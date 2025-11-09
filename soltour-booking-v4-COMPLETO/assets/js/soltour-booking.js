@@ -223,22 +223,26 @@
         const $list = $('#soltour-results-list');
         $list.empty();
 
-        // Mostrar 10 skeleton cards
+        // Mostrar 10 skeleton cards com barra de loading
         for (let i = 0; i < 10; i++) {
             const skeleton = `
                 <div class="soltour-package-card skeleton-card">
-                    <div class="package-image skeleton-shimmer"></div>
+                    <div class="package-image skeleton-shimmer">
+                        <div class="skeleton-loading-bar">
+                            <div class="skeleton-loading-progress"></div>
+                        </div>
+                    </div>
                     <div class="package-info">
-                        <div class="skeleton-line skeleton-shimmer" style="width: 60%; height: 20px; margin-bottom: 10px;"></div>
-                        <div class="skeleton-line skeleton-shimmer" style="width: 80%; height: 24px; margin-bottom: 10px;"></div>
-                        <div class="skeleton-line skeleton-shimmer" style="width: 40%; height: 16px; margin-bottom: 15px;"></div>
-                        <div class="skeleton-line skeleton-shimmer" style="width: 70%; height: 16px; margin-bottom: 8px;"></div>
-                        <div class="skeleton-line skeleton-shimmer" style="width: 65%; height: 16px;"></div>
+                        <div class="skeleton-line skeleton-shimmer" style="width: 60%; height: 20px; margin-bottom: 12px;"></div>
+                        <div class="skeleton-line skeleton-shimmer" style="width: 85%; height: 26px; margin-bottom: 12px;"></div>
+                        <div class="skeleton-line skeleton-shimmer" style="width: 45%; height: 18px; margin-bottom: 16px;"></div>
+                        <div class="skeleton-line skeleton-shimmer" style="width: 75%; height: 16px; margin-bottom: 10px;"></div>
+                        <div class="skeleton-line skeleton-shimmer" style="width: 70%; height: 16px;"></div>
                     </div>
                     <div class="package-price">
-                        <div class="skeleton-line skeleton-shimmer" style="width: 50%; height: 20px; margin-bottom: 10px;"></div>
-                        <div class="skeleton-line skeleton-shimmer" style="width: 80%; height: 32px; margin-bottom: 15px;"></div>
-                        <div class="skeleton-line skeleton-shimmer" style="width: 100%; height: 40px;"></div>
+                        <div class="skeleton-line skeleton-shimmer" style="width: 55%; height: 20px; margin-bottom: 12px;"></div>
+                        <div class="skeleton-line skeleton-shimmer" style="width: 90%; height: 36px; margin-bottom: 16px;"></div>
+                        <div class="skeleton-line skeleton-shimmer" style="width: 100%; height: 44px; border-radius: 12px;"></div>
                     </div>
                 </div>
             `;
@@ -653,76 +657,40 @@
         // Seta Anterior
         if (SoltourApp.currentPage > 1) {
             html += `<button onclick="SoltourApp.loadPage(${SoltourApp.currentPage - 1})" class="pagination-arrow">
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                    <path d="M12.5 15L7.5 10L12.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
             </button>`;
         } else {
             html += `<button class="pagination-arrow disabled" disabled>
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                    <path d="M12.5 15L7.5 10L12.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
             </button>`;
         }
 
-        // Números das páginas (mostrar apenas 5 números)
-        html += '<div class="page-numbers">';
-
-        let startPage, endPage;
-
-        if (totalPages <= 5) {
-            // Mostrar todas as páginas se forem 5 ou menos
-            startPage = 1;
-            endPage = totalPages;
-        } else {
-            // Mostrar 5 páginas centradas na página atual
-            if (SoltourApp.currentPage <= 3) {
-                startPage = 1;
-                endPage = 5;
-            } else if (SoltourApp.currentPage >= totalPages - 2) {
-                startPage = totalPages - 4;
-                endPage = totalPages;
-            } else {
-                startPage = SoltourApp.currentPage - 2;
-                endPage = SoltourApp.currentPage + 2;
-            }
+        // Dots para indicar páginas
+        html += '<div class="pagination-dots">';
+        for (let i = 1; i <= totalPages; i++) {
+            const activeClass = i === SoltourApp.currentPage ? 'active' : '';
+            html += `<span class="pagination-dot ${activeClass}" onclick="SoltourApp.loadPage(${i})"></span>`;
         }
-
-        // Primeira página + ellipsis se necessário
-        if (startPage > 1) {
-            html += `<button onclick="SoltourApp.loadPage(1)" class="page-number">1</button>`;
-            if (startPage > 2) {
-                html += '<span class="page-ellipsis">...</span>';
-            }
-        }
-
-        // Páginas do range
-        for (let i = startPage; i <= endPage; i++) {
-            const active = i === SoltourApp.currentPage ? 'active' : '';
-            html += `<button onclick="SoltourApp.loadPage(${i})" class="page-number ${active}">${i}</button>`;
-        }
-
-        // Ellipsis + última página se necessário
-        if (endPage < totalPages) {
-            if (endPage < totalPages - 1) {
-                html += '<span class="page-ellipsis">...</span>';
-            }
-            html += `<button onclick="SoltourApp.loadPage(${totalPages})" class="page-number">${totalPages}</button>`;
-        }
-
         html += '</div>';
+
+        // Indicador de página atual
+        html += `<div class="pagination-info">${SoltourApp.currentPage} / ${totalPages}</div>`;
 
         // Seta Próxima
         if (SoltourApp.currentPage < totalPages) {
             html += `<button onclick="SoltourApp.loadPage(${SoltourApp.currentPage + 1})" class="pagination-arrow">
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                    <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
             </button>`;
         } else {
             html += `<button class="pagination-arrow disabled" disabled>
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                    <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
             </button>`;
         }
