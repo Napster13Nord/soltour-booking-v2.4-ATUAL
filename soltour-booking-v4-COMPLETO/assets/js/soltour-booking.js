@@ -641,10 +641,6 @@
         log(`=== PAGINAÇÃO ===`);
         log(`Página atual: ${SoltourApp.currentPage}`);
         log(`Total de páginas: ${totalPages}`);
-        log(`Total de budgets: ${SoltourApp.totalBudgets}`);
-        log(`Items por página: ${SoltourApp.itemsPerPage}`);
-        log(`firstItem atual: ${SoltourApp.searchParams.first_item}`);
-        log(`itemCount atual: ${SoltourApp.searchParams.item_count}`);
 
         if (totalPages <= 1) {
             $('#soltour-pagination').hide();
@@ -654,24 +650,45 @@
 
         let html = '<div class="pagination-controls">';
 
-        // Botão Anterior
+        // Seta Anterior
         if (SoltourApp.currentPage > 1) {
-            html += `<button onclick="SoltourApp.loadPage(${SoltourApp.currentPage - 1})" class="soltour-btn">← Anterior</button>`;
+            html += `<button onclick="SoltourApp.loadPage(${SoltourApp.currentPage - 1})" class="pagination-arrow">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M12.5 15L7.5 10L12.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>`;
+        } else {
+            html += `<button class="pagination-arrow disabled" disabled>
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M12.5 15L7.5 10L12.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>`;
         }
 
-        // Números das páginas
+        // Números das páginas (mostrar apenas 5 números)
         html += '<div class="page-numbers">';
 
-        // Calcular range de páginas a mostrar
-        let startPage = Math.max(1, SoltourApp.currentPage - 4);
-        let endPage = Math.min(totalPages, startPage + 9);
+        let startPage, endPage;
 
-        // Ajustar startPage se endPage for o limite
-        if (endPage - startPage < 9) {
-            startPage = Math.max(1, endPage - 9);
+        if (totalPages <= 5) {
+            // Mostrar todas as páginas se forem 5 ou menos
+            startPage = 1;
+            endPage = totalPages;
+        } else {
+            // Mostrar 5 páginas centradas na página atual
+            if (SoltourApp.currentPage <= 3) {
+                startPage = 1;
+                endPage = 5;
+            } else if (SoltourApp.currentPage >= totalPages - 2) {
+                startPage = totalPages - 4;
+                endPage = totalPages;
+            } else {
+                startPage = SoltourApp.currentPage - 2;
+                endPage = SoltourApp.currentPage + 2;
+            }
         }
 
-        // Primeira página sempre visível se não estiver no range
+        // Primeira página + ellipsis se necessário
         if (startPage > 1) {
             html += `<button onclick="SoltourApp.loadPage(1)" class="page-number">1</button>`;
             if (startPage > 2) {
@@ -685,7 +702,7 @@
             html += `<button onclick="SoltourApp.loadPage(${i})" class="page-number ${active}">${i}</button>`;
         }
 
-        // Última página sempre visível se não estiver no range
+        // Ellipsis + última página se necessário
         if (endPage < totalPages) {
             if (endPage < totalPages - 1) {
                 html += '<span class="page-ellipsis">...</span>';
@@ -695,10 +712,25 @@
 
         html += '</div>';
 
+        // Seta Próxima
+        if (SoltourApp.currentPage < totalPages) {
+            html += `<button onclick="SoltourApp.loadPage(${SoltourApp.currentPage + 1})" class="pagination-arrow">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>`;
+        } else {
+            html += `<button class="pagination-arrow disabled" disabled>
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>`;
+        }
+
         html += '</div>';
 
         $('#soltour-pagination').html(html).show();
-        logSuccess('Paginação renderizada com sucesso');
+        logSuccess('Paginação renderizada');
     }
 
     window.SoltourApp.loadPage = function(page) {
