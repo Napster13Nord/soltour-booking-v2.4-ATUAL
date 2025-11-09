@@ -215,6 +215,10 @@ class Soltour_API {
             )
         );
 
+        $this->log('Enviando para API Soltour (booking/availability):');
+        $this->log('  - criteria.pagination.firstItem: ' . $data['criteria']['pagination']['firstItem']);
+        $this->log('  - criteria.pagination.itemCount: ' . $data['criteria']['pagination']['itemCount']);
+
         return $this->make_request('booking/availability', $data);
     }
 
@@ -572,16 +576,18 @@ class Soltour_API {
             'itemCount' => isset($_POST['item_count']) ? intval($_POST['item_count']) : 10
         );
 
-        $this->log('Params with pagination: ' . json_encode($params));
+        $this->log('Params recebidos do frontend:');
+        $this->log('  - first_item: ' . $params['firstItem']);
+        $this->log('  - item_count: ' . $params['itemCount']);
+        $this->log('Params completos: ' . json_encode($params));
 
         $response = $this->search_availability($params);
 
-        $this->log('API Response: ' . json_encode([
-            'has_budgets' => isset($response['budgets']),
-            'budget_count' => isset($response['budgets']) ? count($response['budgets']) : 0,
-            'has_availToken' => isset($response['availToken']),
-            'totalCount' => isset($response['totalCount']) ? $response['totalCount'] : 0
-        ]));
+        $this->log('Resposta da API Soltour:');
+        $this->log('  - budgets: ' . (isset($response['budgets']) ? count($response['budgets']) : 0));
+        $this->log('  - totalCount: ' . (isset($response['totalCount']) ? $response['totalCount'] : 0));
+        $this->log('  - hotels: ' . (isset($response['hotels']) ? count($response['hotels']) : 0));
+        $this->log('  - availToken: ' . (isset($response['availToken']) ? 'SIM' : 'NÃO'));
 
         if (isset($response['budgets']) || isset($response['availToken'])) {
             wp_send_json_success($response);
