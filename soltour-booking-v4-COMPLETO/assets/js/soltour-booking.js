@@ -221,6 +221,7 @@
 
     function searchPackagesAjax() {
         log('=== BUSCA INICIADA ===');
+        log('Params enviados:', SoltourApp.searchParams);
         $('#soltour-results-loading').show();
         $('#soltour-results-list').empty();
 
@@ -231,10 +232,15 @@
             success: function(response) {
                 $('#soltour-results-loading').hide();
 
+                log('Resposta completa da API:', response);
+
                 if (response.success && response.data) {
                     SoltourApp.availToken = response.data.availToken;
                     SoltourApp.allBudgets = response.data.budgets || [];
                     SoltourApp.totalBudgets = response.data.totalCount || SoltourApp.allBudgets.length;
+
+                    log(`Total de budgets na API: ${SoltourApp.totalBudgets}`);
+                    log(`Budgets recebidos nesta página: ${SoltourApp.allBudgets.length}`);
 
                     // Armazenar dados dos hotéis vindos do endpoint availability
                     if (response.data.hotels && Array.isArray(response.data.hotels)) {
@@ -245,7 +251,7 @@
                         logSuccess(`${response.data.hotels.length} hotéis mapeados do availability`);
                     }
 
-                    logSuccess(`${SoltourApp.allBudgets.length} budgets recebidos`);
+                    logSuccess(`${SoltourApp.allBudgets.length} budgets recebidos para página ${SoltourApp.currentPage}`);
 
                     if (SoltourApp.allBudgets.length > 0) {
                         loadPageDetailsWithDeduplication(SoltourApp.allBudgets);
@@ -425,20 +431,21 @@
             }
         }
 
-        // (D) NOME DO HOTEL - PRIORIZAR DADOS DO AVAILABILITY
-        let hotelName = 'Hotel';
+        // (D) NOME DO HOTEL - APENAS DO AVAILABILITY (sem fallback para details)
+        let hotelName = '';
         let hotelCode = pkg.hotelCode || 'N/A';
 
-        // Primeiro tentar pegar do availability (nomes limpos sem tags)
+        // Apenas pegar do availability (nomes limpos sem tags)
         if (hotelService && hotelService.hotelCode && SoltourApp.hotelsFromAvailability[hotelService.hotelCode]) {
             const hotelFromAvail = SoltourApp.hotelsFromAvailability[hotelService.hotelCode];
-            hotelName = hotelFromAvail.name || hotelName;
+            hotelName = hotelFromAvail.name || '';
             hotelCode = hotelFromAvail.code || hotelCode;
         }
-        // Fallback para details se não houver no availability
-        else if (details && details.hotelDetails && details.hotelDetails.hotel) {
-            hotelName = details.hotelDetails.hotel.name || hotelName;
-            hotelCode = details.hotelDetails.hotel.code || hotelCode;
+
+        // Se não houver nome no availability, não renderizar o card
+        if (!hotelName) {
+            log(`Card ignorado - Hotel sem nome (código: ${hotelCode})`);
+            return;
         }
 
         // (E) ESTRELAS - PRIORIZAR AVAILABILITY
@@ -537,10 +544,17 @@
     function renderPagination() {
         const totalPages = Math.ceil(SoltourApp.totalBudgets / SoltourApp.itemsPerPage);
 
-        log(`=== PAGINAÇÃO: Página ${SoltourApp.currentPage} de ${totalPages} (Total: ${SoltourApp.totalBudgets} budgets) ===`);
+        log(`=== PAGINAÇÃO ===`);
+        log(`Página atual: ${SoltourApp.currentPage}`);
+        log(`Total de páginas: ${totalPages}`);
+        log(`Total de budgets: ${SoltourApp.totalBudgets}`);
+        log(`Items por página: ${SoltourApp.itemsPerPage}`);
+        log(`firstItem atual: ${SoltourApp.searchParams.first_item}`);
+        log(`itemCount atual: ${SoltourApp.searchParams.item_count}`);
 
         if (totalPages <= 1) {
             $('#soltour-pagination').hide();
+            log('Paginação oculta - apenas 1 página');
             return;
         }
 
@@ -593,11 +607,15 @@
         }
 
         html += '</div>';
+
         $('#soltour-pagination').html(html).show();
+        logSuccess('Paginação renderizada com sucesso');
     }
 
     window.SoltourApp.loadPage = function(page) {
         log(`=== CARREGANDO PÁGINA ${page} ===`);
+        log(`Página anterior: ${SoltourApp.currentPage}`);
+
         SoltourApp.currentPage = page;
 
         // Scroll suave para o topo da lista de resultados
@@ -609,10 +627,14 @@
         }
 
         // Atualizar parâmetros de paginação
-        SoltourApp.searchParams.first_item = (page - 1) * SoltourApp.itemsPerPage;
+        const firstItem = (page - 1) * SoltourApp.itemsPerPage;
+        SoltourApp.searchParams.first_item = firstItem;
         SoltourApp.searchParams.item_count = SoltourApp.itemsPerPage;
 
-        log(`Pagination params: firstItem=${SoltourApp.searchParams.first_item}, itemCount=${SoltourApp.searchParams.item_count}`);
+        log(`Novos params de paginação:`);
+        log(`  - firstItem: ${firstItem} (página ${page}, ${SoltourApp.itemsPerPage} por página)`);
+        log(`  - itemCount: ${SoltourApp.itemsPerPage}`);
+        log(`Parâmetros completos que serão enviados:`, SoltourApp.searchParams);
 
         // Fazer nova busca com os parâmetros de paginação atualizados
         searchPackagesAjax();
