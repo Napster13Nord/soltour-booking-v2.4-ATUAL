@@ -47,6 +47,7 @@
         allBudgets: [],
         enrichedPackages: {},
         uniqueHotels: [],
+        hotelsFromAvailability: {},
         minDate: null,
         maxDate: null
     };
@@ -184,6 +185,9 @@
             passengers.push({ type: 'CHILD', age: age });
         }
 
+        // Resetar para primeira página na nova busca
+        SoltourApp.currentPage = 1;
+
         SoltourApp.searchParams = {
             action: 'soltour_search_packages',
             nonce: soltourData.nonce,
@@ -226,11 +230,20 @@
             data: SoltourApp.searchParams,
             success: function(response) {
                 $('#soltour-results-loading').hide();
-                
+
                 if (response.success && response.data) {
                     SoltourApp.availToken = response.data.availToken;
                     SoltourApp.allBudgets = response.data.budgets || [];
                     SoltourApp.totalBudgets = response.data.totalCount || SoltourApp.allBudgets.length;
+
+                    // Armazenar dados dos hotéis vindos do endpoint availability
+                    if (response.data.hotels && Array.isArray(response.data.hotels)) {
+                        SoltourApp.hotelsFromAvailability = {};
+                        response.data.hotels.forEach(function(hotel) {
+                            SoltourApp.hotelsFromAvailability[hotel.code] = hotel;
+                        });
+                        logSuccess(`${response.data.hotels.length} hotéis mapeados do availability`);
+                    }
 
                     logSuccess(`${SoltourApp.allBudgets.length} budgets recebidos`);
 
@@ -367,18 +380,43 @@
         const hotelService = budget.hotelServices && budget.hotelServices[0];
         const flightService = budget.flightServices && budget.flightServices[0];
 
-        // (A) IMAGEM
+        // (A) IMAGEM - PRIORIZAR AVAILABILITY
         let hotelImage = '';
-        if (details && details.hotelDetails && details.hotelDetails.hotel && details.hotelDetails.hotel.multimedias) {
+        if (hotelService && hotelService.hotelCode && SoltourApp.hotelsFromAvailability[hotelService.hotelCode]) {
+            const hotelFromAvail = SoltourApp.hotelsFromAvailability[hotelService.hotelCode];
+            if (hotelFromAvail.mainImage) {
+                hotelImage = hotelFromAvail.mainImage;
+            } else if (hotelFromAvail.multimedias && hotelFromAvail.multimedias.length > 0) {
+                const firstImage = hotelFromAvail.multimedias.find(m => m.type === 'IMAGE');
+                if (firstImage) hotelImage = firstImage.url;
+            }
+        }
+        // Fallback para details
+        if (!hotelImage && details && details.hotelDetails && details.hotelDetails.hotel && details.hotelDetails.hotel.multimedias) {
             const firstImage = details.hotelDetails.hotel.multimedias.find(m => m.type === 'IMAGE');
             if (firstImage) hotelImage = firstImage.url;
         }
 
-        // (B) PAÍS e (C) CIDADE
+        // (B) PAÍS e (C) CIDADE - PRIORIZAR AVAILABILITY
         let country = '';
         let city = '';
         let destinationCode = '';
-        if (details && details.hotelDetails && details.hotelDetails.hotel) {
+
+        if (hotelService && hotelService.hotelCode && SoltourApp.hotelsFromAvailability[hotelService.hotelCode]) {
+            const hotelFromAvail = SoltourApp.hotelsFromAvailability[hotelService.hotelCode];
+            destinationCode = hotelFromAvail.destinationCode || '';
+            // Se houver destinationDescription, usar diretamente
+            if (hotelFromAvail.destinationDescription) {
+                city = hotelFromAvail.destinationDescription;
+            }
+            const destInfo = DESTINATIONS_MAP[destinationCode];
+            if (destInfo) {
+                country = destInfo.country;
+                if (!city) city = destInfo.city;
+            }
+        }
+        // Fallback para details
+        else if (details && details.hotelDetails && details.hotelDetails.hotel) {
             destinationCode = details.hotelDetails.hotel.destinationCode || '';
             const destInfo = DESTINATIONS_MAP[destinationCode];
             if (destInfo) {
@@ -387,17 +425,32 @@
             }
         }
 
-        // (D) NOME DO HOTEL
+        // (D) NOME DO HOTEL - PRIORIZAR DADOS DO AVAILABILITY
         let hotelName = 'Hotel';
         let hotelCode = pkg.hotelCode || 'N/A';
-        if (details && details.hotelDetails && details.hotelDetails.hotel) {
+
+        // Primeiro tentar pegar do availability (nomes limpos sem tags)
+        if (hotelService && hotelService.hotelCode && SoltourApp.hotelsFromAvailability[hotelService.hotelCode]) {
+            const hotelFromAvail = SoltourApp.hotelsFromAvailability[hotelService.hotelCode];
+            hotelName = hotelFromAvail.name || hotelName;
+            hotelCode = hotelFromAvail.code || hotelCode;
+        }
+        // Fallback para details se não houver no availability
+        else if (details && details.hotelDetails && details.hotelDetails.hotel) {
             hotelName = details.hotelDetails.hotel.name || hotelName;
             hotelCode = details.hotelDetails.hotel.code || hotelCode;
         }
 
-        // (E) ESTRELAS
+        // (E) ESTRELAS - PRIORIZAR AVAILABILITY
         let hotelStars = 0;
-        if (details && details.hotelDetails && details.hotelDetails.hotel && details.hotelDetails.hotel.categoryCode) {
+        if (hotelService && hotelService.hotelCode && SoltourApp.hotelsFromAvailability[hotelService.hotelCode]) {
+            const hotelFromAvail = SoltourApp.hotelsFromAvailability[hotelService.hotelCode];
+            if (hotelFromAvail.categoryCode) {
+                hotelStars = (hotelFromAvail.categoryCode.match(/\*/g) || []).length;
+            }
+        }
+        // Fallback para details
+        else if (details && details.hotelDetails && details.hotelDetails.hotel && details.hotelDetails.hotel.categoryCode) {
             hotelStars = (details.hotelDetails.hotel.categoryCode.match(/\*/g) || []).length;
         }
 
@@ -483,32 +536,85 @@
 
     function renderPagination() {
         const totalPages = Math.ceil(SoltourApp.totalBudgets / SoltourApp.itemsPerPage);
+
+        log(`=== PAGINAÇÃO: Página ${SoltourApp.currentPage} de ${totalPages} (Total: ${SoltourApp.totalBudgets} budgets) ===`);
+
         if (totalPages <= 1) {
             $('#soltour-pagination').hide();
             return;
         }
 
         let html = '<div class="pagination-controls">';
+
+        // Botão Anterior
         if (SoltourApp.currentPage > 1) {
             html += `<button onclick="SoltourApp.loadPage(${SoltourApp.currentPage - 1})" class="soltour-btn">← Anterior</button>`;
         }
+
+        // Números das páginas
         html += '<div class="page-numbers">';
-        for (let i = 1; i <= Math.min(totalPages, 10); i++) {
+
+        // Calcular range de páginas a mostrar
+        let startPage = Math.max(1, SoltourApp.currentPage - 4);
+        let endPage = Math.min(totalPages, startPage + 9);
+
+        // Ajustar startPage se endPage for o limite
+        if (endPage - startPage < 9) {
+            startPage = Math.max(1, endPage - 9);
+        }
+
+        // Primeira página sempre visível se não estiver no range
+        if (startPage > 1) {
+            html += `<button onclick="SoltourApp.loadPage(1)" class="page-number">1</button>`;
+            if (startPage > 2) {
+                html += '<span class="page-ellipsis">...</span>';
+            }
+        }
+
+        // Páginas do range
+        for (let i = startPage; i <= endPage; i++) {
             const active = i === SoltourApp.currentPage ? 'active' : '';
             html += `<button onclick="SoltourApp.loadPage(${i})" class="page-number ${active}">${i}</button>`;
         }
+
+        // Última página sempre visível se não estiver no range
+        if (endPage < totalPages) {
+            if (endPage < totalPages - 1) {
+                html += '<span class="page-ellipsis">...</span>';
+            }
+            html += `<button onclick="SoltourApp.loadPage(${totalPages})" class="page-number">${totalPages}</button>`;
+        }
+
         html += '</div>';
+
+        // Botão Próximo
         if (SoltourApp.currentPage < totalPages) {
             html += `<button onclick="SoltourApp.loadPage(${SoltourApp.currentPage + 1})" class="soltour-btn">Próximo →</button>`;
         }
+
         html += '</div>';
         $('#soltour-pagination').html(html).show();
     }
 
     window.SoltourApp.loadPage = function(page) {
+        log(`=== CARREGANDO PÁGINA ${page} ===`);
         SoltourApp.currentPage = page;
-        $('html, body').animate({scrollTop: 0}, 300);
+
+        // Scroll suave para o topo da lista de resultados
+        const $resultsList = $('#soltour-results-list');
+        if ($resultsList.length > 0 && $resultsList.offset()) {
+            $('html, body').animate({scrollTop: $resultsList.offset().top - 100}, 300);
+        } else {
+            $('html, body').animate({scrollTop: 0}, 300);
+        }
+
+        // Atualizar parâmetros de paginação
         SoltourApp.searchParams.first_item = (page - 1) * SoltourApp.itemsPerPage;
+        SoltourApp.searchParams.item_count = SoltourApp.itemsPerPage;
+
+        log(`Pagination params: firstItem=${SoltourApp.searchParams.first_item}, itemCount=${SoltourApp.searchParams.item_count}`);
+
+        // Fazer nova busca com os parâmetros de paginação atualizados
         searchPackagesAjax();
     };
 

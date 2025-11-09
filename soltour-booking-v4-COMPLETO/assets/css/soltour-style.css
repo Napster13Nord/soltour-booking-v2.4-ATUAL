@@ -914,6 +914,13 @@
     border-color: #3498db;
 }
 
+.page-ellipsis {
+    padding: 8px 5px;
+    color: #999;
+    display: flex;
+    align-items: center;
+}
+
 /* No results */
 #soltour-no-results {
     text-align: center;
