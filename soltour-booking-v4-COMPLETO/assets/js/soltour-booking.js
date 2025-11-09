@@ -219,11 +219,38 @@
         }
     }
 
+    function showSkeletonCards() {
+        const $list = $('#soltour-results-list');
+        $list.empty();
+
+        // Mostrar 10 skeleton cards
+        for (let i = 0; i < 10; i++) {
+            const skeleton = `
+                <div class="soltour-package-card skeleton-card">
+                    <div class="package-image skeleton-shimmer"></div>
+                    <div class="package-info">
+                        <div class="skeleton-line skeleton-shimmer" style="width: 60%; height: 20px; margin-bottom: 10px;"></div>
+                        <div class="skeleton-line skeleton-shimmer" style="width: 80%; height: 24px; margin-bottom: 10px;"></div>
+                        <div class="skeleton-line skeleton-shimmer" style="width: 40%; height: 16px; margin-bottom: 15px;"></div>
+                        <div class="skeleton-line skeleton-shimmer" style="width: 70%; height: 16px; margin-bottom: 8px;"></div>
+                        <div class="skeleton-line skeleton-shimmer" style="width: 65%; height: 16px;"></div>
+                    </div>
+                    <div class="package-price">
+                        <div class="skeleton-line skeleton-shimmer" style="width: 50%; height: 20px; margin-bottom: 10px;"></div>
+                        <div class="skeleton-line skeleton-shimmer" style="width: 80%; height: 32px; margin-bottom: 15px;"></div>
+                        <div class="skeleton-line skeleton-shimmer" style="width: 100%; height: 40px;"></div>
+                    </div>
+                </div>
+            `;
+            $list.append(skeleton);
+        }
+    }
+
     function searchPackagesAjax() {
         log('=== BUSCA INICIADA ===');
         log('Params enviados:', SoltourApp.searchParams);
-        $('#soltour-results-loading').show();
-        $('#soltour-results-list').empty();
+        showSkeletonCards();
+        $('#soltour-results-loading').hide();
 
         $.ajax({
             url: soltourData.ajaxurl,
@@ -271,8 +298,8 @@
     function paginatePackagesAjax(firstItem, itemCount) {
         log('=== PAGINAÇÃO INICIADA (usando availToken existente) ===');
         log(`firstItem: ${firstItem}, itemCount: ${itemCount}`);
-        $('#soltour-results-loading').show();
-        $('#soltour-results-list').empty();
+        showSkeletonCards();
+        $('#soltour-results-loading').hide();
 
         $.ajax({
             url: soltourData.ajaxurl,
@@ -667,11 +694,6 @@
         }
 
         html += '</div>';
-
-        // Botão Próximo
-        if (SoltourApp.currentPage < totalPages) {
-            html += `<button onclick="SoltourApp.loadPage(${SoltourApp.currentPage + 1})" class="soltour-btn">Próximo →</button>`;
-        }
 
         html += '</div>';
 
