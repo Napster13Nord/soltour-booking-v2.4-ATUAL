@@ -540,19 +540,24 @@
 }
 
 .page-number {
-    min-width: 40px;
-    padding: 8px 12px;
+    min-width: 36px;
+    max-width: 50px;
+    padding: 6px 10px;
     background: #fff;
     border: 1px solid #ddd;
     border-radius: 4px;
     cursor: pointer;
     transition: all 0.3s;
     font-weight: 500;
+    font-size: 14px;
+    text-align: center;
+    line-height: 1.4;
 }
 
 .page-number:hover {
     background: #f0f0f0;
     border-color: #0073aa;
+    transform: translateY(-1px);
 }
 
 .page-number.active {
@@ -560,6 +565,12 @@
     color: #fff;
     border-color: #0073aa;
     cursor: default;
+}
+
+.page-ellipsis {
+    padding: 6px 4px;
+    color: #666;
+    font-size: 14px;
 }
 
 .soltour-loading-page {

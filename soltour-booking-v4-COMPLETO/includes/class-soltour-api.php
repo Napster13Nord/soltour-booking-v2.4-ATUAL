@@ -223,6 +223,34 @@ class Soltour_API {
     }
 
     /**
+     * POST /booking/availability (PAGINAÇÃO)
+     * Busca próxima página usando availToken existente
+     */
+    public function paginate_availability($avail_token, $first_item, $item_count) {
+        $data = array(
+            'productType' => 'PACKAGE',
+            'availToken' => $avail_token,
+            'criteria' => array(
+                'order' => array(
+                    'type' => 'PRICE',
+                    'direction' => 'ASC'
+                ),
+                'pagination' => array(
+                    'firstItem' => intval($first_item),
+                    'itemCount' => intval($item_count)
+                )
+            )
+        );
+
+        $this->log('Paginando com availToken existente:');
+        $this->log('  - availToken: ' . substr($avail_token, 0, 20) . '...');
+        $this->log('  - firstItem: ' . $first_item);
+        $this->log('  - itemCount: ' . $item_count);
+
+        return $this->make_request('booking/availability', $data);
+    }
+
+    /**
      * POST /booking/details
      * Obtém detalhes completos de um budget específico
      */
@@ -593,6 +621,34 @@ class Soltour_API {
             wp_send_json_success($response);
         } else {
             $this->log('Search failed: ' . json_encode($response), 'error');
+            wp_send_json_error($response);
+        }
+    }
+
+    public function ajax_paginate_packages() {
+        check_ajax_referer('soltour_booking_nonce', 'nonce');
+
+        $this->log('=== AJAX PAGINATE PACKAGES CALLED ===');
+
+        $avail_token = sanitize_text_field($_POST['avail_token']);
+        $first_item = isset($_POST['first_item']) ? intval($_POST['first_item']) : 0;
+        $item_count = isset($_POST['item_count']) ? intval($_POST['item_count']) : 10;
+
+        $this->log('Paginação requisitada:');
+        $this->log('  - first_item: ' . $first_item);
+        $this->log('  - item_count: ' . $item_count);
+
+        $response = $this->paginate_availability($avail_token, $first_item, $item_count);
+
+        $this->log('Resposta da paginação:');
+        $this->log('  - budgets: ' . (isset($response['budgets']) ? count($response['budgets']) : 0));
+        $this->log('  - totalCount: ' . (isset($response['totalCount']) ? $response['totalCount'] : 0));
+        $this->log('  - hotels: ' . (isset($response['hotels']) ? count($response['hotels']) : 0));
+
+        if (isset($response['budgets']) || isset($response['availToken'])) {
+            wp_send_json_success($response);
+        } else {
+            $this->log('Pagination failed: ' . json_encode($response), 'error');
             wp_send_json_error($response);
         }
     }

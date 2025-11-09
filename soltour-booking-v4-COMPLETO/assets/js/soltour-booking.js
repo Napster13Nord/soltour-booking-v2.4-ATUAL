@@ -268,6 +268,66 @@
         });
     }
 
+    function paginatePackagesAjax(firstItem, itemCount) {
+        log('=== PAGINAÇÃO INICIADA (usando availToken existente) ===');
+        log(`firstItem: ${firstItem}, itemCount: ${itemCount}`);
+        $('#soltour-results-loading').show();
+        $('#soltour-results-list').empty();
+
+        $.ajax({
+            url: soltourData.ajaxurl,
+            type: 'POST',
+            data: {
+                action: 'soltour_paginate_packages',
+                nonce: soltourData.nonce,
+                avail_token: SoltourApp.availToken,
+                first_item: firstItem,
+                item_count: itemCount
+            },
+            success: function(response) {
+                $('#soltour-results-loading').hide();
+
+                log('Resposta da paginação:', response);
+
+                if (response.success && response.data) {
+                    // NÃO atualizar availToken - manter o mesmo da busca inicial
+                    SoltourApp.allBudgets = response.data.budgets || [];
+
+                    // Manter o totalCount original
+                    if (response.data.totalCount) {
+                        SoltourApp.totalBudgets = response.data.totalCount;
+                    }
+
+                    log(`Budgets recebidos na paginação: ${SoltourApp.allBudgets.length}`);
+                    log(`Total mantido: ${SoltourApp.totalBudgets}`);
+
+                    // Atualizar mapeamento de hotéis
+                    if (response.data.hotels && Array.isArray(response.data.hotels)) {
+                        response.data.hotels.forEach(function(hotel) {
+                            SoltourApp.hotelsFromAvailability[hotel.code] = hotel;
+                        });
+                        logSuccess(`${response.data.hotels.length} hotéis mapeados da paginação`);
+                    }
+
+                    if (SoltourApp.allBudgets.length > 0) {
+                        loadPageDetailsWithDeduplication(SoltourApp.allBudgets);
+                    } else {
+                        $('#soltour-no-results').show();
+                        logError('Nenhum budget retornado na paginação');
+                    }
+                } else {
+                    logError('Erro na paginação', response);
+                    $('#soltour-no-results').show();
+                }
+            },
+            error: function(xhr, status, error) {
+                $('#soltour-results-loading').hide();
+                $('#soltour-no-results').show();
+                logError('Erro AJAX na paginação', error);
+            }
+        });
+    }
+
     function loadPageDetailsWithDeduplication(budgets) {
         log('=== DEDUPLICANDO E CARREGANDO DETALHES ===');
         
@@ -370,7 +430,8 @@
             return;
         }
 
-        $('#soltour-results-count').text(`${packages.length} pacotes encontrados`);
+        // Mostrar total de budgets, não apenas os da página atual
+        $('#soltour-results-count').text(`${SoltourApp.totalBudgets} pacotes encontrados`);
 
         packages.forEach(function(pkg) {
             renderCompleteCard(pkg);
@@ -626,18 +687,16 @@
             $('html, body').animate({scrollTop: 0}, 300);
         }
 
-        // Atualizar parâmetros de paginação
+        // Calcular parâmetros de paginação
         const firstItem = (page - 1) * SoltourApp.itemsPerPage;
-        SoltourApp.searchParams.first_item = firstItem;
-        SoltourApp.searchParams.item_count = SoltourApp.itemsPerPage;
 
-        log(`Novos params de paginação:`);
+        log(`Parâmetros de paginação:`);
         log(`  - firstItem: ${firstItem} (página ${page}, ${SoltourApp.itemsPerPage} por página)`);
         log(`  - itemCount: ${SoltourApp.itemsPerPage}`);
-        log(`Parâmetros completos que serão enviados:`, SoltourApp.searchParams);
+        log(`  - availToken: ${SoltourApp.availToken ? 'PRESENTE' : 'AUSENTE'}`);
 
-        // Fazer nova busca com os parâmetros de paginação atualizados
-        searchPackagesAjax();
+        // Usar endpoint de paginação com availToken existente
+        paginatePackagesAjax(firstItem, SoltourApp.itemsPerPage);
     };
 
     window.SoltourApp.selectPackage = function(budgetId, hotelCode, providerCode) {

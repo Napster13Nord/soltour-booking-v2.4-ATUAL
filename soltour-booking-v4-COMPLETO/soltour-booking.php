@@ -83,6 +83,7 @@ class Soltour_Booking {
             'soltour_get_calendar_months',
             'soltour_get_price_calendar',
             'soltour_search_packages',
+            'soltour_paginate_packages',
             'soltour_get_package_details',
             'soltour_get_alternatives',
             'soltour_quote_package',
