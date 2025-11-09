@@ -225,8 +225,29 @@ class Soltour_API {
     /**
      * POST /booking/availability (PAGINAÇÃO)
      * Busca próxima página usando availToken existente
+     * IMPORTANTE: Precisa enviar TODOS os params originais + availToken
      */
-    public function paginate_availability($avail_token, $first_item, $item_count) {
+    public function paginate_availability($avail_token, $first_item, $item_count, $original_params) {
+        // Reconstruir estrutura de rooms dos params originais
+        $rooms = array();
+        if (isset($original_params['rooms']) && is_array($original_params['rooms'])) {
+            foreach ($original_params['rooms'] as $room) {
+                $passengers = array();
+                foreach ($room['passengers'] as $pax) {
+                    $passengers[] = array(
+                        'type' => $pax['type'],
+                        'age' => intval($pax['age'])
+                    );
+                }
+                $rooms[] = array('passengers' => $passengers);
+            }
+        }
+
+        // Calcular datas
+        $start_date = $original_params['startDate'];
+        $num_nights = intval($original_params['numNights']);
+        $end_date = date('Y-m-d', strtotime($start_date . ' +' . $num_nights . ' days'));
+
         $data = array(
             'productType' => 'PACKAGE',
             'availToken' => $avail_token,
@@ -239,13 +260,37 @@ class Soltour_API {
                     'firstItem' => intval($first_item),
                     'itemCount' => intval($item_count)
                 )
+            ),
+            'languageCode' => SOLTOUR_API_LANG,
+            'params' => array(
+                'startDate' => $start_date,
+                'endDate' => $end_date,
+                'residentType' => isset($original_params['residentType']) ? $original_params['residentType'] : 'NONE',
+                'accomodation' => array(
+                    'rooms' => $rooms
+                ),
+                'hotelParams' => array(
+                    'destinationCode' => $original_params['destinationCode'],
+                    'includeImmediatePayment' => true
+                ),
+                'flightParams' => array(
+                    'itineraries' => array(
+                        array(
+                            'origins' => array($original_params['originCode']),
+                            'destinations' => array($original_params['destinationCode'])
+                        )
+                    ),
+                    'directFlightsOnly' => isset($original_params['directFlightsOnly']) ? $original_params['directFlightsOnly'] : false,
+                    'includeImmediatePayment' => true
+                )
             )
         );
 
-        $this->log('Paginando com availToken existente:');
+        $this->log('Paginando com availToken E params completos:');
         $this->log('  - availToken: ' . substr($avail_token, 0, 20) . '...');
         $this->log('  - firstItem: ' . $first_item);
         $this->log('  - itemCount: ' . $item_count);
+        $this->log('  - params incluídos: SIM');
 
         return $this->make_request('booking/availability', $data);
     }
@@ -634,11 +679,21 @@ class Soltour_API {
         $first_item = isset($_POST['first_item']) ? intval($_POST['first_item']) : 0;
         $item_count = isset($_POST['item_count']) ? intval($_POST['item_count']) : 10;
 
+        // Receber parâmetros originais da busca
+        $original_params = array(
+            'originCode' => sanitize_text_field($_POST['origin_code']),
+            'destinationCode' => sanitize_text_field($_POST['destination_code']),
+            'startDate' => sanitize_text_field($_POST['start_date']),
+            'numNights' => intval($_POST['num_nights']),
+            'rooms' => json_decode(stripslashes($_POST['rooms']), true)
+        );
+
         $this->log('Paginação requisitada:');
         $this->log('  - first_item: ' . $first_item);
         $this->log('  - item_count: ' . $item_count);
+        $this->log('  - original_params recebidos: SIM');
 
-        $response = $this->paginate_availability($avail_token, $first_item, $item_count);
+        $response = $this->paginate_availability($avail_token, $first_item, $item_count, $original_params);
 
         $this->log('Resposta da paginação:');
         $this->log('  - budgets: ' . (isset($response['budgets']) ? count($response['budgets']) : 0));
