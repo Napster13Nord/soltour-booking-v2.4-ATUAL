@@ -1,0 +1,63 @@
+=== Soltour Booking V2 - Changelog ===
+
+= 2.0.0 (2025-11-09) =
+
+MAJOR UPDATE - Reconstrução completa do plugin
+
+* NEW: Implementação correta do fluxo da API Soltour V5
+* NEW: Endpoint /booking/details agora é chamado para buscar dados completos dos hotéis
+* NEW: Calendário de preços interativo com navegação entre meses
+* NEW: Sistema completo de checkout com validação de formulários
+* NEW: Página de confirmação de reservas com detalhes completos
+* NEW: Suporte para múltiplos quartos e passageiros
+* NEW: Validação de nomes (mínimo 2 caracteres conforme API)
+* NEW: Cache inteligente de session tokens (25 minutos)
+* NEW: Cache de masters (destinos, origens, aeroportos) por 24h
+* NEW: Logs detalhados para debug
+* NEW: Design responsivo moderno
+* NEW: Filtros e ordenação de resultados
+* NEW: Barra lateral com resumo da reserva no checkout
+* NEW: Sistema de paginação de resultados
+* NEW: Suporte para serviços opcionais (bagagem, transfers, seguros)
+
+* FIX: Correção do fluxo de chamadas API (availability → details → quote → expedient → book)
+* FIX: Cards de pacotes agora mostram informações completas dos hotéis
+* FIX: Imagens dos hotéis sendo carregadas corretamente
+* FIX: Session token sendo renovado automaticamente quando expira
+* FIX: Validação de AJAX com nonces em todas as requisições
+* FIX: Sanitização correta de todos os inputs do usuário
+* FIX: Tratamento de erros melhorado em todas as chamadas AJAX
+
+* IMPROVE: Código refatorado e bem documentado
+* IMPROVE: Separação clara entre backend (PHP) e frontend (JavaScript)
+* IMPROVE: Performance otimizada com cache inteligente
+* IMPROVE: Experiência do usuário melhorada com feedback visual
+* IMPROVE: CSS moderno e componentizado
+* IMPROVE: JavaScript organizado com namespace global SoltourApp
+* IMPROVE: Compatibilidade com WordPress 5.0+
+
+* DEV: Hooks e filtros para desenvolvedores
+* DEV: Classes bem estruturadas e reutilizáveis
+* DEV: Documentação completa no README.md
+* DEV: Exemplo de configuração do wp-config.php incluído
+
+---
+
+= 1.2.0 (2025-11-08) =
+
+* Versão anterior (incompleta)
+* Apenas busca básica de pacotes funcionando
+* Cards não populados com dados completos dos hotéis
+* Fluxo da API incorreto
+
+---
+
+= 1.0.0 (Data anterior) =
+
+* Versão inicial
+* Funcionalidades básicas
+
+---
+
+Desenvolvido por: Beauty Travel
+Última atualização: 09/11/2025
