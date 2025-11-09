@@ -282,7 +282,13 @@
                 nonce: soltourData.nonce,
                 avail_token: SoltourApp.availToken,
                 first_item: firstItem,
-                item_count: itemCount
+                item_count: itemCount,
+                // Enviar parâmetros originais da busca
+                origin_code: SoltourApp.searchParams.origin_code,
+                destination_code: SoltourApp.searchParams.destination_code,
+                start_date: SoltourApp.searchParams.start_date,
+                num_nights: SoltourApp.searchParams.num_nights,
+                rooms: SoltourApp.searchParams.rooms
             },
             success: function(response) {
                 $('#soltour-results-loading').hide();
