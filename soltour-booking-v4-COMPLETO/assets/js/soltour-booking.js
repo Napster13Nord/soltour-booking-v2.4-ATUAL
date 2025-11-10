@@ -629,7 +629,8 @@
                 <div class="package-price">
                     <div class="price-label">PACOTE</div>
                     <div class="price-amount">${price.toFixed(0)}€</div>
-                    <button class="soltour-btn soltour-btn-primary" 
+                    <button class="soltour-btn soltour-btn-primary"
+                            style="padding: 20px 35px !important; border-radius: 100px !important; background: #019CB8 !important; color: #fff !important; border: none !important; font-size: 16px !important; font-weight: 700 !important; width: 100% !important;"
                             onclick="SoltourApp.selectPackage('${budget.budgetId}', '${hotelCode}', '${hotelService.providerCode || 'UNDEFINED'}')">
                         Ver Detalhes
                     </button>

@@ -101,7 +101,7 @@ class Soltour_Shortcodes {
                 </div>
                 <?php endif; ?>
 
-                <button type="submit" class="soltour-btn soltour-btn-primary">
+                <button type="submit" class="soltour-btn soltour-btn-primary" style="padding: 20px 35px !important; border-radius: 100px !important; background: #019CB8 !important; color: #fff !important; border: none !important; font-size: 16px !important; font-weight: 600 !important;">
                     <?php _e('Pesquisar Pacotes', 'soltour-booking'); ?>
                 </button>
 
@@ -269,7 +269,7 @@ class Soltour_Shortcodes {
                             </label>
                         </div>
 
-                        <button type="submit" class="soltour-btn soltour-btn-primary soltour-btn-large">
+                        <button type="submit" class="soltour-btn soltour-btn-primary soltour-btn-large" style="padding: 20px 35px !important; border-radius: 100px !important; background: #019CB8 !important; color: #fff !important; border: none !important; font-size: 18px !important; width: 100% !important;">
                             <?php _e('Confirmar Reserva', 'soltour-booking'); ?>
                         </button>
 

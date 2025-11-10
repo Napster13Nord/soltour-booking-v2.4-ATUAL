@@ -1283,54 +1283,146 @@
 
 /* ========================================
    CORREÇÕES PARA EVITAR CONFLITOS COM ELEMENTOR
+   ESPECIFICIDADE MÁXIMA - NÃO REMOVER!
    ======================================== */
 
-/* Garantir especificidade máxima para os botões */
-.soltour-search-wrapper .soltour-btn,
-.soltour-search-form .soltour-btn,
-form.soltour-search-form button.soltour-btn,
-form#soltour-search-form button.soltour-btn,
-button.soltour-btn.soltour-btn-primary {
+/* BOTÃO DE BUSCA - MÁXIMA PRIORIDADE */
+.soltour-search-wrapper .soltour-search-form button.soltour-btn.soltour-btn-primary,
+.soltour-search-wrapper form.soltour-search-form button.soltour-btn.soltour-btn-primary,
+.soltour-search-wrapper form#soltour-search-form button.soltour-btn.soltour-btn-primary,
+div.soltour-search-wrapper form#soltour-search-form button[type="submit"].soltour-btn.soltour-btn-primary,
+.elementor .soltour-search-wrapper form#soltour-search-form button.soltour-btn-primary,
+.elementor-section .soltour-search-wrapper form button.soltour-btn-primary,
+.elementor-widget-container .soltour-search-wrapper button.soltour-btn-primary,
+body .soltour-search-wrapper button.soltour-btn.soltour-btn-primary,
+body .soltour-search-form button.soltour-btn.soltour-btn-primary,
+body form#soltour-search-form button.soltour-btn.soltour-btn-primary {
     padding: 20px 35px !important;
+    padding-top: 20px !important;
+    padding-right: 35px !important;
+    padding-bottom: 20px !important;
+    padding-left: 35px !important;
     border-radius: 100px !important;
     background: #019CB8 !important;
+    background-color: #019CB8 !important;
     color: #fff !important;
     border: none !important;
+    border-width: 0 !important;
     font-size: 16px !important;
     font-weight: 600 !important;
+    line-height: 1.5 !important;
+    text-decoration: none !important;
+    box-shadow: 0 4px 12px rgba(1, 156, 184, 0.3) !important;
+    transition: all 0.3s ease !important;
+    cursor: pointer !important;
+    display: inline-block !important;
+    text-align: center !important;
+    width: auto !important;
+    min-width: auto !important;
+    max-width: none !important;
 }
 
-form#soltour-search-form button[type="submit"].soltour-btn-primary:hover,
-button.soltour-btn.soltour-btn-primary:hover {
+/* Hover do botão de busca */
+.soltour-search-wrapper form#soltour-search-form button.soltour-btn-primary:hover,
+div.soltour-search-wrapper button.soltour-btn.soltour-btn-primary:hover,
+body .soltour-search-wrapper button.soltour-btn-primary:hover,
+.elementor .soltour-search-wrapper button.soltour-btn-primary:hover {
     background: #017a93 !important;
+    background-color: #017a93 !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 16px rgba(1, 156, 184, 0.4) !important;
 }
 
-/* Botões nos cards de pacotes */
-.soltour-package-card button.soltour-btn,
-.package-price button.soltour-btn {
+/* BOTÕES NOS CARDS DE PACOTES */
+.soltour-package-card .package-price button.soltour-btn,
+.soltour-package-card .package-price button.soltour-btn.soltour-btn-primary,
+div.soltour-package-card .package-price button.soltour-btn,
+.soltour-packages-grid .soltour-package-card button.soltour-btn,
+.elementor .soltour-package-card button.soltour-btn,
+body .soltour-package-card button.soltour-btn,
+body .package-price button.soltour-btn {
     padding: 20px 35px !important;
+    padding-top: 20px !important;
+    padding-right: 35px !important;
+    padding-bottom: 20px !important;
+    padding-left: 35px !important;
     border-radius: 100px !important;
     background: #019CB8 !important;
+    background-color: #019CB8 !important;
     color: #fff !important;
     border: none !important;
+    border-width: 0 !important;
+    font-size: 16px !important;
+    font-weight: 700 !important;
+    width: 100% !important;
+    box-shadow: 0 4px 16px rgba(1, 156, 184, 0.3) !important;
+    text-decoration: none !important;
 }
 
-/* Botão de checkout */
-.soltour-checkout-form button.soltour-btn-large,
-form#soltour-checkout-form button.soltour-btn-large {
+.soltour-package-card .package-price button.soltour-btn:hover,
+body .soltour-package-card button.soltour-btn:hover {
+    background: #017a93 !important;
+    background-color: #017a93 !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 24px rgba(1, 156, 184, 0.4) !important;
+}
+
+/* BOTÃO DE CHECKOUT */
+.soltour-checkout-wrapper form#soltour-checkout-form button.soltour-btn-large,
+.soltour-checkout-wrapper button.soltour-btn.soltour-btn-large,
+div.soltour-checkout-wrapper button.soltour-btn-large,
+.elementor .soltour-checkout-wrapper button.soltour-btn-large,
+body .soltour-checkout-wrapper button.soltour-btn-large {
     padding: 20px 35px !important;
+    padding-top: 20px !important;
+    padding-right: 35px !important;
+    padding-bottom: 20px !important;
+    padding-left: 35px !important;
     border-radius: 100px !important;
     background: #019CB8 !important;
+    background-color: #019CB8 !important;
     color: #fff !important;
+    border: none !important;
+    width: 100% !important;
+    font-size: 18px !important;
 }
 
-/* Remover quaisquer estilos herdados do Elementor */
+/* REMOVER ESTILOS DO ELEMENTOR - FORÇA BRUTA */
 .elementor-widget-container .soltour-btn,
 .elementor-section .soltour-btn,
-.elementor .soltour-btn {
+.elementor-column .soltour-btn,
+.elementor-element .soltour-btn,
+.elementor .soltour-btn,
+body.elementor-page .soltour-btn,
+body .elementor .soltour-btn {
     padding: 20px 35px !important;
     border-radius: 100px !important;
     background: #019CB8 !important;
+    background-color: #019CB8 !important;
     color: #fff !important;
     border: none !important;
+    border-width: 0 !important;
+    box-sizing: border-box !important;
+}
+
+/* Garantir que NENHUM estilo do Elementor seja aplicado */
+[class*="elementor"] .soltour-btn-primary {
+    background-image: none !important;
+    background-position: initial !important;
+    background-size: initial !important;
+    background-repeat: initial !important;
+    background-attachment: initial !important;
+    background-origin: initial !important;
+    background-clip: initial !important;
+    text-shadow: none !important;
+    box-sizing: border-box !important;
+}
+
+/* Classes específicas do Elementor para sobrescrever */
+.elementor-button-wrapper .soltour-btn,
+.elementor-button .soltour-btn,
+a.elementor-button.soltour-btn {
+    padding: 20px 35px !important;
+    border-radius: 100px !important;
+    background: #019CB8 !important;
 }
