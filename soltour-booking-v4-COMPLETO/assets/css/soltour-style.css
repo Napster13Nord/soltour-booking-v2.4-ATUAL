@@ -1426,3 +1426,274 @@ a.elementor-button.soltour-btn {
     border-radius: 100px !important;
     background: #019CB8 !important;
 }
+
+/* ========================================
+   PAGINAÇÃO - ESPECIFICIDADE MÁXIMA PARA SOBREPOR ELEMENTOR
+   FORÇA BRUTA PARA GARANTIR ESTILOS CORRETOS
+   ======================================== */
+
+/* BOTÕES DE PAGINAÇÃO (SETAS) - MÁXIMA PRIORIDADE */
+.soltour-pagination button.pagination-arrow,
+.soltour-pagination .pagination-controls button.pagination-arrow,
+.soltour-results-wrapper .soltour-pagination button.pagination-arrow,
+.soltour-results-main .soltour-pagination button.pagination-arrow,
+div.soltour-pagination button.pagination-arrow,
+div.soltour-results-wrapper .soltour-pagination button.pagination-arrow,
+.elementor .soltour-pagination button.pagination-arrow,
+.elementor-section .soltour-pagination button.pagination-arrow,
+.elementor-widget-container .soltour-pagination button.pagination-arrow,
+.elementor-kit-8 .soltour-pagination button.pagination-arrow,
+body .soltour-pagination button.pagination-arrow,
+body .elementor .soltour-pagination button.pagination-arrow,
+body div.soltour-pagination button.pagination-arrow {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 45px !important;
+    height: 45px !important;
+    min-width: 45px !important;
+    min-height: 45px !important;
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    border: 2px solid #019CB8 !important;
+    border-width: 2px !important;
+    border-style: solid !important;
+    border-color: #019CB8 !important;
+    border-radius: 8px !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    color: #019CB8 !important;
+    font-weight: 700 !important;
+    font-size: 18px !important;
+    padding: 0 !important;
+    padding-top: 0 !important;
+    padding-right: 0 !important;
+    padding-bottom: 0 !important;
+    padding-left: 0 !important;
+    line-height: 1 !important;
+    text-decoration: none !important;
+    box-shadow: none !important;
+    box-sizing: border-box !important;
+}
+
+/* Hover das setas de paginação */
+.soltour-pagination button.pagination-arrow:hover:not(.disabled),
+.soltour-pagination .pagination-controls button.pagination-arrow:hover:not(.disabled),
+body .soltour-pagination button.pagination-arrow:hover:not(.disabled),
+.elementor .soltour-pagination button.pagination-arrow:hover:not(.disabled) {
+    background: #019CB8 !important;
+    background-color: #019CB8 !important;
+    color: #ffffff !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 12px rgba(1, 156, 184, 0.3) !important;
+    border-color: #019CB8 !important;
+}
+
+/* Setas desabilitadas */
+.soltour-pagination button.pagination-arrow.disabled,
+.soltour-pagination button.pagination-arrow[disabled],
+body .soltour-pagination button.pagination-arrow.disabled {
+    opacity: 0.3 !important;
+    cursor: not-allowed !important;
+    border-color: #ccc !important;
+    color: #ccc !important;
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+}
+
+/* SVG dentro das setas */
+.soltour-pagination button.pagination-arrow svg,
+.soltour-pagination .pagination-controls button.pagination-arrow svg,
+body .soltour-pagination button.pagination-arrow svg {
+    width: 20px !important;
+    height: 20px !important;
+    display: block !important;
+}
+
+/* NÚMEROS DE PÁGINA - MÁXIMA PRIORIDADE */
+.soltour-pagination .page-number,
+.soltour-pagination .page-numbers .page-number,
+div.soltour-pagination .page-number,
+.elementor .soltour-pagination .page-number,
+body .soltour-pagination .page-number {
+    min-width: 45px !important;
+    height: 45px !important;
+    padding: 0 12px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: #fff !important;
+    background-color: #fff !important;
+    border: 2px solid #ddd !important;
+    border-width: 2px !important;
+    border-style: solid !important;
+    border-color: #ddd !important;
+    border-radius: 8px !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    font-weight: 700 !important;
+    font-size: 16px !important;
+    color: #333 !important;
+    line-height: 1 !important;
+    box-sizing: border-box !important;
+}
+
+/* Hover dos números de página */
+.soltour-pagination .page-number:hover:not(.active),
+body .soltour-pagination .page-number:hover:not(.active) {
+    border-color: #019CB8 !important;
+    color: #019CB8 !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 12px rgba(1, 156, 184, 0.15) !important;
+}
+
+/* Número de página ativo */
+.soltour-pagination .page-number.active,
+body .soltour-pagination .page-number.active {
+    background: #019CB8 !important;
+    background-color: #019CB8 !important;
+    color: #ffffff !important;
+    border-color: #019CB8 !important;
+    cursor: default !important;
+    box-shadow: 0 4px 12px rgba(1, 156, 184, 0.3) !important;
+}
+
+/* INDICADORES DE PÁGINA (DOTS) */
+.soltour-pagination .pagination-dot,
+.soltour-pagination .pagination-dots .pagination-dot,
+body .soltour-pagination .pagination-dot {
+    width: 12px !important;
+    height: 12px !important;
+    border-radius: 50% !important;
+    background: #ddd !important;
+    background-color: #ddd !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    display: inline-block !important;
+    margin: 0 4px !important;
+    border: none !important;
+}
+
+.soltour-pagination .pagination-dot:hover,
+body .soltour-pagination .pagination-dot:hover {
+    background: #019CB8 !important;
+    background-color: #019CB8 !important;
+    transform: scale(1.2) !important;
+}
+
+.soltour-pagination .pagination-dot.active,
+body .soltour-pagination .pagination-dot.active {
+    background: #019CB8 !important;
+    background-color: #019CB8 !important;
+    width: 24px !important;
+    border-radius: 6px !important;
+}
+
+/* CONTAINER DOS DOTS */
+.soltour-pagination .pagination-dots,
+body .soltour-pagination .pagination-dots {
+    display: flex !important;
+    gap: 4px !important;
+    align-items: center !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+/* INFORMAÇÃO DE PÁGINA */
+.soltour-pagination .pagination-info,
+body .soltour-pagination .pagination-info {
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    color: #666 !important;
+    margin: 0 15px !important;
+    padding: 0 15px !important;
+    border-left: 2px solid #ddd !important;
+    border-right: 2px solid #ddd !important;
+    line-height: 1.5 !important;
+}
+
+/* CONTAINER PRINCIPAL DA PAGINAÇÃO */
+.soltour-pagination,
+div.soltour-pagination,
+.soltour-results-wrapper .soltour-pagination,
+.elementor .soltour-pagination,
+body .soltour-pagination {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    margin-top: 40px !important;
+    margin-bottom: 40px !important;
+    background: transparent !important;
+    padding: 20px 0 !important;
+}
+
+/* CONTROLES DA PAGINAÇÃO */
+.soltour-pagination .pagination-controls,
+body .soltour-pagination .pagination-controls {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    background: transparent !important;
+    padding: 0 !important;
+}
+
+/* RETICÊNCIAS */
+.soltour-pagination .page-ellipsis,
+body .soltour-pagination .page-ellipsis {
+    padding: 0 8px !important;
+    color: #999 !important;
+    font-size: 18px !important;
+    font-weight: 700 !important;
+    display: flex !important;
+    align-items: center !important;
+}
+
+/* REMOVER ESTILOS DO ELEMENTOR DE TODOS OS ELEMENTOS DA PAGINAÇÃO */
+.elementor-kit-8 .soltour-pagination button,
+.elementor-kit-8 .soltour-pagination .pagination-arrow,
+.elementor-kit-8 .soltour-pagination .page-number,
+[class*="elementor"] .soltour-pagination button,
+[class*="elementor"] .soltour-pagination .pagination-arrow {
+    font-family: inherit !important;
+    line-height: 1 !important;
+    text-transform: none !important;
+    letter-spacing: normal !important;
+}
+
+/* Garantir que nenhum estilo extra do Elementor seja aplicado */
+.elementor .soltour-pagination *,
+.elementor-section .soltour-pagination *,
+.elementor-widget-container .soltour-pagination * {
+    box-sizing: border-box !important;
+}
+
+/* RESPONSIVE - PAGINAÇÃO EM DISPOSITIVOS MÓVEIS */
+@media (max-width: 768px) {
+    .soltour-pagination .pagination-controls,
+    body .soltour-pagination .pagination-controls {
+        gap: 6px !important;
+    }
+
+    .soltour-pagination button.pagination-arrow,
+    .soltour-pagination .page-number,
+    body .soltour-pagination button.pagination-arrow,
+    body .soltour-pagination .page-number {
+        width: 40px !important;
+        height: 40px !important;
+        min-width: 40px !important;
+        font-size: 14px !important;
+    }
+
+    .soltour-pagination .pagination-info,
+    body .soltour-pagination .pagination-info {
+        font-size: 12px !important;
+        margin: 0 8px !important;
+        padding: 0 8px !important;
+    }
+
+    .soltour-pagination .page-ellipsis,
+    body .soltour-pagination .page-ellipsis {
+        padding: 0 4px !important;
+        font-size: 16px !important;
+    }
+}
