@@ -1699,19 +1699,19 @@ body .soltour-pagination .page-ellipsis {
 }
 
 /* ========================================
-   MODAL DE CARREGAMENTO MODERNO
+   MODAL DE CARREGAMENTO MODERNO - GLASS EFFECT
    ======================================== */
 
-/* Overlay do modal - fundo blur */
+/* Overlay do modal - fundo blur claro */
 .soltour-loading-modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    background: rgba(240, 248, 255, 0.4);
+    backdrop-filter: blur(12px) saturate(180%);
+    -webkit-backdrop-filter: blur(12px) saturate(180%);
     z-index: 999999;
     display: none;
     align-items: center;
@@ -1723,14 +1723,20 @@ body .soltour-pagination .page-ellipsis {
     display: flex;
 }
 
-/* Container do modal */
+/* Container do modal - Glass Morphism */
 .soltour-loading-modal {
-    background: #ffffff;
-    border-radius: 24px;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(20px) saturate(200%);
+    -webkit-backdrop-filter: blur(20px) saturate(200%);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 28px;
     padding: 60px 80px;
     max-width: 600px;
     width: 90%;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+    box-shadow:
+        0 8px 32px rgba(1, 156, 184, 0.1),
+        0 2px 8px rgba(0, 0, 0, 0.05),
+        inset 0 1px 1px rgba(255, 255, 255, 0.5);
     text-align: center;
     animation: slideUp 0.4s ease-out;
     position: relative;
@@ -1739,17 +1745,19 @@ body .soltour-pagination .page-ellipsis {
 
 /* Animação Lottie */
 .soltour-loading-modal .loading-animation {
-    width: 120px;
-    height: 120px;
-    margin: 0 auto 30px;
+    width: 140px;
+    height: 140px;
+    margin: 0 auto 25px;
+    filter: drop-shadow(0 4px 8px rgba(1, 156, 184, 0.15));
 }
 
 /* Logo */
 .soltour-loading-modal .loading-logo {
     max-width: 200px;
     height: auto;
-    margin: 0 auto 20px;
+    margin: 0 auto 25px;
     display: block;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.08));
 }
 
 /* Título */
@@ -1760,12 +1768,13 @@ body .soltour-pagination .page-ellipsis {
     margin: 0 0 15px 0;
     line-height: 1.3;
     letter-spacing: -0.5px;
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
 }
 
 /* Mensagem */
 .soltour-loading-modal .loading-message {
     font-size: 16px;
-    color: #666;
+    color: #555;
     margin: 0 0 35px 0;
     line-height: 1.6;
     font-weight: 400;
@@ -1774,21 +1783,23 @@ body .soltour-pagination .page-ellipsis {
 /* Barra de progresso container */
 .soltour-loading-modal .progress-container {
     width: 100%;
-    height: 6px;
-    background: #f0f0f0;
-    border-radius: 10px;
+    height: 8px;
+    background: rgba(240, 240, 240, 0.6);
+    border-radius: 12px;
     overflow: hidden;
     position: relative;
     margin: 0 auto;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 /* Barra de progresso animada */
 .soltour-loading-modal .progress-bar {
     height: 100%;
-    background: linear-gradient(90deg, #019CB8 0%, #00d4ff 100%);
-    border-radius: 10px;
+    background: linear-gradient(90deg, #019CB8 0%, #00d4ff 50%, #019CB8 100%);
+    background-size: 200% 100%;
+    border-radius: 12px;
     animation: progressAnimation 2s ease-in-out infinite;
-    box-shadow: 0 0 10px rgba(1, 156, 184, 0.3);
+    box-shadow: 0 0 15px rgba(1, 156, 184, 0.4);
 }
 
 /* Animações */
@@ -1814,20 +1825,20 @@ body .soltour-pagination .page-ellipsis {
 
 @keyframes progressAnimation {
     0% {
-        width: 0%;
-        opacity: 0.8;
+        background-position: 0% 50%;
+        opacity: 0.9;
     }
     50% {
-        width: 70%;
+        background-position: 100% 50%;
         opacity: 1;
     }
     100% {
-        width: 100%;
-        opacity: 0.8;
+        background-position: 0% 50%;
+        opacity: 0.9;
     }
 }
 
-/* Efeito de brilho sutil no fundo do modal */
+/* Efeito de brilho sutil no fundo do modal - Glass effect */
 .soltour-loading-modal::before {
     content: '';
     position: absolute;
@@ -1835,9 +1846,10 @@ body .soltour-pagination .page-ellipsis {
     left: -50%;
     width: 200%;
     height: 200%;
-    background: radial-gradient(circle, rgba(1, 156, 184, 0.03) 0%, transparent 70%);
-    animation: rotate 20s linear infinite;
+    background: radial-gradient(circle, rgba(1, 156, 184, 0.05) 0%, transparent 60%);
+    animation: rotate 25s linear infinite;
     pointer-events: none;
+    opacity: 0.6;
 }
 
 @keyframes rotate {
@@ -1907,30 +1919,6 @@ body .soltour-pagination .page-ellipsis {
     }
 
     .soltour-loading-modal .progress-container {
-        height: 5px;
-    }
-}
-
-/* Suporte para modo escuro (opcional) */
-@media (prefers-color-scheme: dark) {
-    .soltour-loading-modal-overlay {
-        background: rgba(0, 0, 0, 0.95);
-    }
-
-    .soltour-loading-modal {
-        background: #1a1a1a;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-    }
-
-    .soltour-loading-modal .loading-title {
-        color: #00d4ff;
-    }
-
-    .soltour-loading-modal .loading-message {
-        color: #aaa;
-    }
-
-    .soltour-loading-modal .progress-container {
-        background: #2a2a2a;
+        height: 6px;
     }
 }

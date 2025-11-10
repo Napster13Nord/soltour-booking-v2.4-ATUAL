@@ -193,7 +193,7 @@ class Soltour_Shortcodes {
                 <!-- Animação Lottie -->
                 <lottie-player
                     class="loading-animation"
-                    src="<?php echo SOLTOUR_PLUGIN_URL; ?>assets/images/loading-animation.lottie"
+                    src="<?php echo SOLTOUR_PLUGIN_URL; ?>assets/images/loading-animation.json"
                     background="transparent"
                     speed="1"
                     loop
