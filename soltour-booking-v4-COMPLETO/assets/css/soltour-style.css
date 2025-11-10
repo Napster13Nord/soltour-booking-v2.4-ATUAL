@@ -632,148 +632,133 @@
 }
 
 /* ========================================
-   PAGINAÇÃO MODERNA
+   PAGINAÇÃO MODERNA - REDESIGN
    ======================================== */
 
 .soltour-pagination {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 50px;
-    margin-bottom: 50px;
+    margin-top: 40px;
+    margin-bottom: 40px;
 }
 
 .pagination-controls {
     display: flex;
     align-items: center;
-    gap: 8px;
-    background: #ffffff;
-    padding: 10px 16px;
-    border-radius: 16px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08),
-                0 0 0 1px rgba(0, 0, 0, 0.04);
+    gap: 10px;
 }
 
 .pagination-arrow {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 42px;
-    height: 42px;
-    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-    border: 1px solid #dee2e6;
-    border-radius: 10px;
+    width: 45px;
+    height: 45px;
+    background: #fff;
+    border: 2px solid #019CB8;
+    border-radius: 8px;
     cursor: pointer;
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    color: #495057;
+    transition: all 0.3s ease;
+    color: #019CB8;
+    font-weight: 700;
+    font-size: 18px;
 }
 
 .pagination-arrow:hover:not(.disabled) {
-    background: linear-gradient(135deg, #019CB8 0%, #017a93 100%);
-    border-color: #019CB8;
+    background: #019CB8;
     color: #ffffff;
-    transform: scale(1.1);
-    box-shadow: 0 6px 20px rgba(1, 156, 184, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(1, 156, 184, 0.3);
 }
 
 .pagination-arrow.disabled {
-    opacity: 0.25;
+    opacity: 0.3;
     cursor: not-allowed;
-    background: #f8f9fa;
+    border-color: #ccc;
+    color: #ccc;
 }
 
 .pagination-arrow svg {
-    width: 18px;
-    height: 18px;
+    width: 20px;
+    height: 20px;
 }
 
 .page-numbers {
     display: flex;
-    gap: 6px;
+    gap: 8px;
     align-items: center;
-    margin: 0 6px;
+    margin: 0 5px;
 }
 
 .page-number {
-    min-width: 42px;
-    height: 42px;
-    padding: 0 14px;
+    min-width: 45px;
+    height: 45px;
+    padding: 0 12px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-    border: 1px solid #dee2e6;
-    border-radius: 10px;
+    background: #fff;
+    border: 2px solid #ddd;
+    border-radius: 8px;
     cursor: pointer;
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    font-weight: 600;
-    font-size: 14px;
-    color: #495057;
-    letter-spacing: -0.3px;
+    transition: all 0.3s ease;
+    font-weight: 700;
+    font-size: 16px;
+    color: #333;
 }
 
 .page-number:hover:not(.active) {
-    background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
     border-color: #019CB8;
     color: #019CB8;
-    transform: translateY(-2px) scale(1.05);
+    transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(1, 156, 184, 0.15);
 }
 
 .page-number.active {
-    background: linear-gradient(135deg, #019CB8 0%, #017a93 100%);
+    background: #019CB8;
     color: #ffffff;
     border-color: #019CB8;
     cursor: default;
-    box-shadow: 0 6px 20px rgba(1, 156, 184, 0.4);
-    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(1, 156, 184, 0.3);
 }
 
 .page-ellipsis {
-    padding: 0 10px;
-    color: #adb5bd;
-    font-size: 16px;
+    padding: 0 8px;
+    color: #999;
+    font-size: 18px;
     font-weight: 700;
     display: flex;
     align-items: center;
 }
 
-/* Pagination Dots */
-.pagination-dots {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin: 0 12px;
-}
-
-.pagination-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: #dee2e6;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.pagination-dot:hover {
-    background: #adb5bd;
-    transform: scale(1.3);
-}
-
-.pagination-dot.active {
-    width: 24px;
-    border-radius: 4px;
-    background: linear-gradient(135deg, #019CB8 0%, #017a93 100%);
-    box-shadow: 0 2px 8px rgba(1, 156, 184, 0.4);
-}
-
 /* Pagination Info */
 .pagination-info {
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 600;
-    color: #495057;
-    margin: 0 8px;
-    letter-spacing: 0.3px;
+    color: #666;
+    margin: 0 15px;
+    padding: 0 15px;
+    border-left: 2px solid #ddd;
+    border-right: 2px solid #ddd;
+}
+
+/* Garantir que setas sejam sempre visíveis */
+.pagination-arrow::before {
+    font-weight: 900;
+}
+
+/* Estilo extra para garantir visibilidade */
+.soltour-pagination .pagination-controls {
+    background: transparent;
+    padding: 0;
+}
+
+/* Garantir contraste em qualquer fundo */
+.soltour-results-main .soltour-pagination,
+.soltour-results-wrapper .soltour-pagination {
+    background: transparent;
+    padding: 20px 0;
 }
 
 .soltour-loading-page {
@@ -1154,7 +1139,7 @@
     box-shadow: 0 6px 16px rgba(1, 156, 184, 0.35);
 }
 
-/* Contadores e paginação */
+/* Contadores */
 .soltour-results-header {
     display: flex;
     justify-content: space-between;
@@ -1167,47 +1152,6 @@
 #soltour-results-count {
     color: #666;
     font-size: 16px;
-}
-
-.pagination-controls {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 15px;
-    margin-top: 40px;
-    padding: 20px 0;
-}
-
-.page-numbers {
-    display: flex;
-    gap: 8px;
-}
-
-.page-number {
-    padding: 8px 14px;
-    border: 1px solid #ddd;
-    background: #fff;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.page-number:hover {
-    background: #f0f0f0;
-}
-
-.page-number.active {
-    background: linear-gradient(135deg, #019CB8 0%, #017a93 100%);
-    color: #fff;
-    border-color: #019CB8;
-    box-shadow: 0 4px 12px rgba(1, 156, 184, 0.3);
-}
-
-.page-ellipsis {
-    padding: 8px 5px;
-    color: #999;
-    display: flex;
-    align-items: center;
 }
 
 /* No results */
@@ -1232,14 +1176,38 @@
     .soltour-packages-grid {
         grid-template-columns: 1fr;
     }
-    
+
     .soltour-package-card h3.package-name {
         font-size: 18px;
         min-height: auto;
     }
-    
+
     .soltour-package-card .price-amount {
         font-size: 24px;
+    }
+
+    /* Paginação responsiva */
+    .pagination-controls {
+        gap: 6px;
+    }
+
+    .pagination-arrow,
+    .page-number {
+        width: 40px;
+        height: 40px;
+        min-width: 40px;
+        font-size: 14px;
+    }
+
+    .pagination-info {
+        font-size: 12px;
+        margin: 0 8px;
+        padding: 0 8px;
+    }
+
+    .page-ellipsis {
+        padding: 0 4px;
+        font-size: 16px;
     }
 }
 
