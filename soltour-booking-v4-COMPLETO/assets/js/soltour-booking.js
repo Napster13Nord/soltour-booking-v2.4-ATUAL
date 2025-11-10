@@ -47,6 +47,7 @@
         allBudgets: [],
         enrichedPackages: {},
         uniqueHotels: [],
+        allUniqueHotels: [], // TODOS os hotéis únicos deduplicados (para paginação local)
         hotelsFromAvailability: {},
         minDate: null,
         maxDate: null
@@ -325,10 +326,16 @@
         showSkeletonCards();
         $('#soltour-results-loading').hide();
 
+        // Buscar TODOS os resultados de uma vez (100 itens)
+        const searchParamsWithLargeLimit = $.extend({}, SoltourApp.searchParams, {
+            first_item: 0,
+            item_count: 100  // Buscar 100 budgets de uma vez
+        });
+
         $.ajax({
             url: soltourData.ajaxurl,
             type: 'POST',
-            data: SoltourApp.searchParams,
+            data: searchParamsWithLargeLimit,
             success: function(response) {
                 $('#soltour-results-loading').hide();
 
@@ -340,7 +347,7 @@
                     SoltourApp.totalBudgets = response.data.totalCount || SoltourApp.allBudgets.length;
 
                     log(`Total de budgets na API: ${SoltourApp.totalBudgets}`);
-                    log(`Budgets recebidos nesta página: ${SoltourApp.allBudgets.length}`);
+                    log(`Budgets recebidos: ${SoltourApp.allBudgets.length}`);
 
                     // Armazenar dados dos hotéis vindos do endpoint availability
                     if (response.data.hotels && Array.isArray(response.data.hotels)) {
@@ -351,10 +358,11 @@
                         logSuccess(`${response.data.hotels.length} hotéis mapeados do availability`);
                     }
 
-                    logSuccess(`${SoltourApp.allBudgets.length} budgets recebidos para página ${SoltourApp.currentPage}`);
+                    logSuccess(`${SoltourApp.allBudgets.length} budgets recebidos`);
 
                     if (SoltourApp.allBudgets.length > 0) {
-                        loadPageDetailsWithDeduplication(SoltourApp.allBudgets);
+                        // Deduplicar TODOS os budgets de uma vez
+                        loadAllDetailsWithDeduplication(SoltourApp.allBudgets);
                     } else {
                         $('#soltour-no-results').show();
                         // Esconder modal quando não há resultados
@@ -371,6 +379,114 @@
 
                 logError('Erro na busca', error);
             }
+        });
+    }
+
+    /**
+     * Nova função: Deduplicar TODOS os budgets e armazenar todos os hotéis únicos
+     * Depois fazer paginação local
+     */
+    function loadAllDetailsWithDeduplication(budgets) {
+        log('=== DEDUPLICANDO TODOS OS BUDGETS ===');
+
+        const uniqueBudgets = {};
+        budgets.forEach(function(budget) {
+            const hotelService = budget.hotelServices && budget.hotelServices[0];
+            if (hotelService) {
+                const hotelCode = hotelService.hotelCode;
+
+                // Buscar o preço correto
+                let price = 0;
+                if (budget.priceBreakdown && budget.priceBreakdown.priceBreakdownDetails &&
+                    budget.priceBreakdown.priceBreakdownDetails[0] &&
+                    budget.priceBreakdown.priceBreakdownDetails[0].priceInfo) {
+                    price = budget.priceBreakdown.priceBreakdownDetails[0].priceInfo.pvp || 0;
+                }
+
+                if (!uniqueBudgets[hotelCode] || price < uniqueBudgets[hotelCode].price) {
+                    uniqueBudgets[hotelCode] = {
+                        budget: budget,
+                        price: price
+                    };
+                }
+            }
+        });
+
+        const uniqueBudgetsList = Object.values(uniqueBudgets).map(item => item.budget);
+        logSuccess(`${uniqueBudgetsList.length} hotéis únicos de ${budgets.length} budgets`);
+
+        let completed = 0;
+        const tempEnrichedPackages = {};
+
+        uniqueBudgetsList.forEach(function(budget) {
+            const hotelService = budget.hotelServices && budget.hotelServices[0];
+            if (!hotelService) {
+                completed++;
+                return;
+            }
+
+            const hotelCode = hotelService.hotelCode;
+            const providerCode = hotelService.providerCode || 'UNDEFINED';
+
+            $.ajax({
+                url: soltourData.ajaxurl,
+                type: 'POST',
+                data: {
+                    action: 'soltour_get_package_details',
+                    nonce: soltourData.nonce,
+                    avail_token: SoltourApp.availToken,
+                    budget_id: budget.budgetId,
+                    hotel_code: hotelCode,
+                    provider_code: providerCode
+                },
+                success: function(response) {
+                    if (response.success && response.data && response.data.hotelDetails) {
+                        tempEnrichedPackages[hotelCode] = {
+                            budget: budget,
+                            details: response.data,
+                            hotelCode: hotelCode
+                        };
+                    } else {
+                        tempEnrichedPackages[hotelCode] = {
+                            budget: budget,
+                            details: null,
+                            hotelCode: hotelCode
+                        };
+                    }
+
+                    completed++;
+                    if (completed === uniqueBudgetsList.length) {
+                        // Armazenar TODOS os hotéis únicos deduplicados
+                        SoltourApp.allUniqueHotels = Object.values(tempEnrichedPackages);
+                        logSuccess(`${SoltourApp.allUniqueHotels.length} hotéis únicos carregados e armazenados`);
+
+                        // Resetar para página 1
+                        SoltourApp.currentPage = 1;
+
+                        // Renderizar primeira página (paginação local)
+                        renderLocalPage(1);
+                    }
+                },
+                error: function() {
+                    tempEnrichedPackages[hotelCode] = {
+                        budget: budget,
+                        details: null,
+                        hotelCode: hotelCode
+                    };
+                    completed++;
+                    if (completed === uniqueBudgetsList.length) {
+                        // Armazenar TODOS os hotéis únicos deduplicados
+                        SoltourApp.allUniqueHotels = Object.values(tempEnrichedPackages);
+                        logSuccess(`${SoltourApp.allUniqueHotels.length} hotéis únicos carregados e armazenados`);
+
+                        // Resetar para página 1
+                        SoltourApp.currentPage = 1;
+
+                        // Renderizar primeira página (paginação local)
+                        renderLocalPage(1);
+                    }
+                }
+            });
         });
     }
 
@@ -553,8 +669,9 @@
             return;
         }
 
-        // Mostrar total de budgets, não apenas os da página atual
-        $('#soltour-results-count').text(`${SoltourApp.totalBudgets} pacotes encontrados`);
+        // Mostrar total de HOTÉIS ÚNICOS (não budgets)
+        const totalUniqueHotels = SoltourApp.allUniqueHotels.length;
+        $('#soltour-results-count').text(`${totalUniqueHotels} hotéis encontrados`);
 
         packages.forEach(function(pkg) {
             renderCompleteCard(pkg);
@@ -726,10 +843,46 @@
         $list.append(card);
     }
 
+    /**
+     * Nova função: Renderizar uma página LOCAL dos hotéis únicos (slice do array)
+     */
+    function renderLocalPage(page) {
+        log(`=== RENDERIZANDO PÁGINA LOCAL ${page} ===`);
+
+        SoltourApp.currentPage = page;
+
+        // Calcular índices para slice
+        const startIndex = (page - 1) * SoltourApp.itemsPerPage;
+        const endIndex = startIndex + SoltourApp.itemsPerPage;
+
+        // Pegar apenas os hotéis da página atual
+        const hotelsForPage = SoltourApp.allUniqueHotels.slice(startIndex, endIndex);
+
+        log(`Mostrando hotéis ${startIndex + 1} a ${Math.min(endIndex, SoltourApp.allUniqueHotels.length)} de ${SoltourApp.allUniqueHotels.length}`);
+        log(`Hotéis nesta página: ${hotelsForPage.length}`);
+
+        // Renderizar cards
+        renderPackageCards(hotelsForPage);
+
+        // Renderizar paginação
+        renderPagination();
+
+        // Scroll para o topo
+        const $resultsList = $('#soltour-results-list');
+        if ($resultsList.length > 0 && $resultsList.offset()) {
+            $('html, body').animate({scrollTop: $resultsList.offset().top - 100}, 300);
+        } else {
+            $('html, body').animate({scrollTop: 0}, 300);
+        }
+    }
+
     function renderPagination() {
-        const totalPages = Math.ceil(SoltourApp.totalBudgets / SoltourApp.itemsPerPage);
+        // Calcular total de páginas baseado em hotéis ÚNICOS, não budgets
+        const totalUniqueHotels = SoltourApp.allUniqueHotels.length;
+        const totalPages = Math.ceil(totalUniqueHotels / SoltourApp.itemsPerPage);
 
         log(`=== PAGINAÇÃO ===`);
+        log(`Total de hotéis únicos: ${totalUniqueHotels}`);
         log(`Página atual: ${SoltourApp.currentPage}`);
         log(`Total de páginas: ${totalPages}`);
 
@@ -789,29 +942,12 @@
     }
 
     window.SoltourApp.loadPage = function(page) {
-        log(`=== CARREGANDO PÁGINA ${page} ===`);
+        log(`=== CARREGANDO PÁGINA ${page} (PAGINAÇÃO LOCAL) ===`);
         log(`Página anterior: ${SoltourApp.currentPage}`);
 
-        SoltourApp.currentPage = page;
-
-        // Scroll suave para o topo da lista de resultados
-        const $resultsList = $('#soltour-results-list');
-        if ($resultsList.length > 0 && $resultsList.offset()) {
-            $('html, body').animate({scrollTop: $resultsList.offset().top - 100}, 300);
-        } else {
-            $('html, body').animate({scrollTop: 0}, 300);
-        }
-
-        // Calcular parâmetros de paginação
-        const firstItem = (page - 1) * SoltourApp.itemsPerPage;
-
-        log(`Parâmetros de paginação:`);
-        log(`  - firstItem: ${firstItem} (página ${page}, ${SoltourApp.itemsPerPage} por página)`);
-        log(`  - itemCount: ${SoltourApp.itemsPerPage}`);
-        log(`  - availToken: ${SoltourApp.availToken ? 'PRESENTE' : 'AUSENTE'}`);
-
-        // Usar endpoint de paginação com availToken existente
-        paginatePackagesAjax(firstItem, SoltourApp.itemsPerPage);
+        // Usar paginação LOCAL - não fazer nova chamada à API
+        // Todos os hotéis únicos já estão em SoltourApp.allUniqueHotels
+        renderLocalPage(page);
     };
 
     window.SoltourApp.selectPackage = function(budgetId, hotelCode, providerCode) {
