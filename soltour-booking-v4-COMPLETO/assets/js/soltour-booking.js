@@ -64,6 +64,68 @@
         console.error('%c[Soltour ✗] ' + message, 'color: #f44336; font-weight: bold', error || '');
     }
 
+    // ========================================
+    // FUNÇÕES DO MODAL DE CARREGAMENTO
+    // ========================================
+
+    /**
+     * Mostra o modal de carregamento com mensagem personalizada
+     * @param {string} title - Título do modal (opcional)
+     * @param {string} message - Mensagem do modal (opcional)
+     */
+    function showLoadingModal(title, message) {
+        const modal = $('#soltour-loading-modal');
+
+        if (modal.length) {
+            // Atualizar textos se fornecidos
+            if (title) {
+                $('#loading-modal-title').text(title);
+            }
+            if (message) {
+                $('#loading-modal-message').text(message);
+            }
+
+            // Mostrar modal com animação
+            modal.addClass('active');
+
+            // Prevenir scroll do body
+            $('body').css('overflow', 'hidden');
+
+            log('Modal de carregamento exibido', { title, message });
+        }
+    }
+
+    /**
+     * Esconde o modal de carregamento
+     */
+    function hideLoadingModal() {
+        const modal = $('#soltour-loading-modal');
+
+        if (modal.length) {
+            // Remover classe active para esconder
+            modal.removeClass('active');
+
+            // Restaurar scroll do body
+            $('body').css('overflow', '');
+
+            log('Modal de carregamento escondido');
+        }
+    }
+
+    /**
+     * Atualiza a mensagem do modal sem esconder
+     * @param {string} title - Novo título
+     * @param {string} message - Nova mensagem
+     */
+    function updateLoadingModal(title, message) {
+        if (title) {
+            $('#loading-modal-title').text(title);
+        }
+        if (message) {
+            $('#loading-modal-message').text(message);
+        }
+    }
+
     $(document).ready(function() {
         log('Plugin V4 inicializado - COMPLETO');
         initSearchForm();
@@ -253,6 +315,13 @@
     function searchPackagesAjax() {
         log('=== BUSCA INICIADA ===');
         log('Params enviados:', SoltourApp.searchParams);
+
+        // Mostrar modal de carregamento moderno
+        showLoadingModal(
+            'Buscando os melhores pacotes...',
+            'Encontraremos as melhores opções para sua viagem'
+        );
+
         showSkeletonCards();
         $('#soltour-results-loading').hide();
 
@@ -288,12 +357,18 @@
                         loadPageDetailsWithDeduplication(SoltourApp.allBudgets);
                     } else {
                         $('#soltour-no-results').show();
+                        // Esconder modal quando não há resultados
+                        hideLoadingModal();
                     }
                 }
             },
             error: function(xhr, status, error) {
                 $('#soltour-results-loading').hide();
                 $('#soltour-no-results').show();
+
+                // Esconder modal em caso de erro
+                hideLoadingModal();
+
                 logError('Erro na busca', error);
             }
         });
@@ -302,6 +377,13 @@
     function paginatePackagesAjax(firstItem, itemCount) {
         log('=== PAGINAÇÃO INICIADA (usando availToken existente) ===');
         log(`firstItem: ${firstItem}, itemCount: ${itemCount}`);
+
+        // Mostrar modal de carregamento durante paginação
+        showLoadingModal(
+            'Carregando mais pacotes...',
+            'Aguarde enquanto buscamos mais opções'
+        );
+
         showSkeletonCards();
         $('#soltour-results-loading').hide();
 
@@ -459,6 +541,10 @@
 
     function renderPackageCards(packages) {
         log('=== RENDERIZANDO CARDS COMPLETOS ===');
+
+        // Esconder modal de carregamento quando os resultados estiverem prontos
+        hideLoadingModal();
+
         const $list = $('#soltour-results-list');
         $list.empty();
 
