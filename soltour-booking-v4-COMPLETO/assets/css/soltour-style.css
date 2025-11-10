@@ -206,9 +206,9 @@
    ======================================== */
 
 .soltour-btn {
-    padding: 12px 24px;
-    border: none;
-    border-radius: 4px;
+    padding: 20px 35px !important;
+    border: none !important;
+    border-radius: 100px !important;
     cursor: pointer;
     font-size: 16px;
     font-weight: 600;
@@ -219,18 +219,18 @@
 }
 
 .soltour-btn-primary {
-    background: #019CB8;
-    color: #fff;
+    background: #019CB8 !important;
+    color: #fff !important;
 }
 
 .soltour-btn-primary:hover {
-    background: #017a93;
+    background: #017a93 !important;
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(1, 156, 184, 0.3);
 }
 
 .soltour-btn-large {
-    padding: 16px 32px;
+    padding: 20px 35px !important;
     font-size: 18px;
     width: 100%;
 }
@@ -512,11 +512,11 @@
 
 .package-price .soltour-btn {
     width: 100%;
-    padding: 14px 24px;
-    background: linear-gradient(135deg, #019CB8 0%, #017a93 100%);
-    color: #ffffff;
-    border: none;
-    border-radius: 12px;
+    padding: 20px 35px !important;
+    background: #019CB8 !important;
+    color: #ffffff !important;
+    border: none !important;
+    border-radius: 100px !important;
     font-size: 16px;
     font-weight: 700;
     cursor: pointer;
@@ -525,7 +525,7 @@
 }
 
 .package-price .soltour-btn:hover {
-    background: linear-gradient(135deg, #017a93 0%, #015f72 100%);
+    background: #017a93 !important;
     transform: translateY(-2px);
     box-shadow: 0 8px 24px rgba(1, 156, 184, 0.4);
 }
@@ -1136,11 +1136,11 @@
 
 .soltour-package-card .soltour-btn {
     width: 100%;
-    padding: 12px 20px;
-    background: linear-gradient(135deg, #019CB8 0%, #017a93 100%);
-    color: #fff;
-    border: none;
-    border-radius: 6px;
+    padding: 20px 35px !important;
+    background: #019CB8 !important;
+    color: #fff !important;
+    border: none !important;
+    border-radius: 100px !important;
     font-size: 16px;
     font-weight: 600;
     cursor: pointer;
@@ -1149,7 +1149,7 @@
 }
 
 .soltour-package-card .soltour-btn:hover {
-    background: linear-gradient(135deg, #017a93 0%, #015f72 100%);
+    background: #017a93 !important;
     transform: translateY(-2px);
     box-shadow: 0 6px 16px rgba(1, 156, 184, 0.35);
 }
@@ -1311,4 +1311,58 @@
     color: #e67e22 !important;
     margin-bottom: 12px !important;
     line-height: 1 !important;
+}
+
+/* ========================================
+   CORREÇÕES PARA EVITAR CONFLITOS COM ELEMENTOR
+   ======================================== */
+
+/* Garantir especificidade máxima para os botões */
+.soltour-search-wrapper .soltour-btn,
+.soltour-search-form .soltour-btn,
+form.soltour-search-form button.soltour-btn,
+form#soltour-search-form button.soltour-btn,
+button.soltour-btn.soltour-btn-primary {
+    padding: 20px 35px !important;
+    border-radius: 100px !important;
+    background: #019CB8 !important;
+    color: #fff !important;
+    border: none !important;
+    font-size: 16px !important;
+    font-weight: 600 !important;
+}
+
+form#soltour-search-form button[type="submit"].soltour-btn-primary:hover,
+button.soltour-btn.soltour-btn-primary:hover {
+    background: #017a93 !important;
+}
+
+/* Botões nos cards de pacotes */
+.soltour-package-card button.soltour-btn,
+.package-price button.soltour-btn {
+    padding: 20px 35px !important;
+    border-radius: 100px !important;
+    background: #019CB8 !important;
+    color: #fff !important;
+    border: none !important;
+}
+
+/* Botão de checkout */
+.soltour-checkout-form button.soltour-btn-large,
+form#soltour-checkout-form button.soltour-btn-large {
+    padding: 20px 35px !important;
+    border-radius: 100px !important;
+    background: #019CB8 !important;
+    color: #fff !important;
+}
+
+/* Remover quaisquer estilos herdados do Elementor */
+.elementor-widget-container .soltour-btn,
+.elementor-section .soltour-btn,
+.elementor .soltour-btn {
+    padding: 20px 35px !important;
+    border-radius: 100px !important;
+    background: #019CB8 !important;
+    color: #fff !important;
+    border: none !important;
 }
