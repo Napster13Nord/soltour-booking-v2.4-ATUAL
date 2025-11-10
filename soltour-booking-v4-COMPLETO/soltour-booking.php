@@ -111,11 +111,20 @@ class Soltour_Booking {
             SOLTOUR_VERSION
         );
 
+        // Lottie Player (CDN)
+        wp_enqueue_script(
+            'lottie-player',
+            'https://unpkg.com/@lottiefiles/lottie-player@2.0.2/dist/lottie-player.js',
+            array(),
+            '2.0.2',
+            true
+        );
+
         // JavaScript
         wp_enqueue_script(
             'soltour-booking-script',
             SOLTOUR_PLUGIN_URL . 'assets/js/soltour-booking.js',
-            array('jquery'),
+            array('jquery', 'lottie-player'),
             SOLTOUR_VERSION,
             true
         );
@@ -126,6 +135,7 @@ class Soltour_Booking {
             'nonce' => wp_create_nonce('soltour_booking_nonce'),
             'lang' => SOLTOUR_API_LANG,
             'currency' => 'EUR',
+            'pluginUrl' => SOLTOUR_PLUGIN_URL,
             'strings' => array(
                 'loading' => __('A carregar...', 'soltour-booking'),
                 'error' => __('Ocorreu um erro. Por favor, tente novamente.', 'soltour-booking'),
@@ -134,6 +144,7 @@ class Soltour_Booking {
                 'adults' => __('Adultos', 'soltour-booking'),
                 'children' => __('Crianças', 'soltour-booking'),
                 'nights' => __('Noites', 'soltour-booking'),
+                'loadingMessage' => __('Encontraremos os melhores resultados para sua busca', 'soltour-booking'),
             )
         ));
     }
