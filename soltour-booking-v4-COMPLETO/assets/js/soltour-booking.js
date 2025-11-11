@@ -295,10 +295,16 @@
 
     function initResultsPage() {
         if ($('#soltour-results-list').length === 0) return;
-        
+
         log('=== PÁGINA DE RESULTADOS V4 ===');
         const savedParams = sessionStorage.getItem('soltour_search_params');
         if (savedParams) {
+            // MOSTRAR MODAL IMEDIATAMENTE ao carregar página de resultados
+            showLoadingModal(
+                'Buscando os melhores pacotes...',
+                'Encontraremos as melhores opções para sua viagem'
+            );
+
             SoltourApp.searchParams = JSON.parse(savedParams);
             searchPackagesAjax();
         }
@@ -339,13 +345,17 @@
         log('=== BUSCA INICIADA ===');
         log('Params enviados:', SoltourApp.searchParams);
 
-        // Mostrar modal de carregamento moderno
-        showLoadingModal(
-            'Buscando os melhores pacotes...',
-            'Encontraremos as melhores opções para sua viagem'
-        );
+        // Mostrar modal apenas se ainda não estiver visível
+        const isModalVisible = $('#soltour-loading-modal').hasClass('active');
+        if (!isModalVisible) {
+            showLoadingModal(
+                'Buscando os melhores pacotes...',
+                'Encontraremos as melhores opções para sua viagem'
+            );
+        }
 
-        showSkeletonCards();
+        // Não mostrar skeleton cards (deixar apenas modal)
+        // showSkeletonCards();
         $('#soltour-results-loading').hide();
 
         // Buscar TODOS os resultados de uma vez (100 itens)
