@@ -415,6 +415,15 @@
         const uniqueBudgetsList = Object.values(uniqueBudgets).map(item => item.budget);
         logSuccess(`${uniqueBudgetsList.length} hotéis únicos de ${budgets.length} budgets`);
 
+        // Se não há hotéis únicos após deduplicação, mostrar mensagem e fechar modal
+        if (uniqueBudgetsList.length === 0) {
+            log('Nenhum hotel único encontrado após deduplicação');
+            hideLoadingModal();
+            $('#soltour-no-results').show();
+            $('#soltour-results-count').text('0 hotéis encontrados');
+            return;
+        }
+
         let completed = 0;
         const tempEnrichedPackages = {};
 
