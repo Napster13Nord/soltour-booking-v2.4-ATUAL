@@ -135,7 +135,29 @@
 
     function initSearchForm() {
         if ($('#soltour-search-form').length === 0) return;
-        
+
+        // Verificar se há mensagem de "sem resultados" no localStorage
+        const noResultsMessage = localStorage.getItem('soltour_no_results_message');
+        if (noResultsMessage) {
+            // Mostrar mensagem de alerta
+            const alertHtml = `
+                <div class="soltour-alert soltour-alert-warning" style="background: #fff3cd; border: 1px solid #ffc107; border-radius: 8px; padding: 20px; margin-bottom: 20px; color: #856404;">
+                    <div style="display: flex; align-items: start; gap: 15px;">
+                        <div style="font-size: 32px;">⚠️</div>
+                        <div style="flex: 1;">
+                            <h4 style="margin: 0 0 10px 0; font-size: 18px; font-weight: 700;">Nenhum pacote encontrado</h4>
+                            <p style="margin: 0; line-height: 1.6;">${noResultsMessage}</p>
+                        </div>
+                        <button onclick="this.parentElement.parentElement.remove()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #856404; padding: 0; line-height: 1;">×</button>
+                    </div>
+                </div>
+            `;
+            $('.soltour-search-wrapper').prepend(alertHtml);
+
+            // Limpar mensagem do localStorage
+            localStorage.removeItem('soltour_no_results_message');
+        }
+
         loadDestinations();
         
         $('#soltour-destination').on('change', function() {
@@ -323,21 +345,6 @@
             'Encontraremos as melhores opções para sua viagem'
         );
 
-        // GARANTIA GLOBAL: Timeout de segurança máximo para fechar modal (15 segundos)
-        setTimeout(function() {
-            const isModalVisible = $('#soltour-loading-modal').hasClass('active');
-            if (isModalVisible) {
-                log('⚠️ TIMEOUT GLOBAL: Fechando modal após 15 segundos');
-                hideLoadingModal();
-
-                // Se não há cards visíveis, mostrar mensagem de sem resultados
-                if ($('#soltour-results-list').children().length === 0) {
-                    $('#soltour-no-results').show();
-                    $('#soltour-results-count').text('0 hotéis encontrados');
-                }
-            }
-        }, 15000);
-
         showSkeletonCards();
         $('#soltour-results-loading').hide();
 
@@ -379,24 +386,26 @@
                         // Deduplicar TODOS os budgets de uma vez
                         loadAllDetailsWithDeduplication(SoltourApp.allBudgets);
                     } else {
-                        // GARANTIA 1: Fechar modal quando não há budgets
-                        log('⚠️ Nenhum budget encontrado - fechando modal');
-                        hideLoadingModal();
-                        $('#soltour-no-results').show();
-                        $('#soltour-results-count').text('0 hotéis encontrados');
+                        // Quando não há budgets, redirecionar para página de busca com mensagem
+                        log('⚠️ Nenhum budget encontrado - redirecionando para busca');
 
-                        // GARANTIA 2: Timeout de segurança para garantir fechamento
-                        setTimeout(function() {
-                            hideLoadingModal();
-                            log('✓ Modal fechado via timeout de segurança');
-                        }, 500);
+                        // Salvar mensagem no localStorage
+                        localStorage.setItem('soltour_no_results_message', 'Não foram encontrados pacotes para o destino selecionado com a origem escolhida. Por favor, tente outra origem ou ajuste os critérios de busca.');
+
+                        // Redirecionar para página de busca
+                        const searchPageUrl = window.location.href.replace('/pacotes-resultados', '/buscar-pacotes');
+                        window.location.href = searchPageUrl;
+                        return;
                     }
                 } else {
-                    // GARANTIA 3: Fechar modal quando resposta não tem success
-                    log('⚠️ Resposta sem success - fechando modal');
-                    hideLoadingModal();
-                    $('#soltour-no-results').show();
-                    $('#soltour-results-count').text('0 hotéis encontrados');
+                    // Quando resposta não tem success, redirecionar para busca
+                    log('⚠️ Resposta sem success - redirecionando para busca');
+
+                    localStorage.setItem('soltour_no_results_message', 'Ocorreu um erro na busca. Por favor, tente novamente com outros critérios.');
+
+                    const searchPageUrl = window.location.href.replace('/pacotes-resultados', '/buscar-pacotes');
+                    window.location.href = searchPageUrl;
+                    return;
                 }
             },
             error: function(xhr, status, error) {
@@ -444,18 +453,14 @@
         const uniqueBudgetsList = Object.values(uniqueBudgets).map(item => item.budget);
         logSuccess(`${uniqueBudgetsList.length} hotéis únicos de ${budgets.length} budgets`);
 
-        // Se não há hotéis únicos após deduplicação, mostrar mensagem e fechar modal
+        // Se não há hotéis únicos após deduplicação, redirecionar para página de busca
         if (uniqueBudgetsList.length === 0) {
-            log('⚠️ Nenhum hotel único encontrado após deduplicação');
-            hideLoadingModal();
-            $('#soltour-no-results').show();
-            $('#soltour-results-count').text('0 hotéis encontrados');
+            log('⚠️ Nenhum hotel único encontrado após deduplicação - redirecionando');
 
-            // GARANTIA EXTRA: Timeout de segurança
-            setTimeout(function() {
-                hideLoadingModal();
-                log('✓ Modal fechado via timeout após deduplicação');
-            }, 500);
+            localStorage.setItem('soltour_no_results_message', 'Não foram encontrados pacotes para o destino selecionado com a origem escolhida. Por favor, tente outra origem ou ajuste os critérios de busca.');
+
+            const searchPageUrl = window.location.href.replace('/pacotes-resultados', '/buscar-pacotes');
+            window.location.href = searchPageUrl;
             return;
         }
 
