@@ -55,6 +55,7 @@
         // Filtros
         filters: {
             sortBy: 'price-asc', // 'price-asc', 'price-desc', 'stars-desc'
+            minPrice: 0, // Preço mínimo absoluto dos dados
             maxPrice: 10000,
             absoluteMaxPrice: 10000, // Preço máximo absoluto dos dados (para saber se filtro está ativo)
             selectedStars: [] // Array de estrelas selecionadas [3, 4, 5]
@@ -379,14 +380,20 @@
 
         logSuccess(`${filteredHotels.length} hotéis após aplicar filtros`);
 
-        // Se não houver resultados após filtros, mostrar mensagem
+        // Se não houver resultados após filtros, mostrar mensagem inline
         if (filteredHotels.length === 0) {
-            $('#soltour-results-list').empty();
+            const $list = $('#soltour-results-list');
+            $list.empty();
+            $list.html(`
+                <div style="text-align: center; padding: 60px 20px; grid-column: 1 / -1;">
+                    <div style="font-size: 48px; margin-bottom: 20px;">🔍</div>
+                    <h3 style="color: #1a202c; font-size: 24px; margin-bottom: 12px;">Nenhum pacote corresponde aos filtros</h3>
+                    <p style="color: #6b7280; font-size: 16px;">Tente ajustar os filtros para ver mais resultados</p>
+                </div>
+            `);
             $('#soltour-results-count').text('0 hotéis encontrados');
-            $('#soltour-no-results').show();
             $('#soltour-pagination').empty();
         } else {
-            $('#soltour-no-results').hide();
             // Re-renderizar primeira página
             renderLocalPage(1);
         }
@@ -410,26 +417,11 @@
         // FILTRO 2: Estrelas selecionadas
         if (SoltourApp.filters.selectedStars.length > 0) {
             hotels = hotels.filter(pkg => {
-                const budget = pkg.budget;
-                const hotelService = budget.hotelServices && budget.hotelServices[0];
-
-                if (!hotelService) return false;
-
-                let hotelStars = 0;
-                const hotelFromAvailability = SoltourApp.hotelsFromAvailability[hotelService.hotelCode];
-
-                if (hotelFromAvailability && hotelFromAvailability.categoryStars) {
-                    hotelStars = hotelFromAvailability.categoryStars;
-                } else if (pkg.details && pkg.details.hotelDetails && pkg.details.hotelDetails.hotelCategoryStars) {
-                    hotelStars = pkg.details.hotelDetails.hotelCategoryStars;
-                } else if (hotelService.hotelCategory) {
-                    const match = hotelService.hotelCategory.match(/(\d+)\s*ESTRELLAS?/i);
-                    if (match) hotelStars = parseInt(match[1]);
-                }
-
-                return SoltourApp.filters.selectedStars.includes(hotelStars);
+                const hotelStars = getHotelStars(pkg);
+                const isMatch = SoltourApp.filters.selectedStars.includes(hotelStars);
+                return isMatch;
             });
-            log(`Após filtro de estrelas: ${hotels.length} hotéis`);
+            log(`Após filtro de estrelas (${SoltourApp.filters.selectedStars.join(', ')}): ${hotels.length} hotéis`);
         }
 
         // ORDENAÇÃO
@@ -471,40 +463,48 @@
         let hotelStars = 0;
         const hotelFromAvailability = SoltourApp.hotelsFromAvailability[hotelService.hotelCode];
 
-        if (hotelFromAvailability && hotelFromAvailability.categoryStars) {
-            hotelStars = hotelFromAvailability.categoryStars;
-        } else if (pkg.details && pkg.details.hotelDetails && pkg.details.hotelDetails.hotelCategoryStars) {
-            hotelStars = pkg.details.hotelDetails.hotelCategoryStars;
-        } else if (hotelService.hotelCategory) {
-            const match = hotelService.hotelCategory.match(/(\d+)\s*ESTRELLAS?/i);
-            if (match) hotelStars = parseInt(match[1]);
+        // Usar a MESMA lógica da renderização dos cards
+        if (hotelFromAvailability && hotelFromAvailability.categoryCode) {
+            hotelStars = (hotelFromAvailability.categoryCode.match(/\*/g) || []).length;
+        } else if (pkg.details && pkg.details.hotelDetails && pkg.details.hotelDetails.hotel && pkg.details.hotelDetails.hotel.categoryCode) {
+            hotelStars = (pkg.details.hotelDetails.hotel.categoryCode.match(/\*/g) || []).length;
         }
 
         return hotelStars;
     }
 
     function setupPriceFilter() {
-        // Encontrar o preço máximo nos resultados
+        // Encontrar o preço mínimo e máximo nos resultados
+        let minPrice = Infinity;
         let maxPrice = 0;
+
         SoltourApp.originalHotels.forEach(pkg => {
             const price = getHotelPrice(pkg);
-            if (price > maxPrice) {
-                maxPrice = price;
+            if (price > 0) { // Só considerar preços válidos
+                if (price < minPrice) {
+                    minPrice = price;
+                }
+                if (price > maxPrice) {
+                    maxPrice = price;
+                }
             }
         });
 
-        // Arredondar para cima para o próximo múltiplo de 100
+        // Arredondar mínimo para baixo e máximo para cima (múltiplos de 100)
+        minPrice = Math.floor(minPrice / 100) * 100;
         maxPrice = Math.ceil(maxPrice / 100) * 100;
 
         // Configurar o slider
         const $slider = $('#soltour-max-price');
         if ($slider.length) {
+            $slider.attr('min', minPrice);
             $slider.attr('max', maxPrice);
             $slider.val(maxPrice);
+            SoltourApp.filters.minPrice = minPrice;
             SoltourApp.filters.maxPrice = maxPrice;
             SoltourApp.filters.absoluteMaxPrice = maxPrice; // Guardar o máximo absoluto
             $('#soltour-max-price-value').text('€ ' + maxPrice.toLocaleString('pt-PT'));
-            log(`Filtro de preço configurado: máximo € ${maxPrice}`);
+            log(`Filtro de preço configurado: € ${minPrice} - € ${maxPrice}`);
         }
     }
 
@@ -618,10 +618,12 @@
             },
             error: function(xhr, status, error) {
                 $('#soltour-results-loading').hide();
-                $('#soltour-no-results').show();
 
                 // Esconder modal em caso de erro
                 hideLoadingModal();
+
+                // Mostrar mensagem de erro
+                alert('Ocorreu um erro ao buscar os pacotes. Por favor, tente novamente.');
 
                 logError('Erro na busca', error);
             }
@@ -812,17 +814,17 @@
                     if (SoltourApp.allBudgets.length > 0) {
                         loadPageDetailsWithDeduplication(SoltourApp.allBudgets);
                     } else {
-                        $('#soltour-no-results').show();
+                        alert('Nenhum pacote encontrado nesta página.');
                         logError('Nenhum budget retornado na paginação');
                     }
                 } else {
                     logError('Erro na paginação', response);
-                    $('#soltour-no-results').show();
+                    alert('Erro ao carregar página de resultados.');
                 }
             },
             error: function(xhr, status, error) {
                 $('#soltour-results-loading').hide();
-                $('#soltour-no-results').show();
+                alert('Erro ao carregar página de resultados. Por favor, tente novamente.');
                 logError('Erro AJAX na paginação', error);
             }
         });
@@ -930,7 +932,13 @@
         $list.empty();
 
         if (packages.length === 0) {
-            $('#soltour-no-results').show();
+            $list.html(`
+                <div style="text-align: center; padding: 60px 20px; grid-column: 1 / -1;">
+                    <div style="font-size: 48px; margin-bottom: 20px;">📦</div>
+                    <h3 style="color: #1a202c; font-size: 24px; margin-bottom: 12px;">Nenhum pacote para exibir</h3>
+                    <p style="color: #6b7280; font-size: 16px;">Não há pacotes disponíveis nesta página</p>
+                </div>
+            `);
             return;
         }
 

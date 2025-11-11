@@ -174,23 +174,6 @@ class Soltour_Shortcodes {
                     <?php _e('A carregar pacotes...', 'soltour-booking'); ?>
                 </div>
 
-                <div id="soltour-no-results" style="display:none;">
-                    <div class="soltour-no-results-content">
-                        <div class="no-results-icon">🔍</div>
-                        <h3><?php _e('Nenhum pacote disponível', 'soltour-booking'); ?></h3>
-                        <p><?php _e('Não encontramos pacotes disponíveis para o destino desejado da origem escolhida.', 'soltour-booking'); ?></p>
-                        <p class="no-results-suggestion"><?php _e('Sugestões:', 'soltour-booking'); ?></p>
-                        <ul class="no-results-tips">
-                            <li><?php _e('Tente escolher outra origem', 'soltour-booking'); ?></li>
-                            <li><?php _e('Selecione datas alternativas', 'soltour-booking'); ?></li>
-                            <li><?php _e('Ajuste o número de passageiros', 'soltour-booking'); ?></li>
-                        </ul>
-                        <button onclick="window.history.back()" class="soltour-btn soltour-btn-primary" style="padding: 15px 30px !important; border-radius: 100px !important; background: #019CB8 !important; color: #fff !important; border: none !important; font-size: 16px !important; font-weight: 600 !important; margin-top: 20px;">
-                            ← <?php _e('Voltar à Busca', 'soltour-booking'); ?>
-                        </button>
-                    </div>
-                </div>
-
                 <div class="soltour-pagination" id="soltour-pagination"></div>
             </div>
         </div>
