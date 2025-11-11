@@ -323,6 +323,21 @@
             'Encontraremos as melhores opções para sua viagem'
         );
 
+        // GARANTIA GLOBAL: Timeout de segurança máximo para fechar modal (15 segundos)
+        setTimeout(function() {
+            const isModalVisible = $('#soltour-loading-modal').hasClass('active');
+            if (isModalVisible) {
+                log('⚠️ TIMEOUT GLOBAL: Fechando modal após 15 segundos');
+                hideLoadingModal();
+
+                // Se não há cards visíveis, mostrar mensagem de sem resultados
+                if ($('#soltour-results-list').children().length === 0) {
+                    $('#soltour-no-results').show();
+                    $('#soltour-results-count').text('0 hotéis encontrados');
+                }
+            }
+        }, 15000);
+
         showSkeletonCards();
         $('#soltour-results-loading').hide();
 
@@ -364,10 +379,24 @@
                         // Deduplicar TODOS os budgets de uma vez
                         loadAllDetailsWithDeduplication(SoltourApp.allBudgets);
                     } else {
-                        $('#soltour-no-results').show();
-                        // Esconder modal quando não há resultados
+                        // GARANTIA 1: Fechar modal quando não há budgets
+                        log('⚠️ Nenhum budget encontrado - fechando modal');
                         hideLoadingModal();
+                        $('#soltour-no-results').show();
+                        $('#soltour-results-count').text('0 hotéis encontrados');
+
+                        // GARANTIA 2: Timeout de segurança para garantir fechamento
+                        setTimeout(function() {
+                            hideLoadingModal();
+                            log('✓ Modal fechado via timeout de segurança');
+                        }, 500);
                     }
+                } else {
+                    // GARANTIA 3: Fechar modal quando resposta não tem success
+                    log('⚠️ Resposta sem success - fechando modal');
+                    hideLoadingModal();
+                    $('#soltour-no-results').show();
+                    $('#soltour-results-count').text('0 hotéis encontrados');
                 }
             },
             error: function(xhr, status, error) {
@@ -417,10 +446,16 @@
 
         // Se não há hotéis únicos após deduplicação, mostrar mensagem e fechar modal
         if (uniqueBudgetsList.length === 0) {
-            log('Nenhum hotel único encontrado após deduplicação');
+            log('⚠️ Nenhum hotel único encontrado após deduplicação');
             hideLoadingModal();
             $('#soltour-no-results').show();
             $('#soltour-results-count').text('0 hotéis encontrados');
+
+            // GARANTIA EXTRA: Timeout de segurança
+            setTimeout(function() {
+                hideLoadingModal();
+                log('✓ Modal fechado via timeout após deduplicação');
+            }, 500);
             return;
         }
 
