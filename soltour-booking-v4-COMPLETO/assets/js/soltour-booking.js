@@ -48,9 +48,17 @@
         enrichedPackages: {},
         uniqueHotels: [],
         allUniqueHotels: [], // TODOS os hotéis únicos deduplicados (para paginação local)
+        originalHotels: [], // Cópia dos hotéis originais sem filtros (para poder resetar filtros)
         hotelsFromAvailability: {},
         minDate: null,
-        maxDate: null
+        maxDate: null,
+        // Filtros
+        filters: {
+            sortBy: 'price-asc', // 'price-asc', 'price-desc', 'stars-desc'
+            maxPrice: 10000,
+            absoluteMaxPrice: 10000, // Preço máximo absoluto dos dados (para saber se filtro está ativo)
+            selectedStars: [] // Array de estrelas selecionadas [3, 4, 5]
+        }
     };
 
     function log(message, data) {
@@ -308,6 +316,196 @@
             SoltourApp.searchParams = JSON.parse(savedParams);
             searchPackagesAjax();
         }
+
+        // Inicializar filtros
+        initFilters();
+    }
+
+    // ========================================
+    // FUNÇÕES DE FILTROS
+    // ========================================
+
+    function initFilters() {
+        log('Inicializando filtros');
+
+        // Filtro de ordenação
+        $('#soltour-sort-by').on('change', function() {
+            SoltourApp.filters.sortBy = $(this).val();
+            log('Ordenação alterada para: ' + SoltourApp.filters.sortBy);
+            applyFilters();
+        });
+
+        // Filtro de preço máximo
+        $('#soltour-max-price').on('input', function() {
+            const value = parseInt($(this).val());
+            SoltourApp.filters.maxPrice = value;
+            $('#soltour-max-price-value').text('€ ' + value.toLocaleString('pt-PT'));
+        });
+
+        $('#soltour-max-price').on('change', function() {
+            log('Preço máximo alterado para: € ' + SoltourApp.filters.maxPrice);
+            applyFilters();
+        });
+
+        // Filtro de estrelas
+        $('.soltour-star-filter input[type="checkbox"]').on('change', function() {
+            const starValue = parseInt($(this).val());
+
+            if ($(this).is(':checked')) {
+                if (!SoltourApp.filters.selectedStars.includes(starValue)) {
+                    SoltourApp.filters.selectedStars.push(starValue);
+                }
+            } else {
+                SoltourApp.filters.selectedStars = SoltourApp.filters.selectedStars.filter(s => s !== starValue);
+            }
+
+            log('Estrelas selecionadas: ' + SoltourApp.filters.selectedStars.join(', '));
+            applyFilters();
+        });
+    }
+
+    function applyFilters() {
+        log('=== APLICANDO FILTROS ===');
+        log('Filtros atuais:', SoltourApp.filters);
+
+        // Resetar para primeira página
+        SoltourApp.currentPage = 1;
+
+        // Obter hotéis filtrados e ordenados
+        const filteredHotels = getFilteredHotels();
+
+        // Atualizar allUniqueHotels com hotéis filtrados
+        SoltourApp.allUniqueHotels = filteredHotels;
+
+        logSuccess(`${filteredHotels.length} hotéis após aplicar filtros`);
+
+        // Se não houver resultados após filtros, mostrar mensagem
+        if (filteredHotels.length === 0) {
+            $('#soltour-results-list').empty();
+            $('#soltour-results-count').text('0 hotéis encontrados');
+            $('#soltour-no-results').show();
+            $('#soltour-pagination').empty();
+        } else {
+            $('#soltour-no-results').hide();
+            // Re-renderizar primeira página
+            renderLocalPage(1);
+        }
+    }
+
+    function getFilteredHotels() {
+        // Filtrar a partir dos hotéis originais (sem filtros aplicados)
+        let hotels = [...SoltourApp.originalHotels];
+
+        log(`Total de hotéis antes dos filtros: ${hotels.length}`);
+
+        // FILTRO 1: Preço máximo (só aplicar se usuário moveu o slider)
+        if (SoltourApp.filters.maxPrice < SoltourApp.filters.absoluteMaxPrice) {
+            hotels = hotels.filter(pkg => {
+                const price = getHotelPrice(pkg);
+                return price <= SoltourApp.filters.maxPrice;
+            });
+            log(`Após filtro de preço (≤ € ${SoltourApp.filters.maxPrice}): ${hotels.length} hotéis`);
+        }
+
+        // FILTRO 2: Estrelas selecionadas
+        if (SoltourApp.filters.selectedStars.length > 0) {
+            hotels = hotels.filter(pkg => {
+                const budget = pkg.budget;
+                const hotelService = budget.hotelServices && budget.hotelServices[0];
+
+                if (!hotelService) return false;
+
+                let hotelStars = 0;
+                const hotelFromAvailability = SoltourApp.hotelsFromAvailability[hotelService.hotelCode];
+
+                if (hotelFromAvailability && hotelFromAvailability.categoryStars) {
+                    hotelStars = hotelFromAvailability.categoryStars;
+                } else if (pkg.details && pkg.details.hotelDetails && pkg.details.hotelDetails.hotelCategoryStars) {
+                    hotelStars = pkg.details.hotelDetails.hotelCategoryStars;
+                } else if (hotelService.hotelCategory) {
+                    const match = hotelService.hotelCategory.match(/(\d+)\s*ESTRELLAS?/i);
+                    if (match) hotelStars = parseInt(match[1]);
+                }
+
+                return SoltourApp.filters.selectedStars.includes(hotelStars);
+            });
+            log(`Após filtro de estrelas: ${hotels.length} hotéis`);
+        }
+
+        // ORDENAÇÃO
+        hotels.sort((a, b) => {
+            if (SoltourApp.filters.sortBy === 'price-asc') {
+                // Menor preço primeiro
+                return getHotelPrice(a) - getHotelPrice(b);
+            } else if (SoltourApp.filters.sortBy === 'price-desc') {
+                // Maior preço primeiro
+                return getHotelPrice(b) - getHotelPrice(a);
+            } else if (SoltourApp.filters.sortBy === 'stars-desc') {
+                // Mais estrelas primeiro
+                return getHotelStars(b) - getHotelStars(a);
+            }
+            return 0;
+        });
+
+        log(`Após ordenação (${SoltourApp.filters.sortBy}): ${hotels.length} hotéis`);
+
+        return hotels;
+    }
+
+    function getHotelPrice(pkg) {
+        const budget = pkg.budget;
+        if (budget.priceBreakdown && budget.priceBreakdown.priceBreakdownDetails &&
+            budget.priceBreakdown.priceBreakdownDetails[0] &&
+            budget.priceBreakdown.priceBreakdownDetails[0].priceInfo) {
+            return budget.priceBreakdown.priceBreakdownDetails[0].priceInfo.pvp || 0;
+        }
+        return 0;
+    }
+
+    function getHotelStars(pkg) {
+        const budget = pkg.budget;
+        const hotelService = budget.hotelServices && budget.hotelServices[0];
+
+        if (!hotelService) return 0;
+
+        let hotelStars = 0;
+        const hotelFromAvailability = SoltourApp.hotelsFromAvailability[hotelService.hotelCode];
+
+        if (hotelFromAvailability && hotelFromAvailability.categoryStars) {
+            hotelStars = hotelFromAvailability.categoryStars;
+        } else if (pkg.details && pkg.details.hotelDetails && pkg.details.hotelDetails.hotelCategoryStars) {
+            hotelStars = pkg.details.hotelDetails.hotelCategoryStars;
+        } else if (hotelService.hotelCategory) {
+            const match = hotelService.hotelCategory.match(/(\d+)\s*ESTRELLAS?/i);
+            if (match) hotelStars = parseInt(match[1]);
+        }
+
+        return hotelStars;
+    }
+
+    function setupPriceFilter() {
+        // Encontrar o preço máximo nos resultados
+        let maxPrice = 0;
+        SoltourApp.originalHotels.forEach(pkg => {
+            const price = getHotelPrice(pkg);
+            if (price > maxPrice) {
+                maxPrice = price;
+            }
+        });
+
+        // Arredondar para cima para o próximo múltiplo de 100
+        maxPrice = Math.ceil(maxPrice / 100) * 100;
+
+        // Configurar o slider
+        const $slider = $('#soltour-max-price');
+        if ($slider.length) {
+            $slider.attr('max', maxPrice);
+            $slider.val(maxPrice);
+            SoltourApp.filters.maxPrice = maxPrice;
+            SoltourApp.filters.absoluteMaxPrice = maxPrice; // Guardar o máximo absoluto
+            $('#soltour-max-price-value').text('€ ' + maxPrice.toLocaleString('pt-PT'));
+            log(`Filtro de preço configurado: máximo € ${maxPrice}`);
+        }
     }
 
     function showSkeletonCards() {
@@ -517,7 +715,11 @@
                     if (completed === uniqueBudgetsList.length) {
                         // Armazenar TODOS os hotéis únicos deduplicados
                         SoltourApp.allUniqueHotels = Object.values(tempEnrichedPackages);
+                        SoltourApp.originalHotels = [...SoltourApp.allUniqueHotels]; // Salvar cópia original
                         logSuccess(`${SoltourApp.allUniqueHotels.length} hotéis únicos carregados e armazenados`);
+
+                        // Configurar filtro de preço baseado nos dados reais
+                        setupPriceFilter();
 
                         // Resetar para página 1
                         SoltourApp.currentPage = 1;
@@ -536,7 +738,11 @@
                     if (completed === uniqueBudgetsList.length) {
                         // Armazenar TODOS os hotéis únicos deduplicados
                         SoltourApp.allUniqueHotels = Object.values(tempEnrichedPackages);
+                        SoltourApp.originalHotels = [...SoltourApp.allUniqueHotels]; // Salvar cópia original
                         logSuccess(`${SoltourApp.allUniqueHotels.length} hotéis únicos carregados e armazenados`);
+
+                        // Configurar filtro de preço baseado nos dados reais
+                        setupPriceFilter();
 
                         // Resetar para página 1
                         SoltourApp.currentPage = 1;
