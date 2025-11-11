@@ -1061,6 +1061,31 @@
     #soltour-results-count {
         font-size: 14px;
     }
+
+    /* No results responsivo */
+    .soltour-no-results-content {
+        padding: 35px 25px;
+    }
+
+    .no-results-icon {
+        font-size: 48px;
+    }
+
+    .soltour-no-results-content h3 {
+        font-size: 22px;
+    }
+
+    .soltour-no-results-content p {
+        font-size: 15px;
+    }
+
+    .no-results-suggestion {
+        font-size: 16px;
+    }
+
+    .no-results-tips li {
+        font-size: 14px;
+    }
 }
 
 /* ========================================
@@ -1318,15 +1343,81 @@
     font-size: 16px;
 }
 
-/* No results */
+/* No results - Mensagem melhorada */
 #soltour-no-results {
     text-align: center;
     padding: 60px 20px;
-    color: #999;
 }
 
-#soltour-no-results p {
+.soltour-no-results-content {
+    background: #fff;
+    border-radius: 16px;
+    padding: 50px 40px;
+    max-width: 600px;
+    margin: 0 auto;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.no-results-icon {
+    font-size: 64px;
+    margin-bottom: 20px;
+    opacity: 0.7;
+}
+
+.soltour-no-results-content h3 {
+    color: #2d3748;
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0 0 15px 0;
+}
+
+.soltour-no-results-content p {
+    color: #4a5568;
+    font-size: 16px;
+    line-height: 1.6;
+    margin: 10px 0;
+}
+
+.no-results-suggestion {
+    color: #019CB8;
+    font-weight: 600;
+    font-size: 17px;
+    margin-top: 30px !important;
+    margin-bottom: 15px !important;
+}
+
+.no-results-tips {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 20px 0;
+    text-align: left;
+    display: inline-block;
+}
+
+.no-results-tips li {
+    color: #4a5568;
+    font-size: 15px;
+    padding: 8px 0 8px 30px;
+    position: relative;
+}
+
+.no-results-tips li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: #019CB8;
+    font-weight: bold;
     font-size: 18px;
+}
+
+.soltour-no-results-content .soltour-btn {
+    margin-top: 20px;
+    transition: all 0.3s ease;
+}
+
+.soltour-no-results-content .soltour-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(1, 156, 184, 0.3);
 }
 
 /* Loading state melhorado */
