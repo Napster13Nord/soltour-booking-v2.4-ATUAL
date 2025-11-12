@@ -88,6 +88,8 @@ class Soltour_Booking {
             'soltour_get_alternatives',
             'soltour_check_allowed_selling', // Verificar se venda está permitida
             'soltour_quote_package',
+            'soltour_delayed_quote', // NOVO - Delayed quote com preços finais
+            'soltour_update_optional_service', // NOVO - Adicionar/remover serviços opcionais
             'soltour_generate_expedient',
             'soltour_book_package',
             'soltour_get_booking_details',
@@ -144,6 +146,15 @@ class Soltour_Booking {
             'soltour-toast-notifications',
             SOLTOUR_PLUGIN_URL . 'assets/js/modules/toast-notifications.js',
             array('jquery', 'soltour-booking-script'),
+            SOLTOUR_VERSION,
+            true
+        );
+
+        // Módulo DelayedQuote
+        wp_enqueue_script(
+            'soltour-delayed-quote',
+            SOLTOUR_PLUGIN_URL . 'assets/js/modules/delayed-quote.js',
+            array('jquery', 'soltour-booking-script', 'soltour-toast-notifications'),
             SOLTOUR_VERSION,
             true
         );

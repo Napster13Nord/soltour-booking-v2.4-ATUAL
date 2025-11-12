@@ -875,4 +875,135 @@ class Soltour_API {
 
         wp_send_json_success($response);
     }
+
+    // ========================================
+    // 7) FUNCIONALIDADES DE QUOTE AVANÇADAS
+    // ========================================
+
+    /**
+     * POST /booking/quote/delayedQuote
+     * Busca preços finais em background (DelayedQuote)
+     *
+     * Similar ao DelayedAvailability, mas para a página de quote.
+     * Permite carregar a página rapidamente e buscar preços reais depois.
+     */
+    public function delayed_quote($params) {
+        $data = array(
+            'budgetId' => $params['budgetId'],
+            'availToken' => $params['availToken'],
+            'productType' => isset($params['productType']) ? $params['productType'] : 'PACKAGE',
+            'fromPage' => isset($params['fromPage']) ? $params['fromPage'] : 'SEARCHER',
+            'forceQuote' => true
+        );
+
+        // Adicionar myBpAccount se fornecido
+        if (isset($params['myBpAccount'])) {
+            $data['myBpAccount'] = $params['myBpAccount'];
+        }
+
+        $this->log('=== DELAYED QUOTE ===');
+        $this->log('Request: ' . json_encode($data));
+
+        $response = $this->make_request('booking/quote/delayedQuote', $data);
+
+        $this->log('Response: ' . json_encode($response));
+
+        return $response;
+    }
+
+    /**
+     * AJAX Handler para delayed quote
+     */
+    public function ajax_delayed_quote() {
+        check_ajax_referer('soltour_booking_nonce', 'nonce');
+
+        $this->log('=== AJAX DELAYED QUOTE ===');
+
+        $params = array(
+            'budgetId' => sanitize_text_field($_POST['budget_id']),
+            'availToken' => sanitize_text_field($_POST['avail_token']),
+            'productType' => isset($_POST['product_type']) ? sanitize_text_field($_POST['product_type']) : 'PACKAGE',
+            'fromPage' => isset($_POST['from_page']) ? sanitize_text_field($_POST['from_page']) : 'SEARCHER',
+            'forceQuote' => filter_var($_POST['force_quote'], FILTER_VALIDATE_BOOLEAN)
+        );
+
+        // Adicionar myBpAccount se fornecido
+        if (isset($_POST['my_bp_account'])) {
+            $params['myBpAccount'] = sanitize_text_field($_POST['my_bp_account']);
+        }
+
+        $response = $this->delayed_quote($params);
+
+        if ($response && !isset($response['error'])) {
+            wp_send_json_success($response);
+        } else {
+            $error_msg = isset($response['error']) ? $response['error'] : 'Erro ao buscar preços finais';
+            wp_send_json_error(array('message' => $error_msg));
+        }
+    }
+
+    /**
+     * POST /booking/quote/updateOptionalService
+     * Adiciona ou remove um serviço opcional (seguro, transfer, golf, etc)
+     *
+     * Atualiza o preço total e persiste no availToken.
+     */
+    public function update_optional_service($params) {
+        $data = array(
+            'availToken' => $params['availToken'],
+            'serviceId' => $params['serviceId'],
+            'addService' => $params['addService'],
+            'destinationCode' => $params['destinationCode']
+        );
+
+        // Adicionar passageiros se fornecido (para golf/extras)
+        if (isset($params['passengers'])) {
+            $data['passengers'] = $params['passengers'];
+        }
+
+        $this->log('=== UPDATE OPTIONAL SERVICE ===');
+        $this->log('Request: ' . json_encode($data));
+
+        $response = $this->make_request('booking/quote/updateOptionalService', $data);
+
+        $this->log('Response: ' . json_encode($response));
+
+        return $response;
+    }
+
+    /**
+     * AJAX Handler para update optional service
+     */
+    public function ajax_update_optional_service() {
+        check_ajax_referer('soltour_booking_nonce', 'nonce');
+
+        $this->log('=== AJAX UPDATE OPTIONAL SERVICE ===');
+
+        $service_data = json_decode(stripslashes($_POST['service_data']), true);
+
+        if (!$service_data) {
+            wp_send_json_error(array('message' => 'Dados inválidos'));
+            return;
+        }
+
+        $params = array(
+            'availToken' => sanitize_text_field($service_data['availToken']),
+            'serviceId' => sanitize_text_field($service_data['serviceId']),
+            'addService' => filter_var($service_data['addService'], FILTER_VALIDATE_BOOLEAN),
+            'destinationCode' => sanitize_text_field($service_data['destinationCode'])
+        );
+
+        if (isset($service_data['passengers'])) {
+            $params['passengers'] = $service_data['passengers'];
+        }
+
+        $response = $this->update_optional_service($params);
+
+        if ($response && !isset($response['error'])) {
+            wp_send_json_success($response);
+        } else {
+            $error_msg = isset($response['error']) ? $response['error'] : 'Erro ao atualizar serviço';
+            wp_send_json_error(array('message' => $error_msg));
+        }
+    }
 }
