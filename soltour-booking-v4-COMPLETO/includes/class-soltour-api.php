@@ -875,4 +875,237 @@ class Soltour_API {
 
         wp_send_json_success($response);
     }
+
+    // ========================================
+    // 7) FUNCIONALIDADES DE QUOTE AVANÇADAS
+    // ========================================
+
+    /**
+     * POST /booking/quote/delayedQuote
+     * Busca preços finais em background (DelayedQuote)
+     *
+     * Similar ao DelayedAvailability, mas para a página de quote.
+     * Permite carregar a página rapidamente e buscar preços reais depois.
+     */
+    public function delayed_quote($params) {
+        $data = array(
+            'budgetId' => $params['budgetId'],
+            'availToken' => $params['availToken'],
+            'productType' => isset($params['productType']) ? $params['productType'] : 'PACKAGE',
+            'fromPage' => isset($params['fromPage']) ? $params['fromPage'] : 'SEARCHER',
+            'forceQuote' => true
+        );
+
+        // Adicionar myBpAccount se fornecido
+        if (isset($params['myBpAccount'])) {
+            $data['myBpAccount'] = $params['myBpAccount'];
+        }
+
+        $this->log('=== DELAYED QUOTE ===');
+        $this->log('Request: ' . json_encode($data));
+
+        $response = $this->make_request('booking/quote/delayedQuote', $data);
+
+        $this->log('Response: ' . json_encode($response));
+
+        return $response;
+    }
+
+    /**
+     * AJAX Handler para delayed quote
+     */
+    public function ajax_delayed_quote() {
+        check_ajax_referer('soltour_booking_nonce', 'nonce');
+
+        $this->log('=== AJAX DELAYED QUOTE ===');
+
+        $params = array(
+            'budgetId' => sanitize_text_field($_POST['budget_id']),
+            'availToken' => sanitize_text_field($_POST['avail_token']),
+            'productType' => isset($_POST['product_type']) ? sanitize_text_field($_POST['product_type']) : 'PACKAGE',
+            'fromPage' => isset($_POST['from_page']) ? sanitize_text_field($_POST['from_page']) : 'SEARCHER',
+            'forceQuote' => filter_var($_POST['force_quote'], FILTER_VALIDATE_BOOLEAN)
+        );
+
+        // Adicionar myBpAccount se fornecido
+        if (isset($_POST['my_bp_account'])) {
+            $params['myBpAccount'] = sanitize_text_field($_POST['my_bp_account']);
+        }
+
+        $response = $this->delayed_quote($params);
+
+        if ($response && !isset($response['error'])) {
+            wp_send_json_success($response);
+        } else {
+            $error_msg = isset($response['error']) ? $response['error'] : 'Erro ao buscar preços finais';
+            wp_send_json_error(array('message' => $error_msg));
+        }
+    }
+
+    /**
+     * POST /booking/quote/updateOptionalService
+     * Adiciona ou remove um serviço opcional (seguro, transfer, golf, etc)
+     *
+     * Atualiza o preço total e persiste no availToken.
+     */
+    public function update_optional_service($params) {
+        $data = array(
+            'availToken' => $params['availToken'],
+            'serviceId' => $params['serviceId'],
+            'addService' => $params['addService'],
+            'destinationCode' => $params['destinationCode']
+        );
+
+        // Adicionar passageiros se fornecido (para golf/extras)
+        if (isset($params['passengers'])) {
+            $data['passengers'] = $params['passengers'];
+        }
+
+        $this->log('=== UPDATE OPTIONAL SERVICE ===');
+        $this->log('Request: ' . json_encode($data));
+
+        $response = $this->make_request('booking/quote/updateOptionalService', $data);
+
+        $this->log('Response: ' . json_encode($response));
+
+        return $response;
+    }
+
+    /**
+     * AJAX Handler para update optional service
+     */
+    public function ajax_update_optional_service() {
+        check_ajax_referer('soltour_booking_nonce', 'nonce');
+
+        $this->log('=== AJAX UPDATE OPTIONAL SERVICE ===');
+
+        $service_data = json_decode(stripslashes($_POST['service_data']), true);
+
+        if (!$service_data) {
+            wp_send_json_error(array('message' => 'Dados inválidos'));
+            return;
+        }
+
+        $params = array(
+            'availToken' => sanitize_text_field($service_data['availToken']),
+            'serviceId' => sanitize_text_field($service_data['serviceId']),
+            'addService' => filter_var($service_data['addService'], FILTER_VALIDATE_BOOLEAN),
+            'destinationCode' => sanitize_text_field($service_data['destinationCode'])
+        );
+
+        if (isset($service_data['passengers'])) {
+            $params['passengers'] = $service_data['passengers'];
+        }
+
+        $response = $this->update_optional_service($params);
+
+        if ($response && !isset($response['error'])) {
+            wp_send_json_success($response);
+        } else {
+            $error_msg = isset($response['error']) ? $response['error'] : 'Erro ao atualizar serviço';
+            wp_send_json_error(array('message' => $error_msg));
+        }
+    }
+
+    // ========================================
+    // 8) VALIDAÇÕES AVANÇADAS
+    // ========================================
+
+    /**
+     * AJAX Handler para validar expediente
+     * Validação em tempo real (com debouncing no cliente)
+     */
+    public function ajax_validate_expedient() {
+        check_ajax_referer('soltour_booking_nonce', 'nonce');
+
+        $expedient = sanitize_text_field($_POST['expedient']);
+        $client_code = isset($_POST['client_code']) ? sanitize_text_field($_POST['client_code']) : '';
+        $branch_office_code = isset($_POST['branch_office_code']) ? sanitize_text_field($_POST['branch_office_code']) : '';
+
+        $this->log('=== VALIDATE EXPEDIENT ===');
+        $this->log('Expedient: ' . $expedient);
+
+        // Validação básica
+        if (empty($expedient)) {
+            wp_send_json_error(array(
+                'valid' => false,
+                'message' => 'Expediente não pode estar vazio'
+            ));
+            return;
+        }
+
+        // Validação de formato: mínimo 3 caracteres, alfanumérico
+        if (strlen($expedient) < 3 || !preg_match('/^[A-Za-z0-9-]+$/', $expedient)) {
+            wp_send_json_success(array(
+                'valid' => false,
+                'message' => 'Formato de expediente inválido'
+            ));
+            return;
+        }
+
+        // Se passar nas validações básicas
+        wp_send_json_success(array(
+            'valid' => true,
+            'message' => 'Expediente válido'
+        ));
+    }
+
+    /**
+     * AJAX Handler para validar passageiros (nomes duplicados)
+     */
+    public function ajax_validate_passengers() {
+        check_ajax_referer('soltour_booking_nonce', 'nonce');
+
+        $this->log('=== VALIDATE PASSENGERS ===');
+
+        $passenger_data = json_decode(stripslashes($_POST['passenger_data']), true);
+
+        if (!$passenger_data) {
+            wp_send_json_error(array('message' => 'Dados inválidos'));
+            return;
+        }
+
+        // Extrair nomes dos passageiros
+        $names = array();
+
+        if (isset($passenger_data['rooms']) && is_array($passenger_data['rooms'])) {
+            foreach ($passenger_data['rooms'] as $room) {
+                if (isset($room['passengers']) && is_array($room['passengers'])) {
+                    foreach ($room['passengers'] as $passenger) {
+                        if (isset($passenger['firstName']) && isset($passenger['lastName1'])) {
+                            $fullName = strtolower(trim($passenger['firstName'] . ' ' . $passenger['lastName1']));
+                            $names[] = $fullName;
+                        }
+                    }
+                }
+            }
+        }
+
+        // Verificar duplicatas
+        $duplicates = array();
+        $name_count = array_count_values($names);
+
+        foreach ($name_count as $name => $count) {
+            if ($count > 1) {
+                $duplicates[] = $name;
+            }
+        }
+
+        if (count($duplicates) > 0) {
+            // Encontrados nomes duplicados
+            $duplicate_list = implode(', ', array_map('ucwords', $duplicates));
+
+            wp_send_json_success(array(
+                'duplicates' => true,
+                'names' => $duplicates,
+                'message' => 'Foram encontrados passageiros com nomes duplicados: ' . $duplicate_list . '. Deseja continuar?'
+            ));
+        } else {
+            // Nenhuma duplicata
+            wp_send_json_success(array(
+                'duplicates' => false,
+                'message' => 'Validação concluída'
+            ));
+        }
+    }
 }
