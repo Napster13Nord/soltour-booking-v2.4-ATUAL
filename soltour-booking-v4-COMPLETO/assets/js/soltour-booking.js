@@ -492,8 +492,8 @@
             }
         });
 
-        // Usar o preço mínimo real (sem arredondamentos ou ajustes)
-        // Isso garante que o filtro sempre mostre pelo menos o pacote mais barato
+        // Adicionar 10 euros ao mínimo para garantir que sempre apareça pelo menos um resultado
+        minPrice = minPrice + 10;
 
         // Arredondar máximo para cima (múltiplos de 100)
         maxPrice = Math.ceil(maxPrice / 100) * 100;
