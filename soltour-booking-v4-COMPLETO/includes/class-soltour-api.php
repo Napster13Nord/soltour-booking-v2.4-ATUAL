@@ -178,8 +178,15 @@ class Soltour_API {
             }
         }
 
+        // Parâmetros críticos vindos do frontend
+        $product_type = isset($params['productType']) ? $params['productType'] : 'PACKAGE';
+        $only_hotel = isset($params['onlyHotel']) ? $params['onlyHotel'] : 'N';
+        $force_avail = isset($params['forceAvail']) ? filter_var($params['forceAvail'], FILTER_VALIDATE_BOOLEAN) : false;
+
         $data = array(
-            'productType' => 'PACKAGE',
+            'productType' => $product_type,
+            'onlyHotel' => $only_hotel,
+            'forceAvail' => $force_avail,
             'criteria' => array(
                 'order' => array(
                     'type' => isset($params['orderType']) ? $params['orderType'] : 'PRICE',
@@ -644,6 +651,12 @@ class Soltour_API {
             'startDate' => sanitize_text_field($_POST['start_date']),
             'numNights' => intval($_POST['num_nights']),
             'rooms' => json_decode(stripslashes($_POST['rooms']), true),
+
+            // Parâmetros críticos para API processar corretamente
+            'productType' => isset($_POST['product_type']) ? sanitize_text_field($_POST['product_type']) : 'PACKAGE',
+            'onlyHotel' => isset($_POST['only_hotel']) ? sanitize_text_field($_POST['only_hotel']) : 'N',
+            'forceAvail' => isset($_POST['force_avail']) ? filter_var($_POST['force_avail'], FILTER_VALIDATE_BOOLEAN) : false,
+
             // Paginação
             'firstItem' => isset($_POST['first_item']) ? intval($_POST['first_item']) : 0,
             'itemCount' => isset($_POST['item_count']) ? intval($_POST['item_count']) : 10
