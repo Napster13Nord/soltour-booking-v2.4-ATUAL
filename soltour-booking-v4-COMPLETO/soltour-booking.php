@@ -86,6 +86,7 @@ class Soltour_Booking {
             'soltour_paginate_packages',
             'soltour_get_package_details',
             'soltour_get_alternatives',
+            'soltour_check_allowed_selling', // Verificar se venda está permitida
             'soltour_quote_package',
             'soltour_generate_expedient',
             'soltour_book_package',
@@ -133,6 +134,15 @@ class Soltour_Booking {
         wp_enqueue_script(
             'soltour-delayed-availability',
             SOLTOUR_PLUGIN_URL . 'assets/js/modules/delayed-availability.js',
+            array('jquery', 'soltour-booking-script'),
+            SOLTOUR_VERSION,
+            true
+        );
+
+        // Módulo Toast Notifications
+        wp_enqueue_script(
+            'soltour-toast-notifications',
+            SOLTOUR_PLUGIN_URL . 'assets/js/modules/toast-notifications.js',
             array('jquery', 'soltour-booking-script'),
             SOLTOUR_VERSION,
             true

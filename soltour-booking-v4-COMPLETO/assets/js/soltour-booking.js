@@ -446,6 +446,11 @@
 
         logSuccess(`${filteredHotels.length} hotéis após aplicar filtros`);
 
+        // Atualizar state tracking (mantém estado na URL)
+        if (SoltourApp.availToken) {
+            updateURLState(SoltourApp.availToken);
+        }
+
         // Se não houver resultados após filtros, mostrar mensagem inline
         if (filteredHotels.length === 0) {
             const $list = $('#soltour-results-list');
@@ -718,6 +723,11 @@
 
                 // Esconder modal em caso de erro
                 hideLoadingModal();
+
+                // Mostrar mensagem de erro com toast
+                if (window.SoltourApp.Toast) {
+                    window.SoltourApp.Toast.error('Erro ao buscar pacotes. Por favor, tente novamente.', 5000);
+                }
 
                 // Mostrar mensagem de erro
                 alert('Ocorreu um erro ao buscar os pacotes. Por favor, tente novamente.');
@@ -1355,13 +1365,81 @@
     };
 
     window.SoltourApp.selectPackage = function(budgetId, hotelCode, providerCode) {
+        log('=== SELECT PACKAGE ===');
+        log(`Budget: ${budgetId}, Hotel: ${hotelCode}, Provider: ${providerCode}`);
+
+        // Verificar se venda está permitida ANTES de prosseguir
+        checkAllowedSellingBeforeSelect(budgetId, hotelCode, providerCode);
+    };
+
+    /**
+     * Verifica se venda está permitida antes de selecionar pacote
+     * Implementa validação do site oficial
+     */
+    function checkAllowedSellingBeforeSelect(budgetId, hotelCode, providerCode) {
+        log('🔒 Verificando se venda está permitida...');
+
+        showLoadingModal('Verificando disponibilidade...', 'Validando seu pacote');
+
+        $.ajax({
+            url: soltourData.ajaxurl,
+            type: 'POST',
+            data: {
+                action: 'soltour_check_allowed_selling',
+                nonce: soltourData.nonce
+            },
+            success: function(response) {
+                hideLoadingModal();
+
+                if (response.success && response.data && response.data.allowed) {
+                    log('✅ Venda permitida - prosseguindo...');
+
+                    // Permitir seleção do pacote
+                    proceedWithPackageSelection(budgetId, hotelCode, providerCode);
+
+                } else {
+                    // Venda não permitida
+                    const message = response.data && response.data.message
+                        ? response.data.message
+                        : 'Desculpe, este pacote não está disponível para venda no momento. Por favor, tente outro pacote ou entre em contato conosco.';
+
+                    logError('❌ Venda não permitida: ' + message);
+
+                    // Usar toast em vez de alert
+                    if (window.SoltourApp.Toast) {
+                        window.SoltourApp.Toast.error(message, 6000);
+                    } else {
+                        alert(message);
+                    }
+                }
+            },
+            error: function(xhr, status, error) {
+                hideLoadingModal();
+
+                logError('Erro ao verificar venda permitida:', error);
+
+                // Em caso de erro, permitir continuar (fail-safe)
+                // Pode mudar para fail-secure se preferir
+                log('⚠️ Erro na verificação - permitindo continuar (fail-safe)');
+                proceedWithPackageSelection(budgetId, hotelCode, providerCode);
+            }
+        });
+    }
+
+    /**
+     * Prossegue com seleção do pacote após validação
+     */
+    function proceedWithPackageSelection(budgetId, hotelCode, providerCode) {
+        log('📦 Salvando seleção e redirecionando...');
+
         sessionStorage.setItem('soltour_selected_package', JSON.stringify({
             budgetId: budgetId,
             hotelCode: hotelCode,
             providerCode: providerCode,
             availToken: SoltourApp.availToken
         }));
+
         window.location.href = `/pacote-detalhes/?budget=${budgetId}`;
-    };
+    }
 
 })(jQuery);

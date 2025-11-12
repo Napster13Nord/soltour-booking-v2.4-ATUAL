@@ -765,6 +765,36 @@ class Soltour_API {
         wp_send_json_success($response);
     }
 
+    /**
+     * AJAX: Verificar se venda está permitida
+     * Chamado ANTES de permitir quote/booking
+     */
+    public function ajax_check_allowed_selling() {
+        check_ajax_referer('soltour_booking_nonce', 'nonce');
+
+        $this->log('=== CHECK ALLOWED SELLING ===');
+
+        // Endpoint da API Soltour para verificar venda permitida
+        $response = $this->make_request('booking/availability/checkAllowedSelling', array(), 'GET');
+
+        $this->log('CheckAllowedSelling response: ' . json_encode($response));
+
+        // Verificar se response indica sucesso
+        if ($response && isset($response['allowed'])) {
+            wp_send_json_success(array(
+                'allowed' => $response['allowed'],
+                'message' => isset($response['message']) ? $response['message'] : ''
+            ));
+        } else {
+            // Se não houver resposta clara, assumir permitido (fail-safe)
+            // Pode ajustar para fail-secure se preferir
+            wp_send_json_success(array(
+                'allowed' => true,
+                'message' => 'Verificação de venda concluída'
+            ));
+        }
+    }
+
     public function ajax_quote_package() {
         check_ajax_referer('soltour_booking_nonce', 'nonce');
 
