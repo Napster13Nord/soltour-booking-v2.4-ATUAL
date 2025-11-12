@@ -297,8 +297,18 @@
         if ($('#soltour-results-list').length > 0) {
             searchPackagesAjax();
         } else {
+            // Mostrar modal ANTES de redirecionar para a página de resultados
+            showLoadingModal(
+                'Buscando os melhores pacotes...',
+                'Encontraremos as melhores opções para sua viagem'
+            );
+
             sessionStorage.setItem('soltour_search_params', JSON.stringify(SoltourApp.searchParams));
-            window.location.href = '/pacotes-resultados/';
+
+            // Pequeno delay para garantir que o modal seja visível antes do redirect
+            setTimeout(function() {
+                window.location.href = '/pacotes-resultados/';
+            }, 100);
         }
     }
 
@@ -490,12 +500,8 @@
             }
         });
 
-        // Guardar o preço mínimo real antes de qualquer arredondamento
-        const realMinPrice = minPrice;
-
-        // Adicionar 10 euros ao preço mínimo real
-        // Isso garante que quando o slider estiver no mínimo, sempre apareça pelo menos um resultado
-        minPrice = realMinPrice + 10;
+        // Usar o preço mínimo real (sem arredondamentos ou ajustes)
+        // Isso garante que o filtro sempre mostre pelo menos o pacote mais barato
 
         // Arredondar máximo para cima (múltiplos de 100)
         maxPrice = Math.ceil(maxPrice / 100) * 100;
@@ -510,7 +516,7 @@
             SoltourApp.filters.maxPrice = maxPrice;
             SoltourApp.filters.absoluteMaxPrice = maxPrice; // Guardar o máximo absoluto
             $('#soltour-max-price-value').text('€ ' + maxPrice.toLocaleString('pt-PT'));
-            log(`Filtro de preço configurado: € ${minPrice} - € ${maxPrice} (preço mínimo real: € ${realMinPrice})`);
+            log(`Filtro de preço configurado: € ${minPrice} - € ${maxPrice}`);
         }
     }
 

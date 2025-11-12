@@ -110,6 +110,41 @@ class Soltour_Shortcodes {
                     <?php _e('A procurar...', 'soltour-booking'); ?>
                 </div>
             </form>
+
+            <!-- Modal de Carregamento Moderno (mesmo modal da página de resultados) -->
+            <div class="soltour-loading-modal-overlay" id="soltour-loading-modal">
+                <div class="soltour-loading-modal">
+                    <!-- Logo Beauty Travel -->
+                    <img src="<?php echo SOLTOUR_PLUGIN_URL; ?>assets/images/branding/beauty-travel-logo.webp"
+                         alt="Beauty Travel"
+                         class="loading-logo" />
+
+                    <!-- Animação Lottie -->
+                    <lottie-player
+                        class="loading-animation"
+                        src="<?php echo SOLTOUR_PLUGIN_URL; ?>assets/images/loading-animation.json"
+                        background="transparent"
+                        speed="1"
+                        loop
+                        autoplay>
+                    </lottie-player>
+
+                    <!-- Título (será preenchido dinamicamente) -->
+                    <h2 class="loading-title" id="loading-modal-title">
+                        <?php _e('Buscando pacotes...', 'soltour-booking'); ?>
+                    </h2>
+
+                    <!-- Mensagem -->
+                    <p class="loading-message" id="loading-modal-message">
+                        <?php _e('Encontraremos os melhores resultados para sua busca', 'soltour-booking'); ?>
+                    </p>
+
+                    <!-- Barra de Progresso -->
+                    <div class="loading-progress-bar">
+                        <div class="loading-progress-fill"></div>
+                    </div>
+                </div>
+            </div>
         </div>
         <?php
         return ob_get_clean();
