@@ -340,11 +340,11 @@
         $('#soltour-max-price').on('input', function() {
             const value = parseInt($(this).val());
             SoltourApp.filters.maxPrice = value;
-            $('#soltour-max-price-value').text('€ ' + value.toLocaleString('pt-PT'));
+            $('#soltour-max-price-value').text(value.toLocaleString('pt-PT') + '€');
         });
 
         $('#soltour-max-price').on('change', function() {
-            log('Preço máximo alterado para: € ' + SoltourApp.filters.maxPrice);
+            log('Preço máximo alterado para: ' + SoltourApp.filters.maxPrice.toLocaleString('pt-PT') + '€');
             applyFilters();
         });
 
@@ -405,15 +405,15 @@
 
         log(`Total de hotéis antes dos filtros: ${hotels.length}`);
 
-        // FILTRO 1: Preço - filtrar entre minPrice e maxPrice
+        // FILTRO 1: Preço máximo
         // Só aplicar filtro se o usuário ajustou o slider (maxPrice diferente do absoluto)
         if (SoltourApp.filters.maxPrice < SoltourApp.filters.absoluteMaxPrice) {
             hotels = hotels.filter(pkg => {
                 const price = getHotelPrice(pkg);
-                // Incluir pacotes com preço >= minPrice E <= maxPrice
-                return price >= SoltourApp.filters.minPrice && price <= SoltourApp.filters.maxPrice;
+                // Incluir apenas pacotes com preço <= maxPrice selecionado
+                return price <= SoltourApp.filters.maxPrice;
             });
-            log(`Após filtro de preço (€ ${SoltourApp.filters.minPrice} - € ${SoltourApp.filters.maxPrice}): ${hotels.length} hotéis`);
+            log(`Após filtro de preço (≤ ${SoltourApp.filters.maxPrice.toLocaleString('pt-PT')}€): ${hotels.length} hotéis`);
         }
 
         // FILTRO 2: Estrelas selecionadas
@@ -492,8 +492,9 @@
             }
         });
 
-        // Adicionar 10 euros ao mínimo para garantir que sempre apareça pelo menos um resultado
-        minPrice = minPrice + 10;
+        // O slider controla o PREÇO MÁXIMO que o usuário quer pagar
+        // Quando arrastar totalmente para ESQUERDA, deve mostrar pelo menos o pacote mais barato
+        // Portanto: min do slider = menor preço real dos pacotes
 
         // Arredondar máximo para cima (múltiplos de 100)
         maxPrice = Math.ceil(maxPrice / 100) * 100;
@@ -501,14 +502,14 @@
         // Configurar o slider
         const $slider = $('#soltour-max-price');
         if ($slider.length) {
-            $slider.attr('min', minPrice);
+            $slider.attr('min', minPrice);  // Mínimo = menor preço real
             $slider.attr('max', maxPrice);
             $slider.val(maxPrice);
-            SoltourApp.filters.minPrice = minPrice;
+            SoltourApp.filters.minPrice = minPrice;  // Guardar apenas para referência
             SoltourApp.filters.maxPrice = maxPrice;
             SoltourApp.filters.absoluteMaxPrice = maxPrice; // Guardar o máximo absoluto
-            $('#soltour-max-price-value').text('€ ' + maxPrice.toLocaleString('pt-PT'));
-            log(`Filtro de preço configurado: € ${minPrice} - € ${maxPrice}`);
+            $('#soltour-max-price-value').text(maxPrice.toLocaleString('pt-PT') + '€');
+            log(`Filtro de preço configurado: ${minPrice.toLocaleString('pt-PT')}€ - ${maxPrice.toLocaleString('pt-PT')}€`);
         }
     }
 
