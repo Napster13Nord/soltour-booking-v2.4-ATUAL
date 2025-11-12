@@ -259,6 +259,7 @@
     display: grid;
     grid-template-columns: 250px 1fr;
     gap: 30px;
+    align-items: start;
 }
 
 .soltour-filters-sidebar {
@@ -886,6 +887,7 @@
 @media (max-width: 992px) {
     .soltour-results-wrapper {
         grid-template-columns: 1fr;
+        align-items: start;
     }
 
     .soltour-filters-sidebar {
