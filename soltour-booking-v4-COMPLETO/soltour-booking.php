@@ -90,6 +90,8 @@ class Soltour_Booking {
             'soltour_quote_package',
             'soltour_delayed_quote', // NOVO - Delayed quote com preços finais
             'soltour_update_optional_service', // NOVO - Adicionar/remover serviços opcionais
+            'soltour_validate_expedient', // NOVO - Validar expediente em tempo real
+            'soltour_validate_passengers', // NOVO - Validar nomes duplicados
             'soltour_generate_expedient',
             'soltour_book_package',
             'soltour_get_booking_details',
@@ -154,6 +156,33 @@ class Soltour_Booking {
         wp_enqueue_script(
             'soltour-delayed-quote',
             SOLTOUR_PLUGIN_URL . 'assets/js/modules/delayed-quote.js',
+            array('jquery', 'soltour-booking-script', 'soltour-toast-notifications'),
+            SOLTOUR_VERSION,
+            true
+        );
+
+        // Módulo Quote Form (com CheckAllowedSelling no submit)
+        wp_enqueue_script(
+            'soltour-quote-form',
+            SOLTOUR_PLUGIN_URL . 'assets/js/modules/quote-form.js',
+            array('jquery', 'soltour-booking-script', 'soltour-toast-notifications'),
+            SOLTOUR_VERSION,
+            true
+        );
+
+        // Módulo Optional Services (seguros, transfers, golf, equipagem)
+        wp_enqueue_script(
+            'soltour-optional-services',
+            SOLTOUR_PLUGIN_URL . 'assets/js/modules/optional-services.js',
+            array('jquery', 'soltour-booking-script', 'soltour-toast-notifications'),
+            SOLTOUR_VERSION,
+            true
+        );
+
+        // Módulo Quote Validations (idade, email, expediente, nomes duplicados)
+        wp_enqueue_script(
+            'soltour-quote-validations',
+            SOLTOUR_PLUGIN_URL . 'assets/js/modules/quote-validations.js',
             array('jquery', 'soltour-booking-script', 'soltour-toast-notifications'),
             SOLTOUR_VERSION,
             true

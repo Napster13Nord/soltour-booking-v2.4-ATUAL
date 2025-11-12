@@ -1006,4 +1006,106 @@ class Soltour_API {
             wp_send_json_error(array('message' => $error_msg));
         }
     }
+
+    // ========================================
+    // 8) VALIDAÇÕES AVANÇADAS
+    // ========================================
+
+    /**
+     * AJAX Handler para validar expediente
+     * Validação em tempo real (com debouncing no cliente)
+     */
+    public function ajax_validate_expedient() {
+        check_ajax_referer('soltour_booking_nonce', 'nonce');
+
+        $expedient = sanitize_text_field($_POST['expedient']);
+        $client_code = isset($_POST['client_code']) ? sanitize_text_field($_POST['client_code']) : '';
+        $branch_office_code = isset($_POST['branch_office_code']) ? sanitize_text_field($_POST['branch_office_code']) : '';
+
+        $this->log('=== VALIDATE EXPEDIENT ===');
+        $this->log('Expedient: ' . $expedient);
+
+        // Validação básica
+        if (empty($expedient)) {
+            wp_send_json_error(array(
+                'valid' => false,
+                'message' => 'Expediente não pode estar vazio'
+            ));
+            return;
+        }
+
+        // Validação de formato: mínimo 3 caracteres, alfanumérico
+        if (strlen($expedient) < 3 || !preg_match('/^[A-Za-z0-9-]+$/', $expedient)) {
+            wp_send_json_success(array(
+                'valid' => false,
+                'message' => 'Formato de expediente inválido'
+            ));
+            return;
+        }
+
+        // Se passar nas validações básicas
+        wp_send_json_success(array(
+            'valid' => true,
+            'message' => 'Expediente válido'
+        ));
+    }
+
+    /**
+     * AJAX Handler para validar passageiros (nomes duplicados)
+     */
+    public function ajax_validate_passengers() {
+        check_ajax_referer('soltour_booking_nonce', 'nonce');
+
+        $this->log('=== VALIDATE PASSENGERS ===');
+
+        $passenger_data = json_decode(stripslashes($_POST['passenger_data']), true);
+
+        if (!$passenger_data) {
+            wp_send_json_error(array('message' => 'Dados inválidos'));
+            return;
+        }
+
+        // Extrair nomes dos passageiros
+        $names = array();
+
+        if (isset($passenger_data['rooms']) && is_array($passenger_data['rooms'])) {
+            foreach ($passenger_data['rooms'] as $room) {
+                if (isset($room['passengers']) && is_array($room['passengers'])) {
+                    foreach ($room['passengers'] as $passenger) {
+                        if (isset($passenger['firstName']) && isset($passenger['lastName1'])) {
+                            $fullName = strtolower(trim($passenger['firstName'] . ' ' . $passenger['lastName1']));
+                            $names[] = $fullName;
+                        }
+                    }
+                }
+            }
+        }
+
+        // Verificar duplicatas
+        $duplicates = array();
+        $name_count = array_count_values($names);
+
+        foreach ($name_count as $name => $count) {
+            if ($count > 1) {
+                $duplicates[] = $name;
+            }
+        }
+
+        if (count($duplicates) > 0) {
+            // Encontrados nomes duplicados
+            $duplicate_list = implode(', ', array_map('ucwords', $duplicates));
+
+            wp_send_json_success(array(
+                'duplicates' => true,
+                'names' => $duplicates,
+                'message' => 'Foram encontrados passageiros com nomes duplicados: ' . $duplicate_list . '. Deseja continuar?'
+            ));
+        } else {
+            // Nenhuma duplicata
+            wp_send_json_success(array(
+                'duplicates' => false,
+                'message' => 'Validação concluída'
+            ));
+        }
+    }
 }
