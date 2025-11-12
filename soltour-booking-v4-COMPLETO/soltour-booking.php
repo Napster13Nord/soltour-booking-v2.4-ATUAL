@@ -88,10 +88,12 @@ class Soltour_Booking {
             'soltour_get_alternatives',
             'soltour_check_allowed_selling', // Verificar se venda está permitida
             'soltour_quote_package',
-            'soltour_delayed_quote', // NOVO - Delayed quote com preços finais
-            'soltour_update_optional_service', // NOVO - Adicionar/remover serviços opcionais
-            'soltour_validate_expedient', // NOVO - Validar expediente em tempo real
-            'soltour_validate_passengers', // NOVO - Validar nomes duplicados
+            'soltour_delayed_quote', // NOVO Sprint 1 - Delayed quote com preços finais
+            'soltour_update_optional_service', // NOVO Sprint 1 - Adicionar/remover serviços opcionais
+            'soltour_validate_expedient', // NOVO Sprint 1 - Validar expediente em tempo real
+            'soltour_validate_passengers', // NOVO Sprint 1 - Validar nomes duplicados
+            'soltour_print_quote', // NOVO Sprint 2 - Imprimir cotação
+            'soltour_send_quote_email', // NOVO Sprint 2 - Enviar cotação por email
             'soltour_generate_expedient',
             'soltour_book_package',
             'soltour_get_booking_details',
@@ -183,6 +185,24 @@ class Soltour_Booking {
         wp_enqueue_script(
             'soltour-quote-validations',
             SOLTOUR_PLUGIN_URL . 'assets/js/modules/quote-validations.js',
+            array('jquery', 'soltour-booking-script', 'soltour-toast-notifications'),
+            SOLTOUR_VERSION,
+            true
+        );
+
+        // Módulo Breakdown (desglose dinâmico bruto/líquido)
+        wp_enqueue_script(
+            'soltour-breakdown',
+            SOLTOUR_PLUGIN_URL . 'assets/js/modules/breakdown.js',
+            array('jquery', 'soltour-booking-script', 'soltour-toast-notifications'),
+            SOLTOUR_VERSION,
+            true
+        );
+
+        // Módulo Navigation (go back com cache)
+        wp_enqueue_script(
+            'soltour-navigation',
+            SOLTOUR_PLUGIN_URL . 'assets/js/modules/navigation.js',
             array('jquery', 'soltour-booking-script', 'soltour-toast-notifications'),
             SOLTOUR_VERSION,
             true

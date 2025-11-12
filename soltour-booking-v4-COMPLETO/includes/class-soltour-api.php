@@ -1108,4 +1108,105 @@ class Soltour_API {
             ));
         }
     }
+
+    // ========================================
+    // 9) PRINT E EMAIL DE COTAÇÃO
+    // ========================================
+
+    /**
+     * AJAX Handler para imprimir cotação
+     */
+    public function ajax_print_quote() {
+        check_ajax_referer('soltour_booking_nonce', 'nonce');
+
+        $this->log('=== PRINT QUOTE ===');
+
+        $quote_data = json_decode(stripslashes($_POST['quote_data']), true);
+
+        if (!$quote_data) {
+            wp_send_json_error(array('message' => 'Dados inválidos'));
+            return;
+        }
+
+        // Por enquanto, retornar sucesso simulado
+        // Em produção, aqui você geraria o PDF via API da Soltour
+        $this->log('Quote data para impressão: ' . json_encode($quote_data));
+
+        // Simular geração de PDF
+        wp_send_json_success(array(
+            'pdf_url' => '#', // URL do PDF gerado
+            'message' => 'PDF gerado com sucesso'
+        ));
+
+        // TODO: Implementar integração real com API de impressão da Soltour
+        // $response = $this->make_request('booking/quote/print', $quote_data);
+        // if ($response && isset($response['pdfUrl'])) {
+        //     wp_send_json_success(array('pdf_url' => $response['pdfUrl']));
+        // }
+    }
+
+    /**
+     * AJAX Handler para enviar cotação por email
+     */
+    public function ajax_send_quote_email() {
+        check_ajax_referer('soltour_booking_nonce', 'nonce');
+
+        $this->log('=== SEND QUOTE EMAIL ===');
+
+        $email_data = json_decode(stripslashes($_POST['email_data']), true);
+
+        if (!$email_data) {
+            wp_send_json_error(array('message' => 'Dados inválidos'));
+            return;
+        }
+
+        // Validar email
+        if (!isset($email_data['email']) || !is_email($email_data['email'])) {
+            wp_send_json_error(array('message' => 'Email inválido'));
+            return;
+        }
+
+        $to_email = sanitize_email($email_data['email']);
+
+        $this->log('Enviando cotação para: ' . $to_email);
+
+        // Por enquanto, usar wp_mail como fallback
+        // Em produção, enviar via API da Soltour
+
+        $subject = 'Sua Cotação Soltour';
+        $message = $this->build_quote_email_html($email_data);
+        $headers = array('Content-Type: text/html; charset=UTF-8');
+
+        $sent = wp_mail($to_email, $subject, $message, $headers);
+
+        if ($sent) {
+            $this->log('Email enviado com sucesso');
+            wp_send_json_success(array('message' => 'Email enviado com sucesso'));
+        } else {
+            $this->log('Erro ao enviar email');
+            wp_send_json_error(array('message' => 'Erro ao enviar email'));
+        }
+
+        // TODO: Implementar integração real com API de email da Soltour
+        // $response = $this->make_request('booking/quote/send', $email_data);
+    }
+
+    /**
+     * Constrói HTML do email de cotação
+     */
+    private function build_quote_email_html($data) {
+        $html = '<html><body>';
+        $html .= '<h2>Sua Cotação Soltour</h2>';
+        $html .= '<p>Obrigado pelo seu interesse!</p>';
+
+        // Adicionar dados da cotação
+        if (isset($data['totalAmount'])) {
+            $html .= '<p><strong>Valor Total:</strong> €' . number_format($data['totalAmount'], 2, ',', '.') . '</p>';
+        }
+
+        $html .= '<p>Para mais informações, entre em contato conosco.</p>';
+        $html .= '</body></html>';
+
+        return $html;
+    }
 }
