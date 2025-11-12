@@ -39,6 +39,7 @@
         expedient: null,
         searchParams: {},
         selectedPackage: null,
+        state: 0, // Contador de estado para tracking no URL
         currentMonth: new Date().getMonth() + 1,
         currentYear: new Date().getFullYear(),
         currentPage: 1,
@@ -134,6 +135,53 @@
         if (message) {
             $('#loading-modal-message').text(message);
         }
+    }
+
+    // ========================================
+    // STATE TRACKING E URL MANAGEMENT
+    // ========================================
+
+    /**
+     * Atualiza a URL com availToken e state tracking
+     * Permite manter estado após reload da página
+     * @param {string} availToken - Token de disponibilidade da API
+     */
+    function updateURLState(availToken) {
+        if (!availToken) {
+            logError('updateURLState chamado sem availToken');
+            return;
+        }
+
+        // Incrementar contador de estado
+        SoltourApp.state++;
+
+        // Atualizar URL sem reload
+        const newUrl = new URL(window.location);
+        newUrl.searchParams.set('availToken', availToken);
+        newUrl.searchParams.set('state', SoltourApp.state);
+
+        window.history.replaceState({}, '', newUrl);
+
+        log(`📍 URL atualizado: state=${SoltourApp.state}, availToken=${availToken.substring(0, 15)}...`);
+    }
+
+    /**
+     * Restaura estado da URL ao carregar página
+     * Usado quando usuário dá reload ou volta para resultados
+     */
+    function restoreStateFromURL() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const availToken = urlParams.get('availToken');
+        const state = parseInt(urlParams.get('state') || '0');
+
+        if (availToken && state > 0) {
+            SoltourApp.availToken = availToken;
+            SoltourApp.state = state;
+            log(`🔄 Estado restaurado da URL: state=${state}, availToken=${availToken.substring(0, 15)}...`);
+            return true;
+        }
+
+        return false;
     }
 
     $(document).ready(function() {
@@ -282,6 +330,11 @@
         // Resetar para primeira página na nova busca
         SoltourApp.currentPage = 1;
 
+        // Determinar tipo de produto baseado se tem origem ou não
+        const hasOrigin = !!SoltourApp.searchParams.originCode;
+        const onlyHotel = hasOrigin ? "N" : "S";
+        const productType = onlyHotel === "S" ? "HOTEL_PRODUCT" : "PACKAGE";
+
         SoltourApp.searchParams = {
             action: 'soltour_search_packages',
             nonce: soltourData.nonce,
@@ -290,9 +343,22 @@
             start_date: startDate,
             num_nights: nights,
             rooms: JSON.stringify([{ passengers: passengers }]),
+
+            // Parâmetros críticos para API processar corretamente
+            only_hotel: onlyHotel,
+            product_type: productType,
+            force_avail: false, // Primeira busca sempre false (rápida)
+
             first_item: 0,
             item_count: SoltourApp.itemsPerPage
         };
+
+        log('Parâmetros de busca configurados:', {
+            onlyHotel: onlyHotel,
+            productType: productType,
+            forceAvail: false,
+            hasOrigin: hasOrigin
+        });
 
         if ($('#soltour-results-list').length > 0) {
             searchPackagesAjax();
@@ -603,6 +669,9 @@
                     SoltourApp.availToken = response.data.availToken;
                     SoltourApp.allBudgets = response.data.budgets || [];
                     SoltourApp.totalBudgets = response.data.totalCount || SoltourApp.allBudgets.length;
+
+                    // Atualizar URL com state tracking
+                    updateURLState(SoltourApp.availToken);
 
                     log(`Total de budgets na API: ${SoltourApp.totalBudgets}`);
                     log(`Budgets recebidos: ${SoltourApp.allBudgets.length}`);
@@ -1113,7 +1182,7 @@
 
         // Construir card
         const card = `
-            <div class="soltour-package-card">
+            <div class="soltour-package-card" data-budget-id="${budget.budgetId}">
                 <div class="package-image">
                     ${hotelImage ? 
                         `<img src="${hotelImage}" alt="${hotelName}" />` : 
