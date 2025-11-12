@@ -297,18 +297,8 @@
         if ($('#soltour-results-list').length > 0) {
             searchPackagesAjax();
         } else {
-            // Mostrar modal ANTES de redirecionar para a página de resultados
-            showLoadingModal(
-                'Buscando os melhores pacotes...',
-                'Encontraremos as melhores opções para sua viagem'
-            );
-
             sessionStorage.setItem('soltour_search_params', JSON.stringify(SoltourApp.searchParams));
-
-            // Pequeno delay para garantir que o modal seja visível antes do redirect
-            setTimeout(function() {
-                window.location.href = '/pacotes-resultados/';
-            }, 100);
+            window.location.href = '/pacotes-resultados/';
         }
     }
 
@@ -415,13 +405,15 @@
 
         log(`Total de hotéis antes dos filtros: ${hotels.length}`);
 
-        // FILTRO 1: Preço máximo (só aplicar se usuário moveu o slider)
+        // FILTRO 1: Preço - filtrar entre minPrice e maxPrice
+        // Só aplicar filtro se o usuário ajustou o slider (maxPrice diferente do absoluto)
         if (SoltourApp.filters.maxPrice < SoltourApp.filters.absoluteMaxPrice) {
             hotels = hotels.filter(pkg => {
                 const price = getHotelPrice(pkg);
-                return price <= SoltourApp.filters.maxPrice;
+                // Incluir pacotes com preço >= minPrice E <= maxPrice
+                return price >= SoltourApp.filters.minPrice && price <= SoltourApp.filters.maxPrice;
             });
-            log(`Após filtro de preço (≤ € ${SoltourApp.filters.maxPrice}): ${hotels.length} hotéis`);
+            log(`Após filtro de preço (€ ${SoltourApp.filters.minPrice} - € ${SoltourApp.filters.maxPrice}): ${hotels.length} hotéis`);
         }
 
         // FILTRO 2: Estrelas selecionadas
@@ -585,17 +577,7 @@
         log('=== BUSCA INICIADA ===');
         log('Params enviados:', SoltourApp.searchParams);
 
-        // Mostrar modal apenas se ainda não estiver visível
-        const isModalVisible = $('#soltour-loading-modal').hasClass('active');
-        if (!isModalVisible) {
-            showLoadingModal(
-                'Buscando os melhores pacotes...',
-                'Encontraremos as melhores opções para sua viagem'
-            );
-        }
-
-        // Não mostrar skeleton cards (deixar apenas modal)
-        // showSkeletonCards();
+        // O modal já foi mostrado em initResultsPage(), não mostrar novamente aqui
         $('#soltour-results-loading').hide();
 
         // Buscar TODOS os resultados de uma vez (100 itens)
