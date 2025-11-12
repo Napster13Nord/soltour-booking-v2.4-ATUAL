@@ -494,6 +494,9 @@
         minPrice = Math.floor(minPrice / 100) * 100;
         maxPrice = Math.ceil(maxPrice / 100) * 100;
 
+        // Adicionar 10 euros ao mínimo para garantir que sempre apareça pelo menos um resultado
+        minPrice = minPrice + 10;
+
         // Configurar o slider
         const $slider = $('#soltour-max-price');
         if ($slider.length) {
@@ -506,6 +509,36 @@
             $('#soltour-max-price-value').text('€ ' + maxPrice.toLocaleString('pt-PT'));
             log(`Filtro de preço configurado: € ${minPrice} - € ${maxPrice}`);
         }
+    }
+
+    function setupStarsFilter() {
+        // Encontrar quais estrelas existem nos resultados
+        const availableStars = new Set();
+
+        SoltourApp.originalHotels.forEach(pkg => {
+            const stars = getHotelStars(pkg);
+            if (stars > 0) {
+                availableStars.add(stars);
+            }
+        });
+
+        log(`Estrelas disponíveis nos resultados: ${Array.from(availableStars).sort((a, b) => b - a).join(', ')}`);
+
+        // Mostrar/esconder checkboxes baseado nas estrelas disponíveis
+        $('.soltour-star-filter input[type="checkbox"]').each(function() {
+            const starValue = parseInt($(this).val());
+            const $label = $(this).parent();
+
+            if (availableStars.has(starValue)) {
+                $label.show();
+            } else {
+                $label.hide();
+                // Desmarcar se estava marcado
+                $(this).prop('checked', false);
+            }
+        });
+
+        logSuccess(`Filtro de estrelas configurado - mostrando apenas: ${Array.from(availableStars).sort((a, b) => b - a).join(', ')}`);
     }
 
     function showSkeletonCards() {
@@ -723,6 +756,9 @@
                         // Configurar filtro de preço baseado nos dados reais
                         setupPriceFilter();
 
+                        // Configurar filtro de estrelas baseado nos dados reais
+                        setupStarsFilter();
+
                         // Resetar para página 1
                         SoltourApp.currentPage = 1;
 
@@ -745,6 +781,9 @@
 
                         // Configurar filtro de preço baseado nos dados reais
                         setupPriceFilter();
+
+                        // Configurar filtro de estrelas baseado nos dados reais
+                        setupStarsFilter();
 
                         // Resetar para página 1
                         SoltourApp.currentPage = 1;
