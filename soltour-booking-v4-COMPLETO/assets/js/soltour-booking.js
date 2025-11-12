@@ -490,12 +490,15 @@
             }
         });
 
-        // Arredondar mínimo para baixo e máximo para cima (múltiplos de 100)
-        minPrice = Math.floor(minPrice / 100) * 100;
-        maxPrice = Math.ceil(maxPrice / 100) * 100;
+        // Guardar o preço mínimo real antes de qualquer arredondamento
+        const realMinPrice = minPrice;
 
-        // Adicionar 10 euros ao mínimo para garantir que sempre apareça pelo menos um resultado
-        minPrice = minPrice + 10;
+        // Adicionar 10 euros ao preço mínimo real
+        // Isso garante que quando o slider estiver no mínimo, sempre apareça pelo menos um resultado
+        minPrice = realMinPrice + 10;
+
+        // Arredondar máximo para cima (múltiplos de 100)
+        maxPrice = Math.ceil(maxPrice / 100) * 100;
 
         // Configurar o slider
         const $slider = $('#soltour-max-price');
@@ -507,7 +510,7 @@
             SoltourApp.filters.maxPrice = maxPrice;
             SoltourApp.filters.absoluteMaxPrice = maxPrice; // Guardar o máximo absoluto
             $('#soltour-max-price-value').text('€ ' + maxPrice.toLocaleString('pt-PT'));
-            log(`Filtro de preço configurado: € ${minPrice} - € ${maxPrice}`);
+            log(`Filtro de preço configurado: € ${minPrice} - € ${maxPrice} (preço mínimo real: € ${realMinPrice})`);
         }
     }
 
