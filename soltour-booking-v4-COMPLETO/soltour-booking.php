@@ -120,11 +120,20 @@ class Soltour_Booking {
             true
         );
 
-        // JavaScript
+        // JavaScript principal
         wp_enqueue_script(
             'soltour-booking-script',
             SOLTOUR_PLUGIN_URL . 'assets/js/soltour-booking.js',
             array('jquery', 'lottie-player'),
+            SOLTOUR_VERSION,
+            true
+        );
+
+        // Módulo DelayedAvailability
+        wp_enqueue_script(
+            'soltour-delayed-availability',
+            SOLTOUR_PLUGIN_URL . 'assets/js/modules/delayed-availability.js',
+            array('jquery', 'soltour-booking-script'),
             SOLTOUR_VERSION,
             true
         );

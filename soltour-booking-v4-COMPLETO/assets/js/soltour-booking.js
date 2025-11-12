@@ -828,6 +828,23 @@
 
                         // Renderizar primeira página (paginação local)
                         renderLocalPage(1);
+
+                        // DELAYED AVAILABILITY: Iniciar carregamento tardio de preços
+                        // Se a busca inicial foi com forceAvail=false, ativar delayed loading
+                        if (SoltourApp.searchParams.force_avail === false) {
+                            log('🔄 Iniciando DelayedAvailability para atualizar preços...');
+
+                            // Dar um pequeno delay para UI renderizar completamente
+                            setTimeout(function() {
+                                if (window.SoltourApp.DelayedAvailability) {
+                                    window.SoltourApp.DelayedAvailability.init({
+                                        delayedAvailActive: true
+                                    });
+                                } else {
+                                    console.warn('⚠️  Módulo DelayedAvailability não carregado');
+                                }
+                            }, 500);
+                        }
                     }
                 },
                 error: function() {
@@ -854,6 +871,17 @@
 
                         // Renderizar primeira página (paginação local)
                         renderLocalPage(1);
+
+                        // DELAYED AVAILABILITY: Iniciar carregamento tardio de preços
+                        if (SoltourApp.searchParams.force_avail === false) {
+                            setTimeout(function() {
+                                if (window.SoltourApp.DelayedAvailability) {
+                                    window.SoltourApp.DelayedAvailability.init({
+                                        delayedAvailActive: true
+                                    });
+                                }
+                            }, 500);
+                        }
                     }
                 }
             });
