@@ -493,8 +493,11 @@
         });
 
         // O slider controla o PREÇO MÁXIMO que o usuário quer pagar
-        // Quando arrastar totalmente para ESQUERDA, deve mostrar pelo menos o pacote mais barato
-        // Portanto: min do slider = menor preço real dos pacotes
+        // Para garantir que sempre apareça pelo menos o pacote mais barato:
+        // 1. Arredondar o menor preço para CIMA (ex: 2970.54 → 2971)
+        // 2. Adicionar 10 euros (2971 + 10 = 2981)
+        // Assim quando slider no mínimo (2981), filtro price <= 2981 inclui pacote de 2971
+        minPrice = Math.ceil(minPrice) + 10;
 
         // Arredondar máximo para cima (múltiplos de 100)
         maxPrice = Math.ceil(maxPrice / 100) * 100;
@@ -502,10 +505,10 @@
         // Configurar o slider
         const $slider = $('#soltour-max-price');
         if ($slider.length) {
-            $slider.attr('min', minPrice);  // Mínimo = menor preço real
+            $slider.attr('min', minPrice);
             $slider.attr('max', maxPrice);
             $slider.val(maxPrice);
-            SoltourApp.filters.minPrice = minPrice;  // Guardar apenas para referência
+            SoltourApp.filters.minPrice = minPrice;
             SoltourApp.filters.maxPrice = maxPrice;
             SoltourApp.filters.absoluteMaxPrice = maxPrice; // Guardar o máximo absoluto
             $('#soltour-max-price-value').text(maxPrice.toLocaleString('pt-PT') + '€');
