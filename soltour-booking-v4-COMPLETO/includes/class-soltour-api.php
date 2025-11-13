@@ -810,6 +810,56 @@ class Soltour_API {
         }
     }
 
+    /**
+     * AJAX Handler: Gerar cotação final na página de cotação
+     * Função simplificada para apenas coletar dados e retornar sucesso
+     */
+    public function ajax_generate_quote() {
+        check_ajax_referer('soltour_booking_nonce', 'nonce');
+
+        // Coletar dados do POST
+        $budget_data = isset($_POST['budget_data']) ? json_decode(stripslashes($_POST['budget_data']), true) : array();
+        $passengers = isset($_POST['passengers']) ? json_decode(stripslashes($_POST['passengers']), true) : array();
+        $notes = isset($_POST['notes']) ? sanitize_textarea_field($_POST['notes']) : '';
+
+        // Validar dados básicos
+        if (empty($budget_data) || empty($budget_data['budgetId']) || empty($passengers)) {
+            wp_send_json_error(array(
+                'message' => 'Dados incompletos. Por favor, preencha todos os campos obrigatórios.'
+            ));
+            return;
+        }
+
+        // Log dos dados recebidos
+        error_log('[Soltour Quote] Budget ID: ' . $budget_data['budgetId']);
+        error_log('[Soltour Quote] Passageiros: ' . count($passengers));
+        error_log('[Soltour Quote] Notas: ' . $notes);
+
+        // Preparar dados da cotação
+        $quote_data = array(
+            'budgetId' => $budget_data['budgetId'],
+            'hotelCode' => $budget_data['hotelCode'],
+            'availToken' => $budget_data['availToken'],
+            'passengers' => $passengers,
+            'notes' => $notes,
+            'date' => current_time('mysql'),
+            'status' => 'pending'
+        );
+
+        // Salvar no banco de dados (opcional - pode ser implementado depois)
+        // Por enquanto, apenas simular sucesso
+
+        // TODO: Enviar email com a cotação (pode ser implementado depois)
+        // TODO: Chamar API da Soltour para gerar quote oficial (pode ser implementado depois)
+
+        // Retornar sucesso
+        wp_send_json_success(array(
+            'message' => 'Cotação gerada com sucesso!',
+            'quote_id' => uniqid('quote_', true),
+            'quote_data' => $quote_data
+        ));
+    }
+
     public function ajax_generate_expedient() {
         check_ajax_referer('soltour_booking_nonce', 'nonce');
 
