@@ -1252,156 +1252,219 @@
      * ✈️ Renderizar Box de Voo Recomendado a partir dos dados do availability
      */
     function renderRecommendedFlightFromData(flightData) {
-        log('✈️ [NEW] Renderizando voo recomendado a partir de flightData...');
-        log('🔍 Estrutura do flightData recebido:', flightData);
-        log('🔍 Keys do flightData:', Object.keys(flightData));
+        try {
+            log('✈️ [NEW] Renderizando voo recomendado a partir de flightData...');
+            log('🔍 Estrutura do flightData recebido:', flightData);
 
-        if (!flightData) {
-            logError('❌ flightData é null ou undefined');
-            return;
-        }
-
-        // Helper para formatar horário
-        function formatTime(dateStr) {
-            if (!dateStr) return '';
-            const date = new Date(dateStr);
-            return date.toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' });
-        }
-
-        // Helper para formatar data
-        function formatDate(dateStr) {
-            if (!dateStr) return '';
-            const date = new Date(dateStr);
-            return date.toLocaleDateString('pt-PT', { day: '2-digit', month: 'short' });
-        }
-
-        // Tentar encontrar os itinerários (várias possíveis estruturas)
-        let outboundItinerary = null;
-        let inboundItinerary = null;
-
-        // ESTRUTURA 1: flightData.itineraries[]
-        if (flightData.itineraries && Array.isArray(flightData.itineraries)) {
-            log('✅ Encontrado flightData.itineraries');
-            outboundItinerary = flightData.itineraries.find(i => i.type === 'OUTBOUND' || i.direction === 'OUTBOUND');
-            inboundItinerary = flightData.itineraries.find(i => i.type === 'INBOUND' || i.direction === 'INBOUND');
-
-            // Se não tiver type/direction, assumir primeira = IDA, segunda = VOLTA
-            if (!outboundItinerary && !inboundItinerary && flightData.itineraries.length >= 2) {
-                outboundItinerary = flightData.itineraries[0];
-                inboundItinerary = flightData.itineraries[1];
-            } else if (!outboundItinerary && !inboundItinerary && flightData.itineraries.length === 1) {
-                outboundItinerary = flightData.itineraries[0];
+            if (!flightData) {
+                logError('❌ flightData é null ou undefined');
+                return;
             }
-        }
-        // ESTRUTURA 2: flightData.segments[] diretamente
-        else if (flightData.segments && Array.isArray(flightData.segments)) {
-            log('✅ Encontrado flightData.segments (estrutura direta)');
-            // Se há segments diretos, criar itinerário
-            outboundItinerary = { segments: flightData.segments };
-        }
-        // ESTRUTURA 3: flightData.flightSegments[] (legacy)
-        else if (flightData.flightSegments && Array.isArray(flightData.flightSegments)) {
-            log('✅ Encontrado flightData.flightSegments (estrutura legacy)');
-            outboundItinerary = { segments: flightData.flightSegments };
-        }
 
-        log('Outbound itinerary:', outboundItinerary);
-        log('Inbound itinerary:', inboundItinerary);
+            log('🔍 Keys do flightData:', Object.keys(flightData));
+            log('🔍 JSON completo do flightData:', JSON.stringify(flightData, null, 2));
 
-        if (!outboundItinerary && !inboundItinerary) {
-            logError('❌ Não foi possível encontrar itinerários no flightData');
-            log('💡 Estrutura completa do flightData:', JSON.stringify(flightData, null, 2));
-            return;
-        }
+            // Helper para formatar horário
+            function formatTime(dateStr) {
+                if (!dateStr) return '';
+                try {
+                    const date = new Date(dateStr);
+                    return date.toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' });
+                } catch (e) {
+                    return dateStr;
+                }
+            }
 
-        let flightHTML = '';
+            // Tentar encontrar os itinerários (várias possíveis estruturas)
+            let outboundItinerary = null;
+            let inboundItinerary = null;
 
-        // Renderizar IDA (OUTBOUND)
-        if (outboundItinerary) {
-            const segments = outboundItinerary.segments || outboundItinerary.flightSegments || [];
-            log(`✈️ IDA: ${segments.length} segmentos encontrados`);
+            // ESTRUTURA 1: flightData.itineraries[]
+            if (flightData.itineraries && Array.isArray(flightData.itineraries)) {
+                log('✅ Encontrado flightData.itineraries com ' + flightData.itineraries.length + ' itens');
+                log('🔍 Primeiro itinerário:', flightData.itineraries[0]);
 
-            if (segments.length > 0) {
-                const firstSeg = segments[0];
-                const lastSeg = segments[segments.length - 1];
+                outboundItinerary = flightData.itineraries.find(i => i.type === 'OUTBOUND' || i.direction === 'OUTBOUND');
+                inboundItinerary = flightData.itineraries.find(i => i.type === 'INBOUND' || i.direction === 'INBOUND');
 
-                flightHTML += `
-                    <div class="flight-recommendation-item">
-                        <div class="flight-direction">🛫 <strong>IDA</strong></div>
-                        <div class="flight-details">
-                            <div class="flight-route">
-                                <span class="flight-time">${formatTime(firstSeg.departureDate || firstSeg.departure)}</span>
-                                <span class="flight-airport">${firstSeg.originAirportCode || firstSeg.origin || 'N/A'}</span>
-                                <span class="flight-arrow">→</span>
-                                <span class="flight-airport">${lastSeg.destinationAirportCode || lastSeg.destination || 'N/A'}</span>
-                                <span class="flight-time">${formatTime(lastSeg.arrivalDate || lastSeg.arrival)}</span>
-                            </div>
-                            <div class="flight-airline">
-                                ${firstSeg.operatingAirline || firstSeg.airline || 'Companhia Aérea'} ${firstSeg.flightNumber || firstSeg.number || ''}
-                                ${segments.length > 1 ? ` · ${segments.length - 1} escala${segments.length > 2 ? 's' : ''}` : ' · Direto'}
+                // Se não tiver type/direction, assumir primeira = IDA, segunda = VOLTA
+                if (!outboundItinerary && !inboundItinerary && flightData.itineraries.length >= 2) {
+                    log('⚠️ Itinerários sem type/direction, assumindo ordem: [0]=IDA, [1]=VOLTA');
+                    outboundItinerary = flightData.itineraries[0];
+                    inboundItinerary = flightData.itineraries[1];
+                } else if (!outboundItinerary && !inboundItinerary && flightData.itineraries.length === 1) {
+                    log('⚠️ Apenas 1 itinerário, assumindo IDA');
+                    outboundItinerary = flightData.itineraries[0];
+                }
+            }
+            // ESTRUTURA 2: flightData.segments[] diretamente
+            else if (flightData.segments && Array.isArray(flightData.segments)) {
+                log('✅ Encontrado flightData.segments (estrutura direta)');
+                outboundItinerary = { segments: flightData.segments };
+            }
+            // ESTRUTURA 3: flightData.flightSegments[] (legacy)
+            else if (flightData.flightSegments && Array.isArray(flightData.flightSegments)) {
+                log('✅ Encontrado flightData.flightSegments (estrutura legacy)');
+                outboundItinerary = { segments: flightData.flightSegments };
+            }
+
+            log('📍 Outbound itinerary encontrado?', !!outboundItinerary);
+            log('📍 Inbound itinerary encontrado?', !!inboundItinerary);
+
+            if (outboundItinerary) {
+                log('🔍 Estrutura outbound:', outboundItinerary);
+            }
+            if (inboundItinerary) {
+                log('🔍 Estrutura inbound:', inboundItinerary);
+            }
+
+            // Se não encontrou itinerários, tentar renderizar box simples
+            if (!outboundItinerary && !inboundItinerary) {
+                logError('❌ Não foi possível encontrar itinerários no flightData');
+
+                // FALLBACK: Renderizar box simples com informação genérica
+                log('🔄 Tentando fallback: renderizar box genérico');
+                const flightBox = `
+                    <div class="recommended-flight-box" style="
+                        background: linear-gradient(135deg, #019CB8 0%, #0176a8 100%);
+                        color: #fff;
+                        padding: 25px;
+                        border-radius: 12px;
+                        margin-bottom: 30px;
+                        grid-column: 1 / -1;
+                        box-shadow: 0 4px 15px rgba(1, 156, 184, 0.3);
+                    ">
+                        <div style="margin-bottom: 15px;">
+                            <strong style="font-size: 16px; text-transform: uppercase; letter-spacing: 1px;">
+                                ✈️ Voo Incluído no Pacote
+                            </strong>
+                        </div>
+                        <div class="flight-recommendation-item">
+                            <div class="flight-details">
+                                <div class="flight-route" style="text-align: center; padding: 10px;">
+                                    Informações de voo disponíveis na página de reserva
+                                </div>
                             </div>
                         </div>
                     </div>
                 `;
+
+                log('🔍 Verificando se #soltour-results-list existe...');
+                const $list = $('#soltour-results-list');
+                log('🔍 Elemento encontrado?', $list.length > 0);
+
+                if ($list.length > 0) {
+                    $list.prepend(flightBox);
+                    logSuccess('✅ Box de voo genérico renderizado (fallback)!');
+                } else {
+                    logError('❌ Elemento #soltour-results-list não encontrado!');
+                }
+                return;
             }
-        }
 
-        // Renderizar VOLTA (INBOUND)
-        if (inboundItinerary) {
-            const segments = inboundItinerary.segments || inboundItinerary.flightSegments || [];
-            log(`✈️ VOLTA: ${segments.length} segmentos encontrados`);
+            let flightHTML = '';
 
-            if (segments.length > 0) {
-                const firstSeg = segments[0];
-                const lastSeg = segments[segments.length - 1];
+            // Renderizar IDA (OUTBOUND)
+            if (outboundItinerary) {
+                const segments = outboundItinerary.segments || outboundItinerary.flightSegments || [];
+                log(`✈️ IDA: ${segments.length} segmentos encontrados`);
 
-                flightHTML += `
-                    <div class="flight-recommendation-item">
-                        <div class="flight-direction">🛬 <strong>VOLTA</strong></div>
-                        <div class="flight-details">
-                            <div class="flight-route">
-                                <span class="flight-time">${formatTime(firstSeg.departureDate || firstSeg.departure)}</span>
-                                <span class="flight-airport">${firstSeg.originAirportCode || firstSeg.origin || 'N/A'}</span>
-                                <span class="flight-arrow">→</span>
-                                <span class="flight-airport">${lastSeg.destinationAirportCode || lastSeg.destination || 'N/A'}</span>
-                                <span class="flight-time">${formatTime(lastSeg.arrivalDate || lastSeg.arrival)}</span>
-                            </div>
-                            <div class="flight-airline">
-                                ${firstSeg.operatingAirline || firstSeg.airline || 'Companhia Aérea'} ${firstSeg.flightNumber || firstSeg.number || ''}
-                                ${segments.length > 1 ? ` · ${segments.length - 1} escala${segments.length > 2 ? 's' : ''}` : ' · Direto'}
+                if (segments.length > 0) {
+                    log('🔍 Primeiro segmento IDA:', segments[0]);
+                    const firstSeg = segments[0];
+                    const lastSeg = segments[segments.length - 1];
+
+                    flightHTML += `
+                        <div class="flight-recommendation-item">
+                            <div class="flight-direction">🛫 <strong>IDA</strong></div>
+                            <div class="flight-details">
+                                <div class="flight-route">
+                                    <span class="flight-time">${formatTime(firstSeg.departureDate || firstSeg.departure)}</span>
+                                    <span class="flight-airport">${firstSeg.originAirportCode || firstSeg.origin || 'N/A'}</span>
+                                    <span class="flight-arrow">→</span>
+                                    <span class="flight-airport">${lastSeg.destinationAirportCode || lastSeg.destination || 'N/A'}</span>
+                                    <span class="flight-time">${formatTime(lastSeg.arrivalDate || lastSeg.arrival)}</span>
+                                </div>
+                                <div class="flight-airline">
+                                    ${firstSeg.operatingAirline || firstSeg.airline || 'Companhia Aérea'} ${firstSeg.flightNumber || firstSeg.number || ''}
+                                    ${segments.length > 1 ? ` · ${segments.length - 1} escala${segments.length > 2 ? 's' : ''}` : ' · Direto'}
+                                </div>
                             </div>
                         </div>
-                    </div>
-                `;
+                    `;
+                }
             }
-        }
 
-        if (!flightHTML) {
-            logError('❌ Nenhum HTML de voo foi gerado');
-            return;
-        }
+            // Renderizar VOLTA (INBOUND)
+            if (inboundItinerary) {
+                const segments = inboundItinerary.segments || inboundItinerary.flightSegments || [];
+                log(`✈️ VOLTA: ${segments.length} segmentos encontrados`);
 
-        const flightBox = `
-            <div class="recommended-flight-box" style="
-                background: linear-gradient(135deg, #019CB8 0%, #0176a8 100%);
-                color: #fff;
-                padding: 25px;
-                border-radius: 12px;
-                margin-bottom: 30px;
-                grid-column: 1 / -1;
-                box-shadow: 0 4px 15px rgba(1, 156, 184, 0.3);
-            ">
-                <div style="margin-bottom: 15px;">
-                    <strong style="font-size: 16px; text-transform: uppercase; letter-spacing: 1px;">
-                        ✈️ Voo Recomendado
-                    </strong>
+                if (segments.length > 0) {
+                    log('🔍 Primeiro segmento VOLTA:', segments[0]);
+                    const firstSeg = segments[0];
+                    const lastSeg = segments[segments.length - 1];
+
+                    flightHTML += `
+                        <div class="flight-recommendation-item">
+                            <div class="flight-direction">🛬 <strong>VOLTA</strong></div>
+                            <div class="flight-details">
+                                <div class="flight-route">
+                                    <span class="flight-time">${formatTime(firstSeg.departureDate || firstSeg.departure)}</span>
+                                    <span class="flight-airport">${firstSeg.originAirportCode || firstSeg.origin || 'N/A'}</span>
+                                    <span class="flight-arrow">→</span>
+                                    <span class="flight-airport">${lastSeg.destinationAirportCode || lastSeg.destination || 'N/A'}</span>
+                                    <span class="flight-time">${formatTime(lastSeg.arrivalDate || lastSeg.arrival)}</span>
+                                </div>
+                                <div class="flight-airline">
+                                    ${firstSeg.operatingAirline || firstSeg.airline || 'Companhia Aérea'} ${firstSeg.flightNumber || firstSeg.number || ''}
+                                    ${segments.length > 1 ? ` · ${segments.length - 1} escala${segments.length > 2 ? 's' : ''}` : ' · Direto'}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+
+            if (!flightHTML) {
+                logError('❌ Nenhum HTML de voo foi gerado dos segmentos');
+                return;
+            }
+
+            const flightBox = `
+                <div class="recommended-flight-box" style="
+                    background: linear-gradient(135deg, #019CB8 0%, #0176a8 100%);
+                    color: #fff;
+                    padding: 25px;
+                    border-radius: 12px;
+                    margin-bottom: 30px;
+                    grid-column: 1 / -1;
+                    box-shadow: 0 4px 15px rgba(1, 156, 184, 0.3);
+                ">
+                    <div style="margin-bottom: 15px;">
+                        <strong style="font-size: 16px; text-transform: uppercase; letter-spacing: 1px;">
+                            ✈️ Voo Recomendado
+                        </strong>
+                    </div>
+                    ${flightHTML}
                 </div>
-                ${flightHTML}
-            </div>
-        `;
+            `;
 
-        $('#soltour-results-list').prepend(flightBox);
-        logSuccess('✅ Voo recomendado renderizado a partir de flightData!');
+            log('🔍 Verificando se #soltour-results-list existe...');
+            const $list = $('#soltour-results-list');
+            log('🔍 Elemento encontrado?', $list.length > 0);
+
+            if ($list.length > 0) {
+                $list.prepend(flightBox);
+                logSuccess('✅ Voo recomendado renderizado a partir de flightData!');
+            } else {
+                logError('❌ Elemento #soltour-results-list não encontrado!');
+            }
+
+        } catch (error) {
+            logError('❌ ERRO CRÍTICO ao renderizar voo:', error);
+            log('Stack trace:', error.stack);
+        }
     }
 
     function renderCompleteCard(pkg) {
