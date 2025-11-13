@@ -2630,7 +2630,7 @@ body .soltour-pagination .page-ellipsis {
 
 .flight-info-compact {
     display: grid;
-    grid-template-columns: 60px 1fr auto auto;
+    grid-template-columns: 60px 32px 1fr auto auto;
     gap: 12px;
     align-items: center;
     padding: 10px 0;
@@ -2651,6 +2651,17 @@ body .soltour-pagination .page-ellipsis {
     font-weight: 600;
     color: #6c757d;
     text-transform: uppercase;
+}
+
+/* Logo da companhia aérea */
+.airline-logo {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+    border-radius: 4px;
+    background: #f8f9fa;
+    padding: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .flight-airline {
@@ -2675,6 +2686,12 @@ body .soltour-pagination .page-ellipsis {
     .flight-info-compact {
         grid-template-columns: 1fr;
         gap: 6px;
+    }
+
+    .airline-logo {
+        width: 24px;
+        height: 24px;
+        margin-bottom: 4px;
     }
 
     .flight-type,

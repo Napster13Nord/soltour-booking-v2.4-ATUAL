@@ -1520,11 +1520,21 @@
                     const departureTime = segment.departureTime ? segment.departureTime.substring(0, 5) : '--:--';
                     const arrivalTime = segment.arrivalTime ? segment.arrivalTime.substring(0, 5) : '--:--';
                     const airline = segment.carrierName || segment.carrier || '';
+                    const carrierCode = segment.carrier || '';
                     const flightType = flight.type === 'OUTBOUND' ? 'Saída' : 'Regresso';
+
+                    // Logo da companhia aérea
+                    // Pode vir da API ou construímos a URL baseada no código IATA
+                    let airlineLogo = segment.carrierLogo || segment.carrierImageUrl || '';
+                    if (!airlineLogo && carrierCode) {
+                        // Fallback: usar serviço de logos de companhias aéreas
+                        airlineLogo = `https://images.kiwi.com/airlines/64/${carrierCode}.png`;
+                    }
 
                     flightInfoHTML += `
                         <div class="flight-info-compact">
                             <span class="flight-type">${flightType}</span>
+                            ${airlineLogo ? `<img src="${airlineLogo}" alt="${airline}" class="airline-logo" onerror="this.style.display='none'" />` : ''}
                             <span class="flight-airline">${airline}</span>
                             <span class="flight-times">${departureTime} - ${arrivalTime}</span>
                             <span class="flight-route">${origin} → ${destination}</span>
