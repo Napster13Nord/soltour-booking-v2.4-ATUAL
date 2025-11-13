@@ -8,9 +8,21 @@
 
     // Aguardar DOM ready
     $(document).ready(function() {
+        console.log('=== PACKAGE DETAILS DEBUG ===');
+        console.log('URL:', window.location.href);
+        console.log('Procurando elemento #soltour-package-details...');
+
+        const $element = $('#soltour-package-details');
+        console.log('Elemento encontrado?', $element.length > 0);
+        console.log('Body HTML (primeiros 500 chars):', $('body').html().substring(0, 500));
+
         // Verificar se estamos na página de detalhes
-        if ($('#soltour-package-details').length === 0) {
-            console.log('⚠️ Elemento #soltour-package-details não encontrado');
+        if ($element.length === 0) {
+            console.error('❌ ERRO: Elemento #soltour-package-details NÃO ENCONTRADO!');
+            console.log('Elementos disponíveis na página:');
+            $('[id]').each(function() {
+                console.log('  -', this.id);
+            });
             return;
         }
 
