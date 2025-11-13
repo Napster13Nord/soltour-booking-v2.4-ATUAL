@@ -1069,6 +1069,11 @@
             return;
         }
 
+        // ✈️ RENDERIZAR VOO RECOMENDADO NO TOPO
+        if (packages.length > 0 && packages[0].budget && packages[0].budget.flightServices) {
+            renderRecommendedFlight(packages[0].budget.flightServices);
+        }
+
         // Mostrar total de HOTÉIS ÚNICOS (não budgets)
         const totalUniqueHotels = SoltourApp.allUniqueHotels.length;
         $('#soltour-results-count').text(`${totalUniqueHotels} hotéis encontrados`);
@@ -1078,6 +1083,115 @@
         });
 
         logSuccess(`${packages.length} cards renderizados com TODOS os campos!`);
+    }
+
+    /**
+     * ✈️ Renderizar Box de Voo Recomendado no topo
+     */
+    function renderRecommendedFlight(flightServices) {
+        log('✈️ Renderizando voo recomendado no topo...');
+
+        if (!flightServices || flightServices.length === 0) {
+            log('⚠️ Nenhum voo disponível');
+            return;
+        }
+
+        // Separar voos de ida e volta
+        const outboundFlight = flightServices.find(f => f.type === 'OUTBOUND');
+        const inboundFlight = flightServices.find(f => f.type === 'INBOUND');
+
+        if (!outboundFlight && !inboundFlight) {
+            log('⚠️ Voos incompletos');
+            return;
+        }
+
+        // Helper para formatar horário
+        function formatTime(dateStr) {
+            if (!dateStr) return '';
+            const date = new Date(dateStr);
+            return date.toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' });
+        }
+
+        // Helper para formatar data
+        function formatDate(dateStr) {
+            if (!dateStr) return '';
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('pt-PT', { day: '2-digit', month: 'short' });
+        }
+
+        let flightHTML = '';
+
+        if (outboundFlight && outboundFlight.flightSegments && outboundFlight.flightSegments.length > 0) {
+            const segments = outboundFlight.flightSegments;
+            const firstSeg = segments[0];
+            const lastSeg = segments[segments.length - 1];
+
+            flightHTML += `
+                <div class="flight-recommendation-item">
+                    <div class="flight-direction">🛫 <strong>IDA</strong></div>
+                    <div class="flight-details">
+                        <div class="flight-route">
+                            <span class="flight-time">${formatTime(firstSeg.departureDate)}</span>
+                            <span class="flight-airport">${firstSeg.originAirportCode}</span>
+                            <span class="flight-arrow">→</span>
+                            <span class="flight-airport">${lastSeg.destinationAirportCode}</span>
+                            <span class="flight-time">${formatTime(lastSeg.arrivalDate)}</span>
+                        </div>
+                        <div class="flight-airline">
+                            ${firstSeg.operatingAirline || 'Companhia Aérea'} ${firstSeg.flightNumber || ''}
+                            ${segments.length > 1 ? ` · ${segments.length - 1} escala${segments.length > 2 ? 's' : ''}` : ' · Direto'}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        if (inboundFlight && inboundFlight.flightSegments && inboundFlight.flightSegments.length > 0) {
+            const segments = inboundFlight.flightSegments;
+            const firstSeg = segments[0];
+            const lastSeg = segments[segments.length - 1];
+
+            flightHTML += `
+                <div class="flight-recommendation-item">
+                    <div class="flight-direction">🛬 <strong>VOLTA</strong></div>
+                    <div class="flight-details">
+                        <div class="flight-route">
+                            <span class="flight-time">${formatTime(firstSeg.departureDate)}</span>
+                            <span class="flight-airport">${firstSeg.originAirportCode}</span>
+                            <span class="flight-arrow">→</span>
+                            <span class="flight-airport">${lastSeg.destinationAirportCode}</span>
+                            <span class="flight-time">${formatTime(lastSeg.arrivalDate)}</span>
+                        </div>
+                        <div class="flight-airline">
+                            ${firstSeg.operatingAirline || 'Companhia Aérea'} ${firstSeg.flightNumber || ''}
+                            ${segments.length > 1 ? ` · ${segments.length - 1} escala${segments.length > 2 ? 's' : ''}` : ' · Direto'}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        const flightBox = `
+            <div class="recommended-flight-box" style="
+                background: linear-gradient(135deg, #019CB8 0%, #0176a8 100%);
+                color: #fff;
+                padding: 25px;
+                border-radius: 12px;
+                margin-bottom: 30px;
+                grid-column: 1 / -1;
+                box-shadow: 0 4px 15px rgba(1, 156, 184, 0.3);
+            ">
+                <div style="margin-bottom: 15px;">
+                    <strong style="font-size: 16px; text-transform: uppercase; letter-spacing: 1px;">
+                        ✈️ Voo Recomendado
+                    </strong>
+                </div>
+                ${flightHTML}
+            </div>
+        `;
+
+        $('#soltour-results-list').prepend(flightBox);
+        logSuccess('✅ Voo recomendado renderizado');
     }
 
     function renderCompleteCard(pkg) {
