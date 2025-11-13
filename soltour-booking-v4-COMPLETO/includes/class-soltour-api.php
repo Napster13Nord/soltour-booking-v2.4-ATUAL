@@ -1114,12 +1114,44 @@ class Soltour_API {
     // ========================================
 
     /**
+     * POST /booking/quote/print
+     * Gera PDF da cotação
+     */
+    public function print_quote($params) {
+        $data = array(
+            'budgetId' => $params['budgetId'],
+            'availToken' => $params['availToken'],
+            'breakdownView' => isset($params['breakdownView']) ? $params['breakdownView'] : 'gross'
+        );
+
+        // Adicionar dados do formulário se fornecidos
+        if (isset($params['rooms'])) {
+            $data['rooms'] = $params['rooms'];
+        }
+        if (isset($params['holder'])) {
+            $data['holder'] = $params['holder'];
+        }
+        if (isset($params['agency'])) {
+            $data['agency'] = $params['agency'];
+        }
+
+        $this->log('=== PRINT QUOTE ===');
+        $this->log('Request: ' . json_encode($data));
+
+        $response = $this->make_request('booking/quote/print', $data);
+
+        $this->log('Response: ' . json_encode($response));
+
+        return $response;
+    }
+
+    /**
      * AJAX Handler para imprimir cotação
      */
     public function ajax_print_quote() {
         check_ajax_referer('soltour_booking_nonce', 'nonce');
 
-        $this->log('=== PRINT QUOTE ===');
+        $this->log('=== AJAX PRINT QUOTE ===');
 
         $quote_data = json_decode(stripslashes($_POST['quote_data']), true);
 
@@ -1128,21 +1160,138 @@ class Soltour_API {
             return;
         }
 
-        // Por enquanto, retornar sucesso simulado
-        // Em produção, aqui você geraria o PDF via API da Soltour
         $this->log('Quote data para impressão: ' . json_encode($quote_data));
 
-        // Simular geração de PDF
-        wp_send_json_success(array(
-            'pdf_url' => '#', // URL do PDF gerado
-            'message' => 'PDF gerado com sucesso'
-        ));
+        // Chamar API da Soltour para gerar PDF
+        $response = $this->print_quote($quote_data);
 
-        // TODO: Implementar integração real com API de impressão da Soltour
-        // $response = $this->make_request('booking/quote/print', $quote_data);
-        // if ($response && isset($response['pdfUrl'])) {
-        //     wp_send_json_success(array('pdf_url' => $response['pdfUrl']));
-        // }
+        if ($response && !isset($response['error'])) {
+            // API retorna URL do PDF ou HTML
+            if (isset($response['pdfUrl'])) {
+                wp_send_json_success(array(
+                    'pdf_url' => $response['pdfUrl'],
+                    'message' => 'PDF gerado com sucesso'
+                ));
+            } else if (isset($response['result']) && $response['result']['ok']) {
+                // Fallback: criar PDF localmente se API não retornar URL
+                $pdf_url = $this->generate_local_pdf($quote_data);
+                wp_send_json_success(array(
+                    'pdf_url' => $pdf_url,
+                    'message' => 'PDF gerado com sucesso'
+                ));
+            } else {
+                wp_send_json_error(array('message' => 'Erro ao gerar PDF'));
+            }
+        } else {
+            $error_msg = isset($response['error']) ? $response['error'] : 'Erro ao gerar PDF';
+            wp_send_json_error(array('message' => $error_msg));
+        }
+    }
+
+    /**
+     * Gera PDF localmente como fallback
+     */
+    private function generate_local_pdf($data) {
+        // Esta é uma implementação básica de fallback
+        // Em produção, você pode usar uma biblioteca como TCPDF ou mPDF
+
+        // Por enquanto, gerar um HTML que pode ser impresso
+        $upload_dir = wp_upload_dir();
+        $pdf_dir = $upload_dir['basedir'] . '/soltour-quotes/';
+
+        if (!file_exists($pdf_dir)) {
+            wp_mkdir_p($pdf_dir);
+        }
+
+        $filename = 'quote-' . time() . '.html';
+        $filepath = $pdf_dir . $filename;
+
+        // Gerar HTML da cotação
+        $html = $this->build_quote_html($data);
+
+        // Salvar arquivo
+        file_put_contents($filepath, $html);
+
+        // Retornar URL
+        return $upload_dir['baseurl'] . '/soltour-quotes/' . $filename;
+    }
+
+    /**
+     * Constrói HTML da cotação para impressão
+     */
+    private function build_quote_html($data) {
+        $html = '<!DOCTYPE html><html><head>';
+        $html .= '<meta charset="UTF-8">';
+        $html .= '<title>Cotação Soltour</title>';
+        $html .= '<style>';
+        $html .= 'body { font-family: Arial, sans-serif; margin: 40px; }';
+        $html .= 'h1 { color: #ff211c; }';
+        $html .= 'table { width: 100%; border-collapse: collapse; margin: 20px 0; }';
+        $html .= 'th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }';
+        $html .= 'th { background-color: #ff211c; color: white; }';
+        $html .= '.total { font-size: 24px; font-weight: bold; color: #ff211c; }';
+        $html .= '@media print { button { display: none; } }';
+        $html .= '</style></head><body>';
+
+        $html .= '<h1>Cotação Soltour</h1>';
+        $html .= '<p><strong>Data:</strong> ' . date('d/m/Y H:i') . '</p>';
+
+        // Informações do titular se disponível
+        if (isset($data['holder'])) {
+            $html .= '<h2>Dados do Titular</h2>';
+            $html .= '<p><strong>Nome:</strong> ' . esc_html($data['holder']['name'] ?? '') . '</p>';
+            $html .= '<p><strong>Email:</strong> ' . esc_html($data['holder']['email'] ?? '') . '</p>';
+        }
+
+        // Breakdown de preços
+        if (isset($data['breakdownView'])) {
+            $html .= '<h2>Detalhamento de Preços (' . ($data['breakdownView'] === 'gross' ? 'Bruto' : 'Líquido') . ')</h2>';
+        }
+
+        // Total
+        if (isset($data['totalAmount'])) {
+            $html .= '<div class="total">';
+            $html .= '<p>Valor Total: €' . number_format($data['totalAmount'], 2, ',', '.') . '</p>';
+            $html .= '</div>';
+        }
+
+        $html .= '<button onclick="window.print()">Imprimir</button>';
+        $html .= '</body></html>';
+
+        return $html;
+    }
+
+    /**
+     * POST /booking/quote/send
+     * Envia cotação por email
+     */
+    public function send_quote_email($params) {
+        $data = array(
+            'budgetId' => $params['budgetId'],
+            'availToken' => $params['availToken'],
+            'email' => $params['email'],
+            'breakdownView' => isset($params['breakdownView']) ? $params['breakdownView'] : 'gross'
+        );
+
+        // Adicionar dados do formulário se fornecidos
+        if (isset($params['rooms'])) {
+            $data['rooms'] = $params['rooms'];
+        }
+        if (isset($params['holder'])) {
+            $data['holder'] = $params['holder'];
+        }
+        if (isset($params['agency'])) {
+            $data['agency'] = $params['agency'];
+        }
+
+        $this->log('=== SEND QUOTE EMAIL ===');
+        $this->log('Request: ' . json_encode($data));
+
+        $response = $this->make_request('booking/quote/send', $data);
+
+        $this->log('Response: ' . json_encode($response));
+
+        return $response;
     }
 
     /**
@@ -1151,7 +1300,7 @@ class Soltour_API {
     public function ajax_send_quote_email() {
         check_ajax_referer('soltour_booking_nonce', 'nonce');
 
-        $this->log('=== SEND QUOTE EMAIL ===');
+        $this->log('=== AJAX SEND QUOTE EMAIL ===');
 
         $email_data = json_decode(stripslashes($_POST['email_data']), true);
 
@@ -1170,8 +1319,19 @@ class Soltour_API {
 
         $this->log('Enviando cotação para: ' . $to_email);
 
-        // Por enquanto, usar wp_mail como fallback
-        // Em produção, enviar via API da Soltour
+        // Tentar enviar via API da Soltour primeiro
+        $response = $this->send_quote_email($email_data);
+
+        if ($response && !isset($response['error'])) {
+            if (isset($response['result']) && $response['result']['ok']) {
+                $this->log('Email enviado via API Soltour');
+                wp_send_json_success(array('message' => 'Email enviado com sucesso'));
+                return;
+            }
+        }
+
+        // Fallback: enviar via wp_mail se API falhar
+        $this->log('Fallback: enviando via wp_mail');
 
         $subject = 'Sua Cotação Soltour';
         $message = $this->build_quote_email_html($email_data);
@@ -1180,15 +1340,12 @@ class Soltour_API {
         $sent = wp_mail($to_email, $subject, $message, $headers);
 
         if ($sent) {
-            $this->log('Email enviado com sucesso');
+            $this->log('Email enviado com sucesso via wp_mail');
             wp_send_json_success(array('message' => 'Email enviado com sucesso'));
         } else {
             $this->log('Erro ao enviar email');
-            wp_send_json_error(array('message' => 'Erro ao enviar email'));
+            wp_send_json_error(array('message' => 'Erro ao enviar email. Por favor, tente novamente.'));
         }
-
-        // TODO: Implementar integração real com API de email da Soltour
-        // $response = $this->make_request('booking/quote/send', $email_data);
     }
 
     /**

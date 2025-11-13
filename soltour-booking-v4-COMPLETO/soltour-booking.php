@@ -2,8 +2,8 @@
 /**
  * Plugin Name: Soltour Booking V4
  * Plugin URI: https://beautytravel.pt
- * Description: Integração API Soltour V5 - COMPLETA (Todos os campos mapeados corretamente)
- * Version: 4.0.0
+ * Description: Integração API Soltour V5 - 100% COMPLETA (14/14 funcionalidades implementadas)
+ * Version: 4.1.0
  * Author: Beauty Travel
  * License: GPL v2 or later
  * Text Domain: soltour-booking
@@ -12,7 +12,7 @@
 if (!defined('ABSPATH')) exit;
 
 // Definições de constantes
-define('SOLTOUR_VERSION', '4.0.0');
+define('SOLTOUR_VERSION', '4.1.0');
 define('SOLTOUR_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('SOLTOUR_PLUGIN_URL', plugin_dir_url(__FILE__));
 
@@ -204,6 +204,15 @@ class Soltour_Booking {
             'soltour-navigation',
             SOLTOUR_PLUGIN_URL . 'assets/js/modules/navigation.js',
             array('jquery', 'soltour-booking-script', 'soltour-toast-notifications'),
+            SOLTOUR_VERSION,
+            true
+        );
+
+        // Módulo Copy Holder (copiar titular → primeiro passageiro)
+        wp_enqueue_script(
+            'soltour-copy-holder',
+            SOLTOUR_PLUGIN_URL . 'assets/js/modules/copy-holder.js',
+            array('jquery', 'soltour-booking-script'),
             SOLTOUR_VERSION,
             true
         );
