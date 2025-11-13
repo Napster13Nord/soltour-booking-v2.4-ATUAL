@@ -17,7 +17,6 @@
          * Inicializa navegação
          */
         init: function() {
-            console.log('✅ Inicializando módulo Navigation...');
 
             this.bindEvents();
         },
@@ -45,7 +44,6 @@
          * Volta para availability mantendo estado
          */
         goBackToAvailability: function($button) {
-            console.log('⬅️  Voltando para availability...');
 
             const data = $button.data();
 
@@ -57,7 +55,6 @@
             const fromPage = data.fromPage || data.from_page || 'QUOTE';
 
             if (!availToken) {
-                console.error('❌ availToken não encontrado');
 
                 if (window.SoltourApp.Toast) {
                     window.SoltourApp.Toast.error(
@@ -71,13 +68,10 @@
                 return;
             }
 
-            console.log('  📋 availToken:', availToken);
-            console.log('  📄 fromPage:', fromPage);
 
             // Preparar request de availability
             const rq = this.buildAvailabilityRequest(availToken, fromPage);
 
-            console.log('  🔄 Request:', rq);
 
             // Mostrar loading
             showLoadingModal('Voltando...', 'Carregando disponibilidade');
@@ -181,9 +175,7 @@
             if (typeof sessionStorage !== 'undefined') {
                 try {
                     sessionStorage.setItem('soltour_nav_state', JSON.stringify(state));
-                    console.log('✅ Estado salvo na sessão');
                 } catch (e) {
-                    console.error('❌ Erro ao salvar estado:', e);
                 }
             }
         },
@@ -197,11 +189,9 @@
                     const stateJson = sessionStorage.getItem('soltour_nav_state');
                     if (stateJson) {
                         const state = JSON.parse(stateJson);
-                        console.log('✅ Estado restaurado:', state);
                         return state;
                     }
                 } catch (e) {
-                    console.error('❌ Erro ao restaurar estado:', e);
                 }
             }
             return null;
@@ -214,9 +204,7 @@
             if (typeof sessionStorage !== 'undefined') {
                 try {
                     sessionStorage.removeItem('soltour_nav_state');
-                    console.log('✅ Estado limpo');
                 } catch (e) {
-                    console.error('❌ Erro ao limpar estado:', e);
                 }
             }
         }

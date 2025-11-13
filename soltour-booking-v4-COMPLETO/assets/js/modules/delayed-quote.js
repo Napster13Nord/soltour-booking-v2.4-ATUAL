@@ -27,7 +27,6 @@
             this.isActive = options.delayedQuoteActive || false;
 
             if (this.isActive) {
-                console.log('🔄 DelayedQuote ATIVADO');
                 this.startDelayedLoad();
             }
         },
@@ -46,7 +45,6 @@
          * Desabilita interações durante loading
          */
         disableInteractions: function() {
-            console.log('⏸️  Desabilitando interações...');
 
             // Desabilitar botão de reservar
             $('.js-submit-form').each(function() {
@@ -104,7 +102,6 @@
          * Re-habilita interações após loading
          */
         enableInteractions: function() {
-            console.log('▶️  Re-habilitando interações...');
 
             $('.js-submit-form').each(function() {
                 $(this).prop('disabled', false);
@@ -232,8 +229,6 @@
                 force_quote: true
             };
 
-            console.log('🔄 Carregando preços finais via DelayedQuote...');
-            console.log('Params:', params);
 
             $.ajax({
                 url: soltourData.ajaxurl,
@@ -241,7 +236,6 @@
                 data: params,
                 timeout: 30000,
                 success: function(response) {
-                    console.log('✅ DelayedQuote response:', response);
 
                     if (response.success && response.data) {
                         self.updateQuoteContent(response.data);
@@ -258,16 +252,11 @@
                             );
                         }
 
-                        console.log('✅ DelayedQuote concluído com sucesso!');
                     } else {
-                        console.error('❌ DelayedQuote falhou:', response);
                         self.handleDelayedQuoteError(response);
                     }
                 },
                 error: function(xhr, status, error) {
-                    console.error('❌ Erro AJAX no DelayedQuote:', error);
-                    console.error('Status:', status);
-                    console.error('XHR:', xhr);
 
                     self.handleDelayedQuoteError({
                         success: false,
@@ -284,48 +273,40 @@
          * @param {Object} data - Dados retornados pela API
          */
         updateQuoteContent: function(data) {
-            console.log('🔄 Atualizando conteúdo da página...');
 
             // Atualizar título com preço
             if (data.titleHtml) {
                 $('#titleContent').html(data.titleHtml);
-                console.log('  ✓ Título atualizado');
             }
 
             // Atualizar breakdown
             if (data.breakdownHtml) {
                 $('#breakdownContent').html(data.breakdownHtml);
-                console.log('  ✓ Breakdown atualizado');
             }
 
             // Atualizar formulário
             if (data.formHtml) {
                 $('#formContent').html(data.formHtml);
-                console.log('  ✓ Formulário atualizado');
             }
 
             // Atualizar resumo
             if (data.summaryHtml) {
                 $('#summaryContent').html(data.summaryHtml);
-                console.log('  ✓ Resumo atualizado');
             }
 
             // Atualizar mensagens de warning
             if (data.warningMessagesHtml) {
                 $('#quoteWarningMessages').html(data.warningMessagesHtml);
-                console.log('  ✓ Warnings atualizados');
             }
 
             // Atualizar modal de pagamento
             if (data.paymentHtml) {
                 $('#payModal').html(data.paymentHtml);
-                console.log('  ✓ Modal de pagamento atualizado');
             }
 
             // Atualizar availToken se mudou
             if (data.availToken) {
                 window.SoltourApp.availToken = data.availToken;
-                console.log('  ✓ availToken atualizado:', data.availToken);
             }
 
             // Atualizar total
@@ -335,32 +316,25 @@
                     $(this).data('jsTotalAmount', data.totalAmount);
                     $(this).html(data.totalAmount.toFixed(2) + ' &euro;');
                 });
-                console.log('  ✓ Total atualizado:', data.totalAmount);
             }
 
             // Re-inicializar componentes se necessário
             if (data.jsInit) {
                 try {
-                    console.log('  🔄 Executando jsInit...');
                     // Patch para substituir strings literais que devem ser código
                     let jsInit = data.jsInit.replace("\"$('.myBpContainer')\"", "$('.myBpContainer')");
                     jsInit = jsInit.replace("\"$('.myBpSummary')\"", "$('.myBpSummary')");
                     eval(jsInit);
-                    console.log('  ✓ jsInit executado');
                 } catch (e) {
-                    console.error('  ❌ Erro ao executar jsInit:', e);
                 }
             }
 
             // Re-inicializar módulo Quote se disponível
             if (typeof window.SoltourApp.Quote !== 'undefined' &&
                 typeof window.SoltourApp.Quote.initAfterDelayed === 'function') {
-                console.log('  🔄 Re-inicializando módulo Quote...');
                 window.SoltourApp.Quote.initAfterDelayed();
-                console.log('  ✓ Módulo Quote re-inicializado');
             }
 
-            console.log('✅ Conteúdo atualizado com sucesso!');
         },
 
         /**
@@ -368,7 +342,6 @@
          * @param {Object} response - Resposta de erro
          */
         handleDelayedQuoteError: function(response) {
-            console.error('❌ Tratando erro do DelayedQuote...');
 
             this.stopPriceBlinking();
             this.enableInteractions();
@@ -380,7 +353,6 @@
                 message = response.data.message;
             }
 
-            console.error('Mensagem de erro:', message);
 
             if (window.SoltourApp.Toast) {
                 window.SoltourApp.Toast.error(message, 6000);

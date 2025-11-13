@@ -23,11 +23,9 @@
             this.$form = $('form#bookForm');
 
             if (this.$form.length === 0) {
-                console.log('⚠️  Formulário de booking não encontrado');
                 return;
             }
 
-            console.log('✅ Inicializando formulário de booking...');
 
             this.bindEvents();
             this.initCopyHolder();
@@ -64,7 +62,6 @@
         handleSubmitClick: function() {
             const self = this;
 
-            console.log('🔒 Validando venda antes de submeter...');
 
             // Desabilitar botão para evitar duplo clique
             $('.js-submit-form').prop('disabled', true);
@@ -85,13 +82,11 @@
 
                     if (response.success && response.data && response.data.allowed) {
                         // Venda permitida - triggerar submit real do formulário
-                        console.log('✅ CheckAllowedSelling: Venda permitida');
 
                         // Triggerar submit do formulário (HTML5 validation)
                         self.$form.find('input[type=submit]').trigger('click');
                     } else {
                         // Venda não permitida - mostrar erro
-                        console.error('❌ CheckAllowedSelling: Venda bloqueada');
 
                         const message = response.data && response.data.message
                             ? response.data.message
@@ -109,10 +104,8 @@
                 },
                 error: function(xhr, status, error) {
                     hideLoadingModal();
-                    console.error('❌ Erro ao validar venda:', error);
 
                     // Fail-safe: permitir continuar em caso de erro de rede
-                    console.warn('⚠️  Erro na validação, permitindo continuar (fail-safe)');
 
                     self.$form.find('input[type=submit]').trigger('click');
                 }
@@ -125,12 +118,10 @@
         submitBookingForm: function() {
             const self = this;
 
-            console.log('=== SUBMIT BOOKING FORM ===');
 
             // Serializar dados do formulário
             const formData = this.serializeBookingForm();
 
-            console.log('Dados do formulário:', formData);
 
             // Mostrar loading
             showLoadingModal('Processando reserva...', 'Aguarde enquanto confirmamos sua reserva');
@@ -149,7 +140,6 @@
                     hideLoadingModal();
 
                     if (response.success && response.data) {
-                        console.log('✅ Reserva criada com sucesso:', response.data);
 
                         // Mostrar toast de sucesso
                         if (window.SoltourApp.Toast) {
@@ -173,7 +163,6 @@
                         }
                     } else {
                         // Erro da API
-                        console.error('❌ Erro ao criar reserva:', response);
 
                         const message = response.data && response.data.message
                             ? response.data.message
@@ -190,9 +179,6 @@
                 },
                 error: function(xhr, status, error) {
                     hideLoadingModal();
-                    console.error('❌ Erro AJAX ao criar reserva:', error);
-                    console.error('Status:', status);
-                    console.error('XHR:', xhr);
 
                     let message = 'Erro de conexão. Por favor, tente novamente.';
 
@@ -286,11 +272,9 @@
                     // Triggerar para copiar valores atuais
                     $toggleElements.trigger('input');
 
-                    console.log('✅ Copy holder habilitado');
                 } else {
                     // Desabilitar cópia
                     $toggleElements.off('input');
-                    console.log('❌ Copy holder desabilitado');
                 }
             }
         }

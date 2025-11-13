@@ -22,7 +22,6 @@
          * Inicializa o módulo
          */
         init: function() {
-            console.log('🔄 CopyHolder: Inicializando...');
             this.bindEvents();
             this.mapFields();
         },
@@ -78,7 +77,6 @@
          * Alterna modo de cópia
          */
         toggleCopyHolder: function($checkbox) {
-            console.log('📋 CopyHolder: Toggle', $checkbox.is(':checked'));
 
             if ($checkbox.is(':checked')) {
                 this.enableCopyMode();
@@ -91,7 +89,6 @@
          * Ativa modo de cópia
          */
         enableCopyMode: function() {
-            console.log('✅ CopyHolder: Modo ativado');
             this.isActive = true;
 
             const self = this;
@@ -119,7 +116,6 @@
          * Desativa modo de cópia
          */
         disableCopyMode: function() {
-            console.log('❌ CopyHolder: Modo desativado');
             this.isActive = false;
 
             // Remover listeners
@@ -144,7 +140,6 @@
                 self.copyField(holderField, passengerField);
             });
 
-            console.log('📋 CopyHolder: Todos os campos copiados');
         },
 
         /**
@@ -163,14 +158,11 @@
                 // Triggerar change para validações
                 $passengerInput.trigger('change');
 
-                console.log('📝 CopyHolder: Copiado', holderFieldName, '→', passengerFieldName, '=', value);
             } else {
                 // Campo não encontrado (pode não existir no formulário)
                 if (!$holderInput.length) {
-                    console.warn('⚠️ CopyHolder: Campo titular não encontrado:', holderFieldName);
                 }
                 if (!$passengerInput.length) {
-                    console.warn('⚠️ CopyHolder: Campo passageiro não encontrado:', passengerFieldName);
                 }
             }
         },
@@ -240,7 +232,6 @@
                 return true;
             }
 
-            console.log('✅ CopyHolder: Validação antes do submit');
 
             // Garantir que todos os campos estão sincronizados
             this.copyAllFields();

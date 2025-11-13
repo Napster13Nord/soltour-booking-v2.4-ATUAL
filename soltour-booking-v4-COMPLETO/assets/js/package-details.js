@@ -8,31 +8,21 @@
 
     // Aguardar DOM ready
     $(document).ready(function() {
-        console.log('=== PACKAGE DETAILS DEBUG ===');
-        console.log('URL:', window.location.href);
-        console.log('Procurando elemento #soltour-package-details...');
 
         const $element = $('#soltour-package-details');
-        console.log('Elemento encontrado?', $element.length > 0);
-        console.log('Body HTML (primeiros 500 chars):', $('body').html().substring(0, 500));
 
         // Verificar se estamos na página de detalhes
         if ($element.length === 0) {
-            console.error('❌ ERRO: Elemento #soltour-package-details NÃO ENCONTRADO!');
-            console.log('Elementos disponíveis na página:');
             $('[id]').each(function() {
-                console.log('  -', this.id);
             });
             return;
         }
 
-        console.log('🔍 Página de detalhes detectada, iniciando carregamento...');
 
         // 1. Tentar pegar budgetId da URL
         const urlParams = new URLSearchParams(window.location.search);
         const budgetIdFromURL = urlParams.get('budget');
 
-        console.log('Budget da URL:', budgetIdFromURL);
 
         // 2. Tentar pegar dados do sessionStorage
         let packageData = null;
@@ -41,9 +31,7 @@
         if (savedPackageStr) {
             try {
                 packageData = JSON.parse(savedPackageStr);
-                console.log('📦 Dados do sessionStorage:', packageData);
             } catch (e) {
-                console.error('❌ Erro ao parsear sessionStorage:', e);
             }
         }
 
@@ -54,23 +42,18 @@
         if (savedSearchStr) {
             try {
                 searchParams = JSON.parse(savedSearchStr);
-                console.log('🔍 Search params encontrados:', searchParams);
             } catch (e) {
-                console.error('❌ Erro ao parsear searchParams:', e);
             }
         }
 
         // 4. Decidir o que fazer
         if (budgetIdFromURL) {
-            console.log('✅ BudgetId encontrado na URL, usando ele');
 
             // Se temos searchParams, fazer nova busca para pegar o budget completo
             if (searchParams && searchParams.avail_token) {
-                console.log('🔄 Fazendo busca completa para pegar budget...');
                 loadFullPackageFromSearch(budgetIdFromURL, searchParams);
             } else if (packageData && packageData.availToken) {
                 // Usar availToken do packageData
-                console.log('🔄 Usando availToken do packageData...');
                 loadPackageDetailsSimple({
                     budgetId: budgetIdFromURL,
                     availToken: packageData.availToken,
@@ -81,7 +64,6 @@
                 showError('Dados insuficientes para carregar pacote. Por favor, volte e selecione novamente.');
             }
         } else if (packageData && packageData.budgetId) {
-            console.log('✅ Usando dados do sessionStorage');
 
             // Se temos searchParams, fazer busca completa
             if (searchParams && searchParams.avail_token) {
@@ -90,7 +72,6 @@
                 loadPackageDetailsSimple(packageData);
             }
         } else {
-            console.error('❌ Nenhum budgetId encontrado');
             showError('Pacote não encontrado. Por favor, volte e selecione um pacote novamente.');
         }
     });
@@ -99,7 +80,6 @@
      * Carrega pacote completo fazendo nova busca com forceAvail=true
      */
     function loadFullPackageFromSearch(budgetId, searchParams) {
-        console.log('🔄 Fazendo busca completa com forceAvail=true...');
 
         $.ajax({
             url: soltourData.ajaxurl,
@@ -110,17 +90,14 @@
             }),
             timeout: 30000,
             success: function(response) {
-                console.log('✅ Busca completa recebida');
 
                 if (response.success && response.data && response.data.budgets) {
                     const budgets = response.data.budgets;
-                    console.log(`Total de budgets: ${budgets.length}`);
 
                     // Encontrar o budget específico
                     const targetBudget = budgets.find(b => b.budgetId === budgetId);
 
                     if (targetBudget) {
-                        console.log('✅ Budget encontrado:', targetBudget);
 
                         // Extrair hotel info
                         const hotelService = targetBudget.hotelServices && targetBudget.hotelServices[0];
@@ -135,16 +112,13 @@
                             providerCode
                         );
                     } else {
-                        console.error('❌ Budget não encontrado na busca');
                         showError('Pacote não encontrado nos resultados.');
                     }
                 } else {
-                    console.error('❌ Busca falhou:', response);
                     showError('Erro ao buscar pacote.');
                 }
             },
             error: function(xhr, status, error) {
-                console.error('❌ Erro na busca:', error);
                 showError('Erro de conexão ao buscar pacote.');
             }
         });
@@ -154,7 +128,6 @@
      * Carrega detalhes tendo o budget em mãos
      */
     function loadPackageDetailsWithBudget(budget, availToken, hotelCode, providerCode) {
-        console.log('🏨 Carregando detalhes do hotel...');
 
         $.ajax({
             url: soltourData.ajaxurl,
@@ -168,7 +141,6 @@
                 provider_code: providerCode
             },
             success: function(response) {
-                console.log('✅ Detalhes do hotel recebidos');
 
                 if (response.success && response.data) {
                     // Combinar budget + details
@@ -185,7 +157,6 @@
                         availToken: availToken
                     });
                 } else {
-                    console.error('❌ Erro ao carregar detalhes:', response);
                     // Renderizar só com budget (sem detalhes completos do hotel)
                     renderPackageDetails({
                         budget: budget,
@@ -200,7 +171,6 @@
                 }
             },
             error: function(xhr, status, error) {
-                console.error('❌ Erro ao buscar detalhes do hotel:', error);
                 // Renderizar só com budget
                 renderPackageDetails({
                     budget: budget,
@@ -220,7 +190,6 @@
      * Método simples - só busca details (para compatibilidade)
      */
     function loadPackageDetailsSimple(packageData) {
-        console.log('🔄 Carregando detalhes (modo simples)...');
 
         $.ajax({
             url: soltourData.ajaxurl,
@@ -234,17 +203,14 @@
                 provider_code: packageData.providerCode || 'UNDEFINED'
             },
             success: function(response) {
-                console.log('✅ Response recebido:', response);
 
                 if (response.success && response.data) {
                     renderPackageDetails(response.data, packageData);
                 } else {
-                    console.error('❌ Response sem success:', response);
                     showError(response.data && response.data.message ? response.data.message : 'Erro ao carregar detalhes do pacote.');
                 }
             },
             error: function(xhr, status, error) {
-                console.error('❌ Erro AJAX:', error);
                 showError('Erro de conexão ao carregar detalhes do pacote.');
             }
         });
@@ -254,7 +220,6 @@
      * Renderiza os detalhes do pacote
      */
     function renderPackageDetails(data, packageData) {
-        console.log('🎨 Renderizando detalhes...', data);
 
         const $container = $('#soltour-package-details');
 
@@ -268,8 +233,6 @@
 
         const budget = data.budget || {};
 
-        console.log('Details (after extraction):', details);
-        console.log('Budget:', budget);
 
         // Hotel info - CORREÇÃO: verificar múltiplas propriedades
         const hotelName = details.name || details.hotelName || details.commercialName || 'Hotel';
@@ -424,7 +387,6 @@
         `;
 
         $container.html(html);
-        console.log('✅ Detalhes renderizados com sucesso');
     }
 
     /**
@@ -502,7 +464,6 @@
 
     // Função global para botão de reservar
     window.proceedToBooking = function(budgetId, hotelCode, providerCode, availToken) {
-        console.log('🛒 Prosseguindo para reserva...');
 
         // Salvar no sessionStorage
         sessionStorage.setItem('soltour_selected_package', JSON.stringify({
