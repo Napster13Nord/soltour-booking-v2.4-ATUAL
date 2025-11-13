@@ -258,7 +258,11 @@
                 return;
             }
 
+            console.log(`[DelayedAvail] Total de budgets recebidos: ${data.budgets.length}`);
+
             let updatedCount = 0;
+            let skippedNoPriceCount = 0;
+            let skippedNoCardCount = 0;
 
             // Criar mapa budgetId -> price
             data.budgets.forEach(function(budget) {
@@ -275,15 +279,30 @@
 
                 if (price > 0) {
                     // Procurar card pelo budgetId e atualizar
-                    const $card = $(`[data-budget-id="${budgetId}"]`).closest('.soltour-package-card');
+                    const $card = $(`[data-budget-id="${budgetId}"]`);
+
                     if ($card.length > 0) {
+                        const oldPrice = $card.find('.price-amount').text();
                         $card.find('.price-amount').html(Math.round(price) + '€');
                         updatedCount++;
+                        console.log(`[DelayedAvail] Atualizado: ${budgetId} | ${oldPrice} → ${Math.round(price)}€`);
+                    } else {
+                        skippedNoCardCount++;
+                        console.log(`[DelayedAvail] ⚠️  Card não encontrado para: ${budgetId}`);
                     }
+                } else {
+                    skippedNoPriceCount++;
                 }
             });
 
             console.log(`[DelayedAvail] ✅ ${updatedCount} preços atualizados`);
+            console.log(`[DelayedAvail] ⚠️  ${skippedNoPriceCount} budgets sem preço`);
+            console.log(`[DelayedAvail] ⚠️  ${skippedNoCardCount} budgets sem card na página`);
+
+            // Se nenhum preço foi atualizado, pode ser um problema
+            if (updatedCount === 0 && data.budgets.length > 0) {
+                console.error('[DelayedAvail] ❌ NENHUM PREÇO FOI ATUALIZADO! Possível problema de sincronização.');
+            }
         },
 
         /**
