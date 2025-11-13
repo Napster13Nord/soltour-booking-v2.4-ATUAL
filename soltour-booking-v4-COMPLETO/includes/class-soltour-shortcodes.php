@@ -10,106 +10,82 @@ class Soltour_Shortcodes {
 
     /**
      * Shortcode: [soltour_search]
-     * Formulário de busca com calendário
+     * Formulário de busca SIMPLIFICADO (fluxo oficial Soltour)
+     * Apenas: Destino + Origem + Mês
      */
     public function search_form($atts) {
         $atts = shortcode_atts(array(
-            'default_nights' => 7,
-            'default_adults' => 2,
-            'default_children' => 0,
-            'show_calendar' => 'yes'
+            'style' => 'simple' // 'simple' (novo) ou 'full' (antigo)
         ), $atts);
 
         ob_start();
         ?>
-        <div class="soltour-search-wrapper">
-            <form id="soltour-search-form" class="soltour-search-form">
-                
-                <div class="soltour-form-row">
+        <div class="soltour-search-wrapper bt-search-simple">
+            <div class="bt-search-header">
+                <h2><?php _e('Encontre o seu pacote de sonho', 'soltour-booking'); ?></h2>
+                <p><?php _e('Escolha o destino, origem e mês de viagem', 'soltour-booking'); ?></p>
+            </div>
+
+            <form id="soltour-search-form-simple" class="soltour-search-form-simple">
+
+                <div class="bt-form-grid">
                     <div class="soltour-form-group">
-                        <label for="soltour-destination"><?php _e('Destino', 'soltour-booking'); ?></label>
-                        <select id="soltour-destination" name="destination" required>
-                            <option value=""><?php _e('Selecione um destino', 'soltour-booking'); ?></option>
+                        <label for="soltour-destination-simple">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <?php _e('Para onde quer ir?', 'soltour-booking'); ?>
+                        </label>
+                        <select id="soltour-destination-simple" name="destination" required>
+                            <option value=""><?php _e('Selecione o destino', 'soltour-booking'); ?></option>
                         </select>
                     </div>
 
                     <div class="soltour-form-group">
-                        <label for="soltour-origin"><?php _e('Origem', 'soltour-booking'); ?></label>
-                        <select id="soltour-origin" name="origin" required>
+                        <label for="soltour-origin-simple">
+                            <i class="fas fa-plane-departure"></i>
+                            <?php _e('De onde parte?', 'soltour-booking'); ?>
+                        </label>
+                        <select id="soltour-origin-simple" name="origin" required>
                             <option value=""><?php _e('Selecione a origem', 'soltour-booking'); ?></option>
                         </select>
                     </div>
-                </div>
-
-                <div class="soltour-form-row">
-                    <div class="soltour-form-group">
-                        <label for="soltour-start-date"><?php _e('Data de Partida', 'soltour-booking'); ?></label>
-                        <input type="date" id="soltour-start-date" name="start_date" required 
-                               min="<?php echo date('Y-m-d'); ?>" />
-                    </div>
 
                     <div class="soltour-form-group">
-                        <label for="soltour-nights"><?php _e('Noites', 'soltour-booking'); ?></label>
-                        <select id="soltour-nights" name="nights">
-                            <?php for ($i = 3; $i <= 21; $i++): ?>
-                                <option value="<?php echo $i; ?>" <?php selected($i, $atts['default_nights']); ?>>
-                                    <?php echo $i; ?> <?php _e('noites', 'soltour-booking'); ?>
-                                </option>
-                            <?php endfor; ?>
+                        <label for="soltour-month-simple">
+                            <i class="fas fa-calendar-alt"></i>
+                            <?php _e('Quando quer viajar?', 'soltour-booking'); ?>
+                        </label>
+                        <select id="soltour-month-simple" name="month" required>
+                            <option value=""><?php _e('Selecione o mês', 'soltour-booking'); ?></option>
+                            <?php
+                            // Próximos 12 meses
+                            for ($i = 0; $i < 12; $i++) {
+                                $date = date('Y-m', strtotime("+$i months"));
+                                $monthName = date_i18n('F Y', strtotime("+$i months"));
+                                echo '<option value="' . $date . '">' . $monthName . '</option>';
+                            }
+                            ?>
                         </select>
                     </div>
                 </div>
 
-                <div class="soltour-form-row">
-                    <div class="soltour-form-group">
-                        <label for="soltour-adults"><?php _e('Adultos', 'soltour-booking'); ?></label>
-                        <select id="soltour-adults" name="adults">
-                            <?php for ($i = 1; $i <= 8; $i++): ?>
-                                <option value="<?php echo $i; ?>" <?php selected($i, $atts['default_adults']); ?>>
-                                    <?php echo $i; ?>
-                                </option>
-                            <?php endfor; ?>
-                        </select>
-                    </div>
-
-                    <div class="soltour-form-group">
-                        <label for="soltour-children"><?php _e('Crianças (0-17)', 'soltour-booking'); ?></label>
-                        <select id="soltour-children" name="children">
-                            <?php for ($i = 0; $i <= 6; $i++): ?>
-                                <option value="<?php echo $i; ?>" <?php selected($i, $atts['default_children']); ?>>
-                                    <?php echo $i; ?>
-                                </option>
-                            <?php endfor; ?>
-                        </select>
-                    </div>
-                </div>
-
-                <div id="soltour-children-ages" style="display:none;">
-                    <label><?php _e('Idades das Crianças', 'soltour-booking'); ?></label>
-                    <div id="soltour-children-ages-inputs"></div>
-                </div>
-
-                <?php if ($atts['show_calendar'] === 'yes'): ?>
-                <div class="soltour-price-calendar-wrapper" id="soltour-price-calendar" style="display:none;">
-                    <h3><?php _e('Selecione a Data', 'soltour-booking'); ?></h3>
-                    <div class="soltour-calendar-nav">
-                        <button type="button" id="soltour-prev-month">&larr; <?php _e('Anterior', 'soltour-booking'); ?></button>
-                        <span id="soltour-current-month"></span>
-                        <button type="button" id="soltour-next-month"><?php _e('Próximo', 'soltour-booking'); ?> &rarr;</button>
-                    </div>
-                    <div id="soltour-calendar-grid"></div>
-                </div>
-                <?php endif; ?>
-
-                <button type="submit" class="soltour-btn soltour-btn-primary" style="padding: 20px 35px !important; border-radius: 100px !important; background: #019CB8 !important; color: #fff !important; border: none !important; font-size: 16px !important; font-weight: 600 !important;">
-                    <?php _e('Pesquisar Pacotes', 'soltour-booking'); ?>
+                <button type="submit" class="soltour-btn soltour-btn-primary bt-btn-search-simple">
+                    <i class="fas fa-search"></i>
+                    <?php _e('Buscar Destinos', 'soltour-booking'); ?>
                 </button>
 
                 <div id="soltour-search-loading" class="soltour-loading" style="display:none;">
                     <span class="spinner"></span>
-                    <?php _e('A procurar...', 'soltour-booking'); ?>
+                    <?php _e('A procurar destinos...', 'soltour-booking'); ?>
                 </div>
             </form>
+
+            <!-- Cards de Destinos (serão carregados aqui) -->
+            <div id="soltour-destination-cards" class="bt-destination-cards" style="display:none;">
+                <h3 class="bt-cards-title"><?php _e('Escolha o seu destino', 'soltour-booking'); ?></h3>
+                <div id="soltour-cards-grid" class="bt-cards-grid">
+                    <!-- Cards serão inseridos via JavaScript -->
+                </div>
+            </div>
         </div>
         <?php
         return ob_get_clean();
