@@ -1,4 +1,8 @@
-# Soltour Booking V4 - COMPLETO
+# Soltour Booking V4.1 - 100% COMPLETO
+
+## 🎯 PLUGIN COMPLETO COM TODAS AS FUNCIONALIDADES
+
+### Status: ✅ 14/14 funcionalidades implementadas (100%)
 
 ## ✅ TODOS OS CAMPOS MAPEADOS CORRETAMENTE
 
@@ -132,3 +136,101 @@ Os cards agora incluem:
 ## Versão
 **4.0.0** - Novembro 2025
 **TODOS os campos mapeados corretamente conforme especificação**
+
+---
+
+## 🚀 NOVAS FUNCIONALIDADES V4.1
+
+### 📧 Print & Email Quote
+- **Imprimir Cotação:** Gera PDF da cotação para impressão
+- **Enviar por Email:** Envia cotação formatada por email
+- **Integração API:** Usa API Soltour com fallback local
+- **Template HTML:** Email profissional com dados da cotação
+
+### 👤 Copy Holder to First Passenger
+- **Cópia Automática:** Checkbox para copiar dados do titular
+- **Sincronização em Tempo Real:** Campos sincronizam automaticamente
+- **Validação:** Garante dados corretos antes do submit
+- **UX Aprimorada:** Indicador visual quando ativo
+
+### 🔧 Melhorias Técnicas
+- Endpoint `/booking/quote/print` implementado
+- Endpoint `/booking/quote/send` implementado
+- Geração local de PDF/HTML como fallback
+- Sistema de fallback robusto para print e email
+- Módulo JavaScript modular e reutilizável
+- CSS completo para todas as novas features
+
+---
+
+## 📦 MÓDULOS JAVASCRIPT (9 módulos)
+
+1. ✅ **delayed-availability.js** (345 linhas) - Loading assíncrono
+2. ✅ **toast-notifications.js** (168 linhas) - Notificações
+3. ✅ **delayed-quote.js** (400 linhas) - Preços assíncronos
+4. ✅ **optional-services.js** (484 linhas) - Seguros, transfers, golf
+5. ✅ **quote-validations.js** (411 linhas) - Validações completas
+6. ✅ **breakdown.js** (430 linhas) - Breakdown dinâmico
+7. ✅ **quote-form.js** (306 linhas) - Formulário de cotação
+8. ✅ **navigation.js** (232 linhas) - Navegação com cache
+9. ✅ **copy-holder.js** (267 linhas) - Copiar titular → passageiro
+
+**Total:** 3.043 linhas de código JavaScript modular
+
+---
+
+## 🎨 Como Usar Copy Holder
+
+### No Template/Shortcode:
+
+```html
+<div class="copy-holder-checkbox-container">
+    <label for="copyHolderToggle">
+        <input type="checkbox" 
+               class="js-toggle-copy-holder" 
+               id="copyHolderToggle">
+        <span class="copy-holder-icon">👤</span>
+        <span>Titular é o primeiro passageiro</span>
+    </label>
+</div>
+```
+
+### Funcionalidade:
+- Marcar checkbox: dados do titular são copiados para primeiro passageiro
+- Campos do passageiro ficam desabilitados (somente leitura)
+- Mudanças no titular são refletidas em tempo real
+- Desmarcar: campos voltam ao normal
+
+---
+
+## 📧 Como Usar Print/Email
+
+### Botões no Template:
+
+```html
+<!-- Imprimir Cotação -->
+<button class="js-print-quote" data-budget-id="..." data-avail-token="...">
+    🖨️ Imprimir Cotação
+</button>
+
+<!-- Enviar por Email -->
+<button class="js-send-mail" data-toggle="modal" data-target="#sendEmailModal">
+    📧 Enviar por Email
+</button>
+
+<!-- Modal de Email -->
+<div id="sendEmailModal" class="modal">
+    <form id="sendEmailForm">
+        <input type="email" name="email" placeholder="Digite seu email" required>
+        <button type="submit">Enviar</button>
+    </form>
+</div>
+```
+
+### Funcionalidade:
+- **Print:** Chama API Soltour → gera PDF → abre em nova aba
+- **Email:** Valida email → envia via API → fallback para wp_mail
+- **Feedback:** Toast notifications para sucesso/erro
+
+---
+
