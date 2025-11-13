@@ -2643,3 +2643,72 @@ body .soltour-pagination .page-ellipsis {
         grid-template-columns: repeat(2, 1fr);
     }
 }
+
+/* ========================================
+   INFORMAÇÕES DE VOO NOS CARDS (como Soltour oficial)
+   ======================================== */
+
+.package-flights {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 15px;
+    margin: 15px 0;
+}
+
+.flight-info-compact {
+    display: grid;
+    grid-template-columns: 60px 1fr auto auto;
+    gap: 12px;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.flight-info-compact:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.flight-info-compact:first-child {
+    padding-top: 0;
+}
+
+.flight-type {
+    font-size: 11px;
+    font-weight: 600;
+    color: #6c757d;
+    text-transform: uppercase;
+}
+
+.flight-airline {
+    font-size: 13px;
+    color: #495057;
+    font-weight: 500;
+}
+
+.flight-times {
+    font-size: 14px;
+    font-weight: 700;
+    color: #019CB8;
+}
+
+.flight-route {
+    font-size: 12px;
+    color: #6c757d;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+    .flight-info-compact {
+        grid-template-columns: 1fr;
+        gap: 6px;
+    }
+
+    .flight-type,
+    .flight-airline,
+    .flight-times,
+    .flight-route {
+        font-size: 12px;
+    }
+}

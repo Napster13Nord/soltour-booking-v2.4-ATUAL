@@ -258,19 +258,25 @@
 
         const $container = $('#soltour-package-details');
 
-        // Extrair informações
-        const details = data.hotelDetails || data.details || {};
+        // Extrair informações - CORREÇÃO: hotelDetails.hotel
+        let details = data.hotelDetails || data.details || {};
+
+        // Se hotelDetails tem 'hotel' dentro, usar ele
+        if (details.hotel) {
+            details = details.hotel;
+        }
+
         const budget = data.budget || {};
 
-        console.log('Details:', details);
+        console.log('Details (after extraction):', details);
         console.log('Budget:', budget);
 
-        // Hotel info
-        const hotelName = details.name || details.hotelName || 'Hotel';
-        const hotelDescription = details.description || details.hotelDescription || '';
-        const hotelAddress = details.address || '';
-        const hotelImages = details.images || [];
-        const hotelAmenities = details.amenities || details.facilities || [];
+        // Hotel info - CORREÇÃO: verificar múltiplas propriedades
+        const hotelName = details.name || details.hotelName || details.commercialName || 'Hotel';
+        const hotelDescription = details.description || details.hotelDescription || details.longDescription || '';
+        const hotelAddress = details.address || details.fullAddress || '';
+        const hotelImages = details.images || details.imageUrls || [];
+        const hotelAmenities = details.amenities || details.facilities || details.services || [];
 
         // Preço
         let price = 0;

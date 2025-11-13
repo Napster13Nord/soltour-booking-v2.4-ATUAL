@@ -1191,6 +1191,31 @@
             seasonWindow = `${months[startDate.getMonth()]} ${startDate.getDate()} - ${months[endDate.getMonth()]} ${endDate.getDate()}`;
         }
 
+        // (J) INFORMAÇÕES DE VOO DETALHADAS
+        let flightInfoHTML = '';
+        if (budget.flightServices && budget.flightServices.length > 0) {
+            budget.flightServices.forEach(function(flight) {
+                if (flight.segments && flight.segments.length > 0) {
+                    const segment = flight.segments[0]; // Primeiro segmento
+                    const origin = segment.origin || '';
+                    const destination = segment.destination || '';
+                    const departureTime = segment.departureTime ? segment.departureTime.substring(0, 5) : '--:--';
+                    const arrivalTime = segment.arrivalTime ? segment.arrivalTime.substring(0, 5) : '--:--';
+                    const airline = segment.carrierName || segment.carrier || '';
+                    const flightType = flight.type === 'OUTBOUND' ? 'Saída' : 'Regresso';
+
+                    flightInfoHTML += `
+                        <div class="flight-info-compact">
+                            <span class="flight-type">${flightType}</span>
+                            <span class="flight-airline">${airline}</span>
+                            <span class="flight-times">${departureTime} - ${arrivalTime}</span>
+                            <span class="flight-route">${origin} → ${destination}</span>
+                        </div>
+                    `;
+                }
+            });
+        }
+
         // (K) PREÇO - CORRETO!
         let price = 0;
         let currency = 'EUR';
@@ -1223,8 +1248,12 @@
                     <div class="package-stars">
                         ${hotelStars > 0 ? '⭐'.repeat(hotelStars) : '<span class="no-rating">Hotel</span>'}
                     </div>
+                    ${flightInfoHTML ? `
+                        <div class="package-flights">
+                            ${flightInfoHTML}
+                        </div>
+                    ` : ''}
                     <div class="package-details">
-                        ${originCity ? `<p>✈️ Voos de ${originCity}</p>` : ''}
                         <p>🌙 ${numNights} Noites | ${mealPlan}</p>
                         ${seasonWindow ? `<p>📅 ${seasonWindow}</p>` : ''}
                     </div>
