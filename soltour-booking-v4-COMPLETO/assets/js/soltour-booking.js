@@ -1425,7 +1425,7 @@
             availToken: SoltourApp.availToken
         }));
 
-        window.location.href = `/pacote-detalhes/?budget=${budgetId}`;
+        window.location.href = `/detalhes-do-pacote/?budget=${budgetId}`;
     }
 
 })(jQuery);
