@@ -845,19 +845,34 @@
 
                         // DELAYED AVAILABILITY: Iniciar carregamento tardio de preços
                         // Se a busca inicial foi com forceAvail=false, ativar delayed loading
-                        if (SoltourApp.searchParams.force_avail === false) {
+                        console.log('🔍 DEBUG DelayedAvailability:');
+                        console.log('   - force_avail value:', SoltourApp.searchParams.force_avail);
+                        console.log('   - force_avail type:', typeof SoltourApp.searchParams.force_avail);
+                        console.log('   - force_avail === false:', SoltourApp.searchParams.force_avail === false);
+                        console.log('   - force_avail == false:', SoltourApp.searchParams.force_avail == false);
+                        console.log('   - !force_avail:', !SoltourApp.searchParams.force_avail);
+                        console.log('   - searchParams completo:', SoltourApp.searchParams);
+
+                        // Verificação mais robusta: aceita false (boolean), "false" (string), 0, null, undefined
+                        if (SoltourApp.searchParams.force_avail === false ||
+                            SoltourApp.searchParams.force_avail === 'false' ||
+                            !SoltourApp.searchParams.force_avail) {
                             log('🔄 Iniciando DelayedAvailability para atualizar preços...');
 
                             // Dar um pequeno delay para UI renderizar completamente
                             setTimeout(function() {
                                 if (window.SoltourApp.DelayedAvailability) {
+                                    console.log('✅ Módulo DelayedAvailability encontrado, chamando init()...');
                                     window.SoltourApp.DelayedAvailability.init({
                                         delayedAvailActive: true
                                     });
                                 } else {
-                                    console.warn('⚠️  Módulo DelayedAvailability não carregado');
+                                    console.error('❌ Módulo DelayedAvailability NÃO ENCONTRADO!');
+                                    console.log('   - window.SoltourApp:', window.SoltourApp);
                                 }
                             }, 500);
+                        } else {
+                            console.warn('⚠️  DelayedAvailability NÃO ATIVADO - force_avail não é false');
                         }
                     }
                 },
@@ -891,9 +906,16 @@
                         logSuccess('✅ Página renderizada e modal fechado (handler de erro)');
 
                         // DELAYED AVAILABILITY: Iniciar carregamento tardio de preços
-                        if (SoltourApp.searchParams.force_avail === false) {
+                        console.log('🔍 DEBUG DelayedAvailability (error handler):');
+                        console.log('   - force_avail:', SoltourApp.searchParams.force_avail);
+
+                        // Verificação mais robusta
+                        if (SoltourApp.searchParams.force_avail === false ||
+                            SoltourApp.searchParams.force_avail === 'false' ||
+                            !SoltourApp.searchParams.force_avail) {
                             setTimeout(function() {
                                 if (window.SoltourApp.DelayedAvailability) {
+                                    console.log('✅ Módulo DelayedAvailability encontrado (error handler)');
                                     window.SoltourApp.DelayedAvailability.init({
                                         delayedAvailActive: true
                                     });
