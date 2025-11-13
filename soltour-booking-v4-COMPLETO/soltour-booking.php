@@ -217,7 +217,23 @@ class Soltour_Booking {
             true
         );
 
-        // Package Details Page
+        // Modal de Busca Detalhada (novo fluxo oficial)
+        wp_enqueue_style(
+            'beauty-travel-modal-search',
+            SOLTOUR_PLUGIN_URL . 'assets/css/modal-search.css',
+            array(),
+            SOLTOUR_VERSION
+        );
+
+        wp_enqueue_script(
+            'beauty-travel-modal-search',
+            SOLTOUR_PLUGIN_URL . 'assets/js/modules/modal-search.js',
+            array('jquery', 'soltour-booking-script'),
+            SOLTOUR_VERSION,
+            true
+        );
+
+        // Package Details Page (a ser removido/substituído por quote)
         wp_enqueue_script(
             'soltour-package-details',
             SOLTOUR_PLUGIN_URL . 'assets/js/package-details.js',
