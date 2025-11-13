@@ -1388,7 +1388,7 @@
                 const stopInfo = outboundSegments.length > 1 ? `${outboundSegments.length - 1} escala${outboundSegments.length > 2 ? 's' : ''}` : 'Voo direto';
 
                 flightHTML += `
-                    <div style="background: #fff; border-radius: 12px; padding: 20px; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+                    <div class="flight-card-ida" style="background: #fff; border-radius: 12px; padding: 20px; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); max-width: 100%; box-sizing: border-box; overflow: hidden;">
                         <div style="display: flex; align-items: center; margin-bottom: 18px;">
                             <div style="background: #f0f9fb; border-radius: 50%; width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; margin-right: 12px; font-size: 20px;">
                                 ✈️
@@ -1400,32 +1400,28 @@
                         </div>
 
                         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px;">
-                            <div style="text-align: left; flex: 1;">
-                                <div style="font-size: 32px; font-weight: 700; line-height: 1; margin-bottom: 6px; color: #1a202c;">${formatTime(firstSeg.departureTime)}</div>
-                                <div style="font-size: 18px; font-weight: 600; letter-spacing: 0.5px; color: #019CB8;">${firstSeg.originAirport}</div>
+                            <div style="text-align: left; flex: 1; min-width: 0;">
+                                <div class="flight-time" style="font-size: 24px; font-weight: 700; line-height: 1; margin-bottom: 6px; color: #1a202c;">${formatTime(firstSeg.departureTime)}</div>
+                                <div style="font-size: 16px; font-weight: 600; letter-spacing: 0.5px; color: #019CB8;">${firstSeg.originAirport}</div>
                             </div>
 
-                            <div style="flex: 0 0 100px; text-align: center; padding: 0 20px;">
-                                <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 6px;">
-                                    <div style="flex: 1; height: 2px; background: #e5e7eb;"></div>
-                                    <div style="margin: 0 8px; color: #019CB8; font-size: 20px; font-weight: 700;">→</div>
-                                    <div style="flex: 1; height: 2px; background: #e5e7eb;"></div>
-                                </div>
+                            <div style="text-align: center; padding: 0 15px; flex-shrink: 0;">
+                                <div style="color: #019CB8; font-size: 24px; font-weight: 700; line-height: 1; margin-bottom: 6px;">→</div>
                                 <div style="font-size: 11px; color: #6b7280; font-weight: 500; white-space: nowrap;">${stopInfo}</div>
                             </div>
 
-                            <div style="text-align: right; flex: 1;">
-                                <div style="font-size: 32px; font-weight: 700; line-height: 1; margin-bottom: 6px; color: #1a202c;">${formatTime(lastSeg.arrivalTime)}</div>
-                                <div style="font-size: 18px; font-weight: 600; letter-spacing: 0.5px; color: #019CB8;">${lastSeg.destinationAirport}</div>
+                            <div style="text-align: right; flex: 1; min-width: 0;">
+                                <div class="flight-time" style="font-size: 24px; font-weight: 700; line-height: 1; margin-bottom: 6px; color: #1a202c;">${formatTime(lastSeg.arrivalTime)}</div>
+                                <div style="font-size: 16px; font-weight: 600; letter-spacing: 0.5px; color: #019CB8;">${lastSeg.destinationAirport}</div>
                             </div>
                         </div>
 
                         <div style="display: flex; align-items: center; padding-top: 15px; border-top: 1px solid #e5e7eb;">
-                            <svg style="width: 20px; height: 20px; margin-right: 10px; color: #019CB8;" viewBox="0 0 24 24" fill="currentColor">
+                            <svg style="width: 20px; height: 20px; margin-right: 10px; color: #019CB8; flex-shrink: 0;" viewBox="0 0 24 24" fill="currentColor">
                                 <path d="M21,16V14L13,9V3.5A1.5,1.5 0 0,0 11.5,2A1.5,1.5 0 0,0 10,3.5V9L2,14V16L10,13.5V19L8,20.5V22L11.5,21L15,22V20.5L13,19V13.5L21,16Z" />
                             </svg>
-                            <div>
-                                <div style="font-size: 15px; font-weight: 600; color: #1a202c;">${airlineName}</div>
+                            <div style="min-width: 0; overflow: hidden;">
+                                <div style="font-size: 15px; font-weight: 600; color: #1a202c; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${airlineName}</div>
                                 <div style="font-size: 13px; color: #6b7280;">Voo ${firstSeg.flightNumber || 'N/A'}</div>
                             </div>
                         </div>
@@ -1444,7 +1440,7 @@
                 const stopInfo = inboundSegments.length > 1 ? `${inboundSegments.length - 1} escala${inboundSegments.length > 2 ? 's' : ''}` : 'Voo direto';
 
                 flightHTML += `
-                    <div style="background: #fff; border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+                    <div class="flight-card-volta" style="background: #fff; border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); max-width: 100%; box-sizing: border-box; overflow: hidden;">
                         <div style="display: flex; align-items: center; margin-bottom: 18px;">
                             <div style="background: #f0f9fb; border-radius: 50%; width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; margin-right: 12px; font-size: 20px; transform: rotate(180deg);">
                                 ✈️
@@ -1456,32 +1452,28 @@
                         </div>
 
                         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px;">
-                            <div style="text-align: left; flex: 1;">
-                                <div style="font-size: 32px; font-weight: 700; line-height: 1; margin-bottom: 6px; color: #1a202c;">${formatTime(firstSeg.departureTime)}</div>
-                                <div style="font-size: 18px; font-weight: 600; letter-spacing: 0.5px; color: #019CB8;">${firstSeg.originAirport}</div>
+                            <div style="text-align: left; flex: 1; min-width: 0;">
+                                <div class="flight-time" style="font-size: 24px; font-weight: 700; line-height: 1; margin-bottom: 6px; color: #1a202c;">${formatTime(firstSeg.departureTime)}</div>
+                                <div style="font-size: 16px; font-weight: 600; letter-spacing: 0.5px; color: #019CB8;">${firstSeg.originAirport}</div>
                             </div>
 
-                            <div style="flex: 0 0 100px; text-align: center; padding: 0 20px;">
-                                <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 6px;">
-                                    <div style="flex: 1; height: 2px; background: #e5e7eb;"></div>
-                                    <div style="margin: 0 8px; color: #019CB8; font-size: 20px; font-weight: 700;">→</div>
-                                    <div style="flex: 1; height: 2px; background: #e5e7eb;"></div>
-                                </div>
+                            <div style="text-align: center; padding: 0 15px; flex-shrink: 0;">
+                                <div style="color: #019CB8; font-size: 24px; font-weight: 700; line-height: 1; margin-bottom: 6px;">→</div>
                                 <div style="font-size: 11px; color: #6b7280; font-weight: 500; white-space: nowrap;">${stopInfo}</div>
                             </div>
 
-                            <div style="text-align: right; flex: 1;">
-                                <div style="font-size: 32px; font-weight: 700; line-height: 1; margin-bottom: 6px; color: #1a202c;">${formatTime(lastSeg.arrivalTime)}</div>
-                                <div style="font-size: 18px; font-weight: 600; letter-spacing: 0.5px; color: #019CB8;">${lastSeg.destinationAirport}</div>
+                            <div style="text-align: right; flex: 1; min-width: 0;">
+                                <div class="flight-time" style="font-size: 24px; font-weight: 700; line-height: 1; margin-bottom: 6px; color: #1a202c;">${formatTime(lastSeg.arrivalTime)}</div>
+                                <div style="font-size: 16px; font-weight: 600; letter-spacing: 0.5px; color: #019CB8;">${lastSeg.destinationAirport}</div>
                             </div>
                         </div>
 
                         <div style="display: flex; align-items: center; padding-top: 15px; border-top: 1px solid #e5e7eb;">
-                            <svg style="width: 20px; height: 20px; margin-right: 10px; color: #019CB8;" viewBox="0 0 24 24" fill="currentColor">
+                            <svg style="width: 20px; height: 20px; margin-right: 10px; color: #019CB8; flex-shrink: 0;" viewBox="0 0 24 24" fill="currentColor">
                                 <path d="M21,16V14L13,9V3.5A1.5,1.5 0 0,0 11.5,2A1.5,1.5 0 0,0 10,3.5V9L2,14V16L10,13.5V19L8,20.5V22L11.5,21L15,22V20.5L13,19V13.5L21,16Z" />
                             </svg>
-                            <div>
-                                <div style="font-size: 15px; font-weight: 600; color: #1a202c;">${airlineName}</div>
+                            <div style="min-width: 0; overflow: hidden;">
+                                <div style="font-size: 15px; font-weight: 600; color: #1a202c; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${airlineName}</div>
                                 <div style="font-size: 13px; color: #6b7280;">Voo ${firstSeg.flightNumber || 'N/A'}</div>
                             </div>
                         </div>
@@ -1503,13 +1495,13 @@
                     margin-bottom: 30px;
                     grid-column: 1 / -1;
                     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+                    max-width: 100%;
+                    box-sizing: border-box;
+                    overflow: hidden;
                 ">
-                    <div style="margin-bottom: 25px; display: flex; align-items: center;">
-                        <div style="background: linear-gradient(135deg, #019CB8 0%, #0176a8 100%); border-radius: 12px; width: 56px; height: 56px; display: flex; align-items: center; justify-content: center; font-size: 28px; margin-right: 16px;">✈️</div>
-                        <div>
-                            <div style="font-size: 22px; font-weight: 700; letter-spacing: 0.3px; color: #1a202c;">Voos Incluídos</div>
-                            <div style="font-size: 14px; color: #6b7280; margin-top: 4px;">Ida e volta confirmados no pacote</div>
-                        </div>
+                    <div style="margin-bottom: 25px;">
+                        <div style="font-size: 22px; font-weight: 700; letter-spacing: 0.3px; color: #1a202c;">✈️ Voos Incluídos</div>
+                        <div style="font-size: 14px; color: #6b7280; margin-top: 4px;">Ida e volta confirmados no pacote</div>
                     </div>
                     ${flightHTML}
                 </div>

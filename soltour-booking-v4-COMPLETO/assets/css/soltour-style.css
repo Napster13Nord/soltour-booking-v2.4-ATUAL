@@ -893,80 +893,55 @@
         margin-bottom: 20px !important;
     }
 
-    /* Cabeçalho do box */
-    .recommended-flight-box > div:first-child {
-        margin-bottom: 20px !important;
-        flex-direction: row !important;
-        align-items: center !important;
-        gap: 12px !important;
-    }
-
-    .recommended-flight-box > div:first-child > div:first-child {
-        width: 48px !important;
-        height: 48px !important;
-        font-size: 24px !important;
-    }
-
-    .recommended-flight-box > div:first-child > div:last-child > div:first-child {
-        font-size: 18px !important;
-    }
-
-    .recommended-flight-box > div:first-child > div:last-child > div:last-child {
-        font-size: 12px !important;
-    }
-
-    /* Cards internos de voo */
-    .recommended-flight-box > div > div {
+    /* Cards de voo */
+    .flight-card-ida,
+    .flight-card-volta {
         padding: 16px 12px !important;
         margin-bottom: 12px !important;
     }
 
-    /* Horários REDUZIDOS para mobile */
-    .recommended-flight-box > div > div > div:nth-child(2) > div:first-child > div:first-child,
-    .recommended-flight-box > div > div > div:nth-child(2) > div:last-child > div:first-child {
-        font-size: 24px !important;
-    }
-
-    /* Códigos de aeroporto */
-    .recommended-flight-box > div > div > div:nth-child(2) > div:first-child > div:last-child,
-    .recommended-flight-box > div > div > div:nth-child(2) > div:last-child > div:last-child {
-        font-size: 15px !important;
-    }
-
-    /* Linha com seta */
-    .recommended-flight-box > div > div > div:nth-child(2) > div:nth-child(2) {
-        flex: 0 0 70px !important;
-        padding: 0 10px !important;
-    }
-
-    .recommended-flight-box > div > div > div:nth-child(2) > div:nth-child(2) > div:first-child > div:nth-child(2) {
+    /* HORÁRIOS - 16PX NO MOBILE */
+    .flight-time {
         font-size: 16px !important;
-        margin: 0 6px !important;
     }
 
-    /* Info de companhia */
-    .recommended-flight-box > div > div > div:last-child > div > div:first-child {
+    /* Aeroportos menores */
+    .flight-card-ida div[style*="font-size: 16px"],
+    .flight-card-volta div[style*="font-size: 16px"] {
         font-size: 14px !important;
     }
 
-    .recommended-flight-box > div > div > div:last-child > div > div:last-child {
-        font-size: 12px !important;
+    /* Seta menor */
+    .flight-card-ida div[style*="font-size: 24px"][style*="→"],
+    .flight-card-volta div[style*="font-size: 24px"][style*="→"] {
+        font-size: 18px !important;
     }
 
-    /* Ícone de avião */
-    .recommended-flight-box > div > div > div:first-child > div:first-child {
-        width: 38px !important;
-        height: 38px !important;
+    /* Ícone de avião no cabeçalho */
+    .flight-card-ida > div:first-child > div:first-child,
+    .flight-card-volta > div:first-child > div:first-child {
+        width: 36px !important;
+        height: 36px !important;
         font-size: 18px !important;
         margin-right: 10px !important;
     }
 
-    .recommended-flight-box > div > div > div:first-child > div:last-child > div:first-child {
+    /* Texto "Voo de Ida/Volta" */
+    .flight-card-ida > div:first-child > div:last-child > div:first-child,
+    .flight-card-volta > div:first-child > div:last-child > div:first-child {
         font-size: 10px !important;
     }
 
-    .recommended-flight-box > div > div > div:first-child > div:last-child > div:last-child {
-        font-size: 13px !important;
+    /* Data */
+    .flight-card-ida > div:first-child > div:last-child > div:last-child,
+    .flight-card-volta > div:first-child > div:last-child > div:last-child {
+        font-size: 12px !important;
+    }
+
+    /* Padding da seta */
+    .flight-card-ida div[style*="padding: 0 15px"],
+    .flight-card-volta div[style*="padding: 0 15px"] {
+        padding: 0 10px !important;
     }
 }
 
@@ -1114,81 +1089,49 @@
         border-radius: 12px !important;
     }
 
-    /* Cabeçalho do box - ainda menor */
-    .recommended-flight-box > div:first-child > div:first-child {
-        width: 42px !important;
-        height: 42px !important;
-        font-size: 20px !important;
-    }
-
-    .recommended-flight-box > div:first-child > div:last-child > div:first-child {
-        font-size: 16px !important;
-    }
-
-    .recommended-flight-box > div:first-child > div:last-child > div:last-child {
-        font-size: 11px !important;
-    }
-
-    /* Cards de voo internos */
-    .recommended-flight-box > div > div {
+    /* Cards de voo */
+    .flight-card-ida,
+    .flight-card-volta {
         padding: 14px 10px !important;
         border-radius: 10px !important;
     }
 
-    /* Horários ainda menores */
-    .recommended-flight-box > div > div > div:nth-child(2) > div:first-child > div:first-child,
-    .recommended-flight-box > div > div > div:nth-child(2) > div:last-child > div:first-child {
-        font-size: 20px !important;
-    }
-
-    /* Aeroportos */
-    .recommended-flight-box > div > div > div:nth-child(2) > div:first-child > div:last-child,
-    .recommended-flight-box > div > div > div:nth-child(2) > div:last-child > div:last-child {
-        font-size: 14px !important;
-    }
-
-    /* Seta e linha */
-    .recommended-flight-box > div > div > div:nth-child(2) > div:nth-child(2) {
-        flex: 0 0 60px !important;
-        padding: 0 8px !important;
-    }
-
-    .recommended-flight-box > div > div > div:nth-child(2) > div:nth-child(2) > div:first-child > div:nth-child(2) {
-        font-size: 14px !important;
-        margin: 0 5px !important;
-    }
-
-    .recommended-flight-box > div > div > div:nth-child(2) > div:nth-child(2) > div:last-child {
-        font-size: 10px !important;
-    }
-
-    /* Companhia aérea */
-    .recommended-flight-box > div > div > div:last-child > div > div:first-child {
-        font-size: 13px !important;
-    }
-
-    .recommended-flight-box > div > div > div:last-child > div > div:last-child {
-        font-size: 11px !important;
-    }
-
-    .recommended-flight-box > div > div > div:last-child svg {
-        width: 18px !important;
-        height: 18px !important;
-    }
-
-    /* Ícone de avião */
-    .recommended-flight-box > div > div > div:first-child > div:first-child {
-        width: 36px !important;
-        height: 36px !important;
+    /* HORÁRIOS - 16PX (mantém o mesmo) */
+    .flight-time {
         font-size: 16px !important;
     }
 
-    .recommended-flight-box > div > div > div:first-child > div:last-child > div:first-child {
-        font-size: 9px !important;
+    /* Aeroportos */
+    .flight-card-ida div[style*="font-size: 16px"],
+    .flight-card-volta div[style*="font-size: 16px"] {
+        font-size: 13px !important;
     }
 
-    .recommended-flight-box > div > div > div:first-child > div:last-child > div:last-child {
-        font-size: 12px !important;
+    /* Seta */
+    .flight-card-ida div[style*="font-size: 24px"][style*="→"],
+    .flight-card-volta div[style*="font-size: 24px"][style*="→"] {
+        font-size: 16px !important;
+    }
+
+    /* Ícone de avião */
+    .flight-card-ida > div:first-child > div:first-child,
+    .flight-card-volta > div:first-child > div:first-child {
+        width: 32px !important;
+        height: 32px !important;
+        font-size: 16px !important;
+    }
+
+    /* Companhia aérea */
+    .flight-card-ida svg,
+    .flight-card-volta svg {
+        width: 16px !important;
+        height: 16px !important;
+    }
+
+    /* Padding */
+    .flight-card-ida div[style*="padding: 0 15px"],
+    .flight-card-volta div[style*="padding: 0 15px"] {
+        padding: 0 8px !important;
     }
 
     /* Grid com menos espaçamento */
