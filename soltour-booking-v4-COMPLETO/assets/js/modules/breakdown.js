@@ -21,7 +21,6 @@
          * Inicializa o módulo de breakdown
          */
         init: function() {
-            console.log('✅ Inicializando módulo Breakdown...');
 
             this.bindEvents();
             this.setBreakdownView('gross'); // Começar em visão bruta
@@ -79,7 +78,6 @@
          * Alterna entre desglose completo e simplificado
          */
         toggleBreakdowns: function() {
-            console.log('🔄 Alternando desglose...');
 
             $('.js-breakdown-row').each(function() {
                 const $this = $(this);
@@ -99,7 +97,6 @@
             });
 
             this.showDetailed = !this.showDetailed;
-            console.log('  ✓ Desglose detalhado:', this.showDetailed ? 'SIM' : 'NÃO');
         },
 
         /**
@@ -107,7 +104,6 @@
          * @param {string} view - 'gross' ou 'net'
          */
         setBreakdownView: function(view) {
-            console.log('🔄 Mudando visão do breakdown para:', view);
 
             const $netColumns = $('.js-net-column');
             this.currentView = view;
@@ -115,11 +111,9 @@
             if (view === 'gross') {
                 // Visão bruta - ocultar colunas líquidas
                 $netColumns.hide();
-                console.log('  ✓ Colunas líquidas ocultadas');
             } else if (view === 'net') {
                 // Visão líquida - mostrar colunas líquidas
                 $netColumns.show();
-                console.log('  ✓ Colunas líquidas exibidas');
             }
 
             // Recalcular totais
@@ -135,7 +129,6 @@
          * Calcula totais do breakdown baseado nas colunas visíveis
          */
         calculateBreakdownTotals: function() {
-            console.log('🔢 Calculando totais do breakdown...');
 
             let totalCalculated = 0;
 
@@ -171,7 +164,6 @@
                 }
             });
 
-            console.log('  ✓ Total calculado:', totalCalculated);
 
             /**
              * Formata valor como moeda
@@ -222,11 +214,9 @@
          * Imprime a cotação
          */
         printQuote: function() {
-            console.log('🖨️  Imprimindo cotação...');
 
             const $form = $('form#bookForm');
             if ($form.length === 0) {
-                console.error('❌ Formulário de booking não encontrado');
                 return;
             }
 
@@ -236,7 +226,6 @@
             // Adicionar visão do breakdown
             formData.breakdownView = this.currentView;
 
-            console.log('Dados para impressão:', formData);
 
             showLoadingModal('Gerando PDF...', 'Preparando sua cotação');
 
@@ -254,7 +243,6 @@
                     hideLoadingModal();
 
                     if (response.success && response.data && response.data.pdf_url) {
-                        console.log('✅ PDF gerado:', response.data.pdf_url);
 
                         // Abrir PDF em nova aba
                         window.open(response.data.pdf_url, '_blank');
@@ -263,7 +251,6 @@
                             window.SoltourApp.Toast.success('PDF gerado com sucesso!', 3000);
                         }
                     } else {
-                        console.error('❌ Erro ao gerar PDF:', response);
 
                         const message = response.data && response.data.message
                             ? response.data.message
@@ -278,7 +265,6 @@
                 },
                 error: function(xhr, status, error) {
                     hideLoadingModal();
-                    console.error('❌ Erro ao imprimir:', error);
 
                     if (window.SoltourApp.Toast) {
                         window.SoltourApp.Toast.error(
@@ -296,7 +282,6 @@
          * Envia cotação por email
          */
         submitEmailForm: function(form) {
-            console.log('📧 Enviando cotação por email...');
 
             const $form = $(form);
             const $bookForm = $('form#bookForm');
@@ -320,7 +305,6 @@
             const combinedData = $.extend({}, bookingData, emailData);
             combinedData.breakdownView = this.currentView;
 
-            console.log('Dados para envio:', combinedData);
 
             showLoadingModal('Enviando email...', 'Aguarde um momento');
 
@@ -338,7 +322,6 @@
                     hideLoadingModal();
 
                     if (response.success) {
-                        console.log('✅ Email enviado com sucesso');
 
                         // Fechar modal
                         if ($.magnificPopup) {
@@ -359,7 +342,6 @@
                             alert('Email enviado com sucesso!');
                         }
                     } else {
-                        console.error('❌ Erro ao enviar email:', response);
 
                         const message = response.data && response.data.message
                             ? response.data.message
@@ -374,7 +356,6 @@
                 },
                 error: function(xhr, status, error) {
                     hideLoadingModal();
-                    console.error('❌ Erro ao enviar email:', error);
 
                     if (window.SoltourApp.Toast) {
                         window.SoltourApp.Toast.error(

@@ -17,7 +17,6 @@
          * Inicializa eventos de serviços opcionais
          */
         init: function() {
-            console.log('✅ Inicializando módulo Optional Services...');
 
             this.bindEvents();
             this.initBaggage();
@@ -52,7 +51,6 @@
             const summaryType = $element.data('summaryType') || $element.data('summary-type');
             const price = parseFloat($element.data('price')) || 0;
 
-            console.log(`🔄 Toggle service: ${summaryType} - ${code} - ${checked ? 'ON' : 'OFF'}`);
 
             // Encontrar row do serviço no resumo
             const $row = $('.js-optional-service' +
@@ -190,7 +188,6 @@
                 };
             }
 
-            console.log('🔄 Atualizando serviço opcional via API:', rq);
 
             showLoadingModal('Atualizando...', 'Recalculando preço');
 
@@ -206,22 +203,18 @@
                 success: function(response) {
                     hideLoadingModal();
 
-                    console.log('✅ UpdateOptionalService response:', response);
 
                     if (response.success && response.data) {
-                        console.log('✅ Serviço opcional atualizado com sucesso');
 
                         // Atualizar availToken se mudou
                         if (response.data.availToken) {
                             window.SoltourApp.availToken = response.data.availToken;
-                            console.log('  ✓ availToken atualizado');
                         }
 
                         // Atualizar total se fornecido
                         if (response.data.totalAmount) {
                             window.SoltourApp.totalAmount = response.data.totalAmount;
                             self.updateTotalAmount();
-                            console.log('  ✓ Total atualizado:', response.data.totalAmount);
                         }
 
                         // Chamar callback se fornecido
@@ -238,7 +231,6 @@
                         }
                     } else {
                         // Erro da API - reverter checkbox
-                        console.error('❌ Erro ao atualizar serviço:', response);
                         $element.prop('checked', !$element.is(':checked'));
                         self.toggleOptionalService($element);
 
@@ -255,7 +247,6 @@
                 },
                 error: function(xhr, status, error) {
                     hideLoadingModal();
-                    console.error('❌ Erro AJAX ao atualizar serviço:', error);
 
                     // Reverter checkbox
                     $element.prop('checked', !$element.is(':checked'));
@@ -299,7 +290,6 @@
                 result += parseFloat($(this).data('price')) || 0;
             });
 
-            console.log('💰 Total atualizado:', result);
 
             // Atualizar no DOM
             $('[data-js-total-amount]').each(function() {

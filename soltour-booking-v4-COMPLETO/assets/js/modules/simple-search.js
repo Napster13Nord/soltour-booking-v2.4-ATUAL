@@ -8,15 +8,9 @@
 
     // Aguardar DOM ready
     $(document).ready(function() {
-        console.log('=== BEAUTY TRAVEL SIMPLE SEARCH ===');
-        console.log('jQuery version:', $.fn.jquery);
-        console.log('soltourData exists:', typeof soltourData !== 'undefined');
 
         if (typeof soltourData !== 'undefined') {
-            console.log('soltourData.ajaxurl:', soltourData.ajaxurl);
-            console.log('soltourData.nonce exists:', !!soltourData.nonce);
         } else {
-            console.error('❌ soltourData não está definido! O script não foi localizado corretamente.');
             alert('Erro: Configuração do plugin não encontrada. Por favor, recarregue a página.');
             return;
         }
@@ -28,23 +22,15 @@
      * Inicializar formulário simplificado
      */
     function initSimpleSearch() {
-        console.log('🔍 Procurando formulário #soltour-search-form-simple...');
         const $form = $('#soltour-search-form-simple');
 
-        console.log('Formulário encontrado?', $form.length > 0);
-        console.log('Total de elementos com id contendo "soltour":', $('[id*="soltour"]').length);
 
         if ($form.length === 0) {
-            console.error('❌ Formulário simplificado não encontrado!');
-            console.log('Forms na página:', $('form').length);
-            console.log('IDs de forms:', $('form').map(function() { return this.id; }).get());
             return;
         }
 
-        console.log('✅ Formulário simplificado detectado');
 
         // Carregar destinos e origens
-        console.log('📥 Iniciando carregamento de destinos e origens...');
         loadDestinations();
         loadOrigins();
 
@@ -59,9 +45,6 @@
      * Carregar lista de destinos
      */
     function loadDestinations() {
-        console.log('📍 Carregando destinos...');
-        console.log('URL:', soltourData.ajaxurl);
-        console.log('Action: soltour_get_destinations');
 
         $.ajax({
             url: soltourData.ajaxurl,
@@ -71,25 +54,16 @@
                 nonce: soltourData.nonce
             },
             beforeSend: function() {
-                console.log('📤 Enviando requisição para destinos...');
             },
             success: function(response) {
-                console.log('📥 Resposta recebida (destinos):', response);
 
                 if (response.success && response.data && response.data.destinations) {
-                    console.log(`✅ ${response.data.destinations.length} destinos carregados`);
-                    console.log('Primeiro destino:', response.data.destinations[0]);
                     populateDestinations(response.data.destinations);
                 } else {
-                    console.error('❌ Erro ao carregar destinos:', response);
                     alert('Erro ao carregar destinos. Verifique o console para mais detalhes.');
                 }
             },
             error: function(xhr, status, error) {
-                console.error('❌ Erro AJAX ao carregar destinos');
-                console.error('Status:', status);
-                console.error('Error:', error);
-                console.error('Response:', xhr.responseText);
                 alert('Erro de conexão ao carregar destinos: ' + error);
             }
         });
@@ -99,9 +73,6 @@
      * Carregar lista de origens
      */
     function loadOrigins() {
-        console.log('✈️ Carregando origens...');
-        console.log('URL:', soltourData.ajaxurl);
-        console.log('Action: soltour_get_origins');
 
         $.ajax({
             url: soltourData.ajaxurl,
@@ -111,25 +82,16 @@
                 nonce: soltourData.nonce
             },
             beforeSend: function() {
-                console.log('📤 Enviando requisição para origens...');
             },
             success: function(response) {
-                console.log('📥 Resposta recebida (origens):', response);
 
                 if (response.success && response.data && response.data.origins) {
-                    console.log(`✅ ${response.data.origins.length} origens carregadas`);
-                    console.log('Primeira origem:', response.data.origins[0]);
                     populateOrigins(response.data.origins);
                 } else {
-                    console.error('❌ Erro ao carregar origens:', response);
                     alert('Erro ao carregar origens. Verifique o console para mais detalhes.');
                 }
             },
             error: function(xhr, status, error) {
-                console.error('❌ Erro AJAX ao carregar origens');
-                console.error('Status:', status);
-                console.error('Error:', error);
-                console.error('Response:', xhr.responseText);
                 alert('Erro de conexão ao carregar origens: ' + error);
             }
         });
@@ -139,14 +101,10 @@
      * Preencher select de destinos
      */
     function populateDestinations(destinations) {
-        console.log('🎯 Populando select de destinos...');
         const $select = $('#soltour-destination-simple');
 
-        console.log('Select encontrado?', $select.length > 0);
-        console.log('Select atual tem', $select.find('option').length, 'opções');
 
         if ($select.length === 0) {
-            console.error('❌ Select #soltour-destination-simple não encontrado!');
             return;
         }
 
@@ -158,21 +116,16 @@
             );
         });
 
-        console.log('✅ Select de destinos populado. Total de opções:', $select.find('option').length);
     }
 
     /**
      * Preencher select de origens
      */
     function populateOrigins(origins) {
-        console.log('🎯 Populando select de origens...');
         const $select = $('#soltour-origin-simple');
 
-        console.log('Select encontrado?', $select.length > 0);
-        console.log('Select atual tem', $select.find('option').length, 'opções');
 
         if ($select.length === 0) {
-            console.error('❌ Select #soltour-origin-simple não encontrado!');
             return;
         }
 
@@ -184,14 +137,12 @@
             );
         });
 
-        console.log('✅ Select de origens populado. Total de opções:', $select.find('option').length);
     }
 
     /**
      * Processar busca simplificada
      */
     function handleSimpleSearch() {
-        console.log('🔍 Processando busca simplificada...');
 
         // Coletar dados do formulário
         const destination = $('#soltour-destination-simple').val();
@@ -204,7 +155,6 @@
             return;
         }
 
-        console.log('Parâmetros:', { destination, origin, month });
 
         // Salvar parâmetros iniciais no sessionStorage
         sessionStorage.setItem('soltour_initial_search', JSON.stringify({
@@ -225,7 +175,6 @@
      * Buscar destinos disponíveis (cidades) para o país selecionado
      */
     function fetchAvailableDestinations(destinationCode, originCode, month) {
-        console.log('🌍 Buscando cidades disponíveis...');
 
         // Calcular primeira e última data do mês
         const [year, monthNum] = month.split('-');
@@ -252,14 +201,12 @@
                 $('#soltour-search-loading').hide();
                 $('button[type="submit"]').prop('disabled', false);
 
-                console.log('📦 Resposta da API:', response);
 
                 if (response.success && response.data && response.data.budgets) {
                     // Extrair cidades únicas dos budgets
                     const cities = extractUniqueCities(response.data.budgets, response.data.hotels);
 
                     if (cities.length > 0) {
-                        console.log(`✅ ${cities.length} cidades encontradas`);
                         renderDestinationCards(cities);
                     } else {
                         alert('❌ Nenhum destino disponível para os parâmetros selecionados. Tente outras datas ou origens.');
@@ -272,7 +219,6 @@
                 $('#soltour-search-loading').hide();
                 $('button[type="submit"]').prop('disabled', false);
 
-                console.error('❌ Erro AJAX:', error);
                 alert('❌ Erro de conexão. Por favor, tente novamente.');
             }
         });
@@ -333,7 +279,6 @@
      * Renderizar cards de destinos
      */
     function renderDestinationCards(cities) {
-        console.log('🎨 Renderizando cards de destinos...');
 
         const $container = $('#soltour-cards-grid');
         $container.empty();
@@ -376,7 +321,6 @@
         // Bind click nos cards
         bindCardClicks();
 
-        console.log('✅ Cards renderizados');
     }
 
     /**
@@ -387,7 +331,6 @@
             const cityCode = $(this).data('city-code');
             const cityName = $(this).data('city-name');
 
-            console.log('🎯 Card clicado:', cityName, cityCode);
 
             // Pegar parâmetros iniciais
             const initialSearch = JSON.parse(sessionStorage.getItem('soltour_initial_search'));
@@ -403,10 +346,8 @@
 
             // Abrir modal de busca detalhada (que já existe!)
             if (window.BeautyTravelSearchModal) {
-                console.log('✅ Abrindo modal de busca detalhada...');
                 window.BeautyTravelSearchModal.open(destinationData);
             } else {
-                console.error('❌ Modal não encontrado!');
                 alert('Erro ao abrir modal. Por favor, recarregue a página.');
             }
         });
