@@ -839,6 +839,10 @@
                         // Renderizar primeira página (paginação local)
                         renderLocalPage(1);
 
+                        // IMPORTANTE: Esconder modal de loading após renderizar
+                        hideLoadingModal();
+                        logSuccess('✅ Página renderizada e modal fechado');
+
                         // DELAYED AVAILABILITY: Iniciar carregamento tardio de preços
                         // Se a busca inicial foi com forceAvail=false, ativar delayed loading
                         if (SoltourApp.searchParams.force_avail === false) {
@@ -881,6 +885,10 @@
 
                         // Renderizar primeira página (paginação local)
                         renderLocalPage(1);
+
+                        // IMPORTANTE: Esconder modal de loading após renderizar
+                        hideLoadingModal();
+                        logSuccess('✅ Página renderizada e modal fechado (handler de erro)');
 
                         // DELAYED AVAILABILITY: Iniciar carregamento tardio de preços
                         if (SoltourApp.searchParams.force_avail === false) {
