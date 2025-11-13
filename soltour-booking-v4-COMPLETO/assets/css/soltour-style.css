@@ -2269,3 +2269,377 @@ body .soltour-pagination .page-ellipsis {
         font-size: 14px;
     }
 }
+
+/* ========================================
+   PÁGINA DE DETALHES DO PACOTE
+   ======================================== */
+
+.package-details-container {
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.package-details-header {
+    position: relative;
+    height: 400px;
+    overflow: hidden;
+}
+
+.package-header-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.package-header-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+    padding: 40px;
+    color: #fff;
+}
+
+.package-title {
+    font-size: 36px;
+    font-weight: bold;
+    margin: 0 0 10px 0;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+.package-address {
+    font-size: 18px;
+    margin: 0;
+    opacity: 0.9;
+}
+
+.package-details-content {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 30px;
+    padding: 30px;
+}
+
+.package-details-main {
+    min-width: 0;
+}
+
+.details-section {
+    margin-bottom: 30px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.details-section:last-child {
+    border-bottom: none;
+}
+
+.details-section h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #019CB8;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.details-section p {
+    line-height: 1.8;
+    color: #495057;
+}
+
+.amenities-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 15px;
+}
+
+.amenities-list li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 6px;
+}
+
+.amenities-list i {
+    color: #28a745;
+}
+
+.flight-info, .transfer-info {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.flight-segment {
+    margin-bottom: 15px;
+}
+
+.flight-segment:last-child {
+    margin-bottom: 0;
+}
+
+.flight-route {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.flight-route .airport {
+    color: #019CB8;
+}
+
+.flight-details {
+    display: flex;
+    gap: 20px;
+    color: #6c757d;
+}
+
+.flight-details span {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.image-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+.image-gallery img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.image-gallery img:hover {
+    transform: scale(1.05);
+}
+
+/* Sidebar de reserva */
+.package-details-sidebar {
+    position: sticky;
+    top: 20px;
+    height: fit-content;
+}
+
+.booking-card {
+    background: #fff;
+    border: 2px solid #019CB8;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 4px 15px rgba(1, 156, 184, 0.15);
+}
+
+.booking-price {
+    text-align: center;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #e9ecef;
+    margin-bottom: 20px;
+}
+
+.price-label {
+    display: block;
+    font-size: 14px;
+    color: #6c757d;
+    margin-bottom: 5px;
+}
+
+.price-value {
+    display: block;
+    font-size: 42px;
+    font-weight: bold;
+    color: #019CB8;
+    margin-bottom: 5px;
+}
+
+.price-note {
+    display: block;
+    font-size: 13px;
+    color: #6c757d;
+}
+
+.booking-dates, .booking-info {
+    margin-bottom: 20px;
+}
+
+.date-item, .info-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 12px 0;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.date-item:last-child, .info-item:last-child {
+    border-bottom: none;
+}
+
+.date-item i, .info-item i {
+    font-size: 20px;
+    color: #019CB8;
+    width: 25px;
+}
+
+.date-item div {
+    flex: 1;
+}
+
+.date-item strong {
+    display: block;
+    margin-bottom: 5px;
+    color: #495057;
+}
+
+.date-item span {
+    color: #6c757d;
+}
+
+.info-item span {
+    color: #495057;
+}
+
+.btn-reserve {
+    width: 100%;
+    background: #019CB8;
+    color: #fff;
+    border: none;
+    padding: 16px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.btn-reserve:hover {
+    background: #017a94;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(1, 156, 184, 0.3);
+}
+
+.booking-note {
+    text-align: center;
+    font-size: 13px;
+    color: #6c757d;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.booking-note i {
+    color: #28a745;
+}
+
+/* Erro */
+.package-error {
+    text-align: center;
+    padding: 60px 20px;
+    color: #6c757d;
+}
+
+.package-error i {
+    font-size: 64px;
+    color: #dc3545;
+    margin-bottom: 20px;
+}
+
+.package-error h2 {
+    font-size: 28px;
+    margin-bottom: 15px;
+    color: #343a40;
+}
+
+.package-error p {
+    font-size: 16px;
+    margin-bottom: 30px;
+}
+
+.btn-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 30px;
+    background: #019CB8;
+    color: #fff !important;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.btn-back:hover {
+    background: #017a94;
+    transform: translateY(-2px);
+}
+
+/* Responsivo */
+@media (max-width: 992px) {
+    .package-details-content {
+        grid-template-columns: 1fr;
+    }
+
+    .package-details-sidebar {
+        position: static;
+    }
+
+    .package-title {
+        font-size: 28px;
+    }
+
+    .package-details-header {
+        height: 300px;
+    }
+}
+
+@media (max-width: 768px) {
+    .package-header-overlay {
+        padding: 20px;
+    }
+
+    .package-title {
+        font-size: 24px;
+    }
+
+    .package-address {
+        font-size: 14px;
+    }
+
+    .details-section h2 {
+        font-size: 20px;
+    }
+
+    .price-value {
+        font-size: 36px;
+    }
+
+    .amenities-list {
+        grid-template-columns: 1fr;
+    }
+
+    .image-gallery {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}

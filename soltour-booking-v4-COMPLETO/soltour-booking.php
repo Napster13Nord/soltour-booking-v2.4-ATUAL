@@ -217,6 +217,15 @@ class Soltour_Booking {
             true
         );
 
+        // Package Details Page
+        wp_enqueue_script(
+            'soltour-package-details',
+            SOLTOUR_PLUGIN_URL . 'assets/js/package-details.js',
+            array('jquery', 'soltour-booking-script'),
+            SOLTOUR_VERSION,
+            true
+        );
+
         // Localize script
         wp_localize_script('soltour-booking-script', 'soltourData', array(
             'ajaxurl' => admin_url('admin-ajax.php'),
