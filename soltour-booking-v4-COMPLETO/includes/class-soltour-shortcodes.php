@@ -243,6 +243,29 @@ class Soltour_Shortcodes {
     }
 
     /**
+     * Shortcode: [soltour_quote]
+     * Página de cotação - Nova funcionalidade seguindo fluxo oficial Soltour
+     */
+    public function quote_page($atts) {
+        $atts = shortcode_atts(array(
+            'title' => __('Cotação do Seu Pacote', 'soltour-booking')
+        ), $atts);
+
+        ob_start();
+        ?>
+        <div class="bt-quote-page" id="soltour-quote-page">
+            <!-- Conteúdo será carregado via JavaScript (quote-page.js) -->
+            <div class="bt-quote-loading">
+                <div class="spinner"></div>
+                <h3><?php _e('Carregando detalhes...', 'soltour-booking'); ?></h3>
+                <p><?php _e('Aguarde enquanto buscamos as informações do seu pacote', 'soltour-booking'); ?></p>
+            </div>
+        </div>
+        <?php
+        return ob_get_clean();
+    }
+
+    /**
      * Shortcode: [soltour_checkout]
      * Página de checkout
      */

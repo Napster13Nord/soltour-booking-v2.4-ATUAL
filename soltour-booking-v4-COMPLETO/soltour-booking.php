@@ -88,6 +88,7 @@ class Soltour_Booking {
             'soltour_get_alternatives',
             'soltour_check_allowed_selling', // Verificar se venda está permitida
             'soltour_quote_package',
+            'soltour_generate_quote', // NOVO - Gerar cotação final na página de cotação
             'soltour_delayed_quote', // NOVO Sprint 1 - Delayed quote com preços finais
             'soltour_update_optional_service', // NOVO Sprint 1 - Adicionar/remover serviços opcionais
             'soltour_validate_expedient', // NOVO Sprint 1 - Validar expediente em tempo real
@@ -242,6 +243,22 @@ class Soltour_Booking {
             true
         );
 
+        // Quote Page (Cotação) - Nova funcionalidade
+        wp_enqueue_style(
+            'beauty-travel-quote-page',
+            SOLTOUR_PLUGIN_URL . 'assets/css/quote-page.css',
+            array(),
+            SOLTOUR_VERSION
+        );
+
+        wp_enqueue_script(
+            'beauty-travel-quote-page',
+            SOLTOUR_PLUGIN_URL . 'assets/js/quote-page.js',
+            array('jquery', 'soltour-booking-script'),
+            SOLTOUR_VERSION,
+            true
+        );
+
         // Localize script
         wp_localize_script('soltour-booking-script', 'soltourData', array(
             'ajaxurl' => admin_url('admin-ajax.php'),
@@ -267,6 +284,7 @@ class Soltour_Booking {
         add_shortcode('soltour_search', array($shortcodes, 'search_form'));
         add_shortcode('soltour_results', array($shortcodes, 'results_page'));
         add_shortcode('soltour_package_details', array($shortcodes, 'package_details'));
+        add_shortcode('soltour_quote', array($shortcodes, 'quote_page')); // Nova página de cotação
         add_shortcode('soltour_checkout', array($shortcodes, 'checkout_page'));
         add_shortcode('soltour_booking_confirmation', array($shortcodes, 'confirmation_page'));
     }
