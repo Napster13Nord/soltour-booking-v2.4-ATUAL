@@ -204,32 +204,6 @@ class Soltour_Shortcodes {
     }
 
     /**
-     * Shortcode: [soltour_package_details]
-     * Detalhes de um pacote específico
-     */
-    public function package_details($atts) {
-        error_log('[Soltour] Shortcode package_details EXECUTADO!');
-        error_log('[Soltour] Budget na URL: ' . (isset($_GET['budget']) ? $_GET['budget'] : 'N/A'));
-
-        ob_start();
-        ?>
-        <div class="soltour-package-details-wrapper" style="min-height: 400px; background: #f0f0f0; padding: 20px;">
-            <div id="soltour-package-details" style="background: white; padding: 20px; border: 2px solid #019CB8;">
-                <!-- Package details loaded via AJAX -->
-                <div class="soltour-loading">
-                    <span class="spinner"></span>
-                    <p><?php _e('A carregar detalhes do pacote...', 'soltour-booking'); ?></p>
-                    <p style="font-size: 12px; color: #666;">Debug: Shortcode renderizado com sucesso</p>
-                </div>
-            </div>
-        </div>
-        <?php
-        $output = ob_get_clean();
-        error_log('[Soltour] Shortcode HTML length: ' . strlen($output));
-        return $output;
-    }
-
-    /**
      * Shortcode: [soltour_quote]
      * Página de cotação - Nova funcionalidade seguindo fluxo oficial Soltour
      */
