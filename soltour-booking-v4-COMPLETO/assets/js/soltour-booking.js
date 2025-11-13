@@ -1395,22 +1395,33 @@
         const hotelService = budget.hotelServices && budget.hotelServices[0];
         const flightService = budget.flightServices && budget.flightServices[0];
 
-        // (A) IMAGEM - PRIORIZAR AVAILABILITY
-        let hotelImage = '';
+        // (A) IMAGENS - COLETAR TODAS PARA SLIDER
+        let hotelImages = [];
         if (hotelService && hotelService.hotelCode && SoltourApp.hotelsFromAvailability[hotelService.hotelCode]) {
             const hotelFromAvail = SoltourApp.hotelsFromAvailability[hotelService.hotelCode];
+            // Adicionar mainImage primeiro
             if (hotelFromAvail.mainImage) {
-                hotelImage = hotelFromAvail.mainImage;
-            } else if (hotelFromAvail.multimedias && hotelFromAvail.multimedias.length > 0) {
-                const firstImage = hotelFromAvail.multimedias.find(m => m.type === 'IMAGE');
-                if (firstImage) hotelImage = firstImage.url;
+                hotelImages.push(hotelFromAvail.mainImage);
+            }
+            // Adicionar demais imagens do multimedias
+            if (hotelFromAvail.multimedias && hotelFromAvail.multimedias.length > 0) {
+                hotelFromAvail.multimedias.forEach(m => {
+                    if (m.type === 'IMAGE' && m.url && !hotelImages.includes(m.url)) {
+                        hotelImages.push(m.url);
+                    }
+                });
             }
         }
         // Fallback para details
-        if (!hotelImage && details && details.hotelDetails && details.hotelDetails.hotel && details.hotelDetails.hotel.multimedias) {
-            const firstImage = details.hotelDetails.hotel.multimedias.find(m => m.type === 'IMAGE');
-            if (firstImage) hotelImage = firstImage.url;
+        if (hotelImages.length === 0 && details && details.hotelDetails && details.hotelDetails.hotel && details.hotelDetails.hotel.multimedias) {
+            details.hotelDetails.hotel.multimedias.forEach(m => {
+                if (m.type === 'IMAGE' && m.url) {
+                    hotelImages.push(m.url);
+                }
+            });
         }
+        // Limitar a 10 imagens
+        hotelImages = hotelImages.slice(0, 10);
 
         // (B) PAÍS e (C) CIDADE - PRIORIZAR AVAILABILITY
         let country = '';
@@ -1553,29 +1564,59 @@
         const pricePerPerson = price / numPassengers;
 
         // (L) DESCRIÇÃO DO HOTEL
-        let hotelDescription = '';
+        let hotelDescriptionFull = '';
+        let hotelDescriptionShort = '';
+        let hasMoreDescription = false;
         if (hotelService && hotelService.hotelCode && SoltourApp.hotelsFromAvailability[hotelService.hotelCode]) {
             const hotelFromAvail = SoltourApp.hotelsFromAvailability[hotelService.hotelCode];
-            hotelDescription = hotelFromAvail.description || hotelFromAvail.shortDescription || '';
-            // Limitar a descrição a 150 caracteres
-            if (hotelDescription.length > 150) {
-                hotelDescription = hotelDescription.substring(0, 150) + '...';
+            hotelDescriptionFull = hotelFromAvail.description || hotelFromAvail.shortDescription || '';
+            // Criar versão truncada a 150 caracteres
+            if (hotelDescriptionFull.length > 150) {
+                hotelDescriptionShort = hotelDescriptionFull.substring(0, 150) + '...';
+                hasMoreDescription = true;
+            } else {
+                hotelDescriptionShort = hotelDescriptionFull;
             }
         }
 
         // (M) TIPO
         const productType = 'PACOTE';
 
+        // Construir slider de imagens
+        let sliderHTML = '';
+        if (hotelImages.length > 0) {
+            sliderHTML = `
+                <div class="package-image-slider">
+                    <div class="slider-images">
+                        ${hotelImages.map((img, index) => `
+                            <img src="${img}" alt="${hotelName}" class="slider-image ${index === 0 ? 'active' : ''}" />
+                        `).join('')}
+                    </div>
+                    ${hotelImages.length > 1 ? `
+                        <button class="slider-btn slider-prev" onclick="SoltourApp.changeSlide(this, -1)">❮</button>
+                        <button class="slider-btn slider-next" onclick="SoltourApp.changeSlide(this, 1)">❯</button>
+                        <div class="slider-dots">
+                            ${hotelImages.map((_, index) => `
+                                <span class="slider-dot ${index === 0 ? 'active' : ''}" onclick="SoltourApp.goToSlide(this, ${index})"></span>
+                            `).join('')}
+                        </div>
+                    ` : ''}
+                    <div class="package-badge">${productType}</div>
+                </div>
+            `;
+        } else {
+            sliderHTML = `
+                <div class="package-image">
+                    <div class="no-image">📷 Sem imagem</div>
+                    <div class="package-badge">${productType}</div>
+                </div>
+            `;
+        }
+
         // Construir card
         const card = `
             <div class="soltour-package-card" data-budget-id="${budget.budgetId}">
-                <div class="package-image">
-                    ${hotelImage ?
-                        `<img src="${hotelImage}" alt="${hotelName}" />` :
-                        '<div class="no-image">📷 Sem imagem</div>'
-                    }
-                    <div class="package-badge">${productType}</div>
-                </div>
+                ${sliderHTML}
                 <div class="package-info">
                     <div class="package-location">
                         <strong>${country}</strong>
@@ -1585,9 +1626,15 @@
                     <div class="package-stars">
                         ${hotelStars > 0 ? '⭐'.repeat(hotelStars) : '<span class="no-rating">Hotel</span>'}
                     </div>
-                    ${hotelDescription ? `
+                    ${hotelDescriptionShort ? `
                         <div class="package-description">
-                            <p>${hotelDescription}</p>
+                            <p class="description-text">
+                                <span class="description-short">${hotelDescriptionShort}</span>
+                                ${hasMoreDescription ? `
+                                    <span class="description-full" style="display: none;">${hotelDescriptionFull}</span>
+                                    <a href="javascript:void(0)" class="read-more-btn" onclick="SoltourApp.toggleDescription(this)">ler mais</a>
+                                ` : ''}
+                            </p>
                         </div>
                     ` : ''}
                     ${flightInfoHTML ? `
@@ -1786,5 +1833,62 @@
 
         window.location.href = `/cotacao/?budget=${budgetId}`;
     }
+
+    /**
+     * Função para alternar entre descrição curta e completa
+     */
+    window.SoltourApp.toggleDescription = function(btn) {
+        const descriptionText = $(btn).closest('.description-text');
+        const shortText = descriptionText.find('.description-short');
+        const fullText = descriptionText.find('.description-full');
+
+        if (fullText.is(':visible')) {
+            // Mostrar texto curto
+            fullText.hide();
+            shortText.show();
+            $(btn).text('ler mais');
+        } else {
+            // Mostrar texto completo
+            shortText.hide();
+            fullText.show();
+            $(btn).text('ver menos');
+        }
+    };
+
+    /**
+     * Função para mudar slide do carousel
+     */
+    window.SoltourApp.changeSlide = function(btn, direction) {
+        const slider = $(btn).closest('.package-image-slider');
+        const images = slider.find('.slider-image');
+        const dots = slider.find('.slider-dot');
+        const currentIndex = images.filter('.active').index();
+        let newIndex = currentIndex + direction;
+
+        // Loop circular
+        if (newIndex < 0) newIndex = images.length - 1;
+        if (newIndex >= images.length) newIndex = 0;
+
+        // Atualizar imagens
+        images.removeClass('active').eq(newIndex).addClass('active');
+
+        // Atualizar dots
+        dots.removeClass('active').eq(newIndex).addClass('active');
+    };
+
+    /**
+     * Função para ir para um slide específico
+     */
+    window.SoltourApp.goToSlide = function(dot, index) {
+        const slider = $(dot).closest('.package-image-slider');
+        const images = slider.find('.slider-image');
+        const dots = slider.find('.slider-dot');
+
+        // Atualizar imagens
+        images.removeClass('active').eq(index).addClass('active');
+
+        // Atualizar dots
+        dots.removeClass('active').eq(index).addClass('active');
+    };
 
 })(jQuery);
