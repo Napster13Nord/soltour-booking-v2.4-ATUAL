@@ -258,15 +258,6 @@ class Soltour_Booking {
             true
         );
 
-        // Package Details Page (a ser removido/substituído por quote)
-        wp_enqueue_script(
-            'soltour-package-details',
-            SOLTOUR_PLUGIN_URL . 'assets/js/package-details.js',
-            array('jquery', 'soltour-booking-script'),
-            SOLTOUR_VERSION,
-            true
-        );
-
         // Quote Page (Cotação) - Nova funcionalidade
         wp_enqueue_style(
             'beauty-travel-quote-page',
@@ -307,7 +298,6 @@ class Soltour_Booking {
         $shortcodes = new Soltour_Shortcodes();
         add_shortcode('soltour_search', array($shortcodes, 'search_form'));
         add_shortcode('soltour_results', array($shortcodes, 'results_page'));
-        add_shortcode('soltour_package_details', array($shortcodes, 'package_details'));
         add_shortcode('soltour_quote', array($shortcodes, 'quote_page')); // Nova página de cotação
         add_shortcode('soltour_checkout', array($shortcodes, 'checkout_page'));
         add_shortcode('soltour_booking_confirmation', array($shortcodes, 'confirmation_page'));
