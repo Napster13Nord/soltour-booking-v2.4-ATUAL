@@ -347,16 +347,16 @@
             // Parâmetros críticos para API processar corretamente
             only_hotel: onlyHotel,
             product_type: productType,
-            force_avail: false, // Primeira busca sempre false (rápida)
+            force_avail: true, // ✅ BUSCA DIRETA COM PREÇOS (removido DelayedAvailability)
 
             first_item: 0,
-            item_count: SoltourApp.itemsPerPage
+            item_count: 100 // Buscar todos os budgets de uma vez
         };
 
         log('Parâmetros de busca configurados:', {
             onlyHotel: onlyHotel,
             productType: productType,
-            forceAvail: false,
+            forceAvail: true, // ✅ Busca direta com preços
             hasOrigin: hasOrigin
         });
 
@@ -843,37 +843,8 @@
                         hideLoadingModal();
                         logSuccess('✅ Página renderizada e modal fechado');
 
-                        // DELAYED AVAILABILITY: Iniciar carregamento tardio de preços
-                        // Se a busca inicial foi com forceAvail=false, ativar delayed loading
-                        console.log('🔍 DEBUG DelayedAvailability:');
-                        console.log('   - force_avail value:', SoltourApp.searchParams.force_avail);
-                        console.log('   - force_avail type:', typeof SoltourApp.searchParams.force_avail);
-                        console.log('   - force_avail === false:', SoltourApp.searchParams.force_avail === false);
-                        console.log('   - force_avail == false:', SoltourApp.searchParams.force_avail == false);
-                        console.log('   - !force_avail:', !SoltourApp.searchParams.force_avail);
-                        console.log('   - searchParams completo:', SoltourApp.searchParams);
-
-                        // Verificação mais robusta: aceita false (boolean), "false" (string), 0, null, undefined
-                        if (SoltourApp.searchParams.force_avail === false ||
-                            SoltourApp.searchParams.force_avail === 'false' ||
-                            !SoltourApp.searchParams.force_avail) {
-                            log('🔄 Iniciando DelayedAvailability para atualizar preços...');
-
-                            // Dar um pequeno delay para UI renderizar completamente
-                            setTimeout(function() {
-                                if (window.SoltourApp.DelayedAvailability) {
-                                    console.log('✅ Módulo DelayedAvailability encontrado, chamando init()...');
-                                    window.SoltourApp.DelayedAvailability.init({
-                                        delayedAvailActive: true
-                                    });
-                                } else {
-                                    console.error('❌ Módulo DelayedAvailability NÃO ENCONTRADO!');
-                                    console.log('   - window.SoltourApp:', window.SoltourApp);
-                                }
-                            }, 500);
-                        } else {
-                            console.warn('⚠️  DelayedAvailability NÃO ATIVADO - force_avail não é false');
-                        }
+                        // ✅ PREÇOS JÁ CARREGADOS - Busca feita com forceAvail=true
+                        logSuccess('✅ Preços carregados diretamente da API');
                     }
                 },
                 error: function() {
@@ -905,23 +876,8 @@
                         hideLoadingModal();
                         logSuccess('✅ Página renderizada e modal fechado (handler de erro)');
 
-                        // DELAYED AVAILABILITY: Iniciar carregamento tardio de preços
-                        console.log('🔍 DEBUG DelayedAvailability (error handler):');
-                        console.log('   - force_avail:', SoltourApp.searchParams.force_avail);
-
-                        // Verificação mais robusta
-                        if (SoltourApp.searchParams.force_avail === false ||
-                            SoltourApp.searchParams.force_avail === 'false' ||
-                            !SoltourApp.searchParams.force_avail) {
-                            setTimeout(function() {
-                                if (window.SoltourApp.DelayedAvailability) {
-                                    console.log('✅ Módulo DelayedAvailability encontrado (error handler)');
-                                    window.SoltourApp.DelayedAvailability.init({
-                                        delayedAvailActive: true
-                                    });
-                                }
-                            }, 500);
-                        }
+                        // ✅ PREÇOS JÁ CARREGADOS - Busca feita com forceAvail=true
+                        logSuccess('✅ Preços carregados diretamente da API');
                     }
                 }
             });
