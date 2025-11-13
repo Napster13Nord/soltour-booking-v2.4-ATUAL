@@ -692,6 +692,22 @@
 
                     logSuccess(`${SoltourApp.allBudgets.length} budgets recebidos`);
 
+                    // ✈️ DEBUG: Verificar se os budgets têm voos
+                    if (SoltourApp.allBudgets.length > 0) {
+                        const firstBudget = SoltourApp.allBudgets[0];
+                        log('🔍 DEBUG - Primeiro budget:', firstBudget);
+                        log('🔍 DEBUG - firstBudget.flightServices:', firstBudget.flightServices);
+                        log('🔍 DEBUG - firstBudget tem flightServices?', !!firstBudget.flightServices);
+
+                        if (firstBudget.flightServices) {
+                            logSuccess('✅ Budgets TÊM informações de voo!');
+                            log('Número de voos no primeiro budget:', firstBudget.flightServices.length);
+                        } else {
+                            logError('❌ Budgets NÃO TÊM informações de voo!');
+                            log('Keys do primeiro budget:', Object.keys(firstBudget));
+                        }
+                    }
+
                     if (SoltourApp.allBudgets.length > 0) {
                         // Deduplicar TODOS os budgets de uma vez
                         loadAllDetailsWithDeduplication(SoltourApp.allBudgets);
@@ -1070,8 +1086,44 @@
         }
 
         // ✈️ RENDERIZAR VOO RECOMENDADO NO TOPO
-        if (packages.length > 0 && packages[0].budget && packages[0].budget.flightServices) {
-            renderRecommendedFlight(packages[0].budget.flightServices);
+        log('🔍 Verificando dados de voo...');
+        log('Total de packages:', packages.length);
+
+        if (packages.length > 0) {
+            const firstPackage = packages[0];
+            log('Primeiro package existe:', !!firstPackage);
+            log('firstPackage.budget existe:', !!firstPackage.budget);
+
+            if (firstPackage.budget) {
+                log('firstPackage.budget.flightServices existe:', !!firstPackage.budget.flightServices);
+                log('firstPackage.budget.flightServices:', firstPackage.budget.flightServices);
+
+                if (firstPackage.budget.flightServices) {
+                    log('✅ Voos encontrados! Renderizando...');
+                    renderRecommendedFlight(firstPackage.budget.flightServices);
+                } else {
+                    logError('❌ flightServices não existe no budget!');
+                    log('Budget completo:', firstPackage.budget);
+
+                    // Tentar buscar voos do SoltourApp.allBudgets
+                    if (SoltourApp.allBudgets && SoltourApp.allBudgets.length > 0) {
+                        log('🔍 Tentando buscar voos de SoltourApp.allBudgets...');
+                        const budgetWithFlights = SoltourApp.allBudgets.find(b => b.flightServices && b.flightServices.length > 0);
+
+                        if (budgetWithFlights) {
+                            logSuccess('✅ Voos encontrados em SoltourApp.allBudgets!');
+                            renderRecommendedFlight(budgetWithFlights.flightServices);
+                        } else {
+                            logError('❌ Nenhum budget tem flightServices!');
+                            log('Primeiro budget de allBudgets:', SoltourApp.allBudgets[0]);
+                        }
+                    }
+                }
+            } else {
+                logError('❌ Primeiro package não tem budget!');
+            }
+        } else {
+            logError('❌ Nenhum package disponível!');
         }
 
         // Mostrar total de HOTÉIS ÚNICOS (não budgets)
