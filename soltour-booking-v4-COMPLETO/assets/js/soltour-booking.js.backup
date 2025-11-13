@@ -63,6 +63,18 @@
         }
     };
 
+    function log(message, data) {
+        console.log('%c[Soltour] ' + message, 'color: #0073aa; font-weight: bold', data || '');
+    }
+
+    function logSuccess(message, data) {
+        console.log('%c[Soltour ✓] ' + message, 'color: #4caf50; font-weight: bold', data || '');
+    }
+
+    function logError(message, error) {
+        console.error('%c[Soltour ✗] ' + message, 'color: #f44336; font-weight: bold', error || '');
+    }
+
     // ========================================
     // FUNÇÕES DO MODAL DE CARREGAMENTO
     // ========================================
@@ -90,6 +102,7 @@
             // Prevenir scroll do body
             $('body').css('overflow', 'hidden');
 
+            log('Modal de carregamento exibido', { title, message });
         }
     }
 
@@ -106,6 +119,7 @@
             // Restaurar scroll do body
             $('body').css('overflow', '');
 
+            log('Modal de carregamento escondido');
         }
     }
 
@@ -134,6 +148,7 @@
      */
     function updateURLState(availToken) {
         if (!availToken) {
+            logError('updateURLState chamado sem availToken');
             return;
         }
 
@@ -147,6 +162,7 @@
 
         window.history.replaceState({}, '', newUrl);
 
+        log(`📍 URL atualizado: state=${SoltourApp.state}, availToken=${availToken.substring(0, 15)}...`);
     }
 
     /**
@@ -161,6 +177,7 @@
         if (availToken && state > 0) {
             SoltourApp.availToken = availToken;
             SoltourApp.state = state;
+            log(`🔄 Estado restaurado da URL: state=${state}, availToken=${availToken.substring(0, 15)}...`);
             return true;
         }
 
@@ -168,6 +185,7 @@
     }
 
     $(document).ready(function() {
+        log('Plugin V4 inicializado - COMPLETO');
         initSearchForm();
         initResultsPage();
     });
@@ -335,6 +353,13 @@
             item_count: 100 // Buscar todos os budgets de uma vez
         };
 
+        log('Parâmetros de busca configurados:', {
+            onlyHotel: onlyHotel,
+            productType: productType,
+            forceAvail: true, // ✅ Busca direta com preços
+            hasOrigin: hasOrigin
+        });
+
         if ($('#soltour-results-list').length > 0) {
             searchPackagesAjax();
         } else {
@@ -346,6 +371,7 @@
     function initResultsPage() {
         if ($('#soltour-results-list').length === 0) return;
 
+        log('=== PÁGINA DE RESULTADOS V4 ===');
         const savedParams = sessionStorage.getItem('soltour_search_params');
         if (savedParams) {
             // MOSTRAR MODAL IMEDIATAMENTE ao carregar página de resultados
@@ -367,10 +393,12 @@
     // ========================================
 
     function initFilters() {
+        log('Inicializando filtros');
 
         // Filtro de ordenação
         $('#soltour-sort-by').on('change', function() {
             SoltourApp.filters.sortBy = $(this).val();
+            log('Ordenação alterada para: ' + SoltourApp.filters.sortBy);
             applyFilters();
         });
 
@@ -382,6 +410,7 @@
         });
 
         $('#soltour-max-price').on('change', function() {
+            log('Preço máximo alterado para: ' + SoltourApp.filters.maxPrice.toLocaleString('pt-PT') + '€');
             applyFilters();
         });
 
@@ -397,11 +426,14 @@
                 SoltourApp.filters.selectedStars = SoltourApp.filters.selectedStars.filter(s => s !== starValue);
             }
 
+            log('Estrelas selecionadas: ' + SoltourApp.filters.selectedStars.join(', '));
             applyFilters();
         });
     }
 
     function applyFilters() {
+        log('=== APLICANDO FILTROS ===');
+        log('Filtros atuais:', SoltourApp.filters);
 
         // Resetar para primeira página
         SoltourApp.currentPage = 1;
@@ -412,6 +444,7 @@
         // Atualizar allUniqueHotels com hotéis filtrados
         SoltourApp.allUniqueHotels = filteredHotels;
 
+        logSuccess(`${filteredHotels.length} hotéis após aplicar filtros`);
 
         // Atualizar state tracking (mantém estado na URL)
         if (SoltourApp.availToken) {
@@ -441,6 +474,7 @@
         // Filtrar a partir dos hotéis originais (sem filtros aplicados)
         let hotels = [...SoltourApp.originalHotels];
 
+        log(`Total de hotéis antes dos filtros: ${hotels.length}`);
 
         // FILTRO 1: Preço máximo
         // Só aplicar filtro se o usuário ajustou o slider (maxPrice diferente do absoluto)
@@ -450,6 +484,7 @@
                 // Incluir apenas pacotes com preço <= maxPrice selecionado
                 return price <= SoltourApp.filters.maxPrice;
             });
+            log(`Após filtro de preço (≤ ${SoltourApp.filters.maxPrice.toLocaleString('pt-PT')}€): ${hotels.length} hotéis`);
         }
 
         // FILTRO 2: Estrelas selecionadas
@@ -459,6 +494,7 @@
                 const isMatch = SoltourApp.filters.selectedStars.includes(hotelStars);
                 return isMatch;
             });
+            log(`Após filtro de estrelas (${SoltourApp.filters.selectedStars.join(', ')}): ${hotels.length} hotéis`);
         }
 
         // ORDENAÇÃO
@@ -476,6 +512,7 @@
             return 0;
         });
 
+        log(`Após ordenação (${SoltourApp.filters.sortBy}): ${hotels.length} hotéis`);
 
         return hotels;
     }
@@ -546,6 +583,7 @@
             SoltourApp.filters.maxPrice = maxPrice;
             SoltourApp.filters.absoluteMaxPrice = maxPrice; // Guardar o máximo absoluto
             $('#soltour-max-price-value').text(maxPrice.toLocaleString('pt-PT') + '€');
+            log(`Filtro de preço configurado: ${minPrice.toLocaleString('pt-PT')}€ - ${maxPrice.toLocaleString('pt-PT')}€`);
         }
     }
 
@@ -560,6 +598,7 @@
             }
         });
 
+        log(`Estrelas disponíveis nos resultados: ${Array.from(availableStars).sort((a, b) => b - a).join(', ')}`);
 
         // Mostrar/esconder checkboxes baseado nas estrelas disponíveis
         $('.soltour-star-filter input[type="checkbox"]').each(function() {
@@ -575,6 +614,7 @@
             }
         });
 
+        logSuccess(`Filtro de estrelas configurado - mostrando apenas: ${Array.from(availableStars).sort((a, b) => b - a).join(', ')}`);
     }
 
     function showSkeletonCards() {
@@ -609,6 +649,8 @@
     }
 
     function searchPackagesAjax() {
+        log('=== BUSCA INICIADA ===');
+        log('Params enviados:', SoltourApp.searchParams);
 
         // O modal já foi mostrado em initResultsPage(), não mostrar novamente aqui
         $('#soltour-results-loading').hide();
@@ -626,6 +668,7 @@
             success: function(response) {
                 $('#soltour-results-loading').hide();
 
+                log('Resposta completa da API:', response);
 
                 if (response.success && response.data) {
                     SoltourApp.availToken = response.data.availToken;
@@ -635,6 +678,8 @@
                     // Atualizar URL com state tracking
                     updateURLState(SoltourApp.availToken);
 
+                    log(`Total de budgets na API: ${SoltourApp.totalBudgets}`);
+                    log(`Budgets recebidos: ${SoltourApp.allBudgets.length}`);
 
                     // Armazenar dados dos hotéis vindos do endpoint availability
                     if (response.data.hotels && Array.isArray(response.data.hotels)) {
@@ -642,6 +687,7 @@
                         response.data.hotels.forEach(function(hotel) {
                             SoltourApp.hotelsFromAvailability[hotel.code] = hotel;
                         });
+                        logSuccess(`${response.data.hotels.length} hotéis mapeados do availability`);
                     }
 
                     // ✈️ ARMAZENAR DADOS DOS VOOS vindos do endpoint availability
@@ -650,6 +696,26 @@
                         response.data.flights.forEach(function(flight) {
                             SoltourApp.flightsFromAvailability[flight.id] = flight;
                         });
+                        logSuccess(`✈️ ${response.data.flights.length} voos mapeados do availability`);
+                        log('Primeiro voo:', response.data.flights[0]);
+                    } else {
+                        logError('❌ response.data.flights não existe ou não é array!');
+                        log('response.data keys:', Object.keys(response.data));
+                    }
+
+                    logSuccess(`${SoltourApp.allBudgets.length} budgets recebidos`);
+
+                    // ✈️ DEBUG: Verificar estrutura do budget para encontrar flightId
+                    if (SoltourApp.allBudgets.length > 0) {
+                        const firstBudget = SoltourApp.allBudgets[0];
+                        log('🔍 DEBUG - Primeiro budget (completo):', firstBudget);
+                        log('🔍 DEBUG - Keys do budget:', Object.keys(firstBudget));
+                        log('🔍 DEBUG - firstBudget.flightId:', firstBudget.flightId);
+                        log('🔍 DEBUG - firstBudget.flightServices:', firstBudget.flightServices);
+
+                        // Procurar por qualquer propriedade relacionada a voo
+                        const flightKeys = Object.keys(firstBudget).filter(key => key.toLowerCase().includes('flight'));
+                        log('🔍 DEBUG - Keys relacionadas a flight:', flightKeys);
                     }
 
                     if (SoltourApp.allBudgets.length > 0) {
@@ -657,6 +723,7 @@
                         loadAllDetailsWithDeduplication(SoltourApp.allBudgets);
                     } else {
                         // Quando não há budgets, redirecionar para página de busca com mensagem
+                        log('⚠️ Nenhum budget encontrado - redirecionando para busca');
 
                         // Salvar mensagem no localStorage
                         localStorage.setItem('soltour_no_results_message', 'Não foram encontrados pacotes para o destino selecionado com a origem escolhida. Por favor, tente outra origem ou ajuste os critérios de busca.');
@@ -668,6 +735,7 @@
                     }
                 } else {
                     // Quando resposta não tem success, redirecionar para busca
+                    log('⚠️ Resposta sem success - redirecionando para busca');
 
                     localStorage.setItem('soltour_no_results_message', 'Ocorreu um erro na busca. Por favor, tente novamente com outros critérios.');
 
@@ -690,6 +758,7 @@
                 // Mostrar mensagem de erro
                 alert('Ocorreu um erro ao buscar os pacotes. Por favor, tente novamente.');
 
+                logError('Erro na busca', error);
             }
         });
     }
@@ -699,6 +768,7 @@
      * Depois fazer paginação local
      */
     function loadAllDetailsWithDeduplication(budgets) {
+        log('=== DEDUPLICANDO TODOS OS BUDGETS ===');
 
         const uniqueBudgets = {};
         budgets.forEach(function(budget) {
@@ -724,9 +794,11 @@
         });
 
         const uniqueBudgetsList = Object.values(uniqueBudgets).map(item => item.budget);
+        logSuccess(`${uniqueBudgetsList.length} hotéis únicos de ${budgets.length} budgets`);
 
         // Se não há hotéis únicos após deduplicação, redirecionar para página de busca
         if (uniqueBudgetsList.length === 0) {
+            log('⚠️ Nenhum hotel único encontrado após deduplicação - redirecionando');
 
             localStorage.setItem('soltour_no_results_message', 'Não foram encontrados pacotes para o destino selecionado com a origem escolhida. Por favor, tente outra origem ou ajuste os critérios de busca.');
 
@@ -779,6 +851,7 @@
                         // Armazenar TODOS os hotéis únicos deduplicados
                         SoltourApp.allUniqueHotels = Object.values(tempEnrichedPackages);
                         SoltourApp.originalHotels = [...SoltourApp.allUniqueHotels]; // Salvar cópia original
+                        logSuccess(`${SoltourApp.allUniqueHotels.length} hotéis únicos carregados e armazenados`);
 
                         // Configurar filtro de preço baseado nos dados reais
                         setupPriceFilter();
@@ -794,8 +867,10 @@
 
                         // IMPORTANTE: Esconder modal de loading após renderizar
                         hideLoadingModal();
+                        logSuccess('✅ Página renderizada e modal fechado');
 
                         // ✅ PREÇOS JÁ CARREGADOS - Busca feita com forceAvail=true
+                        logSuccess('✅ Preços carregados diretamente da API');
                     }
                 },
                 error: function() {
@@ -809,6 +884,7 @@
                         // Armazenar TODOS os hotéis únicos deduplicados
                         SoltourApp.allUniqueHotels = Object.values(tempEnrichedPackages);
                         SoltourApp.originalHotels = [...SoltourApp.allUniqueHotels]; // Salvar cópia original
+                        logSuccess(`${SoltourApp.allUniqueHotels.length} hotéis únicos carregados e armazenados`);
 
                         // Configurar filtro de preço baseado nos dados reais
                         setupPriceFilter();
@@ -824,8 +900,10 @@
 
                         // IMPORTANTE: Esconder modal de loading após renderizar
                         hideLoadingModal();
+                        logSuccess('✅ Página renderizada e modal fechado (handler de erro)');
 
                         // ✅ PREÇOS JÁ CARREGADOS - Busca feita com forceAvail=true
+                        logSuccess('✅ Preços carregados diretamente da API');
                     }
                 }
             });
@@ -833,6 +911,8 @@
     }
 
     function paginatePackagesAjax(firstItem, itemCount) {
+        log('=== PAGINAÇÃO INICIADA (usando availToken existente) ===');
+        log(`firstItem: ${firstItem}, itemCount: ${itemCount}`);
 
         // Mostrar modal de carregamento durante paginação
         showLoadingModal(
@@ -862,6 +942,7 @@
             success: function(response) {
                 $('#soltour-results-loading').hide();
 
+                log('Resposta da paginação:', response);
 
                 if (response.success && response.data) {
                     // NÃO atualizar availToken - manter o mesmo da busca inicial
@@ -872,31 +953,38 @@
                         SoltourApp.totalBudgets = response.data.totalCount;
                     }
 
+                    log(`Budgets recebidos na paginação: ${SoltourApp.allBudgets.length}`);
+                    log(`Total mantido: ${SoltourApp.totalBudgets}`);
 
                     // Atualizar mapeamento de hotéis
                     if (response.data.hotels && Array.isArray(response.data.hotels)) {
                         response.data.hotels.forEach(function(hotel) {
                             SoltourApp.hotelsFromAvailability[hotel.code] = hotel;
                         });
+                        logSuccess(`${response.data.hotels.length} hotéis mapeados da paginação`);
                     }
 
                     if (SoltourApp.allBudgets.length > 0) {
                         loadPageDetailsWithDeduplication(SoltourApp.allBudgets);
                     } else {
                         alert('Nenhum pacote encontrado nesta página.');
+                        logError('Nenhum budget retornado na paginação');
                     }
                 } else {
+                    logError('Erro na paginação', response);
                     alert('Erro ao carregar página de resultados.');
                 }
             },
             error: function(xhr, status, error) {
                 $('#soltour-results-loading').hide();
                 alert('Erro ao carregar página de resultados. Por favor, tente novamente.');
+                logError('Erro AJAX na paginação', error);
             }
         });
     }
 
     function loadPageDetailsWithDeduplication(budgets) {
+        log('=== DEDUPLICANDO E CARREGANDO DETALHES ===');
         
         const uniqueBudgets = {};
         budgets.forEach(function(budget) {
@@ -922,6 +1010,7 @@
         });
 
         const uniqueBudgetsList = Object.values(uniqueBudgets).map(item => item.budget);
+        logSuccess(`${uniqueBudgetsList.length} hotéis únicos de ${budgets.length} budgets`);
 
         let completed = 0;
         SoltourApp.enrichedPackages = {};
@@ -987,6 +1076,7 @@
     }
 
     function renderPackageCards(packages) {
+        log('=== RENDERIZANDO CARDS COMPLETOS ===');
 
         // Esconder modal de carregamento quando os resultados estiverem prontos
         hideLoadingModal();
@@ -1006,22 +1096,34 @@
         }
 
         // ✈️ RENDERIZAR VOO RECOMENDADO NO TOPO
+        log('🔍 Verificando dados de voo...');
+        log('Total de packages:', packages.length);
+        log('SoltourApp.flightsFromAvailability existe?', !!SoltourApp.flightsFromAvailability);
 
         if (SoltourApp.flightsFromAvailability && Object.keys(SoltourApp.flightsFromAvailability).length > 0) {
+            log('✅ Array de voos existe!');
+            log('Total de voos disponíveis:', Object.keys(SoltourApp.flightsFromAvailability).length);
 
             // Pegar o primeiro voo disponível
             const firstFlightId = Object.keys(SoltourApp.flightsFromAvailability)[0];
             const firstFlight = SoltourApp.flightsFromAvailability[firstFlightId];
 
+            log('Primeiro voo (ID):', firstFlightId);
+            log('Primeiro voo (dados):', firstFlight);
 
             if (firstFlight) {
+                logSuccess('✅ Renderizando voo recomendado...');
                 renderRecommendedFlightFromData(firstFlight);
             } else {
+                logError('❌ Não foi possível obter dados do primeiro voo');
             }
         } else {
+            logError('❌ Array de voos não existe ou está vazio!');
+            log('SoltourApp.flightsFromAvailability:', SoltourApp.flightsFromAvailability);
 
             // Tentar buscar de forma alternativa nos budgets (fallback)
             if (packages.length > 0 && packages[0].budget && packages[0].budget.flightServices) {
+                log('🔄 Tentando fallback: budget.flightServices');
                 renderRecommendedFlightFromData(packages[0].budget.flightServices);
             }
         }
@@ -1034,14 +1136,17 @@
             renderCompleteCard(pkg);
         });
 
+        logSuccess(`${packages.length} cards renderizados com TODOS os campos!`);
     }
 
     /**
      * ✈️ Renderizar Box de Voo Recomendado no topo
      */
     function renderRecommendedFlight(flightServices) {
+        log('✈️ Renderizando voo recomendado no topo...');
 
         if (!flightServices || flightServices.length === 0) {
+            log('⚠️ Nenhum voo disponível');
             return;
         }
 
@@ -1050,6 +1155,7 @@
         const inboundFlight = flightServices.find(f => f.type === 'INBOUND');
 
         if (!outboundFlight && !inboundFlight) {
+            log('⚠️ Voos incompletos');
             return;
         }
 
@@ -1139,6 +1245,7 @@
         `;
 
         $('#soltour-results-list').prepend(flightBox);
+        logSuccess('✅ Voo recomendado renderizado');
     }
 
     /**
@@ -1146,11 +1253,16 @@
      */
     function renderRecommendedFlightFromData(flightData) {
         try {
+            log('✈️ [NEW] Renderizando voo recomendado a partir de flightData...');
+            log('🔍 Estrutura do flightData recebido:', flightData);
 
             if (!flightData) {
+                logError('❌ flightData é null ou undefined');
                 return;
             }
 
+            log('🔍 Keys do flightData:', Object.keys(flightData));
+            log('🔍 JSON completo do flightData:', JSON.stringify(flightData, null, 2));
 
             // Helper para formatar horário do formato HH:mm:ss
             function formatTime(timeStr) {
@@ -1205,18 +1317,26 @@
             let inboundSegments = null;
 
             if (flightData.outboundSegments && Array.isArray(flightData.outboundSegments)) {
+                log('✅ Encontrado flightData.outboundSegments com ' + flightData.outboundSegments.length + ' segmentos');
+                log('🔍 Primeiro segmento IDA:', flightData.outboundSegments[0]);
                 outboundSegments = flightData.outboundSegments;
             }
 
             if (flightData.returnSegments && Array.isArray(flightData.returnSegments)) {
+                log('✅ Encontrado flightData.returnSegments com ' + flightData.returnSegments.length + ' segmentos');
+                log('🔍 Primeiro segmento VOLTA:', flightData.returnSegments[0]);
                 inboundSegments = flightData.returnSegments;
             }
 
+            log('📍 outboundSegments encontrados?', !!outboundSegments);
+            log('📍 inboundSegments encontrados?', !!inboundSegments);
 
             // Se não encontrou segmentos, tentar renderizar box simples
             if (!outboundSegments && !inboundSegments) {
+                logError('❌ Não foi possível encontrar itinerários no flightData');
 
                 // FALLBACK: Renderizar box simples com informação genérica
+                log('🔄 Tentando fallback: renderizar box genérico');
                 const flightBox = `
                     <div class="recommended-flight-box" style="
                         background: linear-gradient(135deg, #019CB8 0%, #0176a8 100%);
@@ -1242,10 +1362,15 @@
                     </div>
                 `;
 
+                log('🔍 Verificando se #soltour-results-list existe...');
                 const $list = $('#soltour-results-list');
+                log('🔍 Elemento encontrado?', $list.length > 0);
 
                 if ($list.length > 0) {
                     $list.prepend(flightBox);
+                    logSuccess('✅ Box de voo genérico renderizado (fallback)!');
+                } else {
+                    logError('❌ Elemento #soltour-results-list não encontrado!');
                 }
                 return;
             }
@@ -1254,6 +1379,8 @@
 
             // Renderizar IDA (OUTBOUND)
             if (outboundSegments && outboundSegments.length > 0) {
+                log(`✈️ IDA: ${outboundSegments.length} segmentos encontrados`);
+                log('🔍 Primeiro segmento IDA:', outboundSegments[0]);
 
                 const firstSeg = outboundSegments[0];
                 const lastSeg = outboundSegments[outboundSegments.length - 1];
@@ -1304,6 +1431,8 @@
 
             // Renderizar VOLTA (INBOUND)
             if (inboundSegments && inboundSegments.length > 0) {
+                log(`✈️ VOLTA: ${inboundSegments.length} segmentos encontrados`);
+                log('🔍 Primeiro segmento VOLTA:', inboundSegments[0]);
 
                 const firstSeg = inboundSegments[0];
                 const lastSeg = inboundSegments[inboundSegments.length - 1];
@@ -1353,6 +1482,7 @@
             }
 
             if (!flightHTML) {
+                logError('❌ Nenhum HTML de voo foi gerado dos segmentos');
                 return;
             }
 
@@ -1377,14 +1507,20 @@
                 </div>
             `;
 
+            log('🔍 Verificando se #soltour-results-list existe...');
             const $list = $('#soltour-results-list');
+            log('🔍 Elemento encontrado?', $list.length > 0);
 
             if ($list.length > 0) {
                 $list.prepend(flightBox);
+                logSuccess('✅ Voo recomendado renderizado a partir de flightData!');
             } else {
+                logError('❌ Elemento #soltour-results-list não encontrado!');
             }
 
         } catch (error) {
+            logError('❌ ERRO CRÍTICO ao renderizar voo:', error);
+            log('Stack trace:', error.stack);
         }
     }
 
@@ -1453,6 +1589,7 @@
 
         // Se não houver nome no availability, não renderizar o card
         if (!hotelName) {
+            log(`Card ignorado - Hotel sem nome (código: ${hotelCode})`);
             return;
         }
 
@@ -1583,6 +1720,7 @@
      * Nova função: Renderizar uma página LOCAL dos hotéis únicos (slice do array)
      */
     function renderLocalPage(page) {
+        log(`=== RENDERIZANDO PÁGINA LOCAL ${page} ===`);
 
         SoltourApp.currentPage = page;
 
@@ -1593,6 +1731,8 @@
         // Pegar apenas os hotéis da página atual
         const hotelsForPage = SoltourApp.allUniqueHotels.slice(startIndex, endIndex);
 
+        log(`Mostrando hotéis ${startIndex + 1} a ${Math.min(endIndex, SoltourApp.allUniqueHotels.length)} de ${SoltourApp.allUniqueHotels.length}`);
+        log(`Hotéis nesta página: ${hotelsForPage.length}`);
 
         // Renderizar cards
         renderPackageCards(hotelsForPage);
@@ -1614,9 +1754,14 @@
         const totalUniqueHotels = SoltourApp.allUniqueHotels.length;
         const totalPages = Math.ceil(totalUniqueHotels / SoltourApp.itemsPerPage);
 
+        log(`=== PAGINAÇÃO ===`);
+        log(`Total de hotéis únicos: ${totalUniqueHotels}`);
+        log(`Página atual: ${SoltourApp.currentPage}`);
+        log(`Total de páginas: ${totalPages}`);
 
         if (totalPages <= 1) {
             $('#soltour-pagination').hide();
+            log('Paginação oculta - apenas 1 página');
             return;
         }
 
@@ -1666,9 +1811,12 @@
         html += '</div>';
 
         $('#soltour-pagination').html(html).show();
+        logSuccess('Paginação renderizada');
     }
 
     window.SoltourApp.loadPage = function(page) {
+        log(`=== CARREGANDO PÁGINA ${page} (PAGINAÇÃO LOCAL) ===`);
+        log(`Página anterior: ${SoltourApp.currentPage}`);
 
         // Usar paginação LOCAL - não fazer nova chamada à API
         // Todos os hotéis únicos já estão em SoltourApp.allUniqueHotels
@@ -1676,6 +1824,8 @@
     };
 
     window.SoltourApp.selectPackage = function(budgetId, hotelCode, providerCode) {
+        log('=== SELECT PACKAGE ===');
+        log(`Budget: ${budgetId}, Hotel: ${hotelCode}, Provider: ${providerCode}`);
 
         // Verificar se venda está permitida ANTES de prosseguir
         checkAllowedSellingBeforeSelect(budgetId, hotelCode, providerCode);
@@ -1686,6 +1836,7 @@
      * Implementa validação do site oficial
      */
     function checkAllowedSellingBeforeSelect(budgetId, hotelCode, providerCode) {
+        log('🔒 Verificando se venda está permitida...');
 
         showLoadingModal('Verificando disponibilidade...', 'Validando seu pacote');
 
@@ -1700,6 +1851,7 @@
                 hideLoadingModal();
 
                 if (response.success && response.data && response.data.allowed) {
+                    log('✅ Venda permitida - prosseguindo...');
 
                     // Permitir seleção do pacote
                     proceedWithPackageSelection(budgetId, hotelCode, providerCode);
@@ -1710,6 +1862,7 @@
                         ? response.data.message
                         : 'Desculpe, este pacote não está disponível para venda no momento. Por favor, tente outro pacote ou entre em contato conosco.';
 
+                    logError('❌ Venda não permitida: ' + message);
 
                     // Usar toast em vez de alert
                     if (window.SoltourApp.Toast) {
@@ -1722,9 +1875,11 @@
             error: function(xhr, status, error) {
                 hideLoadingModal();
 
+                logError('Erro ao verificar venda permitida:', error);
 
                 // Em caso de erro, permitir continuar (fail-safe)
                 // Pode mudar para fail-secure se preferir
+                log('⚠️ Erro na verificação - permitindo continuar (fail-safe)');
                 proceedWithPackageSelection(budgetId, hotelCode, providerCode);
             }
         });
@@ -1734,6 +1889,7 @@
      * Prossegue com seleção do pacote após validação
      */
     function proceedWithPackageSelection(budgetId, hotelCode, providerCode) {
+        log('📦 Salvando seleção e redirecionando...');
 
         sessionStorage.setItem('soltour_selected_package', JSON.stringify({
             budgetId: budgetId,
