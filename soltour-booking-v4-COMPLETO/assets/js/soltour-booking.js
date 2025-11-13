@@ -781,107 +781,65 @@
             return;
         }
 
-        let completed = 0;
-        const tempEnrichedPackages = {};
+        // ✅ NOVA ABORDAGEM: Processar dados diretamente do availability (sem chamadas extras)
+        logSuccess('🚀 Processando dados diretamente do availability (1 chamada apenas)');
 
+        const enrichedPackages = {};
+
+        // Processar cada budget único e combinar com dados dos hotéis
         uniqueBudgetsList.forEach(function(budget) {
             const hotelService = budget.hotelServices && budget.hotelServices[0];
-            if (!hotelService) {
-                completed++;
-                return;
-            }
+            if (!hotelService) return;
 
             const hotelCode = hotelService.hotelCode;
-            const providerCode = hotelService.providerCode || 'UNDEFINED';
 
-            $.ajax({
-                url: soltourData.ajaxurl,
-                type: 'POST',
-                data: {
-                    action: 'soltour_get_package_details',
-                    nonce: soltourData.nonce,
-                    avail_token: SoltourApp.availToken,
-                    budget_id: budget.budgetId,
-                    hotel_code: hotelCode,
-                    provider_code: providerCode
-                },
-                success: function(response) {
-                    if (response.success && response.data && response.data.hotelDetails) {
-                        tempEnrichedPackages[hotelCode] = {
-                            budget: budget,
-                            details: response.data,
-                            hotelCode: hotelCode
-                        };
-                    } else {
-                        tempEnrichedPackages[hotelCode] = {
-                            budget: budget,
-                            details: null,
-                            hotelCode: hotelCode
-                        };
+            // Buscar dados do hotel do availability (já temos isso!)
+            const hotelData = SoltourApp.hotelsFromAvailability && SoltourApp.hotelsFromAvailability[hotelCode];
+
+            // Montar estrutura compatível (sem precisar de chamada extra)
+            enrichedPackages[hotelCode] = {
+                budget: budget,
+                hotelCode: hotelCode,
+                details: hotelData ? {
+                    hotelDetails: {
+                        hotel: {
+                            code: hotelData.code,
+                            name: hotelData.name,
+                            commercialName: hotelData.commercialName || hotelData.name,
+                            categoryCode: hotelData.categoryCode,
+                            description: hotelData.description || '',
+                            images: hotelData.images || [],
+                            address: hotelData.address || {},
+                            geoLocation: hotelData.geoLocation || {}
+                        }
                     }
-
-                    completed++;
-                    if (completed === uniqueBudgetsList.length) {
-                        // Armazenar TODOS os hotéis únicos deduplicados
-                        SoltourApp.allUniqueHotels = Object.values(tempEnrichedPackages);
-                        SoltourApp.originalHotels = [...SoltourApp.allUniqueHotels]; // Salvar cópia original
-                        logSuccess(`${SoltourApp.allUniqueHotels.length} hotéis únicos carregados e armazenados`);
-
-                        // Configurar filtro de preço baseado nos dados reais
-                        setupPriceFilter();
-
-                        // Configurar filtro de estrelas baseado nos dados reais
-                        setupStarsFilter();
-
-                        // Resetar para página 1
-                        SoltourApp.currentPage = 1;
-
-                        // Renderizar primeira página (paginação local)
-                        renderLocalPage(1);
-
-                        // IMPORTANTE: Esconder modal de loading após renderizar
-                        hideLoadingModal();
-                        logSuccess('✅ Página renderizada e modal fechado');
-
-                        // ✅ PREÇOS JÁ CARREGADOS - Busca feita com forceAvail=true
-                        logSuccess('✅ Preços carregados diretamente da API');
-                    }
-                },
-                error: function() {
-                    tempEnrichedPackages[hotelCode] = {
-                        budget: budget,
-                        details: null,
-                        hotelCode: hotelCode
-                    };
-                    completed++;
-                    if (completed === uniqueBudgetsList.length) {
-                        // Armazenar TODOS os hotéis únicos deduplicados
-                        SoltourApp.allUniqueHotels = Object.values(tempEnrichedPackages);
-                        SoltourApp.originalHotels = [...SoltourApp.allUniqueHotels]; // Salvar cópia original
-                        logSuccess(`${SoltourApp.allUniqueHotels.length} hotéis únicos carregados e armazenados`);
-
-                        // Configurar filtro de preço baseado nos dados reais
-                        setupPriceFilter();
-
-                        // Configurar filtro de estrelas baseado nos dados reais
-                        setupStarsFilter();
-
-                        // Resetar para página 1
-                        SoltourApp.currentPage = 1;
-
-                        // Renderizar primeira página (paginação local)
-                        renderLocalPage(1);
-
-                        // IMPORTANTE: Esconder modal de loading após renderizar
-                        hideLoadingModal();
-                        logSuccess('✅ Página renderizada e modal fechado (handler de erro)');
-
-                        // ✅ PREÇOS JÁ CARREGADOS - Busca feita com forceAvail=true
-                        logSuccess('✅ Preços carregados diretamente da API');
-                    }
-                }
-            });
+                } : null
+            };
         });
+
+        // Armazenar TODOS os hotéis únicos deduplicados
+        SoltourApp.allUniqueHotels = Object.values(enrichedPackages);
+        SoltourApp.originalHotels = [...SoltourApp.allUniqueHotels];
+        logSuccess(`✅ ${SoltourApp.allUniqueHotels.length} hotéis únicos processados (SEM chamadas extras)`);
+
+        // Renderizar voo recomendado no topo (primeiro budget)
+        if (SoltourApp.allBudgets.length > 0 && SoltourApp.allBudgets[0].flightServices) {
+            renderRecommendedFlight(SoltourApp.allBudgets[0].flightServices);
+        }
+
+        // Configurar filtros baseados nos dados reais
+        setupPriceFilter();
+        setupStarsFilter();
+
+        // Resetar para página 1
+        SoltourApp.currentPage = 1;
+
+        // Renderizar primeira página (paginação local)
+        renderLocalPage(1);
+
+        // Esconder modal de loading
+        hideLoadingModal();
+        logSuccess('✅ Página renderizada - Reformulação completa!');
     }
 
     function paginatePackagesAjax(firstItem, itemCount) {
@@ -1047,6 +1005,143 @@
                 }
             });
         });
+    }
+
+    /**
+     * ✈️ Renderizar Box de Voo Recomendado no topo da página
+     */
+    function renderRecommendedFlight(flightServices) {
+        log('✈️ Renderizando voo recomendado');
+
+        if (!flightServices || flightServices.length === 0) {
+            log('⚠️ Nenhum serviço de voo disponível');
+            return;
+        }
+
+        // Separar voos de ida e volta
+        const outboundFlight = flightServices.find(f => f.type === 'OUTBOUND');
+        const inboundFlight = flightServices.find(f => f.type === 'INBOUND');
+
+        if (!outboundFlight || !inboundFlight) {
+            log('⚠️ Voos incompletos (falta ida ou volta)');
+            return;
+        }
+
+        // Helper para formatar horário
+        function formatTime(dateStr) {
+            if (!dateStr) return '';
+            const date = new Date(dateStr);
+            return date.toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' });
+        }
+
+        // Helper para formatar rota (origem → destino)
+        function formatRoute(segments) {
+            if (!segments || segments.length === 0) return '';
+            const firstSegment = segments[0];
+            const lastSegment = segments[segments.length - 1];
+            return `${firstSegment.originAirportCode} → ${lastSegment.destinationAirportCode}`;
+        }
+
+        // Extrair dados do voo de ida
+        const outboundSegments = outboundFlight.flightSegments || [];
+        const outboundAirline = outboundSegments[0]?.operatingAirline || 'Companhia Aérea';
+        const outboundRoute = formatRoute(outboundSegments);
+        const outboundDeparture = formatTime(outboundSegments[0]?.departureDate);
+        const outboundArrival = formatTime(outboundSegments[outboundSegments.length - 1]?.arrivalDate);
+        const outboundBaggage = outboundFlight.includedBaggage ? '🧳 Malas incluídas' : '🎒 Bagagem de mão';
+
+        // Extrair dados do voo de volta
+        const inboundSegments = inboundFlight.flightSegments || [];
+        const inboundAirline = inboundSegments[0]?.operatingAirline || 'Companhia Aérea';
+        const inboundRoute = formatRoute(inboundSegments);
+        const inboundDeparture = formatTime(inboundSegments[0]?.departureDate);
+        const inboundArrival = formatTime(inboundSegments[inboundSegments.length - 1]?.arrivalDate);
+        const inboundBaggage = inboundFlight.includedBaggage ? '🧳 Malas incluídas' : '🎒 Bagagem de mão';
+
+        // Origem do voo (para o badge)
+        const originCode = outboundSegments[0]?.originAirportCode || '';
+        const originName = ORIGINS_MAP[originCode] || originCode;
+
+        // HTML do box de voo recomendado
+        const flightBoxHTML = `
+            <div class="recommended-flight-box" style="
+                background: linear-gradient(135deg, #019CB8 0%, #0176a8 100%);
+                border-radius: 12px;
+                padding: 25px;
+                margin-bottom: 30px;
+                color: #fff;
+                box-shadow: 0 4px 15px rgba(1, 156, 184, 0.2);
+            ">
+                <div class="flight-badge" style="
+                    display: inline-block;
+                    background: rgba(255, 255, 255, 0.2);
+                    padding: 6px 16px;
+                    border-radius: 20px;
+                    font-size: 12px;
+                    font-weight: 700;
+                    text-transform: uppercase;
+                    letter-spacing: 1px;
+                    margin-bottom: 15px;
+                ">
+                    ✈️ Voo recomendado desde ${originName}
+                </div>
+
+                <div class="flight-row" style="
+                    display: flex;
+                    align-items: center;
+                    gap: 20px;
+                    padding: 15px 0;
+                    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+                ">
+                    <div class="flight-label" style="font-weight: 600; min-width: 80px;">Saída</div>
+                    <div class="flight-info" style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap; flex: 1;">
+                        <span style="font-weight: 600;">🛫 ${outboundAirline}</span>
+                        <span style="background: rgba(255, 255, 255, 0.15); padding: 4px 12px; border-radius: 6px;">${outboundRoute}</span>
+                        <span style="font-size: 16px; font-weight: 700;">${outboundDeparture} - ${outboundArrival}</span>
+                        <span style="font-size: 13px; opacity: 0.9;">${outboundBaggage}</span>
+                    </div>
+                </div>
+
+                <div class="flight-row" style="
+                    display: flex;
+                    align-items: center;
+                    gap: 20px;
+                    padding: 15px 0;
+                ">
+                    <div class="flight-label" style="font-weight: 600; min-width: 80px;">Regresso</div>
+                    <div class="flight-info" style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap; flex: 1;">
+                        <span style="font-weight: 600;">🛬 ${inboundAirline}</span>
+                        <span style="background: rgba(255, 255, 255, 0.15); padding: 4px 12px; border-radius: 6px;">${inboundRoute}</span>
+                        <span style="font-size: 16px; font-weight: 700;">${inboundDeparture} - ${inboundArrival}</span>
+                        <span style="font-size: 13px; opacity: 0.9;">${inboundBaggage}</span>
+                    </div>
+                </div>
+
+                <div style="margin-top: 15px; text-align: right;">
+                    <a href="#" class="change-flight-link" style="
+                        color: #fff;
+                        text-decoration: none;
+                        font-size: 14px;
+                        opacity: 0.9;
+                        transition: opacity 0.2s;
+                    " onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.9'">
+                        Ver detalhes <i class="fas fa-chevron-right"></i>
+                    </a>
+                </div>
+            </div>
+        `;
+
+        // Inserir antes da lista de resultados
+        const $resultsList = $('#soltour-results-list');
+        if ($resultsList.length > 0) {
+            // Remover box anterior se existir
+            $('.recommended-flight-box').remove();
+            // Inserir novo box antes da lista
+            $resultsList.before(flightBoxHTML);
+            logSuccess('✅ Box de voo recomendado renderizado');
+        } else {
+            log('⚠️ Elemento #soltour-results-list não encontrado');
+        }
     }
 
     function renderPackageCards(packages) {
@@ -1261,10 +1356,12 @@
                 <div class="package-price">
                     <div class="price-label">PACOTE</div>
                     <div class="price-amount">${price.toFixed(0)}€</div>
-                    <button class="soltour-btn soltour-btn-primary"
-                            style="padding: 20px 35px !important; border-radius: 100px !important; background: #019CB8 !important; color: #fff !important; border: none !important; font-size: 16px !important; font-weight: 700 !important; width: 100% !important;"
-                            onclick="SoltourApp.selectPackage('${budget.budgetId}', '${hotelCode}', '${hotelService.providerCode || 'UNDEFINED'}')">
-                        Ver Detalhes
+                    <button class="soltour-btn soltour-btn-selecionar"
+                            style="padding: 18px 35px !important; border-radius: 8px !important; background: linear-gradient(135deg, #E63946 0%, #c62828 100%) !important; color: #fff !important; border: none !important; font-size: 17px !important; font-weight: 700 !important; width: 100% !important; cursor: pointer !important; transition: transform 0.2s !important; box-shadow: 0 4px 12px rgba(230, 57, 70, 0.3) !important;"
+                            onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(230, 57, 70, 0.4)'"
+                            onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(230, 57, 70, 0.3)'"
+                            onclick="SoltourApp.selectPackageForQuote('${budget.budgetId}', '${hotelCode}', '${hotelService.providerCode || 'UNDEFINED'}')">
+                        Selecionar
                     </button>
                 </div>
             </div>
@@ -1456,5 +1553,28 @@
 
         window.location.href = `/detalhes-do-pacote/?budget=${budgetId}`;
     }
+
+    /**
+     * ✅ NOVA FUNÇÃO: Selecionar pacote e redirecionar para COTAÇÃO (não detalhes)
+     * Fluxo oficial: Resultados → Selecionar → Cotação
+     */
+    window.SoltourApp.selectPackageForQuote = function(budgetId, hotelCode, providerCode) {
+        log('✅ === SELECT PACKAGE FOR QUOTE ===');
+        log(`Budget: ${budgetId}, Hotel: ${hotelCode}, Provider: ${providerCode}`);
+
+        // Salvar dados do budget selecionado no sessionStorage
+        sessionStorage.setItem('soltour_selected_budget', JSON.stringify({
+            budgetId: budgetId,
+            hotelCode: hotelCode,
+            providerCode: providerCode,
+            availToken: SoltourApp.availToken
+        }));
+
+        logSuccess('✅ Budget salvo no sessionStorage');
+
+        // Redirecionar diretamente para página de cotação
+        log('🎯 Redirecionando para /cotacao/');
+        window.location.href = '/cotacao/';
+    };
 
 })(jQuery);
