@@ -1526,22 +1526,52 @@
         // (K) PREÇO - CORRETO!
         let price = 0;
         let currency = 'EUR';
-        if (budget.priceBreakdown && budget.priceBreakdown.priceBreakdownDetails && 
-            budget.priceBreakdown.priceBreakdownDetails[0] && 
+        if (budget.priceBreakdown && budget.priceBreakdown.priceBreakdownDetails &&
+            budget.priceBreakdown.priceBreakdownDetails[0] &&
             budget.priceBreakdown.priceBreakdownDetails[0].priceInfo) {
             price = budget.priceBreakdown.priceBreakdownDetails[0].priceInfo.pvp || 0;
             currency = budget.priceBreakdown.priceBreakdownDetails[0].priceInfo.currency || 'EUR';
         }
 
-        // (L) TIPO
+        // (K.1) NÚMERO DE PASSAGEIROS - para calcular preço por pessoa
+        let numPassengers = 0;
+        if (hotelService && hotelService.mealPlan && hotelService.mealPlan.combination && hotelService.mealPlan.combination.rooms) {
+            hotelService.mealPlan.combination.rooms.forEach(room => {
+                if (room.passengers) {
+                    numPassengers += room.passengers.length;
+                }
+            });
+        }
+        // Fallback: usar dados da busca original
+        if (numPassengers === 0 && SoltourApp.searchParams) {
+            numPassengers = (SoltourApp.searchParams.adults || 2) + (SoltourApp.searchParams.children || 0);
+        }
+        // Garantir pelo menos 1 passageiro
+        if (numPassengers === 0) numPassengers = 2;
+
+        // (K.2) PREÇO POR PESSOA
+        const pricePerPerson = price / numPassengers;
+
+        // (L) DESCRIÇÃO DO HOTEL
+        let hotelDescription = '';
+        if (hotelService && hotelService.hotelCode && SoltourApp.hotelsFromAvailability[hotelService.hotelCode]) {
+            const hotelFromAvail = SoltourApp.hotelsFromAvailability[hotelService.hotelCode];
+            hotelDescription = hotelFromAvail.description || hotelFromAvail.shortDescription || '';
+            // Limitar a descrição a 150 caracteres
+            if (hotelDescription.length > 150) {
+                hotelDescription = hotelDescription.substring(0, 150) + '...';
+            }
+        }
+
+        // (M) TIPO
         const productType = 'PACOTE';
 
         // Construir card
         const card = `
             <div class="soltour-package-card" data-budget-id="${budget.budgetId}">
                 <div class="package-image">
-                    ${hotelImage ? 
-                        `<img src="${hotelImage}" alt="${hotelName}" />` : 
+                    ${hotelImage ?
+                        `<img src="${hotelImage}" alt="${hotelName}" />` :
                         '<div class="no-image">📷 Sem imagem</div>'
                     }
                     <div class="package-badge">${productType}</div>
@@ -1555,6 +1585,11 @@
                     <div class="package-stars">
                         ${hotelStars > 0 ? '⭐'.repeat(hotelStars) : '<span class="no-rating">Hotel</span>'}
                     </div>
+                    ${hotelDescription ? `
+                        <div class="package-description">
+                            <p>${hotelDescription}</p>
+                        </div>
+                    ` : ''}
                     ${flightInfoHTML ? `
                         <div class="package-flights">
                             ${flightInfoHTML}
@@ -1566,8 +1601,15 @@
                     </div>
                 </div>
                 <div class="package-price">
-                    <div class="price-label">PACOTE</div>
-                    <div class="price-amount">${price.toFixed(0)}€</div>
+                    <div class="price-per-person">
+                        <span class="price-label-small">desde</span>
+                        <span class="price-amount-large">${pricePerPerson.toFixed(0)}€</span>
+                        <span class="price-label-small">/ pax</span>
+                    </div>
+                    <div class="price-total">
+                        <span class="price-total-label">Preço total</span>
+                        <span class="price-total-amount">${price.toFixed(0)}€</span>
+                    </div>
                     <button class="soltour-btn soltour-btn-primary"
                             style="padding: 20px 35px !important; border-radius: 100px !important; background: #019CB8 !important; color: #fff !important; border: none !important; font-size: 16px !important; font-weight: 700 !important; width: 100% !important;"
                             onclick="SoltourApp.selectPackage('${budget.budgetId}', '${hotelCode}', '${hotelService.providerCode || 'UNDEFINED'}')">

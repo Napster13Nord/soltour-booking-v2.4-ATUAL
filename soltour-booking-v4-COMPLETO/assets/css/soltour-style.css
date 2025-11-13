@@ -1661,6 +1661,66 @@
     font-weight: 500;
 }
 
+/* Descrição do hotel */
+.package-description {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid #e2e8f0;
+}
+
+.package-description p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #718096;
+    font-weight: 400;
+}
+
+/* Preço por pessoa */
+.price-per-person {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    margin-bottom: 8px;
+}
+
+.price-label-small {
+    font-size: 13px;
+    color: #718096;
+    font-weight: 500;
+}
+
+.price-amount-large {
+    font-size: 28px;
+    font-weight: 800;
+    color: #019CB8;
+    line-height: 1;
+}
+
+/* Preço total */
+.price-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    margin-bottom: 12px;
+    border-top: 1px solid #e2e8f0;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.price-total-label {
+    font-size: 13px;
+    color: #4a5568;
+    font-weight: 600;
+}
+
+.price-total-amount {
+    font-size: 20px;
+    font-weight: 800;
+    color: #2d3748;
+}
+
+/* Legacy - manter para compatibilidade */
 .price-label {
     font-size: 11px;
     color: #95a5a6;
