@@ -193,12 +193,15 @@
             console.log('%c[DelayedAvail] Fazendo request com forceAvail=true', 'color: #ff9800; font-weight: bold');
 
             // Preparar params com forceAvail=true
+            // IMPORTANTE: Buscar TODOS os budgets (100), não apenas os da página atual (10)
             const params = $.extend({}, window.SoltourApp.searchParams, {
                 force_avail: true,
-                avail_token: window.SoltourApp.availToken
+                avail_token: window.SoltourApp.availToken,
+                item_count: 100  // Buscar TODOS os budgets para garantir que todos os preços sejam atualizados
             });
 
-            console.log('Params delayed:', params);
+            console.log('[DelayedAvail] Params delayed:', params);
+            console.log('[DelayedAvail] Buscando 100 budgets para atualizar todos os preços');
 
             $.ajax({
                 url: soltourData.ajaxurl,
