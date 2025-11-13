@@ -1571,7 +1571,7 @@
                     <button class="soltour-btn soltour-btn-primary"
                             style="padding: 20px 35px !important; border-radius: 100px !important; background: #019CB8 !important; color: #fff !important; border: none !important; font-size: 16px !important; font-weight: 700 !important; width: 100% !important;"
                             onclick="SoltourApp.selectPackage('${budget.budgetId}', '${hotelCode}', '${hotelService.providerCode || 'UNDEFINED'}')">
-                        Ver Detalhes
+                        Selecionar
                     </button>
                 </div>
             </div>
@@ -1742,7 +1742,7 @@
             availToken: SoltourApp.availToken
         }));
 
-        window.location.href = `/detalhes-do-pacote/?budget=${budgetId}`;
+        window.location.href = `/cotacao/?budget=${budgetId}`;
     }
 
 })(jQuery);
