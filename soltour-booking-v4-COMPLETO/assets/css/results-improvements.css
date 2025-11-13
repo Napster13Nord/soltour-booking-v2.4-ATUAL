@@ -1,0 +1,235 @@
+/**
+ * Melhorias na Página de Resultados - BeautyTravel
+ * Voo Recomendado + Cards Ricos
+ */
+
+/* Box de Voo Recomendado */
+.recommended-flight-box {
+    animation: slideDown 0.4s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.flight-recommendation-item {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 15px 0;
+}
+
+.flight-recommendation-item + .flight-recommendation-item {
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    margin-top: 10px;
+    padding-top: 15px;
+}
+
+.flight-direction {
+    min-width: 80px;
+    font-size: 14px;
+}
+
+.flight-details {
+    flex: 1;
+}
+
+.flight-route {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.flight-time {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.flight-airport {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.flight-arrow {
+    opacity: 0.7;
+    font-size: 14px;
+}
+
+.flight-airline {
+    font-size: 13px;
+    opacity: 0.9;
+}
+
+/* Melhorias nos Cards de Hotel */
+.package-card {
+    transition: all 0.3s ease !important;
+}
+
+.package-card:hover {
+    transform: translateY(-4px) !important;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15) !important;
+}
+
+.package-image {
+    position: relative;
+    overflow: hidden;
+}
+
+.package-image img {
+    transition: transform 0.5s ease !important;
+}
+
+.package-card:hover .package-image img {
+    transform: scale(1.05) !important;
+}
+
+/* Badge sobre a imagem */
+.package-badge {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background: linear-gradient(135deg, #019CB8 0%, #0176a8 100%);
+    color: #fff;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    z-index: 2;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Descrição do hotel */
+.hotel-description {
+    font-size: 14px;
+    color: #6b7280;
+    line-height: 1.6;
+    margin: 12px 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Amenidades/Facilidades */
+.hotel-amenities {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 12px 0;
+}
+
+.amenity-item {
+    background: #f0f8ff;
+    color: #019CB8;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* Informações de quarto */
+.room-info {
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 12px;
+    margin: 12px 0;
+}
+
+.room-info-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #1a202c;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.room-info-details {
+    font-size: 14px;
+    color: #4b5563;
+    line-height: 1.5;
+}
+
+/* Botão Selecionar melhorado */
+.btn-selecionar-package {
+    background: linear-gradient(135deg, #E63946 0%, #c62828 100%) !important;
+    color: #fff !important;
+    border: none !important;
+    padding: 14px 30px !important;
+    font-size: 16px !important;
+    font-weight: 700 !important;
+    border-radius: 8px !important;
+    cursor: pointer !important;
+    transition: all 0.3s !important;
+    width: 100% !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+    box-shadow: 0 4px 12px rgba(230, 57, 70, 0.3) !important;
+}
+
+.btn-selecionar-package:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 16px rgba(230, 57, 70, 0.4) !important;
+}
+
+.btn-selecionar-package:active {
+    transform: translateY(0) !important;
+}
+
+/* Detalhes do pacote melhorados */
+.package-details {
+    border-top: 1px solid #e5e7eb;
+    padding-top: 12px;
+    margin-top: 12px;
+}
+
+.package-details p {
+    margin: 6px 0 !important;
+    font-size: 14px !important;
+    color: #4b5563 !important;
+}
+
+.package-details strong {
+    color: #1a202c;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+    .flight-recommendation-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .flight-route {
+        font-size: 14px;
+    }
+
+    .flight-time {
+        font-size: 16px;
+    }
+
+    .recommended-flight-box {
+        padding: 20px 15px;
+    }
+}

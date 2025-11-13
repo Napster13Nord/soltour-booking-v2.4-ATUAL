@@ -119,6 +119,14 @@ class Soltour_Booking {
             SOLTOUR_VERSION
         );
 
+        // CSS - Melhorias na página de resultados
+        wp_enqueue_style(
+            'soltour-results-improvements',
+            SOLTOUR_PLUGIN_URL . 'assets/css/results-improvements.css',
+            array('soltour-booking-style'),
+            SOLTOUR_VERSION
+        );
+
         // Lottie Player (CDN)
         wp_enqueue_script(
             'lottie-player',
