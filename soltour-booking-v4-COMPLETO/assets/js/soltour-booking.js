@@ -1281,6 +1281,37 @@
                 }
             }
 
+            // Helper para formatar data no formato "23 nov"
+            function formatDate(dateStr) {
+                if (!dateStr) return '';
+                try {
+                    const date = new Date(dateStr);
+                    const months = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
+                    return date.getDate() + ' ' + months[date.getMonth()];
+                } catch (e) {
+                    return dateStr;
+                }
+            }
+
+            // Mapeamento de códigos IATA para nomes de companhias
+            const airlineNames = {
+                '2W': 'World2Fly',
+                'TP': 'TAP Air Portugal',
+                'IB': 'Iberia',
+                'UX': 'Air Europa',
+                'VY': 'Vueling',
+                'FR': 'Ryanair',
+                'U2': 'easyJet',
+                'LH': 'Lufthansa',
+                'BA': 'British Airways',
+                'AF': 'Air France',
+                'KL': 'KLM'
+            };
+
+            function getAirlineName(code) {
+                return airlineNames[code] || code;
+            }
+
             // ESTRUTURA REAL DO SOLTOUR API: outboundSegments[] e returnSegments[]
             let outboundSegments = null;
             let inboundSegments = null;
@@ -1353,21 +1384,47 @@
 
                 const firstSeg = outboundSegments[0];
                 const lastSeg = outboundSegments[outboundSegments.length - 1];
+                const airlineName = getAirlineName(firstSeg.operatingCompanyCode);
+                const stopInfo = outboundSegments.length > 1 ? `${outboundSegments.length - 1} escala${outboundSegments.length > 2 ? 's' : ''}` : 'Voo direto';
 
                 flightHTML += `
-                    <div class="flight-recommendation-item">
-                        <div class="flight-direction">🛫 <strong>IDA</strong></div>
-                        <div class="flight-details">
-                            <div class="flight-route">
-                                <span class="flight-time">${formatTime(firstSeg.departureTime)}</span>
-                                <span class="flight-airport">${firstSeg.originAirport || 'N/A'}</span>
-                                <span class="flight-arrow">→</span>
-                                <span class="flight-airport">${lastSeg.destinationAirport || 'N/A'}</span>
-                                <span class="flight-time">${formatTime(lastSeg.arrivalTime)}</span>
+                    <div style="background: rgba(255,255,255,0.15); border-radius: 8px; padding: 20px; margin-bottom: 15px;">
+                        <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                            <div style="background: rgba(255,255,255,0.25); border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; margin-right: 15px; font-size: 20px;">
+                                ✈️
                             </div>
-                            <div class="flight-airline">
-                                ${firstSeg.operatingCompanyCode || 'Companhia Aérea'} ${firstSeg.flightNumber || ''}
-                                ${outboundSegments.length > 1 ? ` · ${outboundSegments.length - 1} escala${outboundSegments.length > 2 ? 's' : ''}` : ' · Direto'}
+                            <div>
+                                <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 1px; opacity: 0.9; margin-bottom: 3px;">Voo de Ida</div>
+                                <div style="font-size: 14px; font-weight: 600;">${formatDate(firstSeg.departureDate)}</div>
+                            </div>
+                        </div>
+
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+                            <div style="text-align: left; flex: 1;">
+                                <div style="font-size: 28px; font-weight: 700; line-height: 1; margin-bottom: 5px;">${formatTime(firstSeg.departureTime)}</div>
+                                <div style="font-size: 16px; font-weight: 600; letter-spacing: 0.5px;">${firstSeg.originAirport}</div>
+                            </div>
+
+                            <div style="flex: 0 0 80px; text-align: center; padding: 0 15px;">
+                                <div style="border-top: 2px solid rgba(255,255,255,0.6); position: relative; margin: 8px 0;">
+                                    <div style="position: absolute; top: -8px; right: -5px; font-size: 16px;">→</div>
+                                </div>
+                                <div style="font-size: 11px; opacity: 0.85; margin-top: 5px; white-space: nowrap;">${stopInfo}</div>
+                            </div>
+
+                            <div style="text-align: right; flex: 1;">
+                                <div style="font-size: 28px; font-weight: 700; line-height: 1; margin-bottom: 5px;">${formatTime(lastSeg.arrivalTime)}</div>
+                                <div style="font-size: 16px; font-weight: 600; letter-spacing: 0.5px;">${lastSeg.destinationAirport}</div>
+                            </div>
+                        </div>
+
+                        <div style="display: flex; align-items: center; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.2);">
+                            <svg style="width: 18px; height: 18px; margin-right: 8px; opacity: 0.9;" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M21,16V14L13,9V3.5A1.5,1.5 0 0,0 11.5,2A1.5,1.5 0 0,0 10,3.5V9L2,14V16L10,13.5V19L8,20.5V22L11.5,21L15,22V20.5L13,19V13.5L21,16Z" />
+                            </svg>
+                            <div>
+                                <div style="font-size: 14px; font-weight: 600;">${airlineName}</div>
+                                <div style="font-size: 12px; opacity: 0.85;">Voo ${firstSeg.flightNumber || 'N/A'}</div>
                             </div>
                         </div>
                     </div>
@@ -1381,21 +1438,47 @@
 
                 const firstSeg = inboundSegments[0];
                 const lastSeg = inboundSegments[inboundSegments.length - 1];
+                const airlineName = getAirlineName(firstSeg.operatingCompanyCode);
+                const stopInfo = inboundSegments.length > 1 ? `${inboundSegments.length - 1} escala${inboundSegments.length > 2 ? 's' : ''}` : 'Voo direto';
 
                 flightHTML += `
-                    <div class="flight-recommendation-item">
-                        <div class="flight-direction">🛬 <strong>VOLTA</strong></div>
-                        <div class="flight-details">
-                            <div class="flight-route">
-                                <span class="flight-time">${formatTime(firstSeg.departureTime)}</span>
-                                <span class="flight-airport">${firstSeg.originAirport || 'N/A'}</span>
-                                <span class="flight-arrow">→</span>
-                                <span class="flight-airport">${lastSeg.destinationAirport || 'N/A'}</span>
-                                <span class="flight-time">${formatTime(lastSeg.arrivalTime)}</span>
+                    <div style="background: rgba(255,255,255,0.15); border-radius: 8px; padding: 20px;">
+                        <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                            <div style="background: rgba(255,255,255,0.25); border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; margin-right: 15px; font-size: 20px; transform: rotate(180deg);">
+                                ✈️
                             </div>
-                            <div class="flight-airline">
-                                ${firstSeg.operatingCompanyCode || 'Companhia Aérea'} ${firstSeg.flightNumber || ''}
-                                ${inboundSegments.length > 1 ? ` · ${inboundSegments.length - 1} escala${inboundSegments.length > 2 ? 's' : ''}` : ' · Direto'}
+                            <div>
+                                <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 1px; opacity: 0.9; margin-bottom: 3px;">Voo de Volta</div>
+                                <div style="font-size: 14px; font-weight: 600;">${formatDate(firstSeg.departureDate)}</div>
+                            </div>
+                        </div>
+
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+                            <div style="text-align: left; flex: 1;">
+                                <div style="font-size: 28px; font-weight: 700; line-height: 1; margin-bottom: 5px;">${formatTime(firstSeg.departureTime)}</div>
+                                <div style="font-size: 16px; font-weight: 600; letter-spacing: 0.5px;">${firstSeg.originAirport}</div>
+                            </div>
+
+                            <div style="flex: 0 0 80px; text-align: center; padding: 0 15px;">
+                                <div style="border-top: 2px solid rgba(255,255,255,0.6); position: relative; margin: 8px 0;">
+                                    <div style="position: absolute; top: -8px; right: -5px; font-size: 16px;">→</div>
+                                </div>
+                                <div style="font-size: 11px; opacity: 0.85; margin-top: 5px; white-space: nowrap;">${stopInfo}</div>
+                            </div>
+
+                            <div style="text-align: right; flex: 1;">
+                                <div style="font-size: 28px; font-weight: 700; line-height: 1; margin-bottom: 5px;">${formatTime(lastSeg.arrivalTime)}</div>
+                                <div style="font-size: 16px; font-weight: 600; letter-spacing: 0.5px;">${lastSeg.destinationAirport}</div>
+                            </div>
+                        </div>
+
+                        <div style="display: flex; align-items: center; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.2);">
+                            <svg style="width: 18px; height: 18px; margin-right: 8px; opacity: 0.9;" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M21,16V14L13,9V3.5A1.5,1.5 0 0,0 11.5,2A1.5,1.5 0 0,0 10,3.5V9L2,14V16L10,13.5V19L8,20.5V22L11.5,21L15,22V20.5L13,19V13.5L21,16Z" />
+                            </svg>
+                            <div>
+                                <div style="font-size: 14px; font-weight: 600;">${airlineName}</div>
+                                <div style="font-size: 12px; opacity: 0.85;">Voo ${firstSeg.flightNumber || 'N/A'}</div>
                             </div>
                         </div>
                     </div>
@@ -1411,16 +1494,18 @@
                 <div class="recommended-flight-box" style="
                     background: linear-gradient(135deg, #019CB8 0%, #0176a8 100%);
                     color: #fff;
-                    padding: 25px;
-                    border-radius: 12px;
+                    padding: 30px;
+                    border-radius: 16px;
                     margin-bottom: 30px;
                     grid-column: 1 / -1;
-                    box-shadow: 0 4px 15px rgba(1, 156, 184, 0.3);
+                    box-shadow: 0 8px 30px rgba(1, 156, 184, 0.35);
                 ">
-                    <div style="margin-bottom: 15px;">
-                        <strong style="font-size: 16px; text-transform: uppercase; letter-spacing: 1px;">
-                            ✈️ Voo Recomendado
-                        </strong>
+                    <div style="margin-bottom: 25px; display: flex; align-items: center;">
+                        <div style="font-size: 32px; margin-right: 12px;">✈️</div>
+                        <div>
+                            <div style="font-size: 20px; font-weight: 700; letter-spacing: 0.5px;">Voos Incluídos</div>
+                            <div style="font-size: 13px; opacity: 0.85; margin-top: 2px;">Ida e volta confirmados</div>
+                        </div>
                     </div>
                     ${flightHTML}
                 </div>
