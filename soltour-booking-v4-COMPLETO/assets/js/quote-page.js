@@ -15,16 +15,13 @@
 
     // Aguardar DOM ready
     $(document).ready(function() {
-        console.log('=== BEAUTY TRAVEL QUOTE PAGE ===');
 
         // Verificar se estamos na página de cotação
         const $quotePage = $('#soltour-quote-page');
         if ($quotePage.length === 0) {
-            console.log('Não é a página de cotação, saindo...');
             return;
         }
 
-        console.log('📋 Página de cotação detectada, iniciando...');
         initQuotePage();
     });
 
@@ -36,20 +33,17 @@
         const selectedBudget = sessionStorage.getItem('soltour_selected_budget');
 
         if (!selectedBudget) {
-            console.error('❌ Nenhum budget selecionado!');
             renderError('Nenhum pacote selecionado', 'Por favor, volte à página de resultados e selecione um pacote.');
             return;
         }
 
         try {
             BeautyTravelQuote.budgetData = JSON.parse(selectedBudget);
-            console.log('✅ Budget carregado:', BeautyTravelQuote.budgetData);
 
             // 2. Buscar detalhes completos do pacote
             loadPackageDetails();
 
         } catch (error) {
-            console.error('❌ Erro ao processar budget:', error);
             renderError('Erro ao carregar pacote', 'Os dados do pacote selecionado estão corrompidos.');
         }
     }
@@ -58,7 +52,6 @@
      * Carregar detalhes completos do pacote
      */
     function loadPackageDetails() {
-        console.log('📦 Carregando detalhes do pacote...');
         showLoading();
 
         const { budgetId, hotelCode, providerCode, availToken } = BeautyTravelQuote.budgetData;
@@ -75,22 +68,18 @@
                 provider_code: providerCode
             },
             success: function(response) {
-                console.log('📦 Resposta da API:', response);
 
                 if (response.success && response.data) {
                     BeautyTravelQuote.packageDetails = response.data;
-                    console.log('✅ Detalhes carregados com sucesso');
 
                     // Renderizar página completa
                     renderQuotePage();
 
                 } else {
-                    console.error('❌ Erro na resposta:', response);
                     renderError('Erro ao carregar detalhes', response.data?.message || 'Não foi possível carregar os detalhes do pacote.');
                 }
             },
             error: function(xhr, status, error) {
-                console.error('❌ Erro AJAX:', error);
                 renderError('Erro de conexão', 'Não foi possível conectar ao servidor. Tente novamente.');
             }
         });
@@ -100,7 +89,6 @@
      * Renderizar página completa de cotação
      */
     function renderQuotePage() {
-        console.log('🎨 Renderizando página de cotação...');
 
         const $container = $('#soltour-quote-page');
         const details = BeautyTravelQuote.packageDetails;
@@ -243,7 +231,6 @@
         // Bind eventos
         bindQuoteEvents();
 
-        console.log('✅ Página renderizada com sucesso');
     }
 
     /**
@@ -388,7 +375,6 @@
      * Gerar cotação final
      */
     function generateFinalQuote() {
-        console.log('📄 Gerando cotação final...');
 
         // Validar formulário
         const formData = collectFormData();
@@ -414,7 +400,6 @@
                 notes: formData.notes
             },
             success: function(response) {
-                console.log('✅ Cotação gerada:', response);
 
                 if (response.success) {
                     // Mostrar mensagem de sucesso
@@ -432,7 +417,6 @@
                 }
             },
             error: function(xhr, status, error) {
-                console.error('❌ Erro AJAX:', error);
                 alert('❌ Erro de conexão. Por favor, tente novamente.');
                 $btn.prop('disabled', false).html('<i class="fas fa-file-invoice"></i> Gerar Cotação Final');
             }

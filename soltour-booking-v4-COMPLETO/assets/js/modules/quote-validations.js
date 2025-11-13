@@ -27,7 +27,6 @@
          * Inicializa todas as validações
          */
         init: function() {
-            console.log('✅ Inicializando módulo Quote Validations...');
 
             this.initAgeValidation();
             this.initEmailValidation();
@@ -40,7 +39,6 @@
         initAgeValidation: function() {
             const self = this;
 
-            console.log('  🔧 Inicializando validação de idade...');
 
             // Validar ao mudar data de nascimento
             $(document.body).on('change blur', 'input[name*="[birthDay]"], input[name*="[birthday]"]', function() {
@@ -66,7 +64,6 @@
             const birthDay = $input.val();
             if (!birthDay) return true;
 
-            console.log('🔍 Validando idade para:', birthDay);
 
             // Encontrar campo de idade correspondente
             const fieldName = $input.attr('name');
@@ -74,13 +71,11 @@
             const $ageInput = $('input[name="' + ageFieldName + '"]');
 
             if ($ageInput.length === 0) {
-                console.warn('⚠️  Campo de idade não encontrado para:', fieldName);
                 return true;
             }
 
             const declaredAge = parseInt($ageInput.val());
             if (isNaN(declaredAge)) {
-                console.warn('⚠️  Idade declarada inválida');
                 return true;
             }
 
@@ -92,8 +87,6 @@
             // Calcular idade
             const calculatedAge = this.calculateAge(birthDay, startDate);
 
-            console.log('  📊 Idade declarada:', declaredAge);
-            console.log('  📊 Idade calculada:', calculatedAge);
 
             // Validar
             if (calculatedAge !== declaredAge) {
@@ -104,12 +97,10 @@
                 $input[0].setCustomValidity(errorMessage);
                 $input.addClass('invalid');
 
-                console.error('❌', errorMessage);
                 return false;
             } else {
                 $input[0].setCustomValidity('');
                 $input.removeClass('invalid');
-                console.log('  ✅ Idade válida');
                 return true;
             }
         },
@@ -131,7 +122,6 @@
             });
 
             if (!allValid) {
-                console.error('❌ Validação de idade falhou para', invalidCount, 'passageiros');
 
                 const message = invalidCount === 1
                     ? 'A data de nascimento não corresponde à idade informada.'
@@ -168,7 +158,6 @@
                 const parts = birthDayStr.split('-');
                 birthDay = new Date(parts[0], parts[1] - 1, parts[2]);
             } else {
-                console.error('❌ Formato de data inválido:', birthDayStr);
                 return 0;
             }
 
@@ -197,11 +186,9 @@
             const $repeatEmail = $('#holderRepeatMail, #holderRepeatEmail, input[name="holderRepeatEmail"]');
 
             if ($repeatEmail.length === 0) {
-                console.log('  ℹ️  Campo de confirmação de email não encontrado');
                 return;
             }
 
-            console.log('  🔧 Inicializando validação de email...');
 
             $email.on('keyup keypress blur change', function() {
                 self.validateEmail();
@@ -228,7 +215,6 @@
             if (email !== '' && repeatEmail !== '' && email !== repeatEmail) {
                 $repeatEmail[0].setCustomValidity('Os emails não coincidem');
                 $repeatEmail.addClass('invalid');
-                console.warn('⚠️  Emails não coincidem');
                 return false;
             } else {
                 $repeatEmail[0].setCustomValidity('');
@@ -246,11 +232,9 @@
             const $expedientInput = $('.js-validate-expedient, input[name="expedient"]');
 
             if ($expedientInput.length === 0) {
-                console.log('  ℹ️  Campo de expediente não encontrado');
                 return;
             }
 
-            console.log('  🔧 Inicializando validação de expediente...');
 
             $expedientInput.on('input', function() {
                 const $input = $(this);
@@ -287,7 +271,6 @@
                 return;
             }
 
-            console.log('🔍 Validando expediente:', expedient);
 
             const clientCode = $('input[name="clientCode"]').val();
             const branchOfficeCode = $('input[name="branchOfficeCode"]').val();
@@ -306,7 +289,6 @@
                     if (response.success && response.data && response.data.valid) {
                         $input[0].setCustomValidity('');
                         $input.removeClass('invalid').addClass('valid');
-                        console.log('  ✅ Expediente válido');
                     } else {
                         const message = response.data && response.data.message
                             ? response.data.message
@@ -314,14 +296,12 @@
 
                         $input[0].setCustomValidity(message);
                         $input.removeClass('valid').addClass('invalid');
-                        console.warn('  ⚠️  Expediente inválido:', message);
                     }
 
                     $input[0].checkValidity();
                 },
                 error: function(xhr, status, error) {
                     if (status !== 'abort') {
-                        console.error('❌ Erro ao validar expediente:', error);
                         // Não mostrar erro ao usuário em caso de falha na validação
                         $input[0].setCustomValidity('');
                         $input.removeClass('valid invalid');
@@ -336,7 +316,6 @@
          * Aqui apenas preparamos a estrutura
          */
         checkDuplicatedNames: function(formData, callback) {
-            console.log('🔍 Verificando nomes duplicados...');
 
             // Preparar request
             const rq = $.extend({}, formData, {
@@ -357,21 +336,17 @@
                     hideLoadingModal();
 
                     if (response.success) {
-                        console.log('  ✅ Nomes validados');
                         callback(true);
                     } else if (response.data && response.data.duplicates) {
                         // Nomes duplicados encontrados - mostrar modal
-                        console.warn('  ⚠️  Nomes duplicados encontrados');
                         showDuplicateNamesModal(response.data, callback);
                     } else {
                         // Outro erro
-                        console.error('  ❌ Erro na validação:', response);
                         callback(false);
                     }
                 },
                 error: function(xhr, status, error) {
                     hideLoadingModal();
-                    console.error('❌ Erro ao validar nomes:', error);
                     // Fail-safe: permitir continuar
                     callback(true);
                 }

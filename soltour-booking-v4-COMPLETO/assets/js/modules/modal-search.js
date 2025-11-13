@@ -15,7 +15,6 @@
          * Abrir modal com dados pré-preenchidos
          */
         open: function(destinationData) {
-            console.log('🔵 Abrindo modal de busca para:', destinationData);
 
             this.currentDestination = destinationData;
             this.isOpen = true;
@@ -282,7 +281,6 @@
          * Submeter busca
          */
         submitSearch: function() {
-            console.log('🔍 Submetendo busca detalhada...');
 
             // Coletar dados do formulário
             const originCode = $('#bt-modal-origin').val();
