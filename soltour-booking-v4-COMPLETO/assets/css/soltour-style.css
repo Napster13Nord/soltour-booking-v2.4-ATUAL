@@ -886,6 +886,90 @@
    RESPONSIVE
    ======================================== */
 
+/* BOX DE VOO - RESPONSIVO */
+@media (max-width: 768px) {
+    .recommended-flight-box {
+        padding: 20px 15px !important;
+        margin-bottom: 20px !important;
+    }
+
+    /* Cabeçalho do box */
+    .recommended-flight-box > div:first-child {
+        margin-bottom: 20px !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        gap: 12px !important;
+    }
+
+    .recommended-flight-box > div:first-child > div:first-child {
+        width: 48px !important;
+        height: 48px !important;
+        font-size: 24px !important;
+    }
+
+    .recommended-flight-box > div:first-child > div:last-child > div:first-child {
+        font-size: 18px !important;
+    }
+
+    .recommended-flight-box > div:first-child > div:last-child > div:last-child {
+        font-size: 12px !important;
+    }
+
+    /* Cards internos de voo */
+    .recommended-flight-box > div > div {
+        padding: 16px 12px !important;
+        margin-bottom: 12px !important;
+    }
+
+    /* Horários REDUZIDOS para mobile */
+    .recommended-flight-box > div > div > div:nth-child(2) > div:first-child > div:first-child,
+    .recommended-flight-box > div > div > div:nth-child(2) > div:last-child > div:first-child {
+        font-size: 24px !important;
+    }
+
+    /* Códigos de aeroporto */
+    .recommended-flight-box > div > div > div:nth-child(2) > div:first-child > div:last-child,
+    .recommended-flight-box > div > div > div:nth-child(2) > div:last-child > div:last-child {
+        font-size: 15px !important;
+    }
+
+    /* Linha com seta */
+    .recommended-flight-box > div > div > div:nth-child(2) > div:nth-child(2) {
+        flex: 0 0 70px !important;
+        padding: 0 10px !important;
+    }
+
+    .recommended-flight-box > div > div > div:nth-child(2) > div:nth-child(2) > div:first-child > div:nth-child(2) {
+        font-size: 16px !important;
+        margin: 0 6px !important;
+    }
+
+    /* Info de companhia */
+    .recommended-flight-box > div > div > div:last-child > div > div:first-child {
+        font-size: 14px !important;
+    }
+
+    .recommended-flight-box > div > div > div:last-child > div > div:last-child {
+        font-size: 12px !important;
+    }
+
+    /* Ícone de avião */
+    .recommended-flight-box > div > div > div:first-child > div:first-child {
+        width: 38px !important;
+        height: 38px !important;
+        font-size: 18px !important;
+        margin-right: 10px !important;
+    }
+
+    .recommended-flight-box > div > div > div:first-child > div:last-child > div:first-child {
+        font-size: 10px !important;
+    }
+
+    .recommended-flight-box > div > div > div:first-child > div:last-child > div:last-child {
+        font-size: 13px !important;
+    }
+}
+
 @media (max-width: 992px) {
     .soltour-results-wrapper {
         grid-template-columns: 1fr;
@@ -915,7 +999,7 @@
 }
 
 @media (max-width: 768px) {
-    /* Wrappers principais */
+    /* Wrappers principais - EVITAR OVERFLOW HORIZONTAL */
     .soltour-search-wrapper,
     .soltour-results-wrapper,
     .soltour-package-details-wrapper,
@@ -924,6 +1008,23 @@
         padding: 15px;
         margin: 0 auto;
         max-width: 100%;
+        overflow-x: hidden !important;
+        box-sizing: border-box !important;
+    }
+
+    /* Container de resultados - sem overflow */
+    .soltour-results-main {
+        max-width: 100% !important;
+        overflow-x: hidden !important;
+        box-sizing: border-box !important;
+    }
+
+    /* Grid de pacotes - responsivo */
+    .soltour-packages-grid,
+    #soltour-results-list {
+        max-width: 100% !important;
+        overflow-x: hidden !important;
+        box-sizing: border-box !important;
     }
 
     /* Grid de cards - 1 coluna no mobile */
@@ -1004,6 +1105,90 @@
     .soltour-checkout-wrapper,
     .soltour-confirmation-wrapper {
         padding: 10px;
+        overflow-x: hidden !important;
+    }
+
+    /* BOX DE VOO - MOBILE PEQUENO */
+    .recommended-flight-box {
+        padding: 15px 10px !important;
+        border-radius: 12px !important;
+    }
+
+    /* Cabeçalho do box - ainda menor */
+    .recommended-flight-box > div:first-child > div:first-child {
+        width: 42px !important;
+        height: 42px !important;
+        font-size: 20px !important;
+    }
+
+    .recommended-flight-box > div:first-child > div:last-child > div:first-child {
+        font-size: 16px !important;
+    }
+
+    .recommended-flight-box > div:first-child > div:last-child > div:last-child {
+        font-size: 11px !important;
+    }
+
+    /* Cards de voo internos */
+    .recommended-flight-box > div > div {
+        padding: 14px 10px !important;
+        border-radius: 10px !important;
+    }
+
+    /* Horários ainda menores */
+    .recommended-flight-box > div > div > div:nth-child(2) > div:first-child > div:first-child,
+    .recommended-flight-box > div > div > div:nth-child(2) > div:last-child > div:first-child {
+        font-size: 20px !important;
+    }
+
+    /* Aeroportos */
+    .recommended-flight-box > div > div > div:nth-child(2) > div:first-child > div:last-child,
+    .recommended-flight-box > div > div > div:nth-child(2) > div:last-child > div:last-child {
+        font-size: 14px !important;
+    }
+
+    /* Seta e linha */
+    .recommended-flight-box > div > div > div:nth-child(2) > div:nth-child(2) {
+        flex: 0 0 60px !important;
+        padding: 0 8px !important;
+    }
+
+    .recommended-flight-box > div > div > div:nth-child(2) > div:nth-child(2) > div:first-child > div:nth-child(2) {
+        font-size: 14px !important;
+        margin: 0 5px !important;
+    }
+
+    .recommended-flight-box > div > div > div:nth-child(2) > div:nth-child(2) > div:last-child {
+        font-size: 10px !important;
+    }
+
+    /* Companhia aérea */
+    .recommended-flight-box > div > div > div:last-child > div > div:first-child {
+        font-size: 13px !important;
+    }
+
+    .recommended-flight-box > div > div > div:last-child > div > div:last-child {
+        font-size: 11px !important;
+    }
+
+    .recommended-flight-box > div > div > div:last-child svg {
+        width: 18px !important;
+        height: 18px !important;
+    }
+
+    /* Ícone de avião */
+    .recommended-flight-box > div > div > div:first-child > div:first-child {
+        width: 36px !important;
+        height: 36px !important;
+        font-size: 16px !important;
+    }
+
+    .recommended-flight-box > div > div > div:first-child > div:last-child > div:first-child {
+        font-size: 9px !important;
+    }
+
+    .recommended-flight-box > div > div > div:first-child > div:last-child > div:last-child {
+        font-size: 12px !important;
     }
 
     /* Grid com menos espaçamento */
