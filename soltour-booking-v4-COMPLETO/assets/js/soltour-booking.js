@@ -396,6 +396,8 @@
         // Armazenar número de quartos pesquisados
         SoltourApp.numRoomsSearched = rooms.length;
 
+        console.log('[SOLTOUR DEBUG] Busca iniciada com', SoltourApp.numRoomsSearched, 'quarto(s)');
+
         // Resetar para primeira página na nova busca
         SoltourApp.currentPage = 1;
 
@@ -1836,6 +1838,17 @@
                                 // Pre-selecionar os N primeiros quartos automaticamente
                                 const isAutoSelected = index < maxRooms;
 
+                                // Debug log
+                                if (index === 0) {
+                                    console.log('[SOLTOUR DEBUG] Renderizando quartos:', {
+                                        budgetId: budget.budgetId,
+                                        totalRooms: availableRooms.length,
+                                        numRoomsSearched: SoltourApp.numRoomsSearched,
+                                        maxRooms: maxRooms
+                                    });
+                                }
+                                console.log(`[SOLTOUR DEBUG] Quarto ${index}: isAutoSelected=${isAutoSelected}`);
+
                                 return `
                                     <div class="room-option ${isAutoSelected ? 'selected' : ''}"
                                          data-room-code="${roomCode}"
@@ -1874,6 +1887,14 @@
 
         // Pre-selecionar automaticamente os N primeiros quartos
         const maxRooms = SoltourApp.numRoomsSearched || 1;
+
+        console.log('[SOLTOUR DEBUG] Pre-seleção automática:', {
+            budgetId: budget.budgetId,
+            maxRooms: maxRooms,
+            availableRoomsCount: availableRooms.length,
+            numRoomsSearched: SoltourApp.numRoomsSearched
+        });
+
         if (availableRooms.length > 0) {
             // Inicializar como array vazio se não existir
             if (!SoltourApp.selectedRooms[budget.budgetId]) {
@@ -1882,6 +1903,8 @@
 
             // Pre-selecionar os primeiros N quartos
             SoltourApp.selectedRooms[budget.budgetId] = availableRooms.slice(0, maxRooms);
+
+            console.log('[SOLTOUR DEBUG] Quartos pre-selecionados:', SoltourApp.selectedRooms[budget.budgetId]);
         }
 
         // Atualizar contador visual se houver múltiplos quartos
