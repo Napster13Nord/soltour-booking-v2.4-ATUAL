@@ -877,7 +877,64 @@
     font-size: 18px !important;
 }
 
+/* ========================================
+   GRID 2 COLUNAS - HOTEL E VOOS
+   ======================================== */
+
+.bt-cards-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 25px !important;
+    margin-bottom: 30px !important;
+}
+
+.bt-voos-card {
+    background: transparent !important;
+    height: 100% !important;
+}
+
+/* Ajustar cards de voos para o novo layout */
+.bt-voos-card .bt-flights-container {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 15px !important;
+    height: 100% !important;
+}
+
+.bt-voos-card .bt-flight-card {
+    flex: 1 !important;
+    min-height: 280px !important;
+}
+
+/* Ajustar tamanho da imagem do hotel para igualar altura */
+.bt-cards-grid .bt-hotel-card-image {
+    height: 280px !important;
+}
+
+/* Garantir que ambas as colunas tenham mesma altura */
+.bt-cards-grid .bt-summary-section {
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+.bt-cards-grid .bt-hotel-card,
+.bt-cards-grid .bt-voos-card {
+    flex: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+}
+
 /* Responsivo para mobile */
+@media (max-width: 1024px) {
+    .bt-cards-grid {
+        grid-template-columns: 1fr !important;
+        gap: 20px !important;
+    }
+
+    .bt-cards-grid .bt-hotel-card-image {
+        height: 250px !important;
+    }
+}
 @media (max-width: 768px) {
     .bt-hotel-card-image {
         height: 200px !important;
