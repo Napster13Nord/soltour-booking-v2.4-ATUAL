@@ -138,7 +138,6 @@
                             <p>Textos legales...</p>
                         </div>
                     </div>
-                </div>
 
                 <!-- Coluna Direita: PRECIO FINAL DEL VIAJE -->
                 <div class="soltour-right-column">
