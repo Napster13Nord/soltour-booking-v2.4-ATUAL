@@ -1675,21 +1675,14 @@
                         <h4 class="rooms-title">🛏️ Quartos Disponíveis</h4>
                         <div class="rooms-list">
                             ${availableRooms.map((room, index) => {
-                                const roomPrice = room.priceDetails && room.priceDetails.pvp ? room.priceDetails.pvp : 0;
-                                const roomCurrency = room.priceDetails && room.priceDetails.currency ? room.priceDetails.currency : 'EUR';
                                 const roomDescription = room.description || 'Quarto';
                                 const numRoomPassengers = room.passengers ? room.passengers.length : 0;
-                                const roomPricePerPerson = numRoomPassengers > 0 ? (roomPrice / numRoomPassengers) : roomPrice;
 
                                 return `
                                     <div class="room-option">
                                         <div class="room-info">
                                             <div class="room-name">${roomDescription}</div>
                                             <div class="room-occupancy">👥 ${numRoomPassengers} passageiro${numRoomPassengers !== 1 ? 's' : ''}</div>
-                                        </div>
-                                        <div class="room-pricing">
-                                            <div class="room-price-per-person">${roomPricePerPerson.toFixed(0)}€/pax</div>
-                                            <div class="room-price-total">${roomPrice.toFixed(0)}€ total</div>
                                         </div>
                                     </div>
                                 `;
