@@ -838,6 +838,63 @@
     font-weight: 600 !important;
 }
 
+.flight-compact-date {
+    font-size: 12px !important;
+    color: #6b7280 !important;
+    font-weight: 600 !important;
+}
+
+.flight-compact-point {
+    flex: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 4px !important;
+}
+
+.flight-compact-time {
+    font-size: 18px !important;
+    font-weight: 700 !important;
+    color: #1a202c !important;
+}
+
+.flight-compact-route {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 15px !important;
+    margin-bottom: 10px !important;
+}
+
+.flight-compact-arrow {
+    flex: 0 0 auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 4px !important;
+}
+
+.flight-compact-arrow .arrow {
+    font-size: 20px !important;
+    color: #019CB8 !important;
+    font-weight: 700 !important;
+}
+
+.flight-compact-stops {
+    font-size: 11px !important;
+    color: #6b7280 !important;
+    white-space: nowrap !important;
+}
+
+.flight-compact-number {
+    font-size: 12px !important;
+    background: #f0f8ff !important;
+    color: #019CB8 !important;
+    padding: 3px 8px !important;
+    border-radius: 10px !important;
+    font-weight: 600 !important;
+}
+
 /* ========================================
    BOTÃO DE GERAR COTAÇÃO
    ======================================== */
