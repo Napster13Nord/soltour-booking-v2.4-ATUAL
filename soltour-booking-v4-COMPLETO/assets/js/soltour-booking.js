@@ -69,16 +69,12 @@
     // FUNÇÕES DO MODAL DE CARREGAMENTO
     // ========================================
 
-    // Variável para controlar o intervalo de textos alternados
-    let loadingTextInterval = null;
-
     /**
      * Mostra o modal de carregamento com mensagem personalizada
      * @param {string} title - Título do modal (opcional)
      * @param {string} message - Mensagem do modal (opcional)
-     * @param {boolean} alternateTexts - Se true, alterna textos automaticamente
      */
-    function showLoadingModal(title, message, alternateTexts = false) {
+    function showLoadingModal(title, message) {
         const modal = $('#soltour-loading-modal');
 
         if (modal.length) {
@@ -96,26 +92,6 @@
             // Prevenir scroll do body
             $('body').css('overflow', 'hidden');
 
-            // Se deve alternar textos (alterna o TÍTULO)
-            if (alternateTexts) {
-                const titles = [
-                    'Buscando os melhores hotéis...',
-                    'Buscando os melhores voos...',
-                    'Buscando os melhores pacotes...'
-                ];
-                let currentIndex = 0;
-
-                // Limpar intervalo anterior se existir
-                if (loadingTextInterval) {
-                    clearInterval(loadingTextInterval);
-                }
-
-                // Configurar intervalo para alternar TÍTULO a cada 3 segundos
-                loadingTextInterval = setInterval(function() {
-                    currentIndex = (currentIndex + 1) % titles.length;
-                    $('#loading-modal-title').text(titles[currentIndex]);
-                }, 3000);
-            }
         }
     }
 
@@ -132,11 +108,6 @@
             // Restaurar scroll do body
             $('body').css('overflow', '');
 
-            // Limpar intervalo de textos alternados
-            if (loadingTextInterval) {
-                clearInterval(loadingTextInterval);
-                loadingTextInterval = null;
-            }
         }
     }
 
@@ -381,9 +352,8 @@
         if (savedParams) {
             // MOSTRAR MODAL IMEDIATAMENTE ao carregar página de resultados
             showLoadingModal(
-                'Buscando os melhores hotéis...',
-                'Encontraremos as melhores opções para sua viagem dos sonhos',
-                true // Ativar textos alternados (alterna o título)
+                'Buscando os melhores pacotes...',
+                'Encontraremos as melhores opções para sua viagem'
             );
 
             SoltourApp.searchParams = JSON.parse(savedParams);
@@ -1511,6 +1481,12 @@
         if (hotelService && hotelService.hotelCode && SoltourApp.hotelsFromAvailability[hotelService.hotelCode]) {
             const hotelFromAvail = SoltourApp.hotelsFromAvailability[hotelService.hotelCode];
 
+            // DEBUG: Logar dados de imagens
+            console.log(`[IMAGENS] Hotel ${hotelService.hotelCode}:`, {
+                mainImage: hotelFromAvail.mainImage,
+                multimedias: hotelFromAvail.multimedias
+            });
+
             // Adicionar mainImage primeiro
             if (hotelFromAvail.mainImage) {
                 hotelImages.push(hotelFromAvail.mainImage);
@@ -1526,6 +1502,7 @@
         }
         // Fallback para details
         if (hotelImages.length === 0 && details && details.hotelDetails && details.hotelDetails.hotel && details.hotelDetails.hotel.multimedias) {
+            console.log('[IMAGENS] Usando fallback de details');
             details.hotelDetails.hotel.multimedias.forEach(m => {
                 if (m.type === 'IMAGE' && m.url) {
                     hotelImages.push(m.url);
@@ -1534,6 +1511,9 @@
         }
         // Limitar a 10 imagens
         hotelImages = hotelImages.slice(0, 10);
+
+        // DEBUG: Logar imagens finais
+        console.log('[IMAGENS] URLs finais:', hotelImages);
 
         // (B) PAÍS e (C) CIDADE - PRIORIZAR AVAILABILITY
         let country = '';
