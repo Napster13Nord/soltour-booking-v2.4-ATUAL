@@ -40,14 +40,6 @@
         try {
             const packageData = JSON.parse(selectedPackage);
 
-            // DEBUG: Logar dados recebidos
-            console.log('=== DADOS DO PACOTE SELECIONADO ===');
-            console.log('packageData completo:', packageData);
-            console.log('budget:', packageData.budget);
-            console.log('hotelInfo:', packageData.hotelInfo);
-            console.log('selectedRoom:', packageData.selectedRoom);
-            console.log('searchParams:', packageData.searchParams);
-
             // Verificar se temos todos os dados necessários (APENAS do availability)
             if (!packageData.budget || !packageData.selectedRoom) {
                 renderError('Dados incompletos', 'Os dados do pacote estão incompletos. Por favor, selecione novamente.');
@@ -77,12 +69,6 @@
         const selectedRoom = packageData.selectedRoom || {};
         const hotelService = budget.hotelServices && budget.hotelServices[0];
 
-        // DEBUG: Logar extração de dados
-        console.log('=== RENDERIZANDO PÁGINA DE COTAÇÃO ===');
-        console.log('budget:', budget);
-        console.log('hotelService:', hotelService);
-        console.log('selectedRoom:', selectedRoom);
-
         // USAR APENAS DADOS DO AVAILABILITY (budget)
         // NÃO usar details.hotelDetails que vem de chamada separada
 
@@ -104,16 +90,7 @@
             const categoryCode = packageData.hotelInfo.categoryCode || '';
             hotelStars = (categoryCode.match(/\*/g) || []).length;
             hotelDescription = packageData.hotelInfo.description || packageData.hotelInfo.shortDescription || '';
-
-            // DEBUG: Logar dados do hotel
-            console.log('=== DADOS DO HOTEL ===');
-            console.log('hotelImage:', hotelImage);
-            console.log('hotelLocation:', hotelLocation);
-            console.log('hotelStars:', hotelStars);
-            console.log('hotelName:', hotelName);
-            console.log('hotelDescription:', hotelDescription);
         } else {
-            console.warn('⚠️ packageData.hotelInfo não está disponível!');
             // Fallback para hotelService se hotelInfo não estiver disponível
             hotelName = hotelService?.hotelName || 'Hotel';
         }
@@ -127,14 +104,6 @@
 
         // Voos - Usar flightData (outboundSegments/returnSegments) se disponível
         const flightData = packageData.flightData || null;
-
-        // DEBUG: Logar dados dos voos
-        console.log('=== DADOS DOS VOOS ===');
-        console.log('flightData:', flightData);
-        if (flightData) {
-            console.log('outboundSegments:', flightData.outboundSegments);
-            console.log('returnSegments:', flightData.returnSegments);
-        }
 
         // Meal plan
         const mealPlan = getMealPlan(budget);
@@ -162,22 +131,11 @@
                         <!-- Hotel - Card Bonito -->
                         <div class="bt-summary-section">
                             <div class="bt-hotel-card">
-                                ${hotelImage ? `
-                                    <div class="bt-hotel-card-image" style="background-image: url('${hotelImage}')">
-                                        <div class="bt-hotel-card-badge">
-                                            ${hotelStars > 0 ? '⭐'.repeat(hotelStars) : ''}
-                                        </div>
-                                    </div>
-                                ` : `
-                                    <div class="bt-hotel-card-image bt-hotel-no-image">
-                                        <div class="bt-hotel-placeholder">🏨</div>
-                                    </div>
-                                `}
                                 <div class="bt-hotel-card-content">
-                                    <h3 class="bt-hotel-card-title">
-                                        <span class="bt-hotel-icon">🏨</span>
+                                    <h3 class="bt-card-section-title">🏨 Hotel selecionado</h3>
+                                    <h4 class="bt-hotel-card-title">
                                         ${hotelName}
-                                    </h3>
+                                    </h4>
                                     ${hotelLocation ? `
                                         <p class="bt-hotel-card-location">
                                             <span class="bt-location-icon">📍</span>
@@ -191,6 +149,15 @@
                                         </div>
                                     </div>
                                     ` : ''}
+
+                                    <!-- Acomodação -->
+                                    <div class="bt-room-info">
+                                        <div class="bt-room-label">🛏️ Acomodação</div>
+                                        <div class="bt-room-name">${selectedRoom.description || 'Quarto'}</div>
+                                        <div class="bt-room-occupancy">
+                                            👥 ${selectedRoom.passengers ? selectedRoom.passengers.length : 0} passageiro${(selectedRoom.passengers && selectedRoom.passengers.length !== 1) ? 's' : ''}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -227,17 +194,6 @@
                         <div class="bt-info-row">
                             <span class="bt-info-label">Passageiros:</span>
                             <span class="bt-info-value">${passengerCount} pessoa${passengerCount > 1 ? 's' : ''}</span>
-                        </div>
-                    </div>
-
-                    <!-- Quarto Selecionado -->
-                    <div class="bt-summary-section">
-                        <h3>🛏️ Acomodação</h3>
-                        <div class="bt-room-selected">
-                            <div class="bt-room-name">${selectedRoom.description || 'Quarto'}</div>
-                            <div class="bt-room-occupancy">
-                                👥 ${selectedRoom.passengers ? selectedRoom.passengers.length : 0} passageiro${(selectedRoom.passengers && selectedRoom.passengers.length !== 1) ? 's' : ''}
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -364,7 +320,7 @@
             return airlineNames[code] || code;
         }
 
-        let html = '<h3>✈️ Voos</h3>';
+        let html = '<h3 class="bt-card-section-title">✈️ Voo selecionado</h3>';
 
         // ESTRUTURA REAL DO SOLTOUR API: outboundSegments[] e returnSegments[]
         const outboundSegments = flightData.outboundSegments || [];
