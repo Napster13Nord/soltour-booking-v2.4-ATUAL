@@ -252,10 +252,11 @@ h4.rooms-title {
     border-radius: 10px !important;
     padding: 14px 16px !important;
     display: flex !important;
-    justify-content: flex-start !important;
+    justify-content: space-between !important;
     align-items: center !important;
     transition: all 0.3s ease !important;
     cursor: pointer !important;
+    position: relative !important;
 }
 
 .room-option:hover {
@@ -263,6 +264,32 @@ h4.rooms-title {
     border-color: #019CB8 !important;
     transform: translateX(4px) !important;
     box-shadow: 0 2px 8px rgba(1, 156, 184, 0.1) !important;
+}
+
+.room-option.selected {
+    background: #d1fae5 !important;
+    border-color: #10b981 !important;
+    border-width: 3px !important;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2) !important;
+}
+
+.room-option.selected:hover {
+    background: #d1fae5 !important;
+    border-color: #10b981 !important;
+    transform: translateX(4px) !important;
+}
+
+.room-selected-badge {
+    background: #10b981 !important;
+    color: white !important;
+    padding: 4px 12px !important;
+    border-radius: 20px !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+    white-space: nowrap !important;
 }
 
 .room-info {
