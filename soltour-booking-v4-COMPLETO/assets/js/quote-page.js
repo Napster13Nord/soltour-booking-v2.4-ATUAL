@@ -182,11 +182,6 @@
                                         ${hotelLocation}
                                     </p>
                                 ` : ''}
-                                ${hotelDescription ? `
-                                    <p class="bt-hotel-card-description">
-                                        ${hotelDescription.length > 200 ? hotelDescription.substring(0, 200) + '...' : hotelDescription}
-                                    </p>
-                                ` : ''}
                                 ${hotelStars > 0 ? `
                                 <div class="bt-hotel-card-footer">
                                     <div class="bt-hotel-stars-badge">
@@ -194,16 +189,16 @@
                                     </div>
                                 </div>
                                 ` : ''}
+
+                                <!-- Voos - Cards Compactos -->
+                                ${flightData ? `
+                                    <div class="bt-summary-section">
+                                        ${renderFlightsCompact(flightData)}
+                                    </div>
+                                ` : ''}
                             </div>
                         </div>
                     </div>
-
-                    <!-- Voos - Cards Compactos -->
-                    ${flightData ? `
-                        <div class="bt-summary-section">
-                            ${renderFlightsCompact(flightData)}
-                        </div>
-                    ` : ''}
 
                     <!-- Informações -->
                     <div class="bt-summary-section">
