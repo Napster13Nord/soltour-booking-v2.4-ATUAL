@@ -193,11 +193,6 @@
                                             ${hotelLocation}
                                         </p>
                                     ` : ''}
-                                    ${hotelDescription ? `
-                                        <p class="bt-hotel-card-description">
-                                            ${hotelDescription.length > 200 ? hotelDescription.substring(0, 200) + '...' : hotelDescription}
-                                        </p>
-                                    ` : ''}
                                     ${hotelStars > 0 ? `
                                     <div class="bt-hotel-card-footer">
                                         <div class="bt-hotel-stars-badge">
@@ -383,14 +378,20 @@
     function renderFlightsSummary(flights) {
         let html = '<div class="bt-flights-container">';
 
+        // Console debug
+        console.log('[VOOS COTAÇÃO] flights:', flights);
+
         const outbound = flights.find(f => f.type === 'OUTBOUND');
         const inbound = flights.find(f => f.type === 'INBOUND');
 
         // VOO DE IDA
         if (outbound) {
-            const segments = outbound.flightSegments || [];
+            // Tentar flightSegments ou segments
+            const segments = outbound.flightSegments || outbound.segments || [];
             const firstSegment = segments[0] || {};
             const lastSegment = segments[segments.length - 1] || {};
+
+            console.log('[VOO IDA] segments:', segments);
 
             const airline = firstSegment.operatingAirline || firstSegment.marketingAirline || 'Companhia Aérea';
             const flightNumber = firstSegment.marketingFlightNumber || firstSegment.operatingFlightNumber || '';
@@ -452,9 +453,12 @@
 
         // VOO DE VOLTA
         if (inbound) {
-            const segments = inbound.flightSegments || [];
+            // Tentar flightSegments ou segments
+            const segments = inbound.flightSegments || inbound.segments || [];
             const firstSegment = segments[0] || {};
             const lastSegment = segments[segments.length - 1] || {};
+
+            console.log('[VOO VOLTA] segments:', segments);
 
             const airline = firstSegment.operatingAirline || firstSegment.marketingAirline || 'Companhia Aérea';
             const flightNumber = firstSegment.marketingFlightNumber || firstSegment.operatingFlightNumber || '';
