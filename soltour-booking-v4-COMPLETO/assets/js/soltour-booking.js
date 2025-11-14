@@ -391,6 +391,9 @@
             rooms.push({ passengers: passengers });
         });
 
+        // Armazenar número de quartos pesquisados
+        SoltourApp.numRoomsSearched = rooms.length;
+
         // Resetar para primeira página na nova busca
         SoltourApp.currentPage = 1;
 
@@ -2032,14 +2035,41 @@
 
         if (!fullPackage) {
             alert('Erro: Pacote não encontrado. Por favor, tente novamente.');
+            hideLoadingModal();
             return;
         }
 
-        // Buscar quarto selecionado
-        const selectedRoom = SoltourApp.selectedRooms[budgetId];
+        // Buscar quartos selecionados
+        const selectedRooms = SoltourApp.selectedRooms[budgetId] || [];
+        const maxRooms = SoltourApp.numRoomsSearched || 1;
 
-        if (!selectedRoom) {
-            alert('Por favor, selecione um quarto antes de continuar.');
+        // Validar se todos os quartos foram selecionados
+        if (selectedRooms.length === 0) {
+            const message = maxRooms > 1
+                ? `Por favor, selecione ${maxRooms} quartos antes de continuar.`
+                : 'Por favor, selecione um quarto antes de continuar.';
+
+            hideLoadingModal();
+
+            if (window.SoltourApp.Toast) {
+                window.SoltourApp.Toast.warning(message, 4000);
+            } else {
+                alert(message);
+            }
+            return;
+        }
+
+        if (selectedRooms.length < maxRooms) {
+            const remaining = maxRooms - selectedRooms.length;
+            const message = `Você precisa selecionar mais ${remaining} quarto${remaining > 1 ? 's' : ''}. (${selectedRooms.length} de ${maxRooms} selecionados)`;
+
+            hideLoadingModal();
+
+            if (window.SoltourApp.Toast) {
+                window.SoltourApp.Toast.warning(message, 4000);
+            } else {
+                alert(message);
+            }
             return;
         }
 
@@ -2059,7 +2089,9 @@
             budget: fullPackage.budget,           // Budget completo do availability
             hotelInfo: hotelInfo,                 // Info do hotel do availability (NÃO hotelDetails)
             flightData: flightData,               // Dados dos voos do availability (outboundSegments/returnSegments)
-            selectedRoom: selectedRoom,           // Quarto selecionado
+            selectedRooms: selectedRooms,         // Array de quartos selecionados (múltiplos quartos)
+            selectedRoom: selectedRooms[0],       // Manter compatibilidade com código legado
+            numRoomsSearched: maxRooms,           // Número de quartos pesquisados
             searchParams: SoltourApp.searchParams // USAR searchParams COMPLETO que tem rooms
         }));
 
@@ -2129,18 +2161,92 @@
     window.SoltourApp.selectRoom = function(budgetId, roomElement) {
         const $room = $(roomElement);
         const $roomsList = $room.closest('.rooms-list');
+        const $card = $room.closest('.soltour-package-card');
         const roomData = JSON.parse($room.attr('data-room-data'));
 
-        // Desmarcar outros quartos deste pacote
-        $roomsList.find('.room-option').removeClass('selected');
+        // Inicializar array de quartos selecionados para este budget se não existir
+        if (!SoltourApp.selectedRooms[budgetId]) {
+            SoltourApp.selectedRooms[budgetId] = [];
+        }
 
-        // Marcar este quarto como selecionado
-        $room.addClass('selected');
+        // Obter número de quartos pesquisados (padrão 1 se não definido)
+        const maxRooms = SoltourApp.numRoomsSearched || 1;
 
-        // Salvar no objeto global
-        SoltourApp.selectedRooms[budgetId] = roomData;
+        // Verificar se o quarto já está selecionado
+        const isSelected = $room.hasClass('selected');
 
-        console.log('Quarto selecionado:', budgetId, roomData);
+        if (isSelected) {
+            // Desmarcar quarto
+            $room.removeClass('selected');
+
+            // Remover do array
+            SoltourApp.selectedRooms[budgetId] = SoltourApp.selectedRooms[budgetId].filter(
+                r => r.roomCode !== roomData.roomCode
+            );
+        } else {
+            // Verificar se já atingiu o limite de quartos
+            if (SoltourApp.selectedRooms[budgetId].length >= maxRooms) {
+                // Usar toast se disponível
+                if (window.SoltourApp.Toast) {
+                    window.SoltourApp.Toast.warning(
+                        `Você já selecionou ${maxRooms} quarto${maxRooms > 1 ? 's' : ''}. Desmarque um para selecionar outro.`,
+                        3000
+                    );
+                } else {
+                    alert(`Você já selecionou ${maxRooms} quarto${maxRooms > 1 ? 's' : ''}. Desmarque um para selecionar outro.`);
+                }
+                return;
+            }
+
+            // Marcar quarto como selecionado
+            $room.addClass('selected');
+
+            // Adicionar ao array
+            SoltourApp.selectedRooms[budgetId].push(roomData);
+        }
+
+        // Atualizar contador visual
+        updateRoomCounter($card, budgetId, maxRooms);
+
+        console.log('Quartos selecionados:', budgetId, SoltourApp.selectedRooms[budgetId]);
     };
+
+    /**
+     * Atualizar contador visual de quartos selecionados
+     */
+    function updateRoomCounter($card, budgetId, maxRooms) {
+        const selectedCount = (SoltourApp.selectedRooms[budgetId] || []).length;
+
+        // Verificar se já existe contador, senão criar
+        let $counter = $card.find('.room-selection-counter');
+        if ($counter.length === 0) {
+            // Adicionar contador após a lista de quartos
+            const $roomsList = $card.find('.rooms-list');
+            $counter = $('<div class="room-selection-counter"></div>');
+            $roomsList.after($counter);
+        }
+
+        // Atualizar texto do contador
+        if (maxRooms > 1) {
+            $counter.html(`
+                <div style="
+                    padding: 12px 20px;
+                    background: ${selectedCount === maxRooms ? 'linear-gradient(135deg, #10b981 0%, #059669 100%)' : 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)'};
+                    color: #fff;
+                    border-radius: 8px;
+                    text-align: center;
+                    margin-top: 15px;
+                    font-weight: 600;
+                    font-size: 14px;
+                ">
+                    ${selectedCount === maxRooms ? '✓' : ''} Selecionados: ${selectedCount} de ${maxRooms} quarto${maxRooms > 1 ? 's' : ''}
+                    ${selectedCount < maxRooms ? '<div style="font-size: 12px; margin-top: 4px; opacity: 0.9;">Selecione mais ' + (maxRooms - selectedCount) + ' quarto' + (maxRooms - selectedCount > 1 ? 's' : '') + '</div>' : ''}
+                </div>
+            `);
+            $counter.show();
+        } else {
+            $counter.hide();
+        }
+    }
 
 })(jQuery);
