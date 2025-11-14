@@ -29,60 +29,33 @@
      * Inicializar página de cotação
      */
     function initQuotePage() {
-        // 1. Carregar budget selecionado do sessionStorage
-        const selectedBudget = sessionStorage.getItem('soltour_selected_budget');
+        // 1. Carregar pacote selecionado do sessionStorage (CORRIGIDO: soltour_selected_package)
+        const selectedPackage = sessionStorage.getItem('soltour_selected_package');
 
-        if (!selectedBudget) {
+        if (!selectedPackage) {
             renderError('Nenhum pacote selecionado', 'Por favor, volte à página de resultados e selecione um pacote.');
             return;
         }
 
         try {
-            BeautyTravelQuote.budgetData = JSON.parse(selectedBudget);
+            const packageData = JSON.parse(selectedPackage);
 
-            // 2. Buscar detalhes completos do pacote
-            loadPackageDetails();
+            // Verificar se temos todos os dados necessários
+            if (!packageData.budget || !packageData.details || !packageData.selectedRoom) {
+                renderError('Dados incompletos', 'Os dados do pacote estão incompletos. Por favor, selecione novamente.');
+                return;
+            }
+
+            // Salvar dados no objeto global
+            BeautyTravelQuote.packageData = packageData;
+
+            // Renderizar página completa diretamente (sem AJAX)
+            renderQuotePage();
 
         } catch (error) {
+            console.error('Erro ao carregar pacote:', error);
             renderError('Erro ao carregar pacote', 'Os dados do pacote selecionado estão corrompidos.');
         }
-    }
-
-    /**
-     * Carregar detalhes completos do pacote
-     */
-    function loadPackageDetails() {
-        showLoading();
-
-        const { budgetId, hotelCode, providerCode, availToken } = BeautyTravelQuote.budgetData;
-
-        $.ajax({
-            url: soltourData.ajaxurl,
-            type: 'POST',
-            data: {
-                action: 'soltour_get_package_details',
-                nonce: soltourData.nonce,
-                avail_token: availToken,
-                budget_id: budgetId,
-                hotel_code: hotelCode,
-                provider_code: providerCode
-            },
-            success: function(response) {
-
-                if (response.success && response.data) {
-                    BeautyTravelQuote.packageDetails = response.data;
-
-                    // Renderizar página completa
-                    renderQuotePage();
-
-                } else {
-                    renderError('Erro ao carregar detalhes', response.data?.message || 'Não foi possível carregar os detalhes do pacote.');
-                }
-            },
-            error: function(xhr, status, error) {
-                renderError('Erro de conexão', 'Não foi possível conectar ao servidor. Tente novamente.');
-            }
-        });
     }
 
     /**
@@ -91,8 +64,10 @@
     function renderQuotePage() {
 
         const $container = $('#soltour-quote-page');
-        const details = BeautyTravelQuote.packageDetails;
-        const budget = details.budget || {};
+        const packageData = BeautyTravelQuote.packageData;
+        const budget = packageData.budget || {};
+        const details = packageData.details || {};
+        const selectedRoom = packageData.selectedRoom || {};
         const hotelDetails = details.hotelDetails?.hotel || {};
 
         // Extrair dados
@@ -175,6 +150,17 @@
                         <div class="bt-info-row">
                             <span class="bt-info-label">Passageiros:</span>
                             <span class="bt-info-value">${passengerCount} pessoa${passengerCount > 1 ? 's' : ''}</span>
+                        </div>
+                    </div>
+
+                    <!-- Quarto Selecionado -->
+                    <div class="bt-summary-section">
+                        <h3>🛏️ Acomodação</h3>
+                        <div class="bt-room-selected">
+                            <div class="bt-room-name">${selectedRoom.description || 'Quarto'}</div>
+                            <div class="bt-room-occupancy">
+                                👥 ${selectedRoom.passengers ? selectedRoom.passengers.length : 0} passageiro${(selectedRoom.passengers && selectedRoom.passengers.length !== 1) ? 's' : ''}
+                            </div>
                         </div>
                     </div>
                 </div>

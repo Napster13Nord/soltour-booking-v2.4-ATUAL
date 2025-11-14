@@ -51,6 +51,7 @@
         allUniqueHotels: [], // TODOS os hotéis únicos deduplicados (para paginação local)
         originalHotels: [], // Cópia dos hotéis originais sem filtros (para poder resetar filtros)
         hotelsFromAvailability: {},
+        selectedRooms: {}, // Quartos selecionados por budgetId: { budgetId: roomData }
         minDate: null,
         maxDate: null,
         // Filtros
@@ -1740,17 +1741,23 @@
                     <!-- QUARTOS DISPONÍVEIS -->
                     <div class="available-rooms-section">
                         <h4 class="rooms-title">🛏️ Quartos Disponíveis</h4>
-                        <div class="rooms-list">
+                        <div class="rooms-list" data-budget-id="${budget.budgetId}">
                             ${availableRooms.map((room, index) => {
                                 const roomDescription = room.description || 'Quarto';
                                 const numRoomPassengers = room.passengers ? room.passengers.length : 0;
+                                const roomCode = room.roomCode || '';
+                                const isFirstRoom = index === 0;
 
                                 return `
-                                    <div class="room-option">
+                                    <div class="room-option ${isFirstRoom ? 'selected' : ''}"
+                                         data-room-code="${roomCode}"
+                                         data-room-data='${JSON.stringify(room)}'
+                                         onclick="SoltourApp.selectRoom('${budget.budgetId}', this)">
                                         <div class="room-info">
                                             <div class="room-name">${roomDescription}</div>
                                             <div class="room-occupancy">👥 ${numRoomPassengers} passageiro${numRoomPassengers !== 1 ? 's' : ''}</div>
                                         </div>
+                                        ${isFirstRoom ? '<div class="room-selected-badge">✓ Selecionado</div>' : ''}
                                     </div>
                                 `;
                             }).join('')}
@@ -1776,6 +1783,11 @@
             </div>
         `;
         $list.append(card);
+
+        // Salvar automaticamente o primeiro quarto como selecionado
+        if (availableRooms.length > 0) {
+            SoltourApp.selectedRooms[budget.budgetId] = availableRooms[0];
+        }
     }
 
     /**
@@ -1934,11 +1946,40 @@
      */
     function proceedWithPackageSelection(budgetId, hotelCode, providerCode) {
 
+        // Buscar o pacote completo do array de resultados
+        const fullPackage = SoltourApp.allUniqueHotels.find(pkg =>
+            pkg.budget.budgetId === budgetId
+        );
+
+        if (!fullPackage) {
+            alert('Erro: Pacote não encontrado. Por favor, tente novamente.');
+            return;
+        }
+
+        // Buscar quarto selecionado
+        const selectedRoom = SoltourApp.selectedRooms[budgetId];
+
+        if (!selectedRoom) {
+            alert('Por favor, selecione um quarto antes de continuar.');
+            return;
+        }
+
+        // Salvar TODOS os dados no sessionStorage
         sessionStorage.setItem('soltour_selected_package', JSON.stringify({
             budgetId: budgetId,
             hotelCode: hotelCode,
             providerCode: providerCode,
-            availToken: SoltourApp.availToken
+            availToken: SoltourApp.availToken,
+            budget: fullPackage.budget,           // Budget completo
+            details: fullPackage.details,         // Detalhes do hotel
+            selectedRoom: selectedRoom,           // Quarto selecionado
+            searchParams: {                       // Parâmetros da busca
+                destination: SoltourApp.destination,
+                origin: SoltourApp.origin,
+                startDate: SoltourApp.startDate,
+                endDate: SoltourApp.endDate,
+                passengers: SoltourApp.passengers
+            }
         }));
 
         window.location.href = `/cotacao/?budget=${budgetId}`;
@@ -1999,6 +2040,28 @@
 
         // Atualizar dots
         dots.removeClass('active').eq(index).addClass('active');
+    };
+
+    /**
+     * Função para selecionar um quarto
+     */
+    window.SoltourApp.selectRoom = function(budgetId, roomElement) {
+        const $room = $(roomElement);
+        const $roomsList = $room.closest('.rooms-list');
+        const roomData = JSON.parse($room.attr('data-room-data'));
+
+        // Desmarcar outros quartos deste pacote
+        $roomsList.find('.room-option').removeClass('selected');
+        $roomsList.find('.room-selected-badge').remove();
+
+        // Marcar este quarto como selecionado
+        $room.addClass('selected');
+        $room.append('<div class="room-selected-badge">✓ Selecionado</div>');
+
+        // Salvar no objeto global
+        SoltourApp.selectedRooms[budgetId] = roomData;
+
+        console.log('Quarto selecionado:', budgetId, roomData);
     };
 
 })(jQuery);
