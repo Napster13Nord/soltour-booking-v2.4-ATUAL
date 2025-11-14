@@ -455,3 +455,188 @@
     letter-spacing: 0.5px;
     margin-left: 10px;
 }
+
+/* ===========================
+   NOVA ESTRUTURA DE 2 COLUNAS
+   =========================== */
+
+.soltour-left-column {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.soltour-right-column {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.quote-section-title {
+    margin-bottom: 15px;
+}
+
+.quote-section-title h2 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #019CB8;
+    margin: 0;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+/* Cards de Voo */
+.flight-card {
+    background: #fff;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+.flight-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.flight-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.flight-type-badge {
+    background: linear-gradient(135deg, #019CB8 0%, #0176a8 100%);
+    color: #fff;
+    padding: 6px 15px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.flight-date {
+    font-size: 14px;
+    color: #6b7280;
+    font-weight: 600;
+}
+
+.flight-card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.flight-airline-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.flight-airline-logo {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    border-radius: 4px;
+    background: #f8f9fa;
+    padding: 4px;
+}
+
+.flight-airline-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1a202c;
+}
+
+.flight-route-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.flight-time-location {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    flex: 1;
+}
+
+.flight-time {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1a202c;
+}
+
+.flight-location {
+    font-size: 14px;
+    font-weight: 600;
+    color: #019CB8;
+}
+
+.flight-route-line {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    flex: 2;
+}
+
+.flight-stops-info {
+    font-size: 12px;
+    color: #6b7280;
+    font-weight: 500;
+}
+
+.flight-arrow {
+    font-size: 24px;
+    color: #019CB8;
+    font-weight: 700;
+}
+
+/* Responsivo para cards de voo */
+@media (max-width: 768px) {
+    .flight-route-info {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .flight-route-line {
+        flex-direction: row;
+        width: 100%;
+    }
+}
+
+/* Ajustes para os cards do hotel na página de cotação */
+.soltour-left-column .soltour-package-card {
+    width: 100%;
+    margin-bottom: 0;
+}
+
+/* Ajustes para a sidebar direita ser sticky */
+.soltour-right-column .bt-price-sidebar {
+    position: sticky;
+    top: 20px;
+}
+
+/* Ajustes para mobile */
+@media (max-width: 968px) {
+    .soltour-left-column,
+    .soltour-right-column {
+        width: 100%;
+    }
+
+    .soltour-right-column .bt-price-sidebar {
+        position: relative;
+        top: 0;
+    }
+}

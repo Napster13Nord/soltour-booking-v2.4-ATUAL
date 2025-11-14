@@ -351,7 +351,7 @@
             // MOSTRAR MODAL IMEDIATAMENTE ao carregar página de resultados
             showLoadingModal(
                 'Buscando os melhores pacotes...',
-                'Encontraremos as melhores opções para sua viagem'
+                'Encontraremos as melhores opções para a viagem dos seus sonhos'
             );
 
             SoltourApp.searchParams = JSON.parse(savedParams);

@@ -1,6 +1,7 @@
 /**
  * Página de Cotação - BeautyTravel
  * Carrega pacote selecionado e gera cotação
+ * ATUALIZADO: Usa os mesmos cards da página de resultados
  */
 
 (function($) {
@@ -93,140 +94,82 @@
         const $container = $('#soltour-quote-page');
         const details = BeautyTravelQuote.packageDetails;
         const budget = details.budget || {};
-        const hotelDetails = details.hotelDetails?.hotel || {};
 
-        // Extrair dados
-        const hotelName = hotelDetails.name || hotelDetails.commercialName || 'Hotel';
-        const hotelImage = getHotelMainImage(hotelDetails);
-        const hotelLocation = getHotelLocation(hotelDetails);
-        const hotelStars = getHotelStars(hotelDetails);
-
-        // Preço
-        const price = extractPrice(budget);
-        const pricePerPerson = price / (getPassengerCount(budget));
-
-        // Noites
-        const numNights = getNumNights(budget);
-
-        // Voos
-        const flightServices = budget.flightServices || [];
-
-        // Meal plan
-        const mealPlan = getMealPlan(budget);
-
-        // Datas
-        const { startDate, endDate } = getDates(budget);
-
-        // Passageiros
+        // Extrair dados para contagem de passageiros
         const passengerCount = getPassengerCount(budget);
 
-        // HTML da página
+        // Preço total
+        const price = extractPrice(budget);
+
+        // HTML da página com estrutura de 2 colunas
         const html = `
             <div class="bt-quote-header">
                 <h1>💼 Cotação do Seu Pacote</h1>
-                <p>Preencha os dados abaixo para receber sua cotação personalizada</p>
+                <p>Confirme os detalhes e preencha os dados abaixo para receber a sua cotação personalizada</p>
             </div>
 
             <div class="bt-quote-grid">
-                <!-- Resumo do Pacote -->
-                <div class="bt-package-summary">
-                    <h2>📦 Resumo do Pacote</h2>
+                <!-- Coluna Esquerda: Cards do Hotel e Voos -->
+                <div class="soltour-left-column">
+                    <div id="hotel-card-container"></div>
+                    <div id="flight-cards-container"></div>
+                </div>
 
-                    <!-- Hotel -->
-                    <div class="bt-summary-section">
-                        <h3>🏨 Hotel</h3>
-                        <div class="bt-hotel-info">
-                            ${hotelImage ? `<img src="${hotelImage}" alt="${hotelName}" class="bt-hotel-image">` : ''}
-                            <div class="bt-hotel-details">
-                                <h4 class="bt-hotel-name">${hotelName}</h4>
-                                <p class="bt-hotel-location">${hotelLocation}</p>
-                                <div class="bt-hotel-stars">${hotelStars > 0 ? '⭐'.repeat(hotelStars) : 'Hotel'}</div>
+                <!-- Coluna Direita: Sidebar com Preço e Formulário -->
+                <div class="soltour-right-column">
+                    <!-- Resumo de Preço -->
+                    <div class="bt-price-sidebar">
+                        <h2>💰 Resumo do Preço</h2>
+                        <div class="bt-price-breakdown">
+                            <div class="bt-price-line">
+                                <span>Preço por pessoa:</span>
+                                <span>${(price / passengerCount).toFixed(0)}€</span>
+                            </div>
+                            <div class="bt-price-line">
+                                <span>Número de passageiros:</span>
+                                <span>× ${passengerCount}</span>
                             </div>
                         </div>
+                        <div class="bt-price-total">
+                            <span>Total:</span>
+                            <span class="bt-price-total-amount">${price.toFixed(0)}€</span>
+                        </div>
+                        <div class="bt-price-note">
+                            💡 Este é um valor estimado. O preço final será confirmado após o preenchimento dos dados dos passageiros.
+                        </div>
                     </div>
 
-                    <!-- Voos -->
-                    ${flightServices.length > 0 ? `
-                        <div class="bt-summary-section">
-                            <h3>✈️ Voos</h3>
-                            ${renderFlightsSummary(flightServices)}
-                        </div>
-                    ` : ''}
+                    <!-- Formulário de Passageiros -->
+                    <div class="bt-passengers-form">
+                        <h2>👥 Dados dos Passageiros</h2>
+                        ${renderPassengerForms(passengerCount, budget)}
+                    </div>
 
-                    <!-- Informações -->
-                    <div class="bt-summary-section">
-                        <h3>ℹ️ Informações</h3>
-                        <div class="bt-info-row">
-                            <span class="bt-info-label">Check-in:</span>
-                            <span class="bt-info-value">${startDate}</span>
+                    <!-- Observações -->
+                    <div class="bt-passengers-form">
+                        <h2>📝 Observações (Opcional)</h2>
+                        <div class="bt-form-group bt-form-full">
+                            <label for="quote-notes">Alguma solicitação especial?</label>
+                            <textarea id="quote-notes" name="notes" placeholder="Ex: Quarto com vista para o mar, necessidades especiais, etc."></textarea>
                         </div>
-                        <div class="bt-info-row">
-                            <span class="bt-info-label">Check-out:</span>
-                            <span class="bt-info-value">${endDate}</span>
-                        </div>
-                        <div class="bt-info-row">
-                            <span class="bt-info-label">Noites:</span>
-                            <span class="bt-info-value">${numNights}</span>
-                        </div>
-                        <div class="bt-info-row">
-                            <span class="bt-info-label">Regime:</span>
-                            <span class="bt-info-value">${mealPlan}</span>
-                        </div>
-                        <div class="bt-info-row">
-                            <span class="bt-info-label">Passageiros:</span>
-                            <span class="bt-info-value">${passengerCount} pessoa${passengerCount > 1 ? 's' : ''}</span>
-                        </div>
+                    </div>
+
+                    <!-- Botão de Gerar Cotação -->
+                    <div class="bt-quote-actions">
+                        <button type="button" class="bt-btn-generate-quote" id="btn-generate-quote">
+                            <i class="fas fa-file-invoice"></i>
+                            Gerar Cotação Final
+                        </button>
                     </div>
                 </div>
-
-                <!-- Sidebar de Preço -->
-                <div class="bt-price-sidebar">
-                    <h2>💰 Preço</h2>
-                    <div class="bt-price-breakdown">
-                        <div class="bt-price-line">
-                            <span>Preço por pessoa:</span>
-                            <span>${pricePerPerson.toFixed(0)}€</span>
-                        </div>
-                        <div class="bt-price-line">
-                            <span>Número de passageiros:</span>
-                            <span>× ${passengerCount}</span>
-                        </div>
-                    </div>
-                    <div class="bt-price-total">
-                        <span>Total:</span>
-                        <span class="bt-price-total-amount">${price.toFixed(0)}€</span>
-                    </div>
-                    <div class="bt-price-note">
-                        💡 Este é um valor estimado. O preço final será confirmado após o preenchimento dos dados dos passageiros.
-                    </div>
-                </div>
-            </div>
-
-            <!-- Formulário de Passageiros -->
-            <div class="bt-passengers-form">
-                <h2>👥 Dados dos Passageiros</h2>
-                ${renderPassengerForms(passengerCount, budget)}
-            </div>
-
-            <!-- Observações -->
-            <div class="bt-passengers-form">
-                <h2>📝 Observações (Opcional)</h2>
-                <div class="bt-form-group bt-form-full">
-                    <label for="quote-notes">Alguma solicitação especial?</label>
-                    <textarea id="quote-notes" name="notes" placeholder="Ex: Quarto com vista para o mar, necessidades especiais, etc."></textarea>
-                </div>
-            </div>
-
-            <!-- Botão de Gerar Cotação -->
-            <div class="bt-quote-actions">
-                <button type="button" class="bt-btn-generate-quote" id="btn-generate-quote">
-                    <i class="fas fa-file-invoice"></i>
-                    Gerar Cotação Final
-                </button>
             </div>
         `;
 
         $container.html(html);
+
+        // Renderizar cards do hotel e voos usando a mesma lógica da página de resultados
+        renderHotelCard(budget, details);
+        renderFlightCards(budget);
 
         // Bind eventos
         bindQuoteEvents();
@@ -234,47 +177,249 @@
     }
 
     /**
-     * Renderizar resumo de voos
+     * Renderizar card do hotel usando a mesma estrutura da página de resultados
      */
-    function renderFlightsSummary(flights) {
-        let html = '';
+    function renderHotelCard(budget, details) {
+        const hotelService = budget.hotelServices && budget.hotelServices[0];
 
-        const outbound = flights.find(f => f.type === 'OUTBOUND');
-        const inbound = flights.find(f => f.type === 'INBOUND');
+        if (!hotelService) {
+            $('#hotel-card-container').html('<p>Informações do hotel não disponíveis.</p>');
+            return;
+        }
 
-        if (outbound) {
-            const segments = outbound.flightSegments || [];
-            const airline = segments[0]?.operatingAirline || 'Companhia Aérea';
-            const route = `${segments[0]?.originAirportCode} → ${segments[segments.length - 1]?.destinationAirportCode}`;
-            const departure = formatTime(segments[0]?.departureDate);
-            const arrival = formatTime(segments[segments.length - 1]?.arrivalDate);
+        // Extrair quartos disponíveis
+        let availableRooms = [];
+        if (hotelService.mealPlan && hotelService.mealPlan.combination && hotelService.mealPlan.combination.rooms) {
+            availableRooms = hotelService.mealPlan.combination.rooms;
+        }
 
-            html += `
-                <div class="bt-flight-item">
-                    <div class="bt-flight-type">🛫 Saída</div>
-                    <div class="bt-flight-route">${airline} - ${route}</div>
-                    <div class="bt-flight-time">${departure} - ${arrival}</div>
+        // Imagens
+        let hotelImages = [];
+        if (details.hotelDetails && details.hotelDetails.hotel && details.hotelDetails.hotel.multimedias) {
+            details.hotelDetails.hotel.multimedias.forEach(m => {
+                if (m.type === 'IMAGE' && m.url) {
+                    hotelImages.push(m.url);
+                }
+            });
+        }
+        hotelImages = hotelImages.slice(0, 10);
+
+        // Nome do hotel
+        const hotelName = details.hotelDetails?.hotel?.commercialName ||
+                         details.hotelDetails?.hotel?.name ||
+                         'Hotel';
+
+        // Localização
+        const country = getCountryFromDestination(details.hotelDetails?.hotel?.destinationCode);
+        const city = details.hotelDetails?.hotel?.destinationDescription ||
+                    getCityFromDestination(details.hotelDetails?.hotel?.destinationCode);
+
+        // Estrelas
+        let hotelStars = 0;
+        if (details.hotelDetails?.hotel?.categoryCode) {
+            hotelStars = (details.hotelDetails.hotel.categoryCode.match(/\*/g) || []).length;
+        }
+
+        // Descrição
+        let hotelDescriptionFull = details.hotelDetails?.hotel?.description ||
+                                  details.hotelDetails?.hotel?.shortDescription || '';
+        let hotelDescriptionShort = '';
+        let hasMoreDescription = false;
+        if (hotelDescriptionFull.length > 150) {
+            hotelDescriptionShort = hotelDescriptionFull.substring(0, 150) + '...';
+            hasMoreDescription = true;
+        } else {
+            hotelDescriptionShort = hotelDescriptionFull;
+        }
+
+        // Noites e regime
+        const numNights = getNumNights(budget);
+        const mealPlan = getMealPlan(budget);
+
+        // Datas
+        const { startDate, endDate } = getDates(budget);
+
+        // Construir slider de imagens
+        let sliderHTML = '';
+        if (hotelImages.length > 0) {
+            sliderHTML = `
+                <div class="package-image-slider">
+                    <div class="slider-images">
+                        ${hotelImages.map((img, index) => `
+                            <img src="${img}" alt="${hotelName}" class="slider-image ${index === 0 ? 'active' : ''}" />
+                        `).join('')}
+                    </div>
+                    ${hotelImages.length > 1 ? `
+                        <button class="slider-btn slider-prev" onclick="BeautyTravelQuote.changeSlide(this, -1)">❮</button>
+                        <button class="slider-btn slider-next" onclick="BeautyTravelQuote.changeSlide(this, 1)">❯</button>
+                        <div class="slider-dots">
+                            ${hotelImages.map((_, index) => `
+                                <span class="slider-dot ${index === 0 ? 'active' : ''}" onclick="BeautyTravelQuote.goToSlide(this, ${index})"></span>
+                            `).join('')}
+                        </div>
+                    ` : ''}
+                    <div class="package-badge">HOTEL</div>
+                </div>
+            `;
+        } else {
+            sliderHTML = `
+                <div class="package-image">
+                    <div class="no-image">📷 Sem imagem</div>
+                    <div class="package-badge">HOTEL</div>
                 </div>
             `;
         }
 
-        if (inbound) {
-            const segments = inbound.flightSegments || [];
-            const airline = segments[0]?.operatingAirline || 'Companhia Aérea';
-            const route = `${segments[0]?.originAirportCode} → ${segments[segments.length - 1]?.destinationAirportCode}`;
-            const departure = formatTime(segments[0]?.departureDate);
-            const arrival = formatTime(segments[segments.length - 1]?.arrivalDate);
+        // Construir card do hotel
+        const hotelCard = `
+            <div class="quote-section-title">
+                <h2>🏨 Hotel Selecionado</h2>
+            </div>
+            <div class="soltour-package-card">
+                ${sliderHTML}
+                <div class="package-info">
+                    <div class="package-location">
+                        <strong>${country}</strong>
+                        <span class="package-city">${city}</span>
+                    </div>
+                    <h3 class="package-name">${hotelName}</h3>
+                    <div class="package-stars">
+                        ${hotelStars > 0 ? '⭐'.repeat(hotelStars) : '<span class="no-rating">Hotel</span>'}
+                    </div>
+                    ${hotelDescriptionShort ? `
+                        <div class="package-description">
+                            <p class="description-text">
+                                <span class="description-short">${hotelDescriptionShort}</span>
+                                ${hasMoreDescription ? `
+                                    <span class="description-full" style="display: none;">${hotelDescriptionFull}</span>
+                                    <a href="javascript:void(0)" class="read-more-btn" onclick="BeautyTravelQuote.toggleDescription(this)">ler mais</a>
+                                ` : ''}
+                            </p>
+                        </div>
+                    ` : ''}
+                    <div class="package-details">
+                        <p>🌙 ${numNights} Noites | ${mealPlan}</p>
+                        <p>📅 ${startDate} - ${endDate}</p>
+                    </div>
 
-            html += `
-                <div class="bt-flight-item">
-                    <div class="bt-flight-type">🛬 Regresso</div>
-                    <div class="bt-flight-route">${airline} - ${route}</div>
-                    <div class="bt-flight-time">${departure} - ${arrival}</div>
+                    ${availableRooms.length > 0 ? `
+                        <!-- QUARTOS DISPONÍVEIS -->
+                        <div class="available-rooms-section">
+                            <h4 class="rooms-title">🛏️ Quartos Disponíveis</h4>
+                            <div class="rooms-list">
+                                ${availableRooms.map((room, index) => {
+                                    const roomPrice = room.priceDetails && room.priceDetails.pvp ? room.priceDetails.pvp : 0;
+                                    const roomDescription = room.description || 'Quarto';
+                                    const numRoomPassengers = room.passengers ? room.passengers.length : 0;
+                                    const roomPricePerPerson = numRoomPassengers > 0 ? (roomPrice / numRoomPassengers) : roomPrice;
+
+                                    return `
+                                        <div class="room-option">
+                                            <div class="room-info">
+                                                <div class="room-name">${roomDescription}</div>
+                                                <div class="room-occupancy">👥 ${numRoomPassengers} passageiro${numRoomPassengers !== 1 ? 's' : ''}</div>
+                                            </div>
+                                            <div class="room-pricing">
+                                                <div class="room-price-per-person">${roomPricePerPerson.toFixed(0)}€/pax</div>
+                                                <div class="room-price-total">${roomPrice.toFixed(0)}€ total</div>
+                                            </div>
+                                        </div>
+                                    `;
+                                }).join('')}
+                            </div>
+                        </div>
+                    ` : ''}
                 </div>
-            `;
+            </div>
+        `;
+
+        $('#hotel-card-container').html(hotelCard);
+    }
+
+    /**
+     * Renderizar cards dos voos (separados: ida e volta)
+     */
+    function renderFlightCards(budget) {
+        const flightServices = budget.flightServices || [];
+
+        if (flightServices.length === 0) {
+            $('#flight-cards-container').html('');
+            return;
         }
 
-        return html;
+        let flightCardsHTML = `
+            <div class="quote-section-title">
+                <h2>✈️ Voos Incluídos</h2>
+            </div>
+        `;
+
+        flightServices.forEach(function(flight) {
+            const flightType = flight.type === 'OUTBOUND' ? 'Ida' : 'Regresso';
+            const flightIcon = flight.type === 'OUTBOUND' ? '🛫' : '🛬';
+
+            if (!flight.segments || flight.segments.length === 0) {
+                return;
+            }
+
+            const firstSegment = flight.segments[0];
+            const lastSegment = flight.segments[flight.segments.length - 1];
+
+            const origin = firstSegment.origin || '';
+            const destination = lastSegment.destination || '';
+            const departureTime = firstSegment.departureTime ? firstSegment.departureTime.substring(0, 5) : '--:--';
+            const arrivalTime = lastSegment.arrivalTime ? lastSegment.arrivalTime.substring(0, 5) : '--:--';
+            const airline = firstSegment.carrierName || firstSegment.carrier || 'Companhia Aérea';
+            const carrierCode = firstSegment.carrier || '';
+
+            // Data do voo
+            let flightDate = '';
+            if (firstSegment.departureDate) {
+                flightDate = formatDate(firstSegment.departureDate);
+            }
+
+            // Logo da companhia aérea
+            let airlineLogo = firstSegment.carrierLogo || firstSegment.carrierImageUrl || '';
+            if (!airlineLogo && carrierCode) {
+                airlineLogo = `https://images.kiwi.com/airlines/64/${carrierCode}.png`;
+            }
+
+            // Escalas
+            const numStops = flight.segments.length - 1;
+            const stopsText = numStops === 0 ? 'Voo direto' :
+                            numStops === 1 ? '1 escala' :
+                            `${numStops} escalas`;
+
+            flightCardsHTML += `
+                <div class="flight-card">
+                    <div class="flight-card-header">
+                        <div class="flight-type-badge">${flightIcon} ${flightType}</div>
+                        <div class="flight-date">${flightDate}</div>
+                    </div>
+                    <div class="flight-card-body">
+                        <div class="flight-airline-info">
+                            ${airlineLogo ? `<img src="${airlineLogo}" alt="${airline}" class="flight-airline-logo" onerror="this.style.display='none'" />` : ''}
+                            <span class="flight-airline-name">${airline}</span>
+                        </div>
+                        <div class="flight-route-info">
+                            <div class="flight-time-location">
+                                <div class="flight-time">${departureTime}</div>
+                                <div class="flight-location">${origin}</div>
+                            </div>
+                            <div class="flight-route-line">
+                                <div class="flight-stops-info">${stopsText}</div>
+                                <div class="flight-arrow">→</div>
+                            </div>
+                            <div class="flight-time-location">
+                                <div class="flight-time">${arrivalTime}</div>
+                                <div class="flight-location">${destination}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+
+        $('#flight-cards-container').html(flightCardsHTML);
     }
 
     /**
@@ -386,7 +531,7 @@
 
         // Desabilitar botão
         const $btn = $('#btn-generate-quote');
-        $btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Gerando cotação...');
+        $btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> A gerar cotação...');
 
         // Enviar para o servidor
         $.ajax({
@@ -477,7 +622,7 @@
         const html = `
             <div class="bt-quote-loading">
                 <div class="spinner"></div>
-                <h3>Carregando detalhes...</h3>
+                <h3>A carregar detalhes...</h3>
                 <p>Aguarde enquanto buscamos as informações do seu pacote</p>
             </div>
         `;
@@ -503,32 +648,6 @@
     // ===========================
     // FUNÇÕES AUXILIARES
     // ===========================
-
-    function getHotelMainImage(hotel) {
-        if (hotel.mainImage) return hotel.mainImage;
-        if (hotel.images && hotel.images.length > 0) return hotel.images[0];
-        if (hotel.multimedias && hotel.multimedias.length > 0) {
-            const img = hotel.multimedias.find(m => m.type === 'IMAGE');
-            if (img) return img.url;
-        }
-        return null;
-    }
-
-    function getHotelLocation(hotel) {
-        if (hotel.destinationDescription) return hotel.destinationDescription;
-        if (hotel.address) {
-            if (typeof hotel.address === 'string') return hotel.address;
-            if (hotel.address.city) return hotel.address.city;
-        }
-        return 'Localização não disponível';
-    }
-
-    function getHotelStars(hotel) {
-        if (hotel.categoryCode) {
-            return (hotel.categoryCode.match(/\*/g) || []).length;
-        }
-        return 0;
-    }
 
     function extractPrice(budget) {
         if (budget.priceBreakdown?.priceBreakdownDetails?.[0]?.priceInfo?.pvp) {
@@ -600,16 +719,94 @@
         return date.toLocaleDateString('pt-PT', { day: '2-digit', month: '2-digit', year: 'numeric' });
     }
 
-    function formatTime(dateStr) {
-        if (!dateStr) return '';
-        const date = new Date(dateStr);
-        return date.toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' });
-    }
-
     function getMaxBirthdate(yearsAgo) {
         const date = new Date();
         date.setFullYear(date.getFullYear() - yearsAgo);
         return date.toISOString().split('T')[0];
     }
+
+    function getCountryFromDestination(code) {
+        const DESTINATIONS_MAP = {
+            'PUJ': 'República Dominicana',
+            'CUN': 'México',
+            'PMI': 'Espanha',
+            'BCN': 'Espanha',
+            'MAD': 'Espanha',
+            'FAO': 'Portugal',
+            'FNC': 'Portugal',
+            'AGA': 'Marrocos',
+            'SSH': 'Egito'
+        };
+        return DESTINATIONS_MAP[code] || '';
+    }
+
+    function getCityFromDestination(code) {
+        const CITIES_MAP = {
+            'PUJ': 'Punta Cana',
+            'CUN': 'Cancún',
+            'PMI': 'Palma de Maiorca',
+            'BCN': 'Barcelona',
+            'MAD': 'Madrid',
+            'FAO': 'Faro',
+            'FNC': 'Funchal',
+            'AGA': 'Agadir',
+            'SSH': 'Sharm el-Sheikh'
+        };
+        return CITIES_MAP[code] || '';
+    }
+
+    // ===========================
+    // FUNÇÕES DE SLIDER (mesmas da página de resultados)
+    // ===========================
+
+    BeautyTravelQuote.changeSlide = function(button, direction) {
+        const slider = $(button).closest('.package-image-slider');
+        const images = slider.find('.slider-image');
+        const dots = slider.find('.slider-dot');
+
+        let currentIndex = 0;
+        images.each(function(index) {
+            if ($(this).hasClass('active')) {
+                currentIndex = index;
+            }
+        });
+
+        let newIndex = currentIndex + direction;
+        if (newIndex < 0) newIndex = images.length - 1;
+        if (newIndex >= images.length) newIndex = 0;
+
+        images.removeClass('active');
+        dots.removeClass('active');
+        $(images[newIndex]).addClass('active');
+        $(dots[newIndex]).addClass('active');
+    };
+
+    BeautyTravelQuote.goToSlide = function(dot, index) {
+        const slider = $(dot).closest('.package-image-slider');
+        const images = slider.find('.slider-image');
+        const dots = slider.find('.slider-dot');
+
+        images.removeClass('active');
+        dots.removeClass('active');
+        $(images[index]).addClass('active');
+        $(dots[index]).addClass('active');
+    };
+
+    BeautyTravelQuote.toggleDescription = function(link) {
+        const $link = $(link);
+        const $container = $link.closest('.description-text');
+        const $short = $container.find('.description-short');
+        const $full = $container.find('.description-full');
+
+        if ($full.is(':visible')) {
+            $full.hide();
+            $short.show();
+            $link.text('ler mais');
+        } else {
+            $short.hide();
+            $full.show();
+            $link.text('ler menos');
+        }
+    };
 
 })(jQuery);
