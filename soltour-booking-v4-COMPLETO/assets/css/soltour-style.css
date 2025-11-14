@@ -311,6 +311,18 @@
     margin-right: 8px;
 }
 
+.soltour-meal-plan-filter label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: normal;
+    cursor: pointer;
+}
+
+.soltour-meal-plan-filter input[type="checkbox"] {
+    width: auto;
+    margin-right: 8px;
+}
+
 .soltour-results-main {
     background: #fff;
     padding: 30px;
