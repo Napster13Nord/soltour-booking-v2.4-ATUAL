@@ -40,8 +40,8 @@
         try {
             const packageData = JSON.parse(selectedPackage);
 
-            // Verificar se temos todos os dados necessários
-            if (!packageData.budget || !packageData.details || !packageData.selectedRoom) {
+            // Verificar se temos todos os dados necessários (APENAS do availability)
+            if (!packageData.budget || !packageData.selectedRoom) {
                 renderError('Dados incompletos', 'Os dados do pacote estão incompletos. Por favor, selecione novamente.');
                 return;
             }
@@ -49,7 +49,7 @@
             // Salvar dados no objeto global
             BeautyTravelQuote.packageData = packageData;
 
-            // Renderizar página completa diretamente (sem AJAX)
+            // Renderizar página completa diretamente (SEM AJAX - apenas dados do availability)
             renderQuotePage();
 
         } catch (error) {
@@ -66,15 +66,28 @@
         const $container = $('#soltour-quote-page');
         const packageData = BeautyTravelQuote.packageData;
         const budget = packageData.budget || {};
-        const details = packageData.details || {};
         const selectedRoom = packageData.selectedRoom || {};
-        const hotelDetails = details.hotelDetails?.hotel || {};
+        const hotelService = budget.hotelServices && budget.hotelServices[0];
 
-        // Extrair dados
-        const hotelName = hotelDetails.name || hotelDetails.commercialName || 'Hotel';
-        const hotelImage = getHotelMainImage(hotelDetails);
-        const hotelLocation = getHotelLocation(hotelDetails);
-        const hotelStars = getHotelStars(hotelDetails);
+        // USAR APENAS DADOS DO AVAILABILITY (budget)
+        // NÃO usar details.hotelDetails que vem de chamada separada
+
+        // Extrair dados do hotel do BUDGET
+        const hotelCode = hotelService?.hotelCode || '';
+        const hotelName = hotelService?.hotelName || 'Hotel';
+
+        // Se temos dados do availability salvos, usar eles
+        let hotelImage = '';
+        let hotelLocation = '';
+        let hotelStars = 0;
+
+        if (packageData.hotelInfo) {
+            // Usar dados do hotelsFromAvailability que foram salvos
+            hotelImage = packageData.hotelInfo.mainImage || '';
+            hotelLocation = `${packageData.hotelInfo.destinationName || ''}, ${packageData.hotelInfo.countryName || ''}`.trim();
+            const categoryCode = packageData.hotelInfo.categoryCode || '';
+            hotelStars = (categoryCode.match(/\*/g) || []).length;
+        }
 
         // Preço
         const price = extractPrice(budget);

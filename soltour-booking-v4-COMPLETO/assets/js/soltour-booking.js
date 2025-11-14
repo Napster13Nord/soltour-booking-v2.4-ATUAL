@@ -1964,14 +1964,17 @@
             return;
         }
 
-        // Salvar TODOS os dados no sessionStorage
+        // Buscar informações do hotel do availability (não do hotelDetails!)
+        const hotelInfo = SoltourApp.hotelsFromAvailability[hotelCode] || null;
+
+        // Salvar TODOS os dados no sessionStorage (APENAS do availability)
         sessionStorage.setItem('soltour_selected_package', JSON.stringify({
             budgetId: budgetId,
             hotelCode: hotelCode,
             providerCode: providerCode,
             availToken: SoltourApp.availToken,
-            budget: fullPackage.budget,           // Budget completo
-            details: fullPackage.details,         // Detalhes do hotel
+            budget: fullPackage.budget,           // Budget completo do availability
+            hotelInfo: hotelInfo,                 // Info do hotel do availability (NÃO hotelDetails)
             selectedRoom: selectedRoom,           // Quarto selecionado
             searchParams: {                       // Parâmetros da busca
                 destination: SoltourApp.destination,
