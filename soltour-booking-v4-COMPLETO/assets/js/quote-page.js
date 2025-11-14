@@ -139,8 +139,9 @@
                 console.log(`FlightService ${index}:`, {
                     type: fs.type,
                     id: fs.id,
-                    flightSegments: fs.flightSegments,
-                    hasSegments: fs.flightSegments && fs.flightSegments.length
+                    segments: fs.segments,
+                    hasSegments: fs.segments && fs.segments.length,
+                    fullObject: fs
                 });
             });
         }
@@ -381,8 +382,16 @@
         // Console debug
         console.log('[VOOS COTAÇÃO] flights:', flights);
 
-        const outbound = flights.find(f => f.type === 'OUTBOUND');
-        const inbound = flights.find(f => f.type === 'INBOUND');
+        // Tentar encontrar voos por tipo OUTBOUND/INBOUND
+        let outbound = flights.find(f => f.type === 'OUTBOUND');
+        let inbound = flights.find(f => f.type === 'INBOUND');
+
+        // Se não encontrou por tipo, assumir que o array tem os voos em ordem
+        // [0] = ida, [1] = volta
+        if (!outbound && !inbound && flights.length > 0) {
+            outbound = flights[0];
+            inbound = flights[1] || null;
+        }
 
         // VOO DE IDA
         if (outbound) {
@@ -392,19 +401,22 @@
             const lastSegment = segments[segments.length - 1] || {};
 
             console.log('[VOO IDA] segments:', segments);
+            console.log('[VOO IDA] firstSegment:', firstSegment);
 
-            const airline = firstSegment.operatingAirline || firstSegment.marketingAirline || 'Companhia Aérea';
-            const flightNumber = firstSegment.marketingFlightNumber || firstSegment.operatingFlightNumber || '';
-            const originCode = firstSegment.originAirportCode || '';
-            const destinationCode = lastSegment.destinationAirportCode || '';
-            const originCity = firstSegment.originCity || originCode;
-            const destinationCity = lastSegment.destinationCity || destinationCode;
+            // Tentar múltiplas propriedades para compatibilidade
+            const airline = firstSegment.carrierName || firstSegment.carrier || firstSegment.operatingAirline || firstSegment.marketingAirline || 'Companhia Aérea';
+            const flightNumber = firstSegment.flightNumber || firstSegment.marketingFlightNumber || firstSegment.operatingFlightNumber || '';
+            const originCode = firstSegment.origin || firstSegment.originAirportCode || '';
+            const destinationCode = lastSegment.destination || lastSegment.destinationAirportCode || '';
+            const originCity = firstSegment.originCity || firstSegment.originCityName || originCode;
+            const destinationCity = lastSegment.destinationCity || lastSegment.destinationCityName || destinationCode;
 
-            const departureDateTime = firstSegment.departureDate || '';
-            const arrivalDateTime = lastSegment.arrivalDate || '';
-            const departureTime = formatTime(departureDateTime);
-            const arrivalTime = formatTime(arrivalDateTime);
-            const departureDate = formatDate(departureDateTime);
+            // Tentar diferentes formatos de data/hora
+            const departureDateTime = firstSegment.departureDate || firstSegment.departureDateTime || '';
+            const arrivalDateTime = lastSegment.arrivalDate || lastSegment.arrivalDateTime || '';
+            const departureTime = firstSegment.departureTime || formatTime(departureDateTime);
+            const arrivalTime = lastSegment.arrivalTime || formatTime(arrivalDateTime);
+            const departureDate = formatDate(departureDateTime) || formatDate(firstSegment.departureDateTime);
 
             const numStops = segments.length - 1;
             const duration = calculateFlightDuration(departureDateTime, arrivalDateTime);
@@ -459,19 +471,22 @@
             const lastSegment = segments[segments.length - 1] || {};
 
             console.log('[VOO VOLTA] segments:', segments);
+            console.log('[VOO VOLTA] firstSegment:', firstSegment);
 
-            const airline = firstSegment.operatingAirline || firstSegment.marketingAirline || 'Companhia Aérea';
-            const flightNumber = firstSegment.marketingFlightNumber || firstSegment.operatingFlightNumber || '';
-            const originCode = firstSegment.originAirportCode || '';
-            const destinationCode = lastSegment.destinationAirportCode || '';
-            const originCity = firstSegment.originCity || originCode;
-            const destinationCity = lastSegment.destinationCity || destinationCode;
+            // Tentar múltiplas propriedades para compatibilidade
+            const airline = firstSegment.carrierName || firstSegment.carrier || firstSegment.operatingAirline || firstSegment.marketingAirline || 'Companhia Aérea';
+            const flightNumber = firstSegment.flightNumber || firstSegment.marketingFlightNumber || firstSegment.operatingFlightNumber || '';
+            const originCode = firstSegment.origin || firstSegment.originAirportCode || '';
+            const destinationCode = lastSegment.destination || lastSegment.destinationAirportCode || '';
+            const originCity = firstSegment.originCity || firstSegment.originCityName || originCode;
+            const destinationCity = lastSegment.destinationCity || lastSegment.destinationCityName || destinationCode;
 
-            const departureDateTime = firstSegment.departureDate || '';
-            const arrivalDateTime = lastSegment.arrivalDate || '';
-            const departureTime = formatTime(departureDateTime);
-            const arrivalTime = formatTime(arrivalDateTime);
-            const departureDate = formatDate(departureDateTime);
+            // Tentar diferentes formatos de data/hora
+            const departureDateTime = firstSegment.departureDate || firstSegment.departureDateTime || '';
+            const arrivalDateTime = lastSegment.arrivalDate || lastSegment.arrivalDateTime || '';
+            const departureTime = firstSegment.departureTime || formatTime(departureDateTime);
+            const arrivalTime = lastSegment.arrivalTime || formatTime(arrivalDateTime);
+            const departureDate = formatDate(departureDateTime) || formatDate(firstSegment.departureDateTime);
 
             const numStops = segments.length - 1;
             const duration = calculateFlightDuration(departureDateTime, arrivalDateTime);
