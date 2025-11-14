@@ -281,17 +281,35 @@
 
         for (let i = 0; i < numRooms; i++) {
             const roomHtml = `
-                <div class="soltour-room-config" data-room="${i}">
-                    <h4>Quarto ${i + 1}</h4>
-                    <div class="soltour-form-row">
+                <div class="soltour-room-item soltour-room-config" data-room="${i}">
+                    <div class="soltour-room-header">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                        </svg>
+                        <h4>Quarto ${i + 1}</h4>
+                    </div>
+                    <div class="soltour-room-fields">
                         <div class="soltour-form-group">
-                            <label>Adultos</label>
+                            <label>
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                </svg>
+                                Adultos
+                            </label>
                             <select class="room-adults" data-room="${i}">
                                 ${Array.from({length: 8}, (_, j) => `<option value="${j + 1}" ${j === 1 ? 'selected' : ''}>${j + 1}</option>`).join('')}
                             </select>
                         </div>
                         <div class="soltour-form-group">
-                            <label>Crianças (0-17)</label>
+                            <label>
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="8" r="3"></circle>
+                                    <path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"></path>
+                                </svg>
+                                Crianças (0-17)
+                            </label>
                             <select class="room-children" data-room="${i}">
                                 ${Array.from({length: 7}, (_, j) => `<option value="${j}">${j}</option>`).join('')}
                             </select>
@@ -320,16 +338,24 @@
             return;
         }
 
-        for (let i = 0; i < numChildren; i++) {
-            $container.append(`
-                <div class="child-age-input">
-                    <label>Idade criança ${i + 1}:</label>
-                    <select class="child-age" data-room="${roomIndex}" data-child="${i}" required>
-                        ${Array.from({length: 18}, (_, j) => `<option value="${j}">${j}</option>`).join('')}
-                    </select>
-                </div>
-            `);
-        }
+        $container.html(`
+            <div class="soltour-room-fields" style="margin-top: 16px; padding-top: 16px; border-top: 2px solid #e5e7eb;">
+                ${Array.from({length: numChildren}, (_, i) => `
+                    <div class="soltour-form-group">
+                        <label>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="8" r="3"></circle>
+                                <path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"></path>
+                            </svg>
+                            Idade criança ${i + 1}
+                        </label>
+                        <select class="child-age" data-room="${roomIndex}" data-child="${i}" required>
+                            ${Array.from({length: 18}, (_, j) => `<option value="${j}">${j} anos</option>`).join('')}
+                        </select>
+                    </div>
+                `).join('')}
+            </div>
+        `);
         $container.show();
     }
 
