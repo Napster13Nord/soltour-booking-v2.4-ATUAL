@@ -317,11 +317,19 @@
                             </select>
                         </div>
                     </div>
+                    <div class="room-adults-ages" data-room="${i}" style="display:none;"></div>
                     <div class="room-children-ages" data-room="${i}" style="display:none;"></div>
                 </div>
             `;
             $container.append(roomHtml);
         }
+
+        // Event listeners para adultos
+        $('.room-adults').on('change', function() {
+            const roomIndex = $(this).data('room');
+            const numAdults = parseInt($(this).val());
+            showRoomAdultsAges(roomIndex, numAdults);
+        });
 
         // Event listeners para crianças
         $('.room-children').on('change', function() {
@@ -329,6 +337,54 @@
             const numChildren = parseInt($(this).val());
             showRoomChildrenAges(roomIndex, numChildren);
         });
+
+        // Trigger inicial para mostrar campos de idade dos adultos
+        $('.room-adults').each(function() {
+            const roomIndex = $(this).data('room');
+            const numAdults = parseInt($(this).val());
+            showRoomAdultsAges(roomIndex, numAdults);
+        });
+    }
+
+    function showRoomAdultsAges(roomIndex, numAdults) {
+        const $container = $(`.room-adults-ages[data-room="${roomIndex}"]`);
+        $container.empty();
+
+        if (numAdults === 0) {
+            $container.hide();
+            return;
+        }
+
+        $container.html(`
+            <div class="soltour-room-fields" style="margin-top: 16px; padding-top: 16px; border-top: 2px solid #e5e7eb;">
+                <div style="margin-bottom: 12px; color: #6b7280; font-size: 14px;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle;">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                    </svg>
+                    Informe a idade de cada adulto
+                </div>
+                ${Array.from({length: numAdults}, (_, i) => `
+                    <div class="soltour-form-group">
+                        <label>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                            Idade adulto ${i + 1}
+                        </label>
+                        <select class="adult-age" data-room="${roomIndex}" data-adult="${i}" required>
+                            ${Array.from({length: 83}, (_, j) => {
+                                const age = j + 18; // Idade mínima 18, máxima 100
+                                return `<option value="${age}" ${age === 30 ? 'selected' : ''}>${age} anos</option>`;
+                            }).join('')}
+                        </select>
+                    </div>
+                `).join('')}
+            </div>
+        `);
+        $container.show();
     }
 
     function showRoomChildrenAges(roomIndex, numChildren) {
@@ -342,6 +398,14 @@
 
         $container.html(`
             <div class="soltour-room-fields" style="margin-top: 16px; padding-top: 16px; border-top: 2px solid #e5e7eb;">
+                <div style="margin-bottom: 12px; color: #6b7280; font-size: 14px;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle;">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                    </svg>
+                    Informe a idade de cada criança
+                </div>
                 ${Array.from({length: numChildren}, (_, i) => `
                     <div class="soltour-form-group">
                         <label>
@@ -379,9 +443,10 @@
 
             const passengers = [];
 
-            // Adicionar adultos
+            // Adicionar adultos com suas idades reais
             for (let i = 0; i < adults; i++) {
-                passengers.push({ type: 'ADULT', age: 30 });
+                const age = parseInt($(`.adult-age[data-room="${roomIndex}"][data-adult="${i}"]`).val()) || 30;
+                passengers.push({ type: 'ADULT', age: age });
             }
 
             // Adicionar crianças com suas idades
@@ -397,6 +462,7 @@
         SoltourApp.numRoomsSearched = rooms.length;
 
         console.log('[SOLTOUR DEBUG] Busca iniciada com', SoltourApp.numRoomsSearched, 'quarto(s)');
+        console.log('[SOLTOUR DEBUG] Dados dos quartos:', JSON.stringify(rooms, null, 2));
 
         // Resetar para primeira página na nova busca
         SoltourApp.currentPage = 1;
