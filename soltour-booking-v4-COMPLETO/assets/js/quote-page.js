@@ -98,6 +98,11 @@
         // Preço
         const price = extractPrice(budget);
 
+        // DEBUG: Verificar dados dos passageiros
+        console.log('=== DEBUG PASSAGEIROS ===');
+        console.log('packageData.searchParams:', packageData.searchParams);
+        console.log('packageData.searchParams.rooms:', packageData.searchParams?.rooms);
+
         // Passageiros - USAR DADOS CORRETOS DE searchParams
         let adults = 2;
         let children = 0;
@@ -109,15 +114,25 @@
                     ? JSON.parse(packageData.searchParams.rooms)
                     : packageData.searchParams.rooms;
 
+                console.log('rooms após parse:', rooms);
+
                 if (rooms && rooms[0] && rooms[0].passengers) {
                     const passengers = rooms[0].passengers;
+                    console.log('passengers:', passengers);
+
                     adults = passengers.filter(p => p.type === 'ADULT').length;
                     children = passengers.filter(p => p.type === 'CHILD').length;
                     passengerCount = passengers.length;
+
+                    console.log('adults:', adults);
+                    console.log('children:', children);
+                    console.log('passengerCount:', passengerCount);
                 }
             } catch (e) {
                 console.error('Erro ao parsear rooms:', e);
             }
+        } else {
+            console.warn('searchParams ou rooms não disponível!');
         }
 
         const pricePerPerson = price / passengerCount;
