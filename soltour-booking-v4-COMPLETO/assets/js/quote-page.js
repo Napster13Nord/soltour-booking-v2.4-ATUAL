@@ -48,6 +48,7 @@
 
             // Salvar dados no objeto global
             BeautyTravelQuote.packageData = packageData;
+            BeautyTravelQuote.budgetData = packageData; // Salvar packageData completo para envio ao servidor
 
             // Renderizar página completa diretamente (SEM AJAX - apenas dados do availability)
             renderQuotePage();
@@ -110,6 +111,9 @@
                     ? JSON.parse(packageData.searchParams.rooms)
                     : packageData.searchParams.rooms;
 
+                console.log('[SOLTOUR DEBUG] Página de cotação carregada');
+                console.log('[SOLTOUR DEBUG] Dados dos quartos:', JSON.stringify(rooms, null, 2));
+
                 // Coletar todos os passageiros de todos os quartos
                 rooms.forEach(room => {
                     if (room.passengers) {
@@ -122,6 +126,7 @@
                 });
 
                 passengerCount = allPassengers.length;
+                console.log('[SOLTOUR DEBUG] Total de passageiros:', passengerCount, '(Adultos:', adults, ', Crianças:', children, ')');
             } catch (e) {
                 console.error('Erro ao parsear rooms:', e);
             }
@@ -732,6 +737,12 @@
         // Desabilitar botão
         const $btn = $('#btn-generate-quote');
         $btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Gerando cotação...');
+
+        // Log de debug para verificar dados enviados
+        console.log('[SOLTOUR DEBUG] Gerando cotação com os seguintes dados:');
+        console.log('[SOLTOUR DEBUG] Budget Data:', BeautyTravelQuote.budgetData);
+        console.log('[SOLTOUR DEBUG] Passengers:', formData.passengers);
+        console.log('[SOLTOUR DEBUG] Rooms (searchParams):', BeautyTravelQuote.budgetData?.searchParams?.rooms);
 
         // Enviar para o servidor
         $.ajax({
