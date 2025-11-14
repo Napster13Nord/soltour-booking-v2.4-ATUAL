@@ -97,7 +97,30 @@
 
         // Preço
         const price = extractPrice(budget);
-        const pricePerPerson = price / (getPassengerCount(budget));
+
+        // Passageiros - USAR DADOS CORRETOS DE searchParams
+        let adults = 2;
+        let children = 0;
+        let passengerCount = 2;
+
+        if (packageData.searchParams && packageData.searchParams.rooms) {
+            try {
+                const rooms = typeof packageData.searchParams.rooms === 'string'
+                    ? JSON.parse(packageData.searchParams.rooms)
+                    : packageData.searchParams.rooms;
+
+                if (rooms && rooms[0] && rooms[0].passengers) {
+                    const passengers = rooms[0].passengers;
+                    adults = passengers.filter(p => p.type === 'ADULT').length;
+                    children = passengers.filter(p => p.type === 'CHILD').length;
+                    passengerCount = passengers.length;
+                }
+            } catch (e) {
+                console.error('Erro ao parsear rooms:', e);
+            }
+        }
+
+        const pricePerPerson = price / passengerCount;
 
         // Noites
         const numNights = getNumNights(budget);
@@ -110,9 +133,6 @@
 
         // Datas
         const { startDate, endDate } = getDates(budget);
-
-        // Passageiros
-        const passengerCount = getPassengerCount(budget);
 
         // HTML da página
         const html = `
@@ -224,7 +244,7 @@
             <!-- Formulário de Passageiros -->
             <div class="bt-passengers-form">
                 <h2>👥 Dados dos Passageiros</h2>
-                ${renderPassengerForms(passengerCount, budget)}
+                ${renderPassengerForms(adults, children)}
             </div>
 
             <!-- Observações -->
@@ -598,13 +618,8 @@
     /**
      * Renderizar formulários de passageiros
      */
-    function renderPassengerForms(count, budget) {
+    function renderPassengerForms(adults, children) {
         let html = '';
-
-        // Calcular quantos adultos e crianças
-        const hotelService = budget.hotelServices?.[0];
-        const adults = hotelService?.adults || count;
-        const children = hotelService?.children || 0;
 
         // Adultos
         for (let i = 1; i <= adults; i++) {
