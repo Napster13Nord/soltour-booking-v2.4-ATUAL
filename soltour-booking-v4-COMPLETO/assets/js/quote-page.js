@@ -157,47 +157,52 @@
                 <div class="bt-package-summary">
                     <h2>📦 Resumo do Pacote</h2>
 
-                    <!-- Hotel - Card Bonito -->
-                    <div class="bt-summary-section">
-                        <div class="bt-hotel-card">
-                            ${hotelImage ? `
-                                <div class="bt-hotel-card-image" style="background-image: url('${hotelImage}')">
-                                    <div class="bt-hotel-card-badge">
-                                        ${hotelStars > 0 ? '⭐'.repeat(hotelStars) : ''}
+                    <!-- Container para Hotel e Voos lado a lado -->
+                    <div class="bt-cards-row">
+                        <!-- Hotel - Card Bonito -->
+                        <div class="bt-summary-section">
+                            <div class="bt-hotel-card">
+                                ${hotelImage ? `
+                                    <div class="bt-hotel-card-image" style="background-image: url('${hotelImage}')">
+                                        <div class="bt-hotel-card-badge">
+                                            ${hotelStars > 0 ? '⭐'.repeat(hotelStars) : ''}
+                                        </div>
                                     </div>
-                                </div>
-                            ` : `
-                                <div class="bt-hotel-card-image bt-hotel-no-image">
-                                    <div class="bt-hotel-placeholder">🏨</div>
-                                </div>
-                            `}
-                            <div class="bt-hotel-card-content">
-                                <h3 class="bt-hotel-card-title">
-                                    <span class="bt-hotel-icon">🏨</span>
-                                    ${hotelName}
-                                </h3>
-                                ${hotelLocation ? `
-                                    <p class="bt-hotel-card-location">
-                                        <span class="bt-location-icon">📍</span>
-                                        ${hotelLocation}
-                                    </p>
-                                ` : ''}
-                                ${hotelStars > 0 ? `
-                                <div class="bt-hotel-card-footer">
-                                    <div class="bt-hotel-stars-badge">
-                                        ${'⭐'.repeat(hotelStars)}
+                                ` : `
+                                    <div class="bt-hotel-card-image bt-hotel-no-image">
+                                        <div class="bt-hotel-placeholder">🏨</div>
                                     </div>
-                                </div>
-                                ` : ''}
-
-                                <!-- Voos - Cards Compactos -->
-                                ${flightData ? `
-                                    <div class="bt-summary-section">
-                                        ${renderFlightsCompact(flightData)}
+                                `}
+                                <div class="bt-hotel-card-content">
+                                    <h3 class="bt-hotel-card-title">
+                                        <span class="bt-hotel-icon">🏨</span>
+                                        ${hotelName}
+                                    </h3>
+                                    ${hotelLocation ? `
+                                        <p class="bt-hotel-card-location">
+                                            <span class="bt-location-icon">📍</span>
+                                            ${hotelLocation}
+                                        </p>
+                                    ` : ''}
+                                    ${hotelStars > 0 ? `
+                                    <div class="bt-hotel-card-footer">
+                                        <div class="bt-hotel-stars-badge">
+                                            ${'⭐'.repeat(hotelStars)}
+                                        </div>
                                     </div>
-                                ` : ''}
+                                    ` : ''}
+                                </div>
                             </div>
                         </div>
+
+                        <!-- Voos - Cards Compactos -->
+                        ${flightData ? `
+                            <div class="bt-summary-section">
+                                <div class="bt-flights-card">
+                                    ${renderFlightsCompact(flightData)}
+                                </div>
+                            </div>
+                        ` : ''}
                     </div>
 
                     <!-- Informações -->
