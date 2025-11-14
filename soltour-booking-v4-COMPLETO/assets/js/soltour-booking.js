@@ -444,6 +444,31 @@
             );
 
             SoltourApp.searchParams = JSON.parse(savedParams);
+
+            // CORREÇÃO: Definir numRoomsSearched a partir dos parâmetros de busca
+            if (SoltourApp.searchParams.rooms) {
+                try {
+                    // Se rooms é uma string JSON (formato do formulário principal)
+                    if (typeof SoltourApp.searchParams.rooms === 'string') {
+                        const roomsArray = JSON.parse(SoltourApp.searchParams.rooms);
+                        SoltourApp.numRoomsSearched = Array.isArray(roomsArray) ? roomsArray.length : 1;
+                    }
+                    // Se rooms é um número (formato do modal)
+                    else if (typeof SoltourApp.searchParams.rooms === 'number') {
+                        SoltourApp.numRoomsSearched = SoltourApp.searchParams.rooms;
+                    }
+                    // Se rooms é um array
+                    else if (Array.isArray(SoltourApp.searchParams.rooms)) {
+                        SoltourApp.numRoomsSearched = SoltourApp.searchParams.rooms.length;
+                    }
+                } catch(e) {
+                    console.error('Erro ao determinar número de quartos:', e);
+                    SoltourApp.numRoomsSearched = 1; // fallback
+                }
+            }
+
+            console.log('[SOLTOUR DEBUG] Página de resultados carregada com', SoltourApp.numRoomsSearched, 'quarto(s)');
+
             searchPackagesAjax();
         }
 
