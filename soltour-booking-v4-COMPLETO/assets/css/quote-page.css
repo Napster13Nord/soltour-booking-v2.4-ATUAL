@@ -1,961 +1,436 @@
 /**
- * Página de Cotação - BeautyTravel
- * Design inspirado no site oficial Soltour
+ * CSS para Página de Cotação - Layout Oficial Soltour
  */
 
-/* Container principal */
-.bt-quote-page {
+/* Reset e Base */
+#soltour-quote-page {
     max-width: 1200px !important;
     margin: 0 auto !important;
-    padding: 40px 20px !important;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif !important;
+    padding: 20px !important;
+    background: #f5f5f5 !important;
 }
 
-/* Header da cotação */
-.bt-quote-header {
-    background: linear-gradient(135deg, #019CB8 0%, #0176a8 100%) !important;
-    color: #fff !important;
-    padding: 30px !important;
-    border-radius: 12px !important;
-    margin-bottom: 30px !important;
-    text-align: center !important;
-}
-
-.bt-quote-header h1 {
-    font-size: 32px !important;
-    font-weight: 800 !important;
-    margin: 0 0 10px 0 !important;
-    color: #fff !important;
-    line-height: 1.2 !important;
-}
-
-.bt-quote-header p {
-    font-size: 16px !important;
-    margin: 0 !important;
-    opacity: 0.95 !important;
-    color: #fff !important;
-}
-
-/* Grid layout */
-.bt-quote-grid {
-    display: grid !important;
-    grid-template-columns: 2fr 1fr !important;
-    gap: 30px !important;
-    margin-top: 30px !important;
-}
-
-@media (max-width: 968px) {
-    .bt-quote-grid {
-        grid-template-columns: 1fr !important;
-    }
-}
-
-/* Resumo do pacote */
-.bt-package-summary {
+/* Título do Topo */
+.soltour-quote-top {
     background: #fff !important;
-    border: 2px solid #e0e0e0 !important;
-    border-radius: 12px !important;
-    padding: 25px !important;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
+    padding: 20px 30px !important;
+    margin-bottom: 20px !important;
+    border-radius: 4px !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
 }
 
-.bt-package-summary h2 {
-    font-size: 24px !important;
-    font-weight: 700 !important;
-    color: #1a202c !important;
-    margin: 0 0 20px 0 !important;
-    padding-bottom: 15px !important;
-    border-bottom: 2px solid #e0e0e0 !important;
-    line-height: 1.3 !important;
+.soltour-quote-top h1 {
+    font-size: 28px !important;
+    color: #333 !important;
+    margin: 0 0 15px 0 !important;
+    font-weight: 600 !important;
 }
 
-.bt-summary-section {
-    margin-bottom: 25px !important;
-    padding-bottom: 20px !important;
-    border-bottom: 1px solid #f0f0f0 !important;
-}
-
-.bt-summary-section:last-child {
-    border-bottom: none !important;
-    margin-bottom: 0 !important;
-    padding-bottom: 0 !important;
-}
-
-.bt-summary-section h3 {
-    font-size: 16px !important;
-    font-weight: 700 !important;
-    color: #019CB8 !important;
-    margin: 0 0 12px 0 !important;
-    text-transform: uppercase !important;
-    letter-spacing: 0.5px !important;
-    line-height: 1.4 !important;
-}
-
-.bt-hotel-info {
+.top-info-row {
     display: flex !important;
-    gap: 15px !important;
-    align-items: flex-start !important;
+    align-items: center !important;
+    gap: 20px !important;
 }
 
-.bt-hotel-image {
-    width: 100px !important;
-    height: 80px !important;
-    border-radius: 8px !important;
-    object-fit: cover !important;
+.top-price-label {
+    color: #666 !important;
+    font-size: 14px !important;
 }
 
-.bt-hotel-details {
-    flex: 1 !important;
-}
-
-.bt-hotel-name {
+.top-price-value {
+    color: #d9534f !important;
     font-size: 18px !important;
     font-weight: 700 !important;
-    color: #1a202c !important;
-    margin: 0 0 5px 0 !important;
 }
 
-.bt-hotel-location {
-    font-size: 14px !important;
-    color: #6b7280 !important;
-    margin: 0 0 8px 0 !important;
-}
-
-.bt-hotel-stars {
-    color: #FFA500 !important;
-    font-size: 14px !important;
-}
-
-.bt-flight-item {
-    background: #f8f9fa !important;
-    padding: 15px !important;
-    border-radius: 8px !important;
-    margin-bottom: 10px !important;
-}
-
-.bt-flight-item:last-child {
-    margin-bottom: 0 !important;
-}
-
-.bt-flight-type {
-    font-size: 12px !important;
-    font-weight: 700 !important;
-    color: #019CB8 !important;
-    text-transform: uppercase !important;
-    margin-bottom: 8px !important;
-}
-
-.bt-flight-route {
+.btn-save-quote-top {
+    background: #d9534f !important;
+    color: #fff !important;
+    border: none !important;
+    padding: 12px 24px !important;
     font-size: 16px !important;
     font-weight: 600 !important;
-    color: #1a202c !important;
-    margin-bottom: 5px !important;
+    border-radius: 4px !important;
+    cursor: pointer !important;
+    margin-left: auto !important;
+    transition: background 0.3s ease !important;
 }
 
-.bt-flight-time {
+.btn-save-quote-top:hover {
+    background: #c9302c !important;
+}
+
+/* Layout 2 Colunas */
+.soltour-quote-layout {
+    display: grid !important;
+    grid-template-columns: 1fr 400px !important;
+    gap: 20px !important;
+    align-items: start !important;
+}
+
+/* Coluna Esquerda */
+.soltour-left-column {
+    background: #fff !important;
+    border-radius: 4px !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+    overflow: hidden !important;
+}
+
+.detalles-header {
+    background: #6c2c6c !important;
+    color: #fff !important;
+    padding: 20px 30px !important;
+}
+
+.detalles-header h2 {
+    margin: 0 0 8px 0 !important;
+    font-size: 20px !important;
+    font-weight: 600 !important;
+}
+
+.detalles-subtitle {
     font-size: 14px !important;
-    color: #6b7280 !important;
+    opacity: 0.9 !important;
 }
 
-.bt-info-row {
+/* Seções Expansíveis */
+.quote-section {
+    border-bottom: 1px solid #e0e0e0 !important;
+}
+
+.quote-section-header {
     display: flex !important;
     justify-content: space-between !important;
-    padding: 10px 0 !important;
-    font-size: 15px !important;
+    align-items: center !important;
+    padding: 18px 30px !important;
+    cursor: pointer !important;
+    background: #fff !important;
+    transition: background 0.2s ease !important;
 }
 
-.bt-info-label {
-    color: #6b7280 !important;
+.quote-section-header:hover {
+    background: #f9f9f9 !important;
+}
+
+.quote-section-header h3 {
+    margin: 0 !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    color: #333 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+}
+
+.toggle-icon {
+    font-size: 24px !important;
+    color: #999 !important;
+    font-weight: 300 !important;
+}
+
+.quote-section-content {
+    padding: 20px 30px !important;
+    background: #fafafa !important;
+}
+
+.section-description {
+    color: #666 !important;
+    font-size: 14px !important;
+    margin: 0 0 20px 0 !important;
+}
+
+/* Formulário de Passageiros */
+.passenger-form {
+    margin-bottom: 25px !important;
+    padding-bottom: 20px !important;
+    border-bottom: 1px solid #e0e0e0 !important;
+}
+
+.passenger-form:last-child {
+    border-bottom: none !important;
+}
+
+.passenger-form h4 {
+    margin: 0 0 15px 0 !important;
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    color: #333 !important;
+}
+
+.form-row {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 15px !important;
+}
+
+.form-group {
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+.form-group label {
+    font-size: 13px !important;
+    color: #666 !important;
+    margin-bottom: 6px !important;
     font-weight: 500 !important;
 }
 
-.bt-info-value {
-    color: #1a202c !important;
-    font-weight: 600 !important;
+.form-group input {
+    padding: 10px 12px !important;
+    border: 1px solid #ddd !important;
+    border-radius: 4px !important;
+    font-size: 14px !important;
+    transition: border-color 0.2s ease !important;
 }
 
-/* Sidebar de preço */
-.bt-price-sidebar {
-    background: #fff !important;
-    border: 2px solid #e0e0e0 !important;
-    border-radius: 12px !important;
-    padding: 25px !important;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
-    height: fit-content !important;
+.form-group input:focus {
+    outline: none !important;
+    border-color: #6c2c6c !important;
+}
+
+/* Coluna Direita - Sidebar */
+.soltour-right-column {
     position: sticky !important;
     top: 20px !important;
 }
 
-.bt-price-sidebar h2 {
-    font-size: 20px !important;
-    font-weight: 700 !important;
-    color: #1a202c !important;
-    margin: 0 0 20px 0 !important;
-    padding-bottom: 15px !important;
-    border-bottom: 2px solid #e0e0e0 !important;
-}
-
-.bt-price-breakdown {
-    margin-bottom: 20px !important;
-}
-
-.bt-price-line {
-    display: flex !important;
-    justify-content: space-between !important;
-    padding: 10px 0 !important;
-    font-size: 15px !important;
-    color: #6b7280 !important;
-}
-
-.bt-price-total {
-    display: flex !important;
-    justify-content: space-between !important;
-    padding: 20px 0 0 0 !important;
-    margin-top: 20px !important;
-    border-top: 2px solid #e0e0e0 !important;
-    font-size: 24px !important;
-    font-weight: 800 !important;
-    color: #1a202c !important;
-}
-
-.bt-price-total-amount {
-    color: #019CB8 !important;
-}
-
-.bt-price-note {
-    background: #f0f8ff !important;
-    border-left: 4px solid #019CB8 !important;
-    padding: 12px !important;
-    font-size: 13px !important;
-    color: #555 !important;
-    line-height: 1.5 !important;
-    margin-top: 15px !important;
+.precio-sidebar {
+    background: #fff !important;
     border-radius: 4px !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+    overflow: hidden !important;
 }
 
-/* Formulário de passageiros */
-.bt-passengers-form {
-    background: #fff !important;
-    border: 2px solid #e0e0e0 !important;
-    border-radius: 12px !important;
-    padding: 25px !important;
-    margin-top: 30px !important;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
-}
-
-.bt-passengers-form h2 {
-    font-size: 24px !important;
-    font-weight: 700 !important;
-    color: #1a202c !important;
-    margin: 0 0 20px 0 !important;
-    padding-bottom: 15px !important;
-    border-bottom: 2px solid #e0e0e0 !important;
-}
-
-.bt-form-section {
-    margin-bottom: 30px !important;
-    padding: 20px !important;
-    background: #f8f9fa !important;
-    border-radius: 8px !important;
-}
-
-.bt-form-section h3 {
-    font-size: 18px !important;
-    font-weight: 700 !important;
-    color: #019CB8 !important;
-    margin: 0 0 20px 0 !important;
-}
-
-.bt-form-row {
-    display: grid !important;
-    grid-template-columns: 1fr 1fr !important;
-    gap: 20px !important;
-    margin-bottom: 15px !important;
-}
-
-@media (max-width: 768px) {
-    .bt-form-row {
-        grid-template-columns: 1fr !important;
-    }
-}
-
-.bt-form-group {
-    display: flex !important;
-    flex-direction: column !important;
-}
-
-.bt-form-group label {
-    font-weight: 600 !important;
-    font-size: 14px !important;
-    color: #333 !important;
-    margin-bottom: 8px !important;
-}
-
-.bt-form-group label span.required {
-    color: #E63946 !important;
-}
-
-.bt-form-group input,
-.bt-form-group select {
-    padding: 12px 15px !important;
-    border: 2px solid #e0e0e0 !important;
-    border-radius: 8px !important;
-    font-size: 15px !important;
-    transition: all 0.2s !important;
-    background: #fff !important;
-}
-
-.bt-form-group input:focus,
-.bt-form-group select:focus {
-    outline: none !important;
-    border-color: #019CB8 !important;
-    box-shadow: 0 0 0 3px rgba(1, 156, 184, 0.1) !important;
-}
-
-.bt-form-group input:disabled {
-    background: #f5f5f5 !important;
-    color: #999 !important;
-    cursor: not-allowed !important;
-}
-
-/* Botão de cotação */
-.bt-quote-actions {
-    margin-top: 30px !important;
-    text-align: center !important;
-}
-
-.bt-btn-generate-quote {
-    background: linear-gradient(135deg, #E63946 0%, #c62828 100%) !important;
+.sidebar-title {
+    background: #6c2c6c !important;
     color: #fff !important;
-    border: none !important;
-    padding: 18px 50px !important;
-    font-size: 18px !important;
-    font-weight: 700 !important;
-    border-radius: 8px !important;
-    cursor: pointer !important;
-    transition: all 0.3s !important;
-    box-shadow: 0 4px 15px rgba(230, 57, 70, 0.3) !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    gap: 10px !important;
-}
-
-.bt-btn-generate-quote:hover {
-    transform: translateY(-2px) !important;
-    box-shadow: 0 6px 20px rgba(230, 57, 70, 0.4) !important;
-}
-
-.bt-btn-generate-quote:active {
-    transform: translateY(0) !important;
-}
-
-.bt-btn-generate-quote:disabled {
-    opacity: 0.5 !important;
-    cursor: not-allowed !important;
-    transform: none !important;
-}
-
-/* Estados de loading */
-.bt-quote-loading {
-    text-align: center !important;
-    padding: 60px 20px !important;
-}
-
-.bt-quote-loading .spinner {
-    width: 50px !important;
-    height: 50px !important;
-    border: 4px solid #e0e0e0 !important;
-    border-top-color: #019CB8 !important;
-    border-radius: 50% !important;
-    animation: spin 0.8s linear infinite !important;
-    margin: 0 auto 20px auto !important;
-}
-
-@keyframes spin {
-    to { transform: rotate(360deg); }
-}
-
-.bt-quote-loading h3 {
-    font-size: 20px !important;
-    color: #1a202c !important;
-    margin: 0 0 10px 0 !important;
-}
-
-.bt-quote-loading p {
-    font-size: 15px !important;
-    color: #6b7280 !important;
+    padding: 18px 20px !important;
     margin: 0 !important;
-}
-
-/* Estado de erro */
-.bt-quote-error {
-    background: #fee !important;
-    border: 2px solid #E63946 !important;
-    border-radius: 12px !important;
-    padding: 30px !important;
+    font-size: 16px !important;
+    font-weight: 600 !important;
     text-align: center !important;
 }
 
-.bt-quote-error h3 {
-    font-size: 24px !important;
-    color: #E63946 !important;
-    margin: 0 0 10px 0 !important;
+.sidebar-section {
+    border-bottom: 1px solid #e0e0e0 !important;
+    padding: 20px !important;
 }
 
-.bt-quote-error p {
+.sidebar-section:last-child {
+    border-bottom: none !important;
+}
+
+.sidebar-section-title {
+    margin: 0 0 15px 0 !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    color: #666 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+}
+
+.sidebar-section-content {
+    font-size: 14px !important;
+}
+
+/* Voos na Sidebar */
+.flight-row {
+    margin-bottom: 20px !important;
+    padding-bottom: 15px !important;
+    border-bottom: 1px solid #f0f0f0 !important;
+}
+
+.flight-row:last-child {
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+    border-bottom: none !important;
+}
+
+.flight-route {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    margin-bottom: 8px !important;
+    flex-wrap: wrap !important;
+}
+
+.airport-code {
+    font-weight: 700 !important;
     font-size: 16px !important;
     color: #333 !important;
-    margin: 0 0 20px 0 !important;
 }
 
-.bt-btn-back {
-    background: #019CB8 !important;
-    color: #fff !important;
-    border: none !important;
-    padding: 12px 30px !important;
-    font-size: 16px !important;
-    font-weight: 600 !important;
-    border-radius: 8px !important;
-    cursor: pointer !important;
-    transition: all 0.2s !important;
-}
-
-.bt-btn-back:hover {
-    background: #0176a8 !important;
-    transform: translateY(-1px) !important;
-}
-
-/* Extras/observações */
-.bt-form-full {
-    grid-column: 1 / -1 !important;
-}
-
-.bt-form-group textarea {
-    padding: 12px 15px !important;
-    border: 2px solid #e0e0e0 !important;
-    border-radius: 8px !important;
-    font-size: 15px !important;
-    font-family: inherit !important;
-    resize: vertical !important;
-    min-height: 100px !important;
-    transition: all 0.2s !important;
-}
-
-.bt-form-group textarea:focus {
-    outline: none !important;
-    border-color: #019CB8 !important;
-    box-shadow: 0 0 0 3px rgba(1, 156, 184, 0.1) !important;
-}
-
-/* Badge de passageiros */
-.bt-passenger-badge {
-    display: inline-block !important;
-    background: #019CB8 !important;
-    color: #fff !important;
-    padding: 4px 12px !important;
-    border-radius: 20px !important;
+.city-name {
     font-size: 12px !important;
-    font-weight: 700 !important;
-    text-transform: uppercase !important;
-    letter-spacing: 0.5px !important;
-    margin-left: 10px !important;
+    color: #999 !important;
 }
 
-/* ========================================
-   CARD BONITO DE HOTEL
-   ======================================== */
-
-.bt-hotel-card {
-    background: #fff !important;
-    border-radius: 12px !important;
-    overflow: hidden !important;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1) !important;
-    margin-bottom: 20px !important;
-    transition: all 0.3s ease !important;
-}
-
-.bt-hotel-card:hover {
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15) !important;
-    transform: translateY(-2px) !important;
-}
-
-.bt-hotel-card-image {
-    width: 100% !important;
-    height: 250px !important;
-    background-size: cover !important;
-    background-position: center !important;
-    position: relative !important;
-}
-
-.bt-hotel-no-image {
-    background: linear-gradient(135deg, #019CB8 0%, #0176a8 100%) !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-}
-
-.bt-hotel-placeholder {
-    font-size: 80px !important;
-    opacity: 0.5 !important;
-}
-
-.bt-hotel-card-badge {
-    position: absolute !important;
-    top: 15px !important;
-    right: 15px !important;
-    background: rgba(255, 255, 255, 0.95) !important;
-    padding: 8px 16px !important;
-    border-radius: 25px !important;
+.flight-time {
     font-size: 14px !important;
-    font-weight: 700 !important;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2) !important;
-}
-
-.bt-hotel-card-content {
-    padding: 25px !important;
-}
-
-.bt-hotel-card-title {
-    font-size: 24px !important;
-    font-weight: 700 !important;
-    color: #1a202c !important;
-    margin: 0 0 12px 0 !important;
-    display: flex !important;
-    align-items: center !important;
-    gap: 10px !important;
-}
-
-.bt-hotel-icon {
-    font-size: 28px !important;
-}
-
-.bt-hotel-card-location {
-    font-size: 15px !important;
-    color: #6b7280 !important;
-    margin: 0 0 15px 0 !important;
-    display: flex !important;
-    align-items: center !important;
-    gap: 6px !important;
-}
-
-.bt-location-icon {
-    font-size: 16px !important;
-}
-
-.bt-hotel-card-description {
-    font-size: 14px !important;
-    color: #4b5563 !important;
-    line-height: 1.6 !important;
-    margin: 15px 0 !important;
-    padding-top: 15px !important;
-    border-top: 1px solid #e5e7eb !important;
-}
-
-.bt-hotel-card-footer {
-    display: flex !important;
-    justify-content: space-between !important;
-    align-items: center !important;
-    padding-top: 15px !important;
-    border-top: 1px solid #e5e7eb !important;
-}
-
-.bt-hotel-rating {
-    display: flex !important;
-    align-items: center !important;
-    gap: 8px !important;
-}
-
-.bt-stars {
-    font-size: 16px !important;
-    line-height: 1 !important;
-}
-
-.bt-rating-text {
-    font-size: 14px !important;
+    color: #333 !important;
     font-weight: 600 !important;
-    color: #019CB8 !important;
 }
 
-/* ========================================
-   CARDS BONITOS DE VOOS
-   ======================================== */
-
-.bt-flights-container {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 20px !important;
+.route-arrow {
+    color: #999 !important;
+    margin: 0 4px !important;
 }
 
-.bt-flight-card {
-    background: #fff !important;
-    border-radius: 12px !important;
-    overflow: hidden !important;
-    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08) !important;
-    transition: all 0.3s ease !important;
-}
-
-.bt-flight-card:hover {
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12) !important;
-    transform: translateY(-2px) !important;
-}
-
-.bt-flight-card-header {
-    background: linear-gradient(135deg, #019CB8 0%, #0176a8 100%) !important;
-    color: #fff !important;
-    padding: 15px 20px !important;
-    display: flex !important;
-    justify-content: space-between !important;
-    align-items: center !important;
-}
-
-.bt-flight-type {
+.flight-info {
     display: flex !important;
     align-items: center !important;
-    gap: 8px !important;
-    font-weight: 700 !important;
-    font-size: 16px !important;
+    gap: 12px !important;
+    font-size: 13px !important;
 }
 
-.bt-flight-icon {
-    font-size: 20px !important;
+.airline {
+    color: #666 !important;
 }
 
-.bt-flight-label {
-    text-transform: uppercase !important;
-    letter-spacing: 0.5px !important;
+.flight-number {
+    color: #999 !important;
 }
 
-.bt-flight-date {
-    font-size: 14px !important;
+.flight-status {
+    margin-left: auto !important;
+    padding: 4px 12px !important;
+    border-radius: 3px !important;
+    font-size: 12px !important;
     font-weight: 600 !important;
-    opacity: 0.95 !important;
 }
 
-.bt-flight-card-body {
-    padding: 25px !important;
+.flight-status.confirmed {
+    background: #d4edda !important;
+    color: #155724 !important;
 }
 
-.bt-flight-route-visual {
-    display: flex !important;
-    align-items: center !important;
-    gap: 15px !important;
-    margin-bottom: 20px !important;
-}
-
-.bt-flight-point {
-    flex: 0 0 auto !important;
-    text-align: center !important;
-}
-
-.bt-airport-code {
-    font-size: 24px !important;
+/* Hotel na Sidebar */
+.hotel-name {
+    font-size: 16px !important;
     font-weight: 700 !important;
-    color: #1a202c !important;
+    color: #333 !important;
     margin-bottom: 4px !important;
 }
 
-.bt-city-name {
-    font-size: 12px !important;
-    color: #6b7280 !important;
-    margin-bottom: 8px !important;
-    text-transform: capitalize !important;
+.hotel-category {
+    font-size: 13px !important;
+    color: #666 !important;
+    margin-bottom: 15px !important;
 }
 
-.bt-time {
-    font-size: 16px !important;
-    font-weight: 600 !important;
-    color: #019CB8 !important;
-}
-
-.bt-flight-path {
-    flex: 1 !important;
+.hotel-details-list {
     display: flex !important;
     flex-direction: column !important;
-    align-items: center !important;
-    position: relative !important;
+    gap: 10px !important;
 }
 
-.bt-flight-line {
+.detail-row {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    font-size: 13px !important;
+}
+
+.detail-label {
+    color: #666 !important;
+    font-weight: 500 !important;
+}
+
+.detail-value {
+    color: #333 !important;
+    font-weight: 600 !important;
+    text-align: right !important;
+}
+
+.detail-confirmed {
+    color: #155724 !important;
+}
+
+/* Precio Total Box */
+.precio-total-box {
+    background: #f8f8f8 !important;
+    padding: 20px !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    border-top: 2px solid #e0e0e0 !important;
+}
+
+.precio-total-label {
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    color: #333 !important;
+    text-transform: uppercase !important;
+}
+
+.precio-total-value {
+    font-size: 24px !important;
+    font-weight: 700 !important;
+    color: #d9534f !important;
+}
+
+/* Botão Bottom */
+.btn-save-quote-bottom {
     width: 100% !important;
-    height: 2px !important;
-    background: linear-gradient(to right, #019CB8 0%, #0176a8 100%) !important;
-    position: relative !important;
-    margin-bottom: 8px !important;
-}
-
-.bt-plane-icon {
-    position: absolute !important;
-    top: 50% !important;
-    left: 50% !important;
-    transform: translate(-50%, -50%) !important;
-    font-size: 18px !important;
-    background: #fff !important;
-    padding: 4px !important;
-}
-
-.bt-flight-info {
-    display: flex !important;
-    gap: 12px !important;
-    align-items: center !important;
-}
-
-.bt-duration {
-    font-size: 13px !important;
-    color: #4b5563 !important;
-    font-weight: 600 !important;
-}
-
-.bt-stops {
-    font-size: 12px !important;
-    background: #f3f4f6 !important;
-    color: #6b7280 !important;
-    padding: 3px 10px !important;
-    border-radius: 12px !important;
-    font-weight: 600 !important;
-}
-
-.bt-stops.bt-direct {
-    background: #d1fae5 !important;
-    color: #10b981 !important;
-}
-
-.bt-flight-card-footer {
-    padding-top: 15px !important;
-    border-top: 1px solid #e5e7eb !important;
-}
-
-.bt-airline-info {
-    display: flex !important;
-    align-items: center !important;
-    gap: 10px !important;
-}
-
-.bt-airline-name {
-    font-size: 14px !important;
-    font-weight: 600 !important;
-    color: #1a202c !important;
-}
-
-.bt-flight-number {
-    font-size: 12px !important;
-    background: #f0f8ff !important;
-    color: #019CB8 !important;
-    padding: 4px 10px !important;
-    border-radius: 12px !important;
-    font-weight: 700 !important;
-}
-
-/* ========================================
-   FOOTER DO HOTEL - SLEEK
-   ======================================== */
-
-.bt-hotel-stars-badge {
-    display: inline-block !important;
-    font-size: 18px !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    line-height: 1 !important;
-}
-
-/* ========================================
-   CARDS DE VOOS COMPACTOS
-   ======================================== */
-
-.flight-card-compact {
-    background: #f9fafb !important;
-    border: 1px solid #e5e7eb !important;
-    border-radius: 8px !important;
-    padding: 12px 16px !important;
-    margin-bottom: 12px !important;
-    transition: all 0.2s ease !important;
-}
-
-.flight-card-compact:hover {
-    background: #f3f4f6 !important;
-    border-color: #019CB8 !important;
-}
-
-.flight-card-compact:last-child {
-    margin-bottom: 0 !important;
-}
-
-.flight-compact-header {
-    display: flex !important;
-    align-items: center !important;
-    gap: 10px !important;
-    margin-bottom: 8px !important;
-}
-
-.flight-type-label {
-    font-size: 13px !important;
-    font-weight: 700 !important;
-    color: #019CB8 !important;
-}
-
-.airline-logo-small {
-    width: 24px !important;
-    height: 24px !important;
-    object-fit: contain !important;
-}
-
-.flight-compact-body {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 6px !important;
-}
-
-.flight-compact-route {
-    display: flex !important;
-    align-items: center !important;
-    gap: 8px !important;
-}
-
-.flight-compact-airport {
-    font-size: 16px !important;
-    font-weight: 700 !important;
-    color: #1a202c !important;
-}
-
-.flight-compact-arrow {
-    color: #9ca3af !important;
-    font-size: 14px !important;
-}
-
-.flight-compact-details {
-    display: flex !important;
-    align-items: center !important;
-    gap: 12px !important;
-    font-size: 13px !important;
-    color: #6b7280 !important;
-}
-
-.flight-compact-airline {
-    font-weight: 600 !important;
-}
-
-.flight-compact-times {
-    color: #019CB8 !important;
-    font-weight: 600 !important;
-}
-
-/* ========================================
-   BOTÃO DE GERAR COTAÇÃO
-   ======================================== */
-
-.bt-btn-generate-quote {
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    gap: 10px !important;
-    background: linear-gradient(135deg, #019CB8 0%, #0176a8 100%) !important;
+    background: #d9534f !important;
     color: #fff !important;
     border: none !important;
-    padding: 16px 32px !important;
+    padding: 16px !important;
     font-size: 16px !important;
     font-weight: 700 !important;
-    border-radius: 8px !important;
     cursor: pointer !important;
-    transition: all 0.3s ease !important;
-    box-shadow: 0 4px 12px rgba(1, 156, 184, 0.3) !important;
-    width: 100% !important;
-    max-width: 400px !important;
-    margin: 0 auto !important;
+    transition: background 0.3s ease !important;
 }
 
-.bt-btn-generate-quote:hover {
-    background: linear-gradient(135deg, #0176a8 0%, #015a8a 100%) !important;
-    box-shadow: 0 6px 16px rgba(1, 156, 184, 0.4) !important;
-    transform: translateY(-2px) !important;
+.btn-save-quote-bottom:hover {
+    background: #c9302c !important;
 }
 
-.bt-btn-generate-quote:active {
-    transform: translateY(0) !important;
-    box-shadow: 0 2px 8px rgba(1, 156, 184, 0.3) !important;
-}
-
-.bt-btn-generate-quote i {
-    font-size: 18px !important;
-}
-
-/* ========================================
-   GRID 2 COLUNAS - HOTEL E VOOS
-   ======================================== */
-
-.bt-cards-grid {
-    display: grid !important;
-    grid-template-columns: 1fr 1fr !important;
-    gap: 25px !important;
-    margin-bottom: 30px !important;
-}
-
-.bt-voos-card {
-    background: transparent !important;
-    height: 100% !important;
-}
-
-/* Ajustar cards de voos para o novo layout */
-.bt-voos-card .bt-flights-container {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 15px !important;
-    height: 100% !important;
-}
-
-.bt-voos-card .bt-flight-card {
-    flex: 1 !important;
-    min-height: 280px !important;
-}
-
-/* Ajustar tamanho da imagem do hotel para igualar altura */
-.bt-cards-grid .bt-hotel-card-image {
-    height: 280px !important;
-}
-
-/* Garantir que ambas as colunas tenham mesma altura */
-.bt-cards-grid .bt-summary-section {
-    display: flex !important;
-    flex-direction: column !important;
-}
-
-.bt-cards-grid .bt-hotel-card,
-.bt-cards-grid .bt-voos-card {
-    flex: 1 !important;
-    display: flex !important;
-    flex-direction: column !important;
-}
-
-/* Responsivo para mobile */
+/* Responsivo */
 @media (max-width: 1024px) {
-    .bt-cards-grid {
+    .soltour-quote-layout {
         grid-template-columns: 1fr !important;
-        gap: 20px !important;
     }
 
-    .bt-cards-grid .bt-hotel-card-image {
-        height: 250px !important;
+    .soltour-right-column {
+        position: relative !important;
+        top: 0 !important;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr !important;
     }
 }
-@media (max-width: 768px) {
-    .bt-hotel-card-image {
-        height: 200px !important;
-    }
 
-    .bt-hotel-card-title {
-        font-size: 20px !important;
-    }
+/* Error Container */
+.bt-error-container {
+    text-align: center !important;
+    padding: 60px 20px !important;
+    background: #fff !important;
+    border-radius: 8px !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+}
 
-    .bt-flight-route-visual {
-        flex-direction: column !important;
-        gap: 20px !important;
-    }
+.bt-error-container h2 {
+    color: #d9534f !important;
+    margin-bottom: 15px !important;
+}
 
-    .bt-flight-path {
-        width: 100% !important;
-        transform: rotate(90deg) !important;
-        margin: 20px 0 !important;
-    }
+.bt-error-container p {
+    color: #666 !important;
+    margin-bottom: 25px !important;
+}
 
-    .bt-airport-code {
-        font-size: 20px !important;
-    }
+.bt-btn-back {
+    display: inline-block !important;
+    padding: 12px 30px !important;
+    background: #6c2c6c !important;
+    color: #fff !important;
+    text-decoration: none !important;
+    border-radius: 4px !important;
+    font-weight: 600 !important;
+    transition: background 0.3s ease !important;
+}
+
+.bt-btn-back:hover {
+    background: #5a245a !important;
 }
