@@ -69,12 +69,16 @@
     // FUNÇÕES DO MODAL DE CARREGAMENTO
     // ========================================
 
+    // Variável para controlar o intervalo de textos alternados
+    let loadingTextInterval = null;
+
     /**
      * Mostra o modal de carregamento com mensagem personalizada
      * @param {string} title - Título do modal (opcional)
      * @param {string} message - Mensagem do modal (opcional)
+     * @param {boolean} alternateTexts - Se true, alterna textos automaticamente
      */
-    function showLoadingModal(title, message) {
+    function showLoadingModal(title, message, alternateTexts = false) {
         const modal = $('#soltour-loading-modal');
 
         if (modal.length) {
@@ -92,6 +96,26 @@
             // Prevenir scroll do body
             $('body').css('overflow', 'hidden');
 
+            // Se deve alternar textos
+            if (alternateTexts) {
+                const messages = [
+                    'Buscando os melhores hotéis...',
+                    'Buscando os melhores voos...',
+                    'Buscando os melhores pacotes...'
+                ];
+                let currentIndex = 0;
+
+                // Limpar intervalo anterior se existir
+                if (loadingTextInterval) {
+                    clearInterval(loadingTextInterval);
+                }
+
+                // Configurar intervalo para alternar textos a cada 3 segundos
+                loadingTextInterval = setInterval(function() {
+                    currentIndex = (currentIndex + 1) % messages.length;
+                    $('#loading-modal-message').text(messages[currentIndex]);
+                }, 3000);
+            }
         }
     }
 
@@ -108,6 +132,11 @@
             // Restaurar scroll do body
             $('body').css('overflow', '');
 
+            // Limpar intervalo de textos alternados
+            if (loadingTextInterval) {
+                clearInterval(loadingTextInterval);
+                loadingTextInterval = null;
+            }
         }
     }
 
@@ -353,7 +382,8 @@
             // MOSTRAR MODAL IMEDIATAMENTE ao carregar página de resultados
             showLoadingModal(
                 'Buscando os melhores pacotes...',
-                'Encontraremos as melhores opções para sua viagem'
+                'Buscando os melhores hotéis...',
+                true // Ativar textos alternados
             );
 
             SoltourApp.searchParams = JSON.parse(savedParams);
