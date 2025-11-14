@@ -143,6 +143,18 @@ class Soltour_Shortcodes {
                         <label><input type="checkbox" value="3" /> ⭐⭐⭐</label>
                     </div>
                 </div>
+
+                <div class="soltour-filter-group">
+                    <label><?php _e('Regime Alimentar', 'soltour-booking'); ?></label>
+                    <div class="soltour-meal-plan-filter">
+                        <label><input type="checkbox" value="TI" /> Tudo Incluído</label>
+                        <label><input type="checkbox" value="PC" /> Pensão Completa</label>
+                        <label><input type="checkbox" value="MP" /> Meia Pensão</label>
+                        <label><input type="checkbox" value="PA" /> Pequeno-almoço</label>
+                        <label><input type="checkbox" value="SA" /> Só Alojamento</label>
+                        <label><input type="checkbox" value="RO" /> Room Only</label>
+                    </div>
+                </div>
             </div>
             <?php endif; ?>
 

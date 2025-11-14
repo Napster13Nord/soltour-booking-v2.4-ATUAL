@@ -59,7 +59,8 @@
             minPrice: 0, // Preço mínimo absoluto dos dados
             maxPrice: 10000,
             absoluteMaxPrice: 10000, // Preço máximo absoluto dos dados (para saber se filtro está ativo)
-            selectedStars: [] // Array de estrelas selecionadas [3, 4, 5]
+            selectedStars: [], // Array de estrelas selecionadas [3, 4, 5]
+            selectedMealPlans: [] // Array de códigos de regime alimentar ['TI', 'MP', etc]
         }
     };
 
@@ -399,6 +400,21 @@
 
             applyFilters();
         });
+
+        // Filtro de regime alimentar
+        $('.soltour-meal-plan-filter input[type="checkbox"]').on('change', function() {
+            const mealPlanCode = $(this).val();
+
+            if ($(this).is(':checked')) {
+                if (!SoltourApp.filters.selectedMealPlans.includes(mealPlanCode)) {
+                    SoltourApp.filters.selectedMealPlans.push(mealPlanCode);
+                }
+            } else {
+                SoltourApp.filters.selectedMealPlans = SoltourApp.filters.selectedMealPlans.filter(mp => mp !== mealPlanCode);
+            }
+
+            applyFilters();
+        });
     }
 
     function applyFilters() {
@@ -461,6 +477,15 @@
             });
         }
 
+        // FILTRO 3: Regime Alimentar
+        if (SoltourApp.filters.selectedMealPlans.length > 0) {
+            hotels = hotels.filter(pkg => {
+                const mealPlanCode = getHotelMealPlan(pkg);
+                const isMatch = SoltourApp.filters.selectedMealPlans.includes(mealPlanCode);
+                return isMatch;
+            });
+        }
+
         // ORDENAÇÃO
         hotels.sort((a, b) => {
             if (SoltourApp.filters.sortBy === 'price-asc') {
@@ -507,6 +532,16 @@
         }
 
         return hotelStars;
+    }
+
+    function getHotelMealPlan(pkg) {
+        const budget = pkg.budget;
+        const hotelService = budget.hotelServices && budget.hotelServices[0];
+
+        if (!hotelService || !hotelService.mealPlan) return '';
+
+        // Retornar o código do regime alimentar (TI, MP, PC, etc)
+        return hotelService.mealPlan.code || '';
     }
 
     function setupPriceFilter() {
@@ -575,6 +610,32 @@
             }
         });
 
+    }
+
+    function setupMealPlanFilter() {
+        // Encontrar quais regimes alimentares existem nos resultados
+        const availableMealPlans = new Set();
+
+        SoltourApp.originalHotels.forEach(pkg => {
+            const mealPlanCode = getHotelMealPlan(pkg);
+            if (mealPlanCode) {
+                availableMealPlans.add(mealPlanCode);
+            }
+        });
+
+        // Mostrar/esconder checkboxes baseado nos regimes disponíveis
+        $('.soltour-meal-plan-filter input[type="checkbox"]').each(function() {
+            const mealPlanValue = $(this).val();
+            const $label = $(this).parent();
+
+            if (availableMealPlans.has(mealPlanValue)) {
+                $label.show();
+            } else {
+                $label.hide();
+                // Desmarcar se estava marcado
+                $(this).prop('checked', false);
+            }
+        });
     }
 
     function showSkeletonCards() {
@@ -786,6 +847,9 @@
                         // Configurar filtro de estrelas baseado nos dados reais
                         setupStarsFilter();
 
+                        // Configurar filtro de regime alimentar baseado nos dados reais
+                        setupMealPlanFilter();
+
                         // Resetar para página 1
                         SoltourApp.currentPage = 1;
 
@@ -815,6 +879,9 @@
 
                         // Configurar filtro de estrelas baseado nos dados reais
                         setupStarsFilter();
+
+                        // Configurar filtro de regime alimentar baseado nos dados reais
+                        setupMealPlanFilter();
 
                         // Resetar para página 1
                         SoltourApp.currentPage = 1;
