@@ -1832,11 +1832,14 @@
                                 const roomDescription = room.description || 'Quarto';
                                 const numRoomPassengers = room.passengers ? room.passengers.length : 0;
                                 const roomCode = room.roomCode || '';
-                                const isFirstRoom = index === 0;
+                                const maxRooms = SoltourApp.numRoomsSearched || 1;
+                                // Pre-selecionar os N primeiros quartos automaticamente
+                                const isAutoSelected = index < maxRooms;
 
                                 return `
-                                    <div class="room-option ${isFirstRoom ? 'selected' : ''}"
+                                    <div class="room-option ${isAutoSelected ? 'selected' : ''}"
                                          data-room-code="${roomCode}"
+                                         data-room-index="${index}"
                                          data-room-data='${JSON.stringify(room)}'
                                          onclick="SoltourApp.selectRoom('${budget.budgetId}', this)">
                                         <div class="room-info">
@@ -1869,9 +1872,22 @@
         `;
         $list.append(card);
 
-        // Salvar automaticamente o primeiro quarto como selecionado
+        // Pre-selecionar automaticamente os N primeiros quartos
+        const maxRooms = SoltourApp.numRoomsSearched || 1;
         if (availableRooms.length > 0) {
-            SoltourApp.selectedRooms[budget.budgetId] = availableRooms[0];
+            // Inicializar como array vazio se não existir
+            if (!SoltourApp.selectedRooms[budget.budgetId]) {
+                SoltourApp.selectedRooms[budget.budgetId] = [];
+            }
+
+            // Pre-selecionar os primeiros N quartos
+            SoltourApp.selectedRooms[budget.budgetId] = availableRooms.slice(0, maxRooms);
+        }
+
+        // Atualizar contador visual se houver múltiplos quartos
+        if (maxRooms > 1) {
+            const $card = $list.find('.soltour-package-card').last();
+            updateRoomCounter($card, budget.budgetId, maxRooms);
         }
     }
 
@@ -2041,37 +2057,14 @@
             return;
         }
 
-        // Buscar quartos selecionados
+        // Buscar quartos selecionados (já pre-selecionados automaticamente)
         const selectedRooms = SoltourApp.selectedRooms[budgetId] || [];
         const maxRooms = SoltourApp.numRoomsSearched || 1;
 
-        // Validar se todos os quartos foram selecionados
+        // Validação simples - quartos já vêm pre-selecionados
         if (selectedRooms.length === 0) {
-            const message = maxRooms > 1
-                ? `Por favor, selecione ${maxRooms} quartos antes de continuar.`
-                : 'Por favor, selecione um quarto antes de continuar.';
-
             hideLoadingModal();
-
-            if (window.SoltourApp.Toast) {
-                window.SoltourApp.Toast.warning(message, 4000);
-            } else {
-                alert(message);
-            }
-            return;
-        }
-
-        if (selectedRooms.length < maxRooms) {
-            const remaining = maxRooms - selectedRooms.length;
-            const message = `Você precisa selecionar mais ${remaining} quarto${remaining > 1 ? 's' : ''}. (${selectedRooms.length} de ${maxRooms} selecionados)`;
-
-            hideLoadingModal();
-
-            if (window.SoltourApp.Toast) {
-                window.SoltourApp.Toast.warning(message, 4000);
-            } else {
-                alert(message);
-            }
+            alert('Por favor, selecione um quarto antes de continuar.');
             return;
         }
 
@@ -2158,57 +2151,50 @@
     };
 
     /**
-     * Função para selecionar um quarto
+     * Função para selecionar um quarto (SIMPLIFICADA)
+     * Sempre mantém N quartos selecionados, permitindo troca simples
      */
     window.SoltourApp.selectRoom = function(budgetId, roomElement) {
         const $room = $(roomElement);
         const $roomsList = $room.closest('.rooms-list');
         const $card = $room.closest('.soltour-package-card');
         const roomData = JSON.parse($room.attr('data-room-data'));
+        const roomIndex = parseInt($room.attr('data-room-index'));
 
-        // Inicializar array de quartos selecionados para este budget se não existir
-        if (!SoltourApp.selectedRooms[budgetId]) {
+        // Garantir que selectedRooms[budgetId] é um array
+        if (!Array.isArray(SoltourApp.selectedRooms[budgetId])) {
             SoltourApp.selectedRooms[budgetId] = [];
         }
 
-        // Obter número de quartos pesquisados (padrão 1 se não definido)
         const maxRooms = SoltourApp.numRoomsSearched || 1;
-
-        // Verificar se o quarto já está selecionado
         const isSelected = $room.hasClass('selected');
 
         if (isSelected) {
-            // Desmarcar quarto
-            $room.removeClass('selected');
-
-            // Remover do array
-            SoltourApp.selectedRooms[budgetId] = SoltourApp.selectedRooms[budgetId].filter(
-                r => r.roomCode !== roomData.roomCode
-            );
-        } else {
-            // Verificar se já atingiu o limite de quartos
-            if (SoltourApp.selectedRooms[budgetId].length >= maxRooms) {
-                // Usar toast se disponível
-                if (window.SoltourApp.Toast) {
-                    window.SoltourApp.Toast.warning(
-                        `Você já selecionou ${maxRooms} quarto${maxRooms > 1 ? 's' : ''}. Desmarque um para selecionar outro.`,
-                        3000
-                    );
-                } else {
-                    alert(`Você já selecionou ${maxRooms} quarto${maxRooms > 1 ? 's' : ''}. Desmarque um para selecionar outro.`);
-                }
-                return;
-            }
-
-            // Marcar quarto como selecionado
-            $room.addClass('selected');
-
-            // Adicionar ao array
-            SoltourApp.selectedRooms[budgetId].push(roomData);
+            // Se clicar em um quarto já selecionado, não faz nada
+            // (precisa manter N quartos selecionados sempre)
+            return;
         }
 
+        // Clicar em quarto não selecionado: trocar o último selecionado por este
+        if (SoltourApp.selectedRooms[budgetId].length >= maxRooms) {
+            // Remover o último quarto selecionado
+            SoltourApp.selectedRooms[budgetId].pop();
+
+            // Desmarcar visualmente o último
+            const $allSelected = $roomsList.find('.room-option.selected');
+            if ($allSelected.length > 0) {
+                $allSelected.last().removeClass('selected');
+            }
+        }
+
+        // Adicionar o novo quarto
+        SoltourApp.selectedRooms[budgetId].push(roomData);
+        $room.addClass('selected');
+
         // Atualizar contador visual
-        updateRoomCounter($card, budgetId, maxRooms);
+        if (maxRooms > 1) {
+            updateRoomCounter($card, budgetId, maxRooms);
+        }
 
         console.log('Quartos selecionados:', budgetId, SoltourApp.selectedRooms[budgetId]);
     };
