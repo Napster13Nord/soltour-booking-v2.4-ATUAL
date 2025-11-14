@@ -40,6 +40,14 @@
         try {
             const packageData = JSON.parse(selectedPackage);
 
+            // DEBUG: Logar dados recebidos
+            console.log('=== DADOS DO PACOTE SELECIONADO ===');
+            console.log('packageData completo:', packageData);
+            console.log('budget:', packageData.budget);
+            console.log('hotelInfo:', packageData.hotelInfo);
+            console.log('selectedRoom:', packageData.selectedRoom);
+            console.log('searchParams:', packageData.searchParams);
+
             // Verificar se temos todos os dados necessários (APENAS do availability)
             if (!packageData.budget || !packageData.selectedRoom) {
                 renderError('Dados incompletos', 'Os dados do pacote estão incompletos. Por favor, selecione novamente.');
@@ -69,6 +77,12 @@
         const selectedRoom = packageData.selectedRoom || {};
         const hotelService = budget.hotelServices && budget.hotelServices[0];
 
+        // DEBUG: Logar extração de dados
+        console.log('=== RENDERIZANDO PÁGINA DE COTAÇÃO ===');
+        console.log('budget:', budget);
+        console.log('hotelService:', hotelService);
+        console.log('selectedRoom:', selectedRoom);
+
         // USAR APENAS DADOS DO AVAILABILITY (budget)
         // NÃO usar details.hotelDetails que vem de chamada separada
 
@@ -80,6 +94,7 @@
         let hotelImage = '';
         let hotelLocation = '';
         let hotelStars = 0;
+        let hotelDescription = '';
 
         if (packageData.hotelInfo) {
             // Usar dados do hotelsFromAvailability que foram salvos
@@ -87,6 +102,17 @@
             hotelLocation = `${packageData.hotelInfo.destinationName || ''}, ${packageData.hotelInfo.countryName || ''}`.trim();
             const categoryCode = packageData.hotelInfo.categoryCode || '';
             hotelStars = (categoryCode.match(/\*/g) || []).length;
+            hotelDescription = packageData.hotelInfo.description || packageData.hotelInfo.shortDescription || '';
+
+            // DEBUG: Logar dados do hotel
+            console.log('=== DADOS DO HOTEL ===');
+            console.log('hotelImage:', hotelImage);
+            console.log('hotelLocation:', hotelLocation);
+            console.log('hotelStars:', hotelStars);
+            console.log('hotelName:', hotelName);
+            console.log('hotelDescription:', hotelDescription);
+        } else {
+            console.warn('⚠️ packageData.hotelInfo não está disponível!');
         }
 
         // Preço
@@ -98,6 +124,11 @@
 
         // Voos
         const flightServices = budget.flightServices || [];
+
+        // DEBUG: Logar dados dos voos
+        console.log('=== DADOS DOS VOOS ===');
+        console.log('flightServices:', flightServices);
+        console.log('Número de voos:', flightServices.length);
 
         // Meal plan
         const mealPlan = getMealPlan(budget);
@@ -120,23 +151,51 @@
                 <div class="bt-package-summary">
                     <h2>📦 Resumo do Pacote</h2>
 
-                    <!-- Hotel -->
+                    <!-- Hotel - Card Bonito -->
                     <div class="bt-summary-section">
-                        <h3>🏨 Hotel</h3>
-                        <div class="bt-hotel-info">
-                            ${hotelImage ? `<img src="${hotelImage}" alt="${hotelName}" class="bt-hotel-image">` : ''}
-                            <div class="bt-hotel-details">
-                                <h4 class="bt-hotel-name">${hotelName}</h4>
-                                <p class="bt-hotel-location">${hotelLocation}</p>
-                                <div class="bt-hotel-stars">${hotelStars > 0 ? '⭐'.repeat(hotelStars) : 'Hotel'}</div>
+                        <div class="bt-hotel-card">
+                            ${hotelImage ? `
+                                <div class="bt-hotel-card-image" style="background-image: url('${hotelImage}')">
+                                    <div class="bt-hotel-card-badge">
+                                        ${hotelStars > 0 ? '⭐'.repeat(hotelStars) : ''}
+                                    </div>
+                                </div>
+                            ` : `
+                                <div class="bt-hotel-card-image bt-hotel-no-image">
+                                    <div class="bt-hotel-placeholder">🏨</div>
+                                </div>
+                            `}
+                            <div class="bt-hotel-card-content">
+                                <h3 class="bt-hotel-card-title">
+                                    <span class="bt-hotel-icon">🏨</span>
+                                    ${hotelName}
+                                </h3>
+                                ${hotelLocation ? `
+                                    <p class="bt-hotel-card-location">
+                                        <span class="bt-location-icon">📍</span>
+                                        ${hotelLocation}
+                                    </p>
+                                ` : ''}
+                                ${hotelDescription ? `
+                                    <p class="bt-hotel-card-description">
+                                        ${hotelDescription.length > 200 ? hotelDescription.substring(0, 200) + '...' : hotelDescription}
+                                    </p>
+                                ` : ''}
+                                <div class="bt-hotel-card-footer">
+                                    <div class="bt-hotel-rating">
+                                        ${hotelStars > 0 ? `
+                                            <span class="bt-stars">${'⭐'.repeat(hotelStars)}</span>
+                                            <span class="bt-rating-text">${hotelStars} Estrelas</span>
+                                        ` : '<span class="bt-rating-text">Hotel</span>'}
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
 
                     <!-- Voos -->
                     ${flightServices.length > 0 ? `
-                        <div class="bt-summary-section">
-                            <h3>✈️ Voos</h3>
+                        <div class="bt-summary-section bt-flights-section">
                             ${renderFlightsSummary(flightServices)}
                         </div>
                     ` : ''}
@@ -233,47 +292,184 @@
     }
 
     /**
-     * Renderizar resumo de voos
+     * Renderizar resumo de voos - Cards Bonitos
      */
     function renderFlightsSummary(flights) {
-        let html = '';
+        let html = '<div class="bt-flights-container">';
 
         const outbound = flights.find(f => f.type === 'OUTBOUND');
         const inbound = flights.find(f => f.type === 'INBOUND');
 
+        // VOO DE IDA
         if (outbound) {
             const segments = outbound.flightSegments || [];
-            const airline = segments[0]?.operatingAirline || 'Companhia Aérea';
-            const route = `${segments[0]?.originAirportCode} → ${segments[segments.length - 1]?.destinationAirportCode}`;
-            const departure = formatTime(segments[0]?.departureDate);
-            const arrival = formatTime(segments[segments.length - 1]?.arrivalDate);
+            const firstSegment = segments[0] || {};
+            const lastSegment = segments[segments.length - 1] || {};
+
+            const airline = firstSegment.operatingAirline || firstSegment.marketingAirline || 'Companhia Aérea';
+            const flightNumber = firstSegment.marketingFlightNumber || firstSegment.operatingFlightNumber || '';
+            const originCode = firstSegment.originAirportCode || '';
+            const destinationCode = lastSegment.destinationAirportCode || '';
+            const originCity = firstSegment.originCity || originCode;
+            const destinationCity = lastSegment.destinationCity || destinationCode;
+
+            const departureDateTime = firstSegment.departureDate || '';
+            const arrivalDateTime = lastSegment.arrivalDate || '';
+            const departureTime = formatTime(departureDateTime);
+            const arrivalTime = formatTime(arrivalDateTime);
+            const departureDate = formatDate(departureDateTime);
+
+            const numStops = segments.length - 1;
+            const duration = calculateFlightDuration(departureDateTime, arrivalDateTime);
 
             html += `
-                <div class="bt-flight-item">
-                    <div class="bt-flight-type">🛫 Saída</div>
-                    <div class="bt-flight-route">${airline} - ${route}</div>
-                    <div class="bt-flight-time">${departure} - ${arrival}</div>
+                <div class="bt-flight-card bt-flight-outbound">
+                    <div class="bt-flight-card-header">
+                        <div class="bt-flight-type">
+                            <span class="bt-flight-icon">🛫</span>
+                            <span class="bt-flight-label">Voo de Ida</span>
+                        </div>
+                        <div class="bt-flight-date">${departureDate}</div>
+                    </div>
+                    <div class="bt-flight-card-body">
+                        <div class="bt-flight-route-visual">
+                            <div class="bt-flight-point bt-flight-origin">
+                                <div class="bt-airport-code">${originCode}</div>
+                                <div class="bt-city-name">${originCity}</div>
+                                <div class="bt-time">${departureTime}</div>
+                            </div>
+                            <div class="bt-flight-path">
+                                <div class="bt-flight-line">
+                                    <div class="bt-plane-icon">✈️</div>
+                                </div>
+                                <div class="bt-flight-info">
+                                    ${duration ? `<div class="bt-duration">${duration}</div>` : ''}
+                                    ${numStops > 0 ? `<div class="bt-stops">${numStops} ${numStops === 1 ? 'escala' : 'escalas'}</div>` : '<div class="bt-stops bt-direct">Direto</div>'}
+                                </div>
+                            </div>
+                            <div class="bt-flight-point bt-flight-destination">
+                                <div class="bt-airport-code">${destinationCode}</div>
+                                <div class="bt-city-name">${destinationCity}</div>
+                                <div class="bt-time">${arrivalTime}</div>
+                            </div>
+                        </div>
+                        <div class="bt-flight-card-footer">
+                            <div class="bt-airline-info">
+                                <span class="bt-airline-name">${airline}</span>
+                                ${flightNumber ? `<span class="bt-flight-number">#${flightNumber}</span>` : ''}
+                            </div>
+                        </div>
+                    </div>
                 </div>
             `;
         }
 
+        // VOO DE VOLTA
         if (inbound) {
             const segments = inbound.flightSegments || [];
-            const airline = segments[0]?.operatingAirline || 'Companhia Aérea';
-            const route = `${segments[0]?.originAirportCode} → ${segments[segments.length - 1]?.destinationAirportCode}`;
-            const departure = formatTime(segments[0]?.departureDate);
-            const arrival = formatTime(segments[segments.length - 1]?.arrivalDate);
+            const firstSegment = segments[0] || {};
+            const lastSegment = segments[segments.length - 1] || {};
+
+            const airline = firstSegment.operatingAirline || firstSegment.marketingAirline || 'Companhia Aérea';
+            const flightNumber = firstSegment.marketingFlightNumber || firstSegment.operatingFlightNumber || '';
+            const originCode = firstSegment.originAirportCode || '';
+            const destinationCode = lastSegment.destinationAirportCode || '';
+            const originCity = firstSegment.originCity || originCode;
+            const destinationCity = lastSegment.destinationCity || destinationCode;
+
+            const departureDateTime = firstSegment.departureDate || '';
+            const arrivalDateTime = lastSegment.arrivalDate || '';
+            const departureTime = formatTime(departureDateTime);
+            const arrivalTime = formatTime(arrivalDateTime);
+            const departureDate = formatDate(departureDateTime);
+
+            const numStops = segments.length - 1;
+            const duration = calculateFlightDuration(departureDateTime, arrivalDateTime);
 
             html += `
-                <div class="bt-flight-item">
-                    <div class="bt-flight-type">🛬 Regresso</div>
-                    <div class="bt-flight-route">${airline} - ${route}</div>
-                    <div class="bt-flight-time">${departure} - ${arrival}</div>
+                <div class="bt-flight-card bt-flight-inbound">
+                    <div class="bt-flight-card-header">
+                        <div class="bt-flight-type">
+                            <span class="bt-flight-icon">🛬</span>
+                            <span class="bt-flight-label">Voo de Regresso</span>
+                        </div>
+                        <div class="bt-flight-date">${departureDate}</div>
+                    </div>
+                    <div class="bt-flight-card-body">
+                        <div class="bt-flight-route-visual">
+                            <div class="bt-flight-point bt-flight-origin">
+                                <div class="bt-airport-code">${originCode}</div>
+                                <div class="bt-city-name">${originCity}</div>
+                                <div class="bt-time">${departureTime}</div>
+                            </div>
+                            <div class="bt-flight-path">
+                                <div class="bt-flight-line">
+                                    <div class="bt-plane-icon">✈️</div>
+                                </div>
+                                <div class="bt-flight-info">
+                                    ${duration ? `<div class="bt-duration">${duration}</div>` : ''}
+                                    ${numStops > 0 ? `<div class="bt-stops">${numStops} ${numStops === 1 ? 'escala' : 'escalas'}</div>` : '<div class="bt-stops bt-direct">Direto</div>'}
+                                </div>
+                            </div>
+                            <div class="bt-flight-point bt-flight-destination">
+                                <div class="bt-airport-code">${destinationCode}</div>
+                                <div class="bt-city-name">${destinationCity}</div>
+                                <div class="bt-time">${arrivalTime}</div>
+                            </div>
+                        </div>
+                        <div class="bt-flight-card-footer">
+                            <div class="bt-airline-info">
+                                <span class="bt-airline-name">${airline}</span>
+                                ${flightNumber ? `<span class="bt-flight-number">#${flightNumber}</span>` : ''}
+                            </div>
+                        </div>
+                    </div>
                 </div>
             `;
         }
 
+        html += '</div>';
         return html;
+    }
+
+    /**
+     * Calcular duração do voo
+     */
+    function calculateFlightDuration(departure, arrival) {
+        if (!departure || !arrival) return null;
+
+        try {
+            const dep = new Date(departure);
+            const arr = new Date(arrival);
+            const diffMs = arr - dep;
+            const diffMins = Math.floor(diffMs / 60000);
+            const hours = Math.floor(diffMins / 60);
+            const minutes = diffMins % 60;
+
+            if (hours > 0) {
+                return `${hours}h${minutes > 0 ? ` ${minutes}m` : ''}`;
+            }
+            return `${minutes}m`;
+        } catch (e) {
+            return null;
+        }
+    }
+
+    /**
+     * Formatar data completa
+     */
+    function formatDate(dateStr) {
+        if (!dateStr) return '';
+
+        try {
+            const date = new Date(dateStr);
+            const day = date.getDate().toString().padStart(2, '0');
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const year = date.getFullYear();
+            return `${day}/${month}/${year}`;
+        } catch (e) {
+            return dateStr;
+        }
     }
 
     /**

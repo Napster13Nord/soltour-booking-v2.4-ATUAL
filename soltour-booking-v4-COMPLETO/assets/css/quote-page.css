@@ -460,3 +460,313 @@
     letter-spacing: 0.5px !important;
     margin-left: 10px !important;
 }
+
+/* ========================================
+   CARD BONITO DE HOTEL
+   ======================================== */
+
+.bt-hotel-card {
+    background: #fff !important;
+    border-radius: 12px !important;
+    overflow: hidden !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1) !important;
+    margin-bottom: 20px !important;
+    transition: all 0.3s ease !important;
+}
+
+.bt-hotel-card:hover {
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15) !important;
+    transform: translateY(-2px) !important;
+}
+
+.bt-hotel-card-image {
+    width: 100% !important;
+    height: 250px !important;
+    background-size: cover !important;
+    background-position: center !important;
+    position: relative !important;
+}
+
+.bt-hotel-no-image {
+    background: linear-gradient(135deg, #019CB8 0%, #0176a8 100%) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.bt-hotel-placeholder {
+    font-size: 80px !important;
+    opacity: 0.5 !important;
+}
+
+.bt-hotel-card-badge {
+    position: absolute !important;
+    top: 15px !important;
+    right: 15px !important;
+    background: rgba(255, 255, 255, 0.95) !important;
+    padding: 8px 16px !important;
+    border-radius: 25px !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2) !important;
+}
+
+.bt-hotel-card-content {
+    padding: 25px !important;
+}
+
+.bt-hotel-card-title {
+    font-size: 24px !important;
+    font-weight: 700 !important;
+    color: #1a202c !important;
+    margin: 0 0 12px 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+}
+
+.bt-hotel-icon {
+    font-size: 28px !important;
+}
+
+.bt-hotel-card-location {
+    font-size: 15px !important;
+    color: #6b7280 !important;
+    margin: 0 0 15px 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+}
+
+.bt-location-icon {
+    font-size: 16px !important;
+}
+
+.bt-hotel-card-description {
+    font-size: 14px !important;
+    color: #4b5563 !important;
+    line-height: 1.6 !important;
+    margin: 15px 0 !important;
+    padding-top: 15px !important;
+    border-top: 1px solid #e5e7eb !important;
+}
+
+.bt-hotel-card-footer {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    padding-top: 15px !important;
+    border-top: 1px solid #e5e7eb !important;
+}
+
+.bt-hotel-rating {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+}
+
+.bt-stars {
+    font-size: 16px !important;
+    line-height: 1 !important;
+}
+
+.bt-rating-text {
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    color: #019CB8 !important;
+}
+
+/* ========================================
+   CARDS BONITOS DE VOOS
+   ======================================== */
+
+.bt-flights-container {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 20px !important;
+}
+
+.bt-flight-card {
+    background: #fff !important;
+    border-radius: 12px !important;
+    overflow: hidden !important;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08) !important;
+    transition: all 0.3s ease !important;
+}
+
+.bt-flight-card:hover {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12) !important;
+    transform: translateY(-2px) !important;
+}
+
+.bt-flight-card-header {
+    background: linear-gradient(135deg, #019CB8 0%, #0176a8 100%) !important;
+    color: #fff !important;
+    padding: 15px 20px !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+}
+
+.bt-flight-type {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    font-weight: 700 !important;
+    font-size: 16px !important;
+}
+
+.bt-flight-icon {
+    font-size: 20px !important;
+}
+
+.bt-flight-label {
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+}
+
+.bt-flight-date {
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    opacity: 0.95 !important;
+}
+
+.bt-flight-card-body {
+    padding: 25px !important;
+}
+
+.bt-flight-route-visual {
+    display: flex !important;
+    align-items: center !important;
+    gap: 15px !important;
+    margin-bottom: 20px !important;
+}
+
+.bt-flight-point {
+    flex: 0 0 auto !important;
+    text-align: center !important;
+}
+
+.bt-airport-code {
+    font-size: 24px !important;
+    font-weight: 700 !important;
+    color: #1a202c !important;
+    margin-bottom: 4px !important;
+}
+
+.bt-city-name {
+    font-size: 12px !important;
+    color: #6b7280 !important;
+    margin-bottom: 8px !important;
+    text-transform: capitalize !important;
+}
+
+.bt-time {
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    color: #019CB8 !important;
+}
+
+.bt-flight-path {
+    flex: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    position: relative !important;
+}
+
+.bt-flight-line {
+    width: 100% !important;
+    height: 2px !important;
+    background: linear-gradient(to right, #019CB8 0%, #0176a8 100%) !important;
+    position: relative !important;
+    margin-bottom: 8px !important;
+}
+
+.bt-plane-icon {
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    font-size: 18px !important;
+    background: #fff !important;
+    padding: 4px !important;
+}
+
+.bt-flight-info {
+    display: flex !important;
+    gap: 12px !important;
+    align-items: center !important;
+}
+
+.bt-duration {
+    font-size: 13px !important;
+    color: #4b5563 !important;
+    font-weight: 600 !important;
+}
+
+.bt-stops {
+    font-size: 12px !important;
+    background: #f3f4f6 !important;
+    color: #6b7280 !important;
+    padding: 3px 10px !important;
+    border-radius: 12px !important;
+    font-weight: 600 !important;
+}
+
+.bt-stops.bt-direct {
+    background: #d1fae5 !important;
+    color: #10b981 !important;
+}
+
+.bt-flight-card-footer {
+    padding-top: 15px !important;
+    border-top: 1px solid #e5e7eb !important;
+}
+
+.bt-airline-info {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+}
+
+.bt-airline-name {
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    color: #1a202c !important;
+}
+
+.bt-flight-number {
+    font-size: 12px !important;
+    background: #f0f8ff !important;
+    color: #019CB8 !important;
+    padding: 4px 10px !important;
+    border-radius: 12px !important;
+    font-weight: 700 !important;
+}
+
+/* Responsivo para mobile */
+@media (max-width: 768px) {
+    .bt-hotel-card-image {
+        height: 200px !important;
+    }
+
+    .bt-hotel-card-title {
+        font-size: 20px !important;
+    }
+
+    .bt-flight-route-visual {
+        flex-direction: column !important;
+        gap: 20px !important;
+    }
+
+    .bt-flight-path {
+        width: 100% !important;
+        transform: rotate(90deg) !important;
+        margin: 20px 0 !important;
+    }
+
+    .bt-airport-code {
+        font-size: 20px !important;
+    }
+}

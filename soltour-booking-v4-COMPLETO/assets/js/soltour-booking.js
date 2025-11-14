@@ -1480,6 +1480,13 @@
         let hotelImages = [];
         if (hotelService && hotelService.hotelCode && SoltourApp.hotelsFromAvailability[hotelService.hotelCode]) {
             const hotelFromAvail = SoltourApp.hotelsFromAvailability[hotelService.hotelCode];
+
+            // DEBUG: Logar dados de imagens
+            console.log(`[IMAGENS] Hotel ${hotelService.hotelCode}:`, {
+                mainImage: hotelFromAvail.mainImage,
+                multimedias: hotelFromAvail.multimedias
+            });
+
             // Adicionar mainImage primeiro
             if (hotelFromAvail.mainImage) {
                 hotelImages.push(hotelFromAvail.mainImage);
@@ -1495,6 +1502,7 @@
         }
         // Fallback para details
         if (hotelImages.length === 0 && details && details.hotelDetails && details.hotelDetails.hotel && details.hotelDetails.hotel.multimedias) {
+            console.log('[IMAGENS] Usando fallback de details');
             details.hotelDetails.hotel.multimedias.forEach(m => {
                 if (m.type === 'IMAGE' && m.url) {
                     hotelImages.push(m.url);
@@ -1503,6 +1511,9 @@
         }
         // Limitar a 10 imagens
         hotelImages = hotelImages.slice(0, 10);
+
+        // DEBUG: Logar imagens finais
+        console.log('[IMAGENS] URLs finais:', hotelImages);
 
         // (B) PAÍS e (C) CIDADE - PRIORIZAR AVAILABILITY
         let country = '';
