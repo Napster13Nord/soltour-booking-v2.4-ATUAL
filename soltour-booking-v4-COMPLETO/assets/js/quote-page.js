@@ -196,22 +196,21 @@
                                         ${hotelDescription.length > 200 ? hotelDescription.substring(0, 200) + '...' : hotelDescription}
                                     </p>
                                 ` : ''}
+                                ${hotelStars > 0 ? `
                                 <div class="bt-hotel-card-footer">
-                                    <div class="bt-hotel-rating">
-                                        ${hotelStars > 0 ? `
-                                            <span class="bt-stars">${'⭐'.repeat(hotelStars)}</span>
-                                            <span class="bt-rating-text">${hotelStars} Estrelas</span>
-                                        ` : '<span class="bt-rating-text">Hotel</span>'}
+                                    <div class="bt-hotel-stars-badge">
+                                        ${'⭐'.repeat(hotelStars)}
                                     </div>
                                 </div>
+                                ` : ''}
                             </div>
                         </div>
                     </div>
 
-                    <!-- Voos -->
+                    <!-- Voos - Cards Compactos -->
                     ${flightServices.length > 0 ? `
-                        <div class="bt-summary-section bt-flights-section">
-                            ${renderFlightsSummary(flightServices)}
+                        <div class="bt-summary-section">
+                            ${renderFlightsCompact(flightServices)}
                         </div>
                     ` : ''}
 
@@ -304,6 +303,73 @@
         // Bind eventos
         bindQuoteEvents();
 
+        // Esconder loading modal apenas DEPOIS de renderizar tudo
+        // O modal foi aberto em soltour-booking.js quando clicou em "Selecionar"
+        if (typeof hideLoadingModal === 'function') {
+            hideLoadingModal();
+        } else if (window.hideLoadingModal) {
+            window.hideLoadingModal();
+        } else {
+            // Fallback: tentar esconder modal diretamente
+            const modal = $('#soltour-loading-modal');
+            if (modal.length) {
+                modal.removeClass('active');
+            }
+        }
+
+    }
+
+    /**
+     * Renderizar voos de forma compacta (similar à página de resultados, mas menor)
+     */
+    function renderFlightsCompact(flights) {
+        let html = '';
+
+        flights.forEach(function(flight) {
+            // Verificar se é flightSegments ou segments
+            const segments = flight.flightSegments || flight.segments || [];
+
+            if (segments.length === 0) return;
+
+            const firstSegment = segments[0];
+            const lastSegment = segments[segments.length - 1];
+
+            const origin = firstSegment.originAirportCode || firstSegment.origin || '';
+            const destination = lastSegment.destinationAirportCode || lastSegment.destination || '';
+            const departureTime = firstSegment.departureDate ? formatTime(firstSegment.departureDate) : '--:--';
+            const arrivalTime = lastSegment.arrivalDate ? formatTime(lastSegment.arrivalDate) : '--:--';
+            const airline = firstSegment.operatingAirline || firstSegment.marketingAirline || firstSegment.carrierName || firstSegment.carrier || '';
+            const carrierCode = firstSegment.operatingAirlineCode || firstSegment.marketingAirlineCode || firstSegment.carrier || '';
+            const flightType = flight.type === 'OUTBOUND' ? '🛫 Saída' : '🛬 Regresso';
+
+            // Logo da companhia aérea
+            let airlineLogo = firstSegment.carrierLogo || firstSegment.carrierImageUrl || '';
+            if (!airlineLogo && carrierCode) {
+                airlineLogo = `https://images.kiwi.com/airlines/64/${carrierCode}.png`;
+            }
+
+            html += `
+                <div class="flight-card-compact">
+                    <div class="flight-compact-header">
+                        <span class="flight-type-label">${flightType}</span>
+                        ${airlineLogo ? `<img src="${airlineLogo}" alt="${airline}" class="airline-logo-small" onerror="this.style.display='none'" />` : ''}
+                    </div>
+                    <div class="flight-compact-body">
+                        <div class="flight-compact-route">
+                            <span class="flight-compact-airport">${origin}</span>
+                            <span class="flight-compact-arrow">→</span>
+                            <span class="flight-compact-airport">${destination}</span>
+                        </div>
+                        <div class="flight-compact-details">
+                            <span class="flight-compact-airline">${airline}</span>
+                            <span class="flight-compact-times">${departureTime} - ${arrivalTime}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+
+        return html;
     }
 
     /**

@@ -1768,7 +1768,6 @@
                                             <div class="room-name">${roomDescription}</div>
                                             <div class="room-occupancy">👥 ${numRoomPassengers} passageiro${numRoomPassengers !== 1 ? 's' : ''}</div>
                                         </div>
-                                        ${isFirstRoom ? '<div class="room-selected-badge">✓</div>' : ''}
                                     </div>
                                 `;
                             }).join('')}
@@ -1919,15 +1918,16 @@
                 nonce: soltourData.nonce
             },
             success: function(response) {
-                hideLoadingModal();
-
                 if (response.success && response.data && response.data.allowed) {
 
                     // Permitir seleção do pacote
+                    // NÃO esconder modal - será escondido na página de cotação após renderizar
                     proceedWithPackageSelection(budgetId, hotelCode, providerCode);
 
                 } else {
-                    // Venda não permitida
+                    // Venda não permitida - esconder modal e mostrar erro
+                    hideLoadingModal();
+
                     const message = response.data && response.data.message
                         ? response.data.message
                         : 'Desculpe, este pacote não está disponível para venda no momento. Por favor, tente outro pacote ou entre em contato conosco.';
@@ -1942,10 +1942,8 @@
                 }
             },
             error: function(xhr, status, error) {
-                hideLoadingModal();
-
-
                 // Em caso de erro, permitir continuar (fail-safe)
+                // NÃO esconder modal - será escondido na página de cotação após renderizar
                 // Pode mudar para fail-secure se preferir
                 proceedWithPackageSelection(budgetId, hotelCode, providerCode);
             }
@@ -2066,11 +2064,9 @@
 
         // Desmarcar outros quartos deste pacote
         $roomsList.find('.room-option').removeClass('selected');
-        $roomsList.find('.room-selected-badge').remove();
 
         // Marcar este quarto como selecionado
         $room.addClass('selected');
-        $room.append('<div class="room-selected-badge">✓</div>');
 
         // Salvar no objeto global
         SoltourApp.selectedRooms[budgetId] = roomData;
