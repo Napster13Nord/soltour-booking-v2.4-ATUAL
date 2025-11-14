@@ -119,6 +119,14 @@ class Soltour_Booking {
             SOLTOUR_VERSION
         );
 
+        // CSS - Formulário de Busca Moderno
+        wp_enqueue_style(
+            'soltour-search-form',
+            SOLTOUR_PLUGIN_URL . 'assets/css/search-form.css',
+            array('soltour-booking-style'),
+            SOLTOUR_VERSION
+        );
+
         // CSS - Melhorias na página de resultados
         wp_enqueue_style(
             'soltour-results-improvements',
