@@ -51,7 +51,9 @@
         allUniqueHotels: [], // TODOS os hotéis únicos deduplicados (para paginação local)
         originalHotels: [], // Cópia dos hotéis originais sem filtros (para poder resetar filtros)
         hotelsFromAvailability: {},
-        selectedRooms: {}, // Quartos selecionados por budgetId: { budgetId: roomData }
+        flightsFromAvailability: {}, // Voos do availability
+        selectedRooms: {}, // Quartos selecionados por budgetId: { budgetId: [roomData, roomData, ...] }
+        numRoomsSearched: 1, // Número de quartos pesquisados (padrão 1)
         minDate: null,
         maxDate: null,
         // Filtros
@@ -2215,15 +2217,36 @@
      * Atualizar contador visual de quartos selecionados
      */
     function updateRoomCounter($card, budgetId, maxRooms) {
-        const selectedCount = (SoltourApp.selectedRooms[budgetId] || []).length;
+        // Validar parâmetros
+        if (!$card || $card.length === 0) {
+            console.warn('updateRoomCounter: Card não encontrado');
+            return;
+        }
+
+        if (!budgetId) {
+            console.warn('updateRoomCounter: budgetId inválido');
+            return;
+        }
+
+        // Garantir que selectedRooms[budgetId] é um array
+        if (!Array.isArray(SoltourApp.selectedRooms[budgetId])) {
+            SoltourApp.selectedRooms[budgetId] = [];
+        }
+
+        const selectedCount = SoltourApp.selectedRooms[budgetId].length;
 
         // Verificar se já existe contador, senão criar
         let $counter = $card.find('.room-selection-counter');
         if ($counter.length === 0) {
             // Adicionar contador após a lista de quartos
             const $roomsList = $card.find('.rooms-list');
-            $counter = $('<div class="room-selection-counter"></div>');
-            $roomsList.after($counter);
+            if ($roomsList.length > 0) {
+                $counter = $('<div class="room-selection-counter"></div>');
+                $roomsList.after($counter);
+            } else {
+                console.warn('updateRoomCounter: rooms-list não encontrada');
+                return;
+            }
         }
 
         // Atualizar texto do contador
