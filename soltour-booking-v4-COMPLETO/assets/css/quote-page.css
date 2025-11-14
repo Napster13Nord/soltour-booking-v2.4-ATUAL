@@ -486,6 +486,18 @@
    CARD BONITO DE HOTEL
    ======================================== */
 
+/* Título da seção do card */
+.bt-card-section-title {
+    font-size: 18px !important;
+    font-weight: 700 !important;
+    color: #019CB8 !important;
+    margin: 0 0 20px 0 !important;
+    padding-bottom: 12px !important;
+    border-bottom: 2px solid #e5e7eb !important;
+    text-transform: none !important;
+    letter-spacing: normal !important;
+}
+
 .bt-hotel-card {
     background: #fff !important;
     border-radius: 12px !important;
@@ -537,17 +549,43 @@
 }
 
 .bt-hotel-card-title {
-    font-size: 24px !important;
+    font-size: 20px !important;
     font-weight: 700 !important;
     color: #1a202c !important;
     margin: 0 0 12px 0 !important;
-    display: flex !important;
-    align-items: center !important;
-    gap: 10px !important;
 }
 
 .bt-hotel-icon {
     font-size: 28px !important;
+}
+
+/* Informações do quarto */
+.bt-room-info {
+    margin-top: 20px !important;
+    padding-top: 20px !important;
+    border-top: 1px solid #e5e7eb !important;
+}
+
+.bt-room-label {
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    color: #019CB8 !important;
+    margin-bottom: 8px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+}
+
+.bt-room-name {
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    color: #1a202c !important;
+    margin-bottom: 6px !important;
+    text-transform: capitalize !important;
+}
+
+.bt-room-occupancy {
+    font-size: 14px !important;
+    color: #6b7280 !important;
 }
 
 .bt-hotel-card-location {
