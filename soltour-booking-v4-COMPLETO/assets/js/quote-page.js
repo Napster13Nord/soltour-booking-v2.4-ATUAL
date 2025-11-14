@@ -68,7 +68,15 @@
         const packageData = BeautyTravelQuote.packageData;
         const budget = packageData.budget || {};
         const selectedRoom = packageData.selectedRoom || {};
+        const selectedRooms = packageData.selectedRooms || [selectedRoom]; // Array com todos os quartos
+        const numRoomsSearched = packageData.numRoomsSearched || 1;
         const hotelService = budget.hotelServices && budget.hotelServices[0];
+
+        // Debug: Verificar dados dos quartos
+        console.log('[SOLTOUR DEBUG] Renderizando página de cotação');
+        console.log('[SOLTOUR DEBUG] Número de quartos pesquisados:', numRoomsSearched);
+        console.log('[SOLTOUR DEBUG] Quartos selecionados:', selectedRooms);
+        console.log('[SOLTOUR DEBUG] Total de quartos no array:', selectedRooms.length);
 
         // USAR APENAS DADOS DO AVAILABILITY (budget)
         // NÃO usar details.hotelDetails que vem de chamada separada
@@ -182,13 +190,24 @@
                                     </div>
                                     ` : ''}
 
-                                    <!-- Acomodação -->
+                                    <!-- Acomodação - Todos os Quartos -->
                                     <div class="bt-room-info">
-                                        <div class="bt-room-label">🛏️ Acomodação</div>
-                                        <div class="bt-room-name">${selectedRoom.description || 'Quarto'}</div>
-                                        <div class="bt-room-occupancy">
-                                            👥 ${selectedRoom.passengers ? selectedRoom.passengers.length : 0} passageiro${(selectedRoom.passengers && selectedRoom.passengers.length !== 1) ? 's' : ''}
-                                        </div>
+                                        <div class="bt-room-label">🛏️ Acomodação${numRoomsSearched > 1 ? 's' : ''} (${numRoomsSearched} quarto${numRoomsSearched > 1 ? 's' : ''})</div>
+                                        ${selectedRooms.map((room, index) => {
+                                            const adultsInRoom = room.passengers ? room.passengers.filter(p => p.type === 'ADULT').length : 0;
+                                            const childrenInRoom = room.passengers ? room.passengers.filter(p => p.type === 'CHILD').length : 0;
+                                            const totalInRoom = room.passengers ? room.passengers.length : 0;
+
+                                            return `
+                                                <div class="bt-room-item" style="margin-top: ${index > 0 ? '12px' : '0'}; padding-top: ${index > 0 ? '12px' : '0'}; border-top: ${index > 0 ? '1px solid #e5e7eb' : 'none'};">
+                                                    ${numRoomsSearched > 1 ? `<div class="bt-room-number" style="font-weight: 600; color: #1f2937; margin-bottom: 4px;">Quarto ${index + 1}</div>` : ''}
+                                                    <div class="bt-room-name">${room.description || 'Quarto Duplo'}</div>
+                                                    <div class="bt-room-occupancy" style="margin-top: 4px; color: #6b7280; font-size: 14px;">
+                                                        👥 ${totalInRoom} passageiro${totalInRoom !== 1 ? 's' : ''} (${adultsInRoom} adulto${adultsInRoom !== 1 ? 's' : ''}${childrenInRoom > 0 ? `, ${childrenInRoom} criança${childrenInRoom !== 1 ? 's' : ''}` : ''})
+                                                    </div>
+                                                </div>
+                                            `;
+                                        }).join('')}
                                     </div>
                                 </div>
                             </div>
