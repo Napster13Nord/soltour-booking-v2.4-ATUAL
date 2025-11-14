@@ -217,13 +217,13 @@
             SoltourApp.searchParams.numNights = $(this).val();
         });
 
-        $('#soltour-children').on('change', function() {
-            const numChildren = parseInt($(this).val());
-            if (numChildren > 0) {
-                showChildrenAges(numChildren);
-            } else {
-                $('#soltour-children-ages').hide();
-            }
+        // Renderizar configuração de quartos ao carregar
+        renderRoomsConfig(1);
+
+        // Event listener para número de quartos
+        $('#soltour-num-rooms').on('change', function() {
+            const numRooms = parseInt($(this).val());
+            renderRoomsConfig(numRooms);
         });
 
         $('#soltour-search-form').on('submit', function(e) {
@@ -275,41 +275,95 @@
         });
     }
 
-    function showChildrenAges(numChildren) {
-        const $container = $('#soltour-children-ages-inputs');
+    function renderRoomsConfig(numRooms) {
+        const $container = $('#soltour-rooms-config');
         $container.empty();
+
+        for (let i = 0; i < numRooms; i++) {
+            const roomHtml = `
+                <div class="soltour-room-config" data-room="${i}">
+                    <h4>Quarto ${i + 1}</h4>
+                    <div class="soltour-form-row">
+                        <div class="soltour-form-group">
+                            <label>Adultos</label>
+                            <select class="room-adults" data-room="${i}">
+                                ${Array.from({length: 8}, (_, j) => `<option value="${j + 1}" ${j === 1 ? 'selected' : ''}>${j + 1}</option>`).join('')}
+                            </select>
+                        </div>
+                        <div class="soltour-form-group">
+                            <label>Crianças (0-17)</label>
+                            <select class="room-children" data-room="${i}">
+                                ${Array.from({length: 7}, (_, j) => `<option value="${j}">${j}</option>`).join('')}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="room-children-ages" data-room="${i}" style="display:none;"></div>
+                </div>
+            `;
+            $container.append(roomHtml);
+        }
+
+        // Event listeners para crianças
+        $('.room-children').on('change', function() {
+            const roomIndex = $(this).data('room');
+            const numChildren = parseInt($(this).val());
+            showRoomChildrenAges(roomIndex, numChildren);
+        });
+    }
+
+    function showRoomChildrenAges(roomIndex, numChildren) {
+        const $container = $(`.room-children-ages[data-room="${roomIndex}"]`);
+        $container.empty();
+
+        if (numChildren === 0) {
+            $container.hide();
+            return;
+        }
+
         for (let i = 0; i < numChildren; i++) {
             $container.append(`
                 <div class="child-age-input">
                     <label>Idade criança ${i + 1}:</label>
-                    <select name="child_age_${i}" required>
+                    <select class="child-age" data-room="${roomIndex}" data-child="${i}" required>
                         ${Array.from({length: 18}, (_, j) => `<option value="${j}">${j}</option>`).join('')}
                     </select>
                 </div>
             `);
         }
-        $('#soltour-children-ages').show();
+        $container.show();
     }
 
     function performSearch() {
         const startDate = $('#soltour-start-date').val();
         const nights = parseInt($('#soltour-nights').val());
-        const adults = parseInt($('#soltour-adults').val());
-        const children = parseInt($('#soltour-children').val());
 
         if (!startDate || !SoltourApp.searchParams.originCode || !SoltourApp.searchParams.destinationCode) {
             alert('Preencha todos os campos');
             return;
         }
 
-        const passengers = [];
-        for (let i = 0; i < adults; i++) {
-            passengers.push({ type: 'ADULT', age: 30 });
-        }
-        for (let i = 0; i < children; i++) {
-            const age = parseInt($(`select[name="child_age_${i}"]`).val()) || 10;
-            passengers.push({ type: 'CHILD', age: age });
-        }
+        // Montar array de quartos
+        const rooms = [];
+        $('.soltour-room-config').each(function() {
+            const roomIndex = $(this).data('room');
+            const adults = parseInt($(`.room-adults[data-room="${roomIndex}"]`).val());
+            const children = parseInt($(`.room-children[data-room="${roomIndex}"]`).val());
+
+            const passengers = [];
+
+            // Adicionar adultos
+            for (let i = 0; i < adults; i++) {
+                passengers.push({ type: 'ADULT', age: 30 });
+            }
+
+            // Adicionar crianças com suas idades
+            for (let i = 0; i < children; i++) {
+                const age = parseInt($(`.child-age[data-room="${roomIndex}"][data-child="${i}"]`).val()) || 10;
+                passengers.push({ type: 'CHILD', age: age });
+            }
+
+            rooms.push({ passengers: passengers });
+        });
 
         // Resetar para primeira página na nova busca
         SoltourApp.currentPage = 1;
@@ -326,7 +380,7 @@
             destination_code: SoltourApp.searchParams.destinationCode,
             start_date: startDate,
             num_nights: nights,
-            rooms: JSON.stringify([{ passengers: passengers }]),
+            rooms: JSON.stringify(rooms),
 
             // Parâmetros críticos para API processar corretamente
             only_hotel: onlyHotel,
@@ -1969,10 +2023,6 @@
         // Buscar informações dos voos do availability
         const firstFlightId = Object.keys(SoltourApp.flightsFromAvailability)[0];
         const flightData = SoltourApp.flightsFromAvailability[firstFlightId] || null;
-
-        // DEBUG: Verificar searchParams antes de salvar
-        console.log('=== DEBUG SALVANDO PACOTE ===');
-        console.log('SoltourApp.searchParams completo:', SoltourApp.searchParams);
 
         // Salvar TODOS os dados no sessionStorage (APENAS do availability)
         sessionStorage.setItem('soltour_selected_package', JSON.stringify({

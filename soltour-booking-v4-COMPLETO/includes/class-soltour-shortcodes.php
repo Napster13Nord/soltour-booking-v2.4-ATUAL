@@ -61,32 +61,18 @@ class Soltour_Shortcodes {
 
                 <div class="soltour-form-row">
                     <div class="soltour-form-group">
-                        <label for="soltour-adults"><?php _e('Adultos', 'soltour-booking'); ?></label>
-                        <select id="soltour-adults" name="adults">
-                            <?php for ($i = 1; $i <= 8; $i++): ?>
-                                <option value="<?php echo $i; ?>" <?php selected($i, $atts['default_adults']); ?>>
-                                    <?php echo $i; ?>
-                                </option>
-                            <?php endfor; ?>
-                        </select>
-                    </div>
-
-                    <div class="soltour-form-group">
-                        <label for="soltour-children"><?php _e('Crianças (0-17)', 'soltour-booking'); ?></label>
-                        <select id="soltour-children" name="children">
-                            <?php for ($i = 0; $i <= 6; $i++): ?>
-                                <option value="<?php echo $i; ?>" <?php selected($i, $atts['default_children']); ?>>
-                                    <?php echo $i; ?>
+                        <label for="soltour-num-rooms"><?php _e('Quartos', 'soltour-booking'); ?></label>
+                        <select id="soltour-num-rooms" name="num_rooms">
+                            <?php for ($i = 1; $i <= 4; $i++): ?>
+                                <option value="<?php echo $i; ?>">
+                                    <?php echo $i; ?> <?php echo $i == 1 ? 'quarto' : 'quartos'; ?>
                                 </option>
                             <?php endfor; ?>
                         </select>
                     </div>
                 </div>
 
-                <div id="soltour-children-ages" style="display:none;">
-                    <label><?php _e('Idades das Crianças', 'soltour-booking'); ?></label>
-                    <div id="soltour-children-ages-inputs"></div>
-                </div>
+                <div id="soltour-rooms-config"></div>
 
                 <button type="submit" class="soltour-btn soltour-btn-primary" style="padding: 20px 35px !important; border-radius: 100px !important; background: #019CB8 !important; color: #fff !important; border: none !important; font-size: 16px !important; font-weight: 600 !important;">
                     <?php _e('Pesquisar Pacotes', 'soltour-booking'); ?>

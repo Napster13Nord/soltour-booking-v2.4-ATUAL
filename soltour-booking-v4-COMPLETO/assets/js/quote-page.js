@@ -98,15 +98,11 @@
         // Preço
         const price = extractPrice(budget);
 
-        // DEBUG: Verificar dados dos passageiros
-        console.log('=== DEBUG PASSAGEIROS ===');
-        console.log('packageData.searchParams:', packageData.searchParams);
-        console.log('packageData.searchParams.rooms:', packageData.searchParams?.rooms);
-
-        // Passageiros - USAR DADOS CORRETOS DE searchParams
-        let adults = 2;
+        // Passageiros - USAR DADOS CORRETOS DE searchParams (suportar múltiplos quartos)
+        let allPassengers = [];
+        let adults = 0;
         let children = 0;
-        let passengerCount = 2;
+        let passengerCount = 0;
 
         if (packageData.searchParams && packageData.searchParams.rooms) {
             try {
@@ -114,28 +110,24 @@
                     ? JSON.parse(packageData.searchParams.rooms)
                     : packageData.searchParams.rooms;
 
-                console.log('rooms após parse:', rooms);
+                // Coletar todos os passageiros de todos os quartos
+                rooms.forEach(room => {
+                    if (room.passengers) {
+                        room.passengers.forEach(p => {
+                            allPassengers.push(p);
+                            if (p.type === 'ADULT') adults++;
+                            else if (p.type === 'CHILD') children++;
+                        });
+                    }
+                });
 
-                if (rooms && rooms[0] && rooms[0].passengers) {
-                    const passengers = rooms[0].passengers;
-                    console.log('passengers:', passengers);
-
-                    adults = passengers.filter(p => p.type === 'ADULT').length;
-                    children = passengers.filter(p => p.type === 'CHILD').length;
-                    passengerCount = passengers.length;
-
-                    console.log('adults:', adults);
-                    console.log('children:', children);
-                    console.log('passengerCount:', passengerCount);
-                }
+                passengerCount = allPassengers.length;
             } catch (e) {
                 console.error('Erro ao parsear rooms:', e);
             }
-        } else {
-            console.warn('searchParams ou rooms não disponível!');
         }
 
-        const pricePerPerson = price / passengerCount;
+        const pricePerPerson = passengerCount > 0 ? price / passengerCount : 0;
 
         // Noites
         const numNights = getNumNights(budget);
@@ -259,7 +251,7 @@
             <!-- Formulário de Passageiros -->
             <div class="bt-passengers-form">
                 <h2>👥 Dados dos Passageiros</h2>
-                ${renderPassengerForms(adults, children)}
+                ${renderPassengerForms(allPassengers)}
             </div>
 
             <!-- Observações -->
@@ -633,78 +625,83 @@
     /**
      * Renderizar formulários de passageiros
      */
-    function renderPassengerForms(adults, children) {
+    function renderPassengerForms(allPassengers) {
         let html = '';
+        let adultCount = 0;
+        let childCount = 0;
 
-        // Adultos
-        for (let i = 1; i <= adults; i++) {
-            html += `
-                <div class="bt-form-section">
-                    <h3>👤 Adulto ${i} <span class="bt-passenger-badge">Titular ${i === 1 ? '(Responsável)' : ''}</span></h3>
-                    <div class="bt-form-row">
-                        <div class="bt-form-group">
-                            <label for="adult-${i}-firstname">Nome <span class="required">*</span></label>
-                            <input type="text" id="adult-${i}-firstname" name="adult_${i}_firstname" required />
-                        </div>
-                        <div class="bt-form-group">
-                            <label for="adult-${i}-lastname">Apelido <span class="required">*</span></label>
-                            <input type="text" id="adult-${i}-lastname" name="adult_${i}_lastname" required />
-                        </div>
-                    </div>
-                    <div class="bt-form-row">
-                        <div class="bt-form-group">
-                            <label for="adult-${i}-birthdate">Data de Nascimento <span class="required">*</span></label>
-                            <input type="date" id="adult-${i}-birthdate" name="adult_${i}_birthdate" required max="${getMaxBirthdate(18)}" />
-                        </div>
-                        <div class="bt-form-group">
-                            <label for="adult-${i}-document">Documento (Passaporte/BI) <span class="required">*</span></label>
-                            <input type="text" id="adult-${i}-document" name="adult_${i}_document" required />
-                        </div>
-                    </div>
-                    ${i === 1 ? `
+        allPassengers.forEach((passenger, index) => {
+            if (passenger.type === 'ADULT') {
+                adultCount++;
+                const i = adultCount;
+                html += `
+                    <div class="bt-form-section">
+                        <h3>👤 Adulto ${i} <span class="bt-passenger-badge">Titular ${i === 1 ? '(Responsável)' : ''}</span></h3>
                         <div class="bt-form-row">
                             <div class="bt-form-group">
-                                <label for="adult-1-email">Email <span class="required">*</span></label>
-                                <input type="email" id="adult-1-email" name="adult_1_email" required />
+                                <label for="adult-${i}-firstname">Nome <span class="required">*</span></label>
+                                <input type="text" id="adult-${i}-firstname" name="adult_${i}_firstname" required />
                             </div>
                             <div class="bt-form-group">
-                                <label for="adult-1-phone">Telefone <span class="required">*</span></label>
-                                <input type="tel" id="adult-1-phone" name="adult_1_phone" required placeholder="+351 912 345 678" />
+                                <label for="adult-${i}-lastname">Apelido <span class="required">*</span></label>
+                                <input type="text" id="adult-${i}-lastname" name="adult_${i}_lastname" required />
                             </div>
                         </div>
-                    ` : ''}
-                </div>
-            `;
-        }
-
-        // Crianças
-        for (let i = 1; i <= children; i++) {
-            html += `
-                <div class="bt-form-section">
-                    <h3>👶 Criança ${i} <span class="bt-passenger-badge">Menor</span></h3>
-                    <div class="bt-form-row">
-                        <div class="bt-form-group">
-                            <label for="child-${i}-firstname">Nome <span class="required">*</span></label>
-                            <input type="text" id="child-${i}-firstname" name="child_${i}_firstname" required />
+                        <div class="bt-form-row">
+                            <div class="bt-form-group">
+                                <label for="adult-${i}-birthdate">Data de Nascimento <span class="required">*</span></label>
+                                <input type="date" id="adult-${i}-birthdate" name="adult_${i}_birthdate" required max="${getMaxBirthdate(18)}" />
+                            </div>
+                            <div class="bt-form-group">
+                                <label for="adult-${i}-document">Documento (Passaporte/BI) <span class="required">*</span></label>
+                                <input type="text" id="adult-${i}-document" name="adult_${i}_document" required />
+                            </div>
                         </div>
-                        <div class="bt-form-group">
-                            <label for="child-${i}-lastname">Apelido <span class="required">*</span></label>
-                            <input type="text" id="child-${i}-lastname" name="child_${i}_lastname" required />
+                        ${i === 1 ? `
+                            <div class="bt-form-row">
+                                <div class="bt-form-group">
+                                    <label for="adult-1-email">Email <span class="required">*</span></label>
+                                    <input type="email" id="adult-1-email" name="adult_1_email" required />
+                                </div>
+                                <div class="bt-form-group">
+                                    <label for="adult-1-phone">Telefone <span class="required">*</span></label>
+                                    <input type="tel" id="adult-1-phone" name="adult_1_phone" required placeholder="+351 912 345 678" />
+                                </div>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            } else if (passenger.type === 'CHILD') {
+                childCount++;
+                const i = childCount;
+                const age = passenger.age || 10;
+                html += `
+                    <div class="bt-form-section">
+                        <h3>👶 Criança ${i} <span class="bt-passenger-badge">Menor (${age} anos)</span></h3>
+                        <div class="bt-form-row">
+                            <div class="bt-form-group">
+                                <label for="child-${i}-firstname">Nome <span class="required">*</span></label>
+                                <input type="text" id="child-${i}-firstname" name="child_${i}_firstname" required />
+                            </div>
+                            <div class="bt-form-group">
+                                <label for="child-${i}-lastname">Apelido <span class="required">*</span></label>
+                                <input type="text" id="child-${i}-lastname" name="child_${i}_lastname" required />
+                            </div>
+                        </div>
+                        <div class="bt-form-row">
+                            <div class="bt-form-group">
+                                <label for="child-${i}-birthdate">Data de Nascimento <span class="required">*</span></label>
+                                <input type="date" id="child-${i}-birthdate" name="child_${i}_birthdate" required min="${getMaxBirthdate(18)}" max="${getMaxBirthdate(0)}" />
+                            </div>
+                            <div class="bt-form-group">
+                                <label for="child-${i}-document">Documento (Passaporte/BI) <span class="required">*</span></label>
+                                <input type="text" id="child-${i}-document" name="child_${i}_document" required />
+                            </div>
                         </div>
                     </div>
-                    <div class="bt-form-row">
-                        <div class="bt-form-group">
-                            <label for="child-${i}-birthdate">Data de Nascimento <span class="required">*</span></label>
-                            <input type="date" id="child-${i}-birthdate" name="child_${i}_birthdate" required min="${getMaxBirthdate(18)}" max="${getMaxBirthdate(0)}" />
-                        </div>
-                        <div class="bt-form-group">
-                            <label for="child-${i}-document">Documento (Passaporte/BI) <span class="required">*</span></label>
-                            <input type="text" id="child-${i}-document" name="child_${i}_document" required />
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
+                `;
+            }
+        });
 
         return html;
     }
