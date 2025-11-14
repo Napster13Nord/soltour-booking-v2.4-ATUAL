@@ -202,7 +202,7 @@ class Soltour_Shortcodes {
 
                 <!-- Mensagem -->
                 <p class="loading-message" id="loading-modal-message">
-                    <?php _e('Encontraremos as melhores opções para a viagem dos seus sonhos', 'soltour-booking'); ?>
+                    <?php _e('Encontraremos os melhores resultados para sua busca', 'soltour-booking'); ?>
                 </p>
 
                 <!-- Barra de Progresso -->
