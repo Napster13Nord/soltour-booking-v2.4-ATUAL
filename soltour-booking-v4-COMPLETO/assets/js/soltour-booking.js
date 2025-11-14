@@ -1395,6 +1395,19 @@
         const hotelService = budget.hotelServices && budget.hotelServices[0];
         const flightService = budget.flightServices && budget.flightServices[0];
 
+        // ========================================
+        // EXTRAIR QUARTOS DISPONÍVEIS
+        // ========================================
+        let availableRooms = [];
+        if (hotelService && hotelService.mealPlan && hotelService.mealPlan.combination && hotelService.mealPlan.combination.rooms) {
+            availableRooms = hotelService.mealPlan.combination.rooms;
+        }
+
+        // 🚫 FILTRAR: Se não há quartos disponíveis, não renderizar o card
+        if (!availableRooms || availableRooms.length === 0) {
+            return;
+        }
+
         // (A) IMAGENS - COLETAR TODAS PARA SLIDER
         let hotelImages = [];
         if (hotelService && hotelService.hotelCode && SoltourApp.hotelsFromAvailability[hotelService.hotelCode]) {
@@ -1655,6 +1668,33 @@
                     <div class="package-details">
                         <p>🌙 ${numNights} Noites | ${mealPlan}</p>
                         ${seasonWindow ? `<p>📅 ${seasonWindow}</p>` : ''}
+                    </div>
+
+                    <!-- QUARTOS DISPONÍVEIS -->
+                    <div class="available-rooms-section">
+                        <h4 class="rooms-title">🛏️ Quartos Disponíveis</h4>
+                        <div class="rooms-list">
+                            ${availableRooms.map((room, index) => {
+                                const roomPrice = room.priceDetails && room.priceDetails.pvp ? room.priceDetails.pvp : 0;
+                                const roomCurrency = room.priceDetails && room.priceDetails.currency ? room.priceDetails.currency : 'EUR';
+                                const roomDescription = room.description || 'Quarto';
+                                const numRoomPassengers = room.passengers ? room.passengers.length : 0;
+                                const roomPricePerPerson = numRoomPassengers > 0 ? (roomPrice / numRoomPassengers) : roomPrice;
+
+                                return `
+                                    <div class="room-option">
+                                        <div class="room-info">
+                                            <div class="room-name">${roomDescription}</div>
+                                            <div class="room-occupancy">👥 ${numRoomPassengers} passageiro${numRoomPassengers !== 1 ? 's' : ''}</div>
+                                        </div>
+                                        <div class="room-pricing">
+                                            <div class="room-price-per-person">${roomPricePerPerson.toFixed(0)}€/pax</div>
+                                            <div class="room-price-total">${roomPrice.toFixed(0)}€ total</div>
+                                        </div>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
                     </div>
                 </div>
                 <div class="package-price">
