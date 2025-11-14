@@ -125,24 +125,15 @@
         // Noites
         const numNights = getNumNights(budget);
 
-        // Voos
-        const flightServices = budget.flightServices || [];
+        // Voos - Usar flightData (outboundSegments/returnSegments) se disponível
+        const flightData = packageData.flightData || null;
 
         // DEBUG: Logar dados dos voos
         console.log('=== DADOS DOS VOOS ===');
-        console.log('flightServices:', flightServices);
-        console.log('Número de flightServices:', flightServices.length);
-
-        // Verificar se cada flightService contém múltiplos voos
-        if (flightServices.length > 0) {
-            flightServices.forEach((fs, index) => {
-                console.log(`FlightService ${index}:`, {
-                    type: fs.type,
-                    id: fs.id,
-                    flightSegments: fs.flightSegments,
-                    hasSegments: fs.flightSegments && fs.flightSegments.length
-                });
-            });
+        console.log('flightData:', flightData);
+        if (flightData) {
+            console.log('outboundSegments:', flightData.outboundSegments);
+            console.log('returnSegments:', flightData.returnSegments);
         }
 
         // Meal plan
@@ -208,9 +199,9 @@
                     </div>
 
                     <!-- Voos - Cards Compactos -->
-                    ${flightServices.length > 0 ? `
+                    ${flightData ? `
                         <div class="bt-summary-section">
-                            ${renderFlightsCompact(flightServices)}
+                            ${renderFlightsCompact(flightData)}
                         </div>
                     ` : ''}
 
@@ -320,54 +311,149 @@
     }
 
     /**
-     * Renderizar voos de forma compacta (similar à página de resultados, mas menor)
+     * Renderizar voos de forma compacta (usando estrutura do availability: outboundSegments/returnSegments)
      */
-    function renderFlightsCompact(flights) {
-        let html = '';
+    function renderFlightsCompact(flightData) {
+        if (!flightData) return '';
 
-        flights.forEach(function(flight) {
-            // Verificar se é flightSegments ou segments
-            const segments = flight.flightSegments || flight.segments || [];
-
-            if (segments.length === 0) return;
-
-            const firstSegment = segments[0];
-            const lastSegment = segments[segments.length - 1];
-
-            const origin = firstSegment.originAirportCode || firstSegment.origin || '';
-            const destination = lastSegment.destinationAirportCode || lastSegment.destination || '';
-            const departureTime = firstSegment.departureDate ? formatTime(firstSegment.departureDate) : '--:--';
-            const arrivalTime = lastSegment.arrivalDate ? formatTime(lastSegment.arrivalDate) : '--:--';
-            const airline = firstSegment.operatingAirline || firstSegment.marketingAirline || firstSegment.carrierName || firstSegment.carrier || '';
-            const carrierCode = firstSegment.operatingAirlineCode || firstSegment.marketingAirlineCode || firstSegment.carrier || '';
-            const flightType = flight.type === 'OUTBOUND' ? '🛫 Saída' : '🛬 Regresso';
-
-            // Logo da companhia aérea
-            let airlineLogo = firstSegment.carrierLogo || firstSegment.carrierImageUrl || '';
-            if (!airlineLogo && carrierCode) {
-                airlineLogo = `https://images.kiwi.com/airlines/64/${carrierCode}.png`;
+        // Helper para formatar horário do formato HH:mm:ss
+        function formatTimeSimple(timeStr) {
+            if (!timeStr) return '';
+            try {
+                // Se for formato HH:mm:ss, pegar só HH:mm
+                if (timeStr.includes(':')) {
+                    const parts = timeStr.split(':');
+                    return parts[0] + ':' + parts[1];
+                }
+                // Fallback para Date
+                const date = new Date(timeStr);
+                return date.toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' });
+            } catch (e) {
+                return timeStr;
             }
+        }
+
+        // Helper para formatar data no formato "23 nov"
+        function formatDateSimple(dateStr) {
+            if (!dateStr) return '';
+            try {
+                const date = new Date(dateStr);
+                const months = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
+                return date.getDate() + ' ' + months[date.getMonth()];
+            } catch (e) {
+                return dateStr;
+            }
+        }
+
+        // Mapeamento de códigos IATA para nomes de companhias
+        const airlineNames = {
+            '2W': 'World2Fly',
+            'TP': 'TAP Air Portugal',
+            'IB': 'Iberia',
+            'UX': 'Air Europa',
+            'VY': 'Vueling',
+            'FR': 'Ryanair',
+            'U2': 'easyJet',
+            'LH': 'Lufthansa',
+            'BA': 'British Airways',
+            'AF': 'Air France',
+            'KL': 'KLM'
+        };
+
+        function getAirlineName(code) {
+            return airlineNames[code] || code;
+        }
+
+        let html = '<h3>✈️ Voos</h3>';
+
+        // ESTRUTURA REAL DO SOLTOUR API: outboundSegments[] e returnSegments[]
+        const outboundSegments = flightData.outboundSegments || [];
+        const returnSegments = flightData.returnSegments || [];
+
+        // Renderizar IDA (OUTBOUND)
+        if (outboundSegments.length > 0) {
+            const firstSeg = outboundSegments[0];
+            const lastSeg = outboundSegments[outboundSegments.length - 1];
+            const airlineName = getAirlineName(firstSeg.operatingCompanyCode);
+            const stopInfo = outboundSegments.length > 1 ? `${outboundSegments.length - 1} escala${outboundSegments.length > 2 ? 's' : ''}` : 'Direto';
 
             html += `
                 <div class="flight-card-compact">
                     <div class="flight-compact-header">
-                        <span class="flight-type-label">${flightType}</span>
-                        ${airlineLogo ? `<img src="${airlineLogo}" alt="${airline}" class="airline-logo-small" onerror="this.style.display='none'" />` : ''}
+                        <span class="flight-type-label">🛫 Ida</span>
+                        <span class="flight-compact-date">${formatDateSimple(firstSeg.departureDate)}</span>
                     </div>
                     <div class="flight-compact-body">
                         <div class="flight-compact-route">
-                            <span class="flight-compact-airport">${origin}</span>
-                            <span class="flight-compact-arrow">→</span>
-                            <span class="flight-compact-airport">${destination}</span>
+                            <div class="flight-compact-point">
+                                <div class="flight-compact-time">${formatTimeSimple(firstSeg.departureTime)}</div>
+                                <div class="flight-compact-airport">${firstSeg.originAirport}</div>
+                            </div>
+                            <div class="flight-compact-arrow">
+                                <div class="arrow">→</div>
+                                <div class="flight-compact-stops">${stopInfo}</div>
+                            </div>
+                            <div class="flight-compact-point">
+                                <div class="flight-compact-time">${formatTimeSimple(lastSeg.arrivalTime)}</div>
+                                <div class="flight-compact-airport">${lastSeg.destinationAirport}</div>
+                            </div>
                         </div>
                         <div class="flight-compact-details">
-                            <span class="flight-compact-airline">${airline}</span>
-                            <span class="flight-compact-times">${departureTime} - ${arrivalTime}</span>
+                            <span class="flight-compact-airline">${airlineName}</span>
+                            <span class="flight-compact-number">Voo ${firstSeg.flightNumber || 'N/A'}</span>
                         </div>
                     </div>
                 </div>
             `;
-        });
+        }
+
+        // Renderizar VOLTA (RETURN)
+        if (returnSegments.length > 0) {
+            const firstSeg = returnSegments[0];
+            const lastSeg = returnSegments[returnSegments.length - 1];
+            const airlineName = getAirlineName(firstSeg.operatingCompanyCode);
+            const stopInfo = returnSegments.length > 1 ? `${returnSegments.length - 1} escala${returnSegments.length > 2 ? 's' : ''}` : 'Direto';
+
+            html += `
+                <div class="flight-card-compact">
+                    <div class="flight-compact-header">
+                        <span class="flight-type-label">🛬 Volta</span>
+                        <span class="flight-compact-date">${formatDateSimple(firstSeg.departureDate)}</span>
+                    </div>
+                    <div class="flight-compact-body">
+                        <div class="flight-compact-route">
+                            <div class="flight-compact-point">
+                                <div class="flight-compact-time">${formatTimeSimple(firstSeg.departureTime)}</div>
+                                <div class="flight-compact-airport">${firstSeg.originAirport}</div>
+                            </div>
+                            <div class="flight-compact-arrow">
+                                <div class="arrow">→</div>
+                                <div class="flight-compact-stops">${stopInfo}</div>
+                            </div>
+                            <div class="flight-compact-point">
+                                <div class="flight-compact-time">${formatTimeSimple(lastSeg.arrivalTime)}</div>
+                                <div class="flight-compact-airport">${lastSeg.destinationAirport}</div>
+                            </div>
+                        </div>
+                        <div class="flight-compact-details">
+                            <span class="flight-compact-airline">${airlineName}</span>
+                            <span class="flight-compact-number">Voo ${firstSeg.flightNumber || 'N/A'}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Se não houver segmentos, mostrar mensagem genérica
+        if (outboundSegments.length === 0 && returnSegments.length === 0) {
+            html += `
+                <div class="flight-card-compact">
+                    <div class="flight-compact-body" style="text-align: center; padding: 20px;">
+                        Informações de voo disponíveis na confirmação
+                    </div>
+                </div>
+            `;
+        }
 
         return html;
     }
