@@ -51,6 +51,7 @@
         allUniqueHotels: [], // TODOS os hotéis únicos deduplicados (para paginação local)
         originalHotels: [], // Cópia dos hotéis originais sem filtros (para poder resetar filtros)
         hotelsFromAvailability: {},
+        selectedRooms: {}, // Quartos selecionados por budgetId: { budgetId: roomData }
         minDate: null,
         maxDate: null,
         // Filtros
@@ -59,7 +60,8 @@
             minPrice: 0, // Preço mínimo absoluto dos dados
             maxPrice: 10000,
             absoluteMaxPrice: 10000, // Preço máximo absoluto dos dados (para saber se filtro está ativo)
-            selectedStars: [] // Array de estrelas selecionadas [3, 4, 5]
+            selectedStars: [], // Array de estrelas selecionadas [3, 4, 5]
+            selectedMealPlans: [] // Array de códigos de regime alimentar ['TI', 'MP', etc]
         }
     };
 
@@ -67,12 +69,16 @@
     // FUNÇÕES DO MODAL DE CARREGAMENTO
     // ========================================
 
+    // Variável para controlar o intervalo de textos alternados
+    let loadingTextInterval = null;
+
     /**
      * Mostra o modal de carregamento com mensagem personalizada
      * @param {string} title - Título do modal (opcional)
      * @param {string} message - Mensagem do modal (opcional)
+     * @param {boolean} alternateTexts - Se true, alterna textos automaticamente
      */
-    function showLoadingModal(title, message) {
+    function showLoadingModal(title, message, alternateTexts = false) {
         const modal = $('#soltour-loading-modal');
 
         if (modal.length) {
@@ -90,6 +96,26 @@
             // Prevenir scroll do body
             $('body').css('overflow', 'hidden');
 
+            // Se deve alternar textos (alterna o TÍTULO)
+            if (alternateTexts) {
+                const titles = [
+                    'Buscando os melhores hotéis...',
+                    'Buscando os melhores voos...',
+                    'Buscando os melhores pacotes...'
+                ];
+                let currentIndex = 0;
+
+                // Limpar intervalo anterior se existir
+                if (loadingTextInterval) {
+                    clearInterval(loadingTextInterval);
+                }
+
+                // Configurar intervalo para alternar TÍTULO a cada 3 segundos
+                loadingTextInterval = setInterval(function() {
+                    currentIndex = (currentIndex + 1) % titles.length;
+                    $('#loading-modal-title').text(titles[currentIndex]);
+                }, 3000);
+            }
         }
     }
 
@@ -106,6 +132,11 @@
             // Restaurar scroll do body
             $('body').css('overflow', '');
 
+            // Limpar intervalo de textos alternados
+            if (loadingTextInterval) {
+                clearInterval(loadingTextInterval);
+                loadingTextInterval = null;
+            }
         }
     }
 
@@ -350,8 +381,9 @@
         if (savedParams) {
             // MOSTRAR MODAL IMEDIATAMENTE ao carregar página de resultados
             showLoadingModal(
-                'Buscando os melhores pacotes...',
-                'Encontraremos as melhores opções para a viagem dos seus sonhos'
+                'Buscando os melhores hotéis...',
+                'Encontraremos as melhores opções para sua viagem dos sonhos',
+                true // Ativar textos alternados (alterna o título)
             );
 
             SoltourApp.searchParams = JSON.parse(savedParams);
@@ -395,6 +427,21 @@
                 }
             } else {
                 SoltourApp.filters.selectedStars = SoltourApp.filters.selectedStars.filter(s => s !== starValue);
+            }
+
+            applyFilters();
+        });
+
+        // Filtro de regime alimentar
+        $('.soltour-meal-plan-filter input[type="checkbox"]').on('change', function() {
+            const mealPlanCode = $(this).val();
+
+            if ($(this).is(':checked')) {
+                if (!SoltourApp.filters.selectedMealPlans.includes(mealPlanCode)) {
+                    SoltourApp.filters.selectedMealPlans.push(mealPlanCode);
+                }
+            } else {
+                SoltourApp.filters.selectedMealPlans = SoltourApp.filters.selectedMealPlans.filter(mp => mp !== mealPlanCode);
             }
 
             applyFilters();
@@ -461,6 +508,15 @@
             });
         }
 
+        // FILTRO 3: Regime Alimentar
+        if (SoltourApp.filters.selectedMealPlans.length > 0) {
+            hotels = hotels.filter(pkg => {
+                const mealPlanCode = getHotelMealPlan(pkg);
+                const isMatch = SoltourApp.filters.selectedMealPlans.includes(mealPlanCode);
+                return isMatch;
+            });
+        }
+
         // ORDENAÇÃO
         hotels.sort((a, b) => {
             if (SoltourApp.filters.sortBy === 'price-asc') {
@@ -507,6 +563,16 @@
         }
 
         return hotelStars;
+    }
+
+    function getHotelMealPlan(pkg) {
+        const budget = pkg.budget;
+        const hotelService = budget.hotelServices && budget.hotelServices[0];
+
+        if (!hotelService || !hotelService.mealPlan) return '';
+
+        // Retornar o código do regime alimentar (TI, MP, PC, etc)
+        return hotelService.mealPlan.code || '';
     }
 
     function setupPriceFilter() {
@@ -575,6 +641,32 @@
             }
         });
 
+    }
+
+    function setupMealPlanFilter() {
+        // Encontrar quais regimes alimentares existem nos resultados
+        const availableMealPlans = new Set();
+
+        SoltourApp.originalHotels.forEach(pkg => {
+            const mealPlanCode = getHotelMealPlan(pkg);
+            if (mealPlanCode) {
+                availableMealPlans.add(mealPlanCode);
+            }
+        });
+
+        // Mostrar/esconder checkboxes baseado nos regimes disponíveis
+        $('.soltour-meal-plan-filter input[type="checkbox"]').each(function() {
+            const mealPlanValue = $(this).val();
+            const $label = $(this).parent();
+
+            if (availableMealPlans.has(mealPlanValue)) {
+                $label.show();
+            } else {
+                $label.hide();
+                // Desmarcar se estava marcado
+                $(this).prop('checked', false);
+            }
+        });
     }
 
     function showSkeletonCards() {
@@ -786,6 +878,9 @@
                         // Configurar filtro de estrelas baseado nos dados reais
                         setupStarsFilter();
 
+                        // Configurar filtro de regime alimentar baseado nos dados reais
+                        setupMealPlanFilter();
+
                         // Resetar para página 1
                         SoltourApp.currentPage = 1;
 
@@ -815,6 +910,9 @@
 
                         // Configurar filtro de estrelas baseado nos dados reais
                         setupStarsFilter();
+
+                        // Configurar filtro de regime alimentar baseado nos dados reais
+                        setupMealPlanFilter();
 
                         // Resetar para página 1
                         SoltourApp.currentPage = 1;
@@ -1412,6 +1510,7 @@
         let hotelImages = [];
         if (hotelService && hotelService.hotelCode && SoltourApp.hotelsFromAvailability[hotelService.hotelCode]) {
             const hotelFromAvail = SoltourApp.hotelsFromAvailability[hotelService.hotelCode];
+
             // Adicionar mainImage primeiro
             if (hotelFromAvail.mainImage) {
                 hotelImages.push(hotelFromAvail.mainImage);
@@ -1673,23 +1772,21 @@
                     <!-- QUARTOS DISPONÍVEIS -->
                     <div class="available-rooms-section">
                         <h4 class="rooms-title">🛏️ Quartos Disponíveis</h4>
-                        <div class="rooms-list">
+                        <div class="rooms-list" data-budget-id="${budget.budgetId}">
                             ${availableRooms.map((room, index) => {
-                                const roomPrice = room.priceDetails && room.priceDetails.pvp ? room.priceDetails.pvp : 0;
-                                const roomCurrency = room.priceDetails && room.priceDetails.currency ? room.priceDetails.currency : 'EUR';
                                 const roomDescription = room.description || 'Quarto';
                                 const numRoomPassengers = room.passengers ? room.passengers.length : 0;
-                                const roomPricePerPerson = numRoomPassengers > 0 ? (roomPrice / numRoomPassengers) : roomPrice;
+                                const roomCode = room.roomCode || '';
+                                const isFirstRoom = index === 0;
 
                                 return `
-                                    <div class="room-option">
+                                    <div class="room-option ${isFirstRoom ? 'selected' : ''}"
+                                         data-room-code="${roomCode}"
+                                         data-room-data='${JSON.stringify(room)}'
+                                         onclick="SoltourApp.selectRoom('${budget.budgetId}', this)">
                                         <div class="room-info">
                                             <div class="room-name">${roomDescription}</div>
                                             <div class="room-occupancy">👥 ${numRoomPassengers} passageiro${numRoomPassengers !== 1 ? 's' : ''}</div>
-                                        </div>
-                                        <div class="room-pricing">
-                                            <div class="room-price-per-person">${roomPricePerPerson.toFixed(0)}€/pax</div>
-                                            <div class="room-price-total">${roomPrice.toFixed(0)}€ total</div>
                                         </div>
                                     </div>
                                 `;
@@ -1716,6 +1813,11 @@
             </div>
         `;
         $list.append(card);
+
+        // Salvar automaticamente o primeiro quarto como selecionado
+        if (availableRooms.length > 0) {
+            SoltourApp.selectedRooms[budget.budgetId] = availableRooms[0];
+        }
     }
 
     /**
@@ -1836,15 +1938,16 @@
                 nonce: soltourData.nonce
             },
             success: function(response) {
-                hideLoadingModal();
-
                 if (response.success && response.data && response.data.allowed) {
 
                     // Permitir seleção do pacote
+                    // NÃO esconder modal - será escondido na página de cotação após renderizar
                     proceedWithPackageSelection(budgetId, hotelCode, providerCode);
 
                 } else {
-                    // Venda não permitida
+                    // Venda não permitida - esconder modal e mostrar erro
+                    hideLoadingModal();
+
                     const message = response.data && response.data.message
                         ? response.data.message
                         : 'Desculpe, este pacote não está disponível para venda no momento. Por favor, tente outro pacote ou entre em contato conosco.';
@@ -1859,10 +1962,8 @@
                 }
             },
             error: function(xhr, status, error) {
-                hideLoadingModal();
-
-
                 // Em caso de erro, permitir continuar (fail-safe)
+                // NÃO esconder modal - será escondido na página de cotação após renderizar
                 // Pode mudar para fail-secure se preferir
                 proceedWithPackageSelection(budgetId, hotelCode, providerCode);
             }
@@ -1874,11 +1975,43 @@
      */
     function proceedWithPackageSelection(budgetId, hotelCode, providerCode) {
 
+        // Buscar o pacote completo do array de resultados
+        const fullPackage = SoltourApp.allUniqueHotels.find(pkg =>
+            pkg.budget.budgetId === budgetId
+        );
+
+        if (!fullPackage) {
+            alert('Erro: Pacote não encontrado. Por favor, tente novamente.');
+            return;
+        }
+
+        // Buscar quarto selecionado
+        const selectedRoom = SoltourApp.selectedRooms[budgetId];
+
+        if (!selectedRoom) {
+            alert('Por favor, selecione um quarto antes de continuar.');
+            return;
+        }
+
+        // Buscar informações do hotel do availability (não do hotelDetails!)
+        const hotelInfo = SoltourApp.hotelsFromAvailability[hotelCode] || null;
+
+        // Salvar TODOS os dados no sessionStorage (APENAS do availability)
         sessionStorage.setItem('soltour_selected_package', JSON.stringify({
             budgetId: budgetId,
             hotelCode: hotelCode,
             providerCode: providerCode,
-            availToken: SoltourApp.availToken
+            availToken: SoltourApp.availToken,
+            budget: fullPackage.budget,           // Budget completo do availability
+            hotelInfo: hotelInfo,                 // Info do hotel do availability (NÃO hotelDetails)
+            selectedRoom: selectedRoom,           // Quarto selecionado
+            searchParams: {                       // Parâmetros da busca
+                destination: SoltourApp.destination,
+                origin: SoltourApp.origin,
+                startDate: SoltourApp.startDate,
+                endDate: SoltourApp.endDate,
+                passengers: SoltourApp.passengers
+            }
         }));
 
         window.location.href = `/cotacao/?budget=${budgetId}`;
@@ -1939,6 +2072,26 @@
 
         // Atualizar dots
         dots.removeClass('active').eq(index).addClass('active');
+    };
+
+    /**
+     * Função para selecionar um quarto
+     */
+    window.SoltourApp.selectRoom = function(budgetId, roomElement) {
+        const $room = $(roomElement);
+        const $roomsList = $room.closest('.rooms-list');
+        const roomData = JSON.parse($room.attr('data-room-data'));
+
+        // Desmarcar outros quartos deste pacote
+        $roomsList.find('.room-option').removeClass('selected');
+
+        // Marcar este quarto como selecionado
+        $room.addClass('selected');
+
+        // Salvar no objeto global
+        SoltourApp.selectedRooms[budgetId] = roomData;
+
+        console.log('Quarto selecionado:', budgetId, roomData);
     };
 
 })(jQuery);
