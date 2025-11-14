@@ -1970,6 +1970,10 @@
         const firstFlightId = Object.keys(SoltourApp.flightsFromAvailability)[0];
         const flightData = SoltourApp.flightsFromAvailability[firstFlightId] || null;
 
+        // DEBUG: Verificar searchParams antes de salvar
+        console.log('=== DEBUG SALVANDO PACOTE ===');
+        console.log('SoltourApp.searchParams completo:', SoltourApp.searchParams);
+
         // Salvar TODOS os dados no sessionStorage (APENAS do availability)
         sessionStorage.setItem('soltour_selected_package', JSON.stringify({
             budgetId: budgetId,
@@ -1980,13 +1984,7 @@
             hotelInfo: hotelInfo,                 // Info do hotel do availability (NÃO hotelDetails)
             flightData: flightData,               // Dados dos voos do availability (outboundSegments/returnSegments)
             selectedRoom: selectedRoom,           // Quarto selecionado
-            searchParams: {                       // Parâmetros da busca
-                destination: SoltourApp.destination,
-                origin: SoltourApp.origin,
-                startDate: SoltourApp.startDate,
-                endDate: SoltourApp.endDate,
-                passengers: SoltourApp.passengers
-            }
+            searchParams: SoltourApp.searchParams // USAR searchParams COMPLETO que tem rooms
         }));
 
         window.location.href = `/cotacao/?budget=${budgetId}`;
