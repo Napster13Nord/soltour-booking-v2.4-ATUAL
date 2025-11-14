@@ -1768,7 +1768,7 @@
                                             <div class="room-name">${roomDescription}</div>
                                             <div class="room-occupancy">👥 ${numRoomPassengers} passageiro${numRoomPassengers !== 1 ? 's' : ''}</div>
                                         </div>
-                                        ${isFirstRoom ? '<div class="room-selected-badge">✓ Selecionado</div>' : ''}
+                                        ${isFirstRoom ? '<div class="room-selected-badge">✓</div>' : ''}
                                     </div>
                                 `;
                             }).join('')}
@@ -2070,7 +2070,7 @@
 
         // Marcar este quarto como selecionado
         $room.addClass('selected');
-        $room.append('<div class="room-selected-badge">✓ Selecionado</div>');
+        $room.append('<div class="room-selected-badge">✓</div>');
 
         // Salvar no objeto global
         SoltourApp.selectedRooms[budgetId] = roomData;

@@ -86,11 +86,11 @@
         // USAR APENAS DADOS DO AVAILABILITY (budget)
         // NÃO usar details.hotelDetails que vem de chamada separada
 
-        // Extrair dados do hotel do BUDGET
+        // Extrair dados do hotel do BUDGET e HOTELINFO
         const hotelCode = hotelService?.hotelCode || '';
-        const hotelName = hotelService?.hotelName || 'Hotel';
 
-        // Se temos dados do availability salvos, usar eles
+        // IMPORTANTE: Usar dados do hotelInfo (availability) e não do hotelService
+        let hotelName = 'Hotel';
         let hotelImage = '';
         let hotelLocation = '';
         let hotelStars = 0;
@@ -98,8 +98,9 @@
 
         if (packageData.hotelInfo) {
             // Usar dados do hotelsFromAvailability que foram salvos
+            hotelName = packageData.hotelInfo.name || hotelService?.hotelName || 'Hotel';
             hotelImage = packageData.hotelInfo.mainImage || '';
-            hotelLocation = `${packageData.hotelInfo.destinationName || ''}, ${packageData.hotelInfo.countryName || ''}`.trim();
+            hotelLocation = packageData.hotelInfo.destinationDescription || '';
             const categoryCode = packageData.hotelInfo.categoryCode || '';
             hotelStars = (categoryCode.match(/\*/g) || []).length;
             hotelDescription = packageData.hotelInfo.description || packageData.hotelInfo.shortDescription || '';
@@ -113,6 +114,8 @@
             console.log('hotelDescription:', hotelDescription);
         } else {
             console.warn('⚠️ packageData.hotelInfo não está disponível!');
+            // Fallback para hotelService se hotelInfo não estiver disponível
+            hotelName = hotelService?.hotelName || 'Hotel';
         }
 
         // Preço
@@ -128,7 +131,19 @@
         // DEBUG: Logar dados dos voos
         console.log('=== DADOS DOS VOOS ===');
         console.log('flightServices:', flightServices);
-        console.log('Número de voos:', flightServices.length);
+        console.log('Número de flightServices:', flightServices.length);
+
+        // Verificar se cada flightService contém múltiplos voos
+        if (flightServices.length > 0) {
+            flightServices.forEach((fs, index) => {
+                console.log(`FlightService ${index}:`, {
+                    type: fs.type,
+                    id: fs.id,
+                    flightSegments: fs.flightSegments,
+                    hasSegments: fs.flightSegments && fs.flightSegments.length
+                });
+            });
+        }
 
         // Meal plan
         const mealPlan = getMealPlan(budget);
