@@ -309,7 +309,6 @@
                 children: children,
                 direct_flights: directFlights,
                 alternative_dates: alternativeDates,
-                force_avail: true,
                 item_count: 100,
                 product_type: 'PACKAGE',
                 only_hotel: 'N'

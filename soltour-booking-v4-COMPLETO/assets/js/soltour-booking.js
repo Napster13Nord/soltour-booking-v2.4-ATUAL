@@ -484,7 +484,6 @@
             // Parâmetros críticos para API processar corretamente
             only_hotel: onlyHotel,
             product_type: productType,
-            force_avail: true, // ✅ BUSCA DIRETA COM PREÇOS (removido DelayedAvailability)
 
             // Paginação (corrigido para pageNumber/rowsPerPage conforme documentação Soltour)
             page_number: 0,
@@ -880,7 +879,6 @@
         console.log('Number of Nights:', searchParamsWithLargeLimit.num_nights);
         console.log('Only Hotel:', searchParamsWithLargeLimit.only_hotel);
         console.log('Product Type:', searchParamsWithLargeLimit.product_type);
-        console.log('Force Avail:', searchParamsWithLargeLimit.force_avail);
         console.log('First Item:', searchParamsWithLargeLimit.first_item);
         console.log('Item Count:', searchParamsWithLargeLimit.item_count);
         console.log('');
@@ -1172,7 +1170,7 @@
                         // IMPORTANTE: Esconder modal de loading após renderizar
                         hideLoadingModal();
 
-                        // ✅ PREÇOS JÁ CARREGADOS - Busca feita com forceAvail=true
+                        // ✅ PREÇOS JÁ CARREGADOS
                     }
                 },
                 error: function() {
@@ -1205,7 +1203,7 @@
                         // IMPORTANTE: Esconder modal de loading após renderizar
                         hideLoadingModal();
 
-                        // ✅ PREÇOS JÁ CARREGADOS - Busca feita com forceAvail=true
+                        // ✅ PREÇOS JÁ CARREGADOS
                     }
                 }
             });

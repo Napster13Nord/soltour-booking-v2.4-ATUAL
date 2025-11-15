@@ -194,8 +194,7 @@
                 num_nights: 7, // Default
                 adults: 2, // Default
                 children: 0,
-                item_count: 100,
-                force_avail: false // Só queremos ver disponibilidade, não preços ainda
+                item_count: 100
             },
             success: function(response) {
                 $('#soltour-search-loading').hide();
