@@ -306,31 +306,23 @@
 
                     <!-- PASSO 3: Custos de Cancelamento -->
                     ${cancellationData && cancellationData.charges && cancellationData.charges.length > 0 ? `
-                        <div class="bt-package-summary" style="margin-top: 30px;">
+                        <div class="bt-package-summary" style="margin-top: 20px;">
                             <h2>❌ Passo 3: Custos de Cancelamento</h2>
                             ${renderCancellationCard(cancellationData)}
                         </div>
                     ` : ''}
 
-                    <!-- PASSO 4: Seguros -->
-                    ${insuranceData && insuranceData.hasInsurances ? `
-                        <div class="bt-package-summary" style="margin-top: 30px;">
-                            <h2>🛡️ Passo 4: Seguros Disponíveis</h2>
-                            ${renderInsuranceCard(insuranceData)}
-                        </div>
-                    ` : ''}
-
-                    <!-- PASSO 5: Informações Importantes -->
+                    <!-- PASSO 4: Informações Importantes -->
                     ${legalData && legalData.hasLegalInfo ? `
-                        <div class="bt-package-summary" style="margin-top: 30px;">
-                            <h2>📋 Passo 5: Informações Importantes e Condições</h2>
+                        <div class="bt-package-summary" style="margin-top: 20px;">
+                            <h2>📋 Passo 4: Informações Importantes e Condições</h2>
                             ${renderLegalTextsCard(legalData)}
                         </div>
                     ` : ''}
 
                     <!-- Extras (se disponível) -->
                     ${extrasData && extrasData.hasExtras ? `
-                        <div class="bt-package-summary" style="margin-top: 30px;">
+                        <div class="bt-package-summary" style="margin-top: 20px;">
                             <h2>🎁 Serviços Extras</h2>
                             ${renderExtrasCard(extrasData)}
                         </div>
@@ -339,23 +331,7 @@
 
                 <!-- COLUNA DIREITA (30%) - SIDEBAR FIXA -->
                 <div class="bt-price-sidebar">
-                    <h2>💰 Resumo & Preço</h2>
-
-                    <!-- Hotel -->
-                    <div class="bt-sidebar-section">
-                        <h3 class="bt-sidebar-title">🏨 Hotel</h3>
-                        <div class="bt-sidebar-hotel-name">${hotelName}</div>
-                        ${hotelLocation ? `<div class="bt-sidebar-hotel-location">📍 ${hotelLocation}</div>` : ''}
-                        ${hotelStars > 0 ? `<div class="bt-sidebar-hotel-stars">${'⭐'.repeat(hotelStars)}</div>` : ''}
-                    </div>
-
-                    <!-- Voos -->
-                    ${flightData ? `
-                        <div class="bt-sidebar-section">
-                            <h3 class="bt-sidebar-title">✈️ Voos</h3>
-                            ${renderFlightsSidebar(flightData)}
-                        </div>
-                    ` : ''}
+                    <h2>💰 Preço Final da Viagem</h2>
 
                     <!-- Informações da Viagem -->
                     <div class="bt-sidebar-section">
@@ -381,6 +357,14 @@
                             <strong>${passengerCount} pessoa${passengerCount > 1 ? 's' : ''}</strong>
                         </div>
                     </div>
+
+                    <!-- Seguros Disponíveis -->
+                    ${insuranceData && insuranceData.hasInsurances ? `
+                        <div class="bt-sidebar-section">
+                            <h3 class="bt-sidebar-title">🛡️ Seguros Disponíveis</h3>
+                            ${renderInsuranceCard(insuranceData)}
+                        </div>
+                    ` : ''}
 
                     <!-- Preço -->
                     <div class="bt-sidebar-section bt-sidebar-price">

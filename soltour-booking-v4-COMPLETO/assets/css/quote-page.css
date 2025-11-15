@@ -446,6 +446,47 @@
     font-weight: 600 !important;
 }
 
+/* Seguros dentro da sidebar - ESTILO COMPACTO */
+.bt-price-sidebar .bt-insurance-card {
+    margin-bottom: 10px !important;
+    box-shadow: none !important;
+    border: 1px solid #e5e7eb !important;
+}
+
+.bt-price-sidebar .bt-insurance-header {
+    padding: 10px 12px !important;
+    background: #f9fafb !important;
+}
+
+.bt-price-sidebar .bt-insurance-header h3 {
+    font-size: 12px !important;
+}
+
+.bt-price-sidebar .bt-insurance-body {
+    padding: 0 12px !important;
+}
+
+.bt-price-sidebar .bt-insurance-card.expanded .bt-insurance-body {
+    padding: 12px !important;
+}
+
+.bt-price-sidebar .bt-insurance-item {
+    padding: 10px !important;
+    margin-bottom: 8px !important;
+}
+
+.bt-price-sidebar .bt-insurance-name {
+    font-size: 13px !important;
+}
+
+.bt-price-sidebar .bt-insurance-description {
+    font-size: 12px !important;
+}
+
+.bt-price-sidebar .bt-insurance-price {
+    font-size: 14px !important;
+}
+
 /* Seção de preço na sidebar - DESTAQUE MAIOR */
 .bt-sidebar-price {
     background: linear-gradient(135deg, #e6f7fb 0%, #f0f8ff 100%) !important;
