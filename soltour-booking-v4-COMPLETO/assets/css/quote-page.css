@@ -25,7 +25,7 @@
 
 @media (max-width: 768px) {
     .bt-quote-page {
-        padding: 20px 10px !important;
+        padding: 20px 15px !important;
     }
 }
 
@@ -118,20 +118,31 @@
     grid-template-columns: 2fr 1fr !important;
     gap: 30px !important;
     margin-top: 30px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
 }
 
 @media (max-width: 968px) {
     .bt-quote-grid {
         grid-template-columns: 1fr !important;
+        gap: 20px !important;
+        padding: 0 !important;
     }
 
     /* Em mobile, inverter ordem para sidebar aparecer primeiro */
     .bt-quote-left-column {
         order: 2 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
     }
 
     .bt-price-sidebar {
         order: 1 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
     }
 }
 
@@ -150,6 +161,7 @@
     padding: 20px !important;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
     width: 100% !important;
+    max-width: 100% !important;
     box-sizing: border-box !important;
     overflow: hidden !important;
 }
@@ -158,6 +170,8 @@
     .bt-package-summary {
         padding: 16px !important;
         margin: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
     }
 }
 
@@ -342,6 +356,7 @@
     position: sticky !important;
     top: 20px !important;
     width: 100% !important;
+    max-width: 100% !important;
     box-sizing: border-box !important;
     overflow: hidden !important;
     display: flex !important;
@@ -351,10 +366,12 @@
 
 @media (max-width: 968px) {
     .bt-price-sidebar {
-        padding: 20px 15px !important;
+        padding: 16px !important;
         position: relative !important;
         top: 0 !important;
-        margin: 0 0 30px 0 !important;
+        margin: 0 0 20px 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
     }
 }
 
@@ -578,14 +595,17 @@
     margin-top: 20px !important;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
     width: 100% !important;
+    max-width: 100% !important;
     box-sizing: border-box !important;
     overflow: hidden !important;
 }
 
 @media (max-width: 768px) {
     .bt-passengers-form {
-        padding: 16px 15px !important;
+        padding: 16px !important;
         margin: 20px 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
     }
 }
 
@@ -1450,6 +1470,9 @@
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
     margin-bottom: 12px !important;
     transition: all 0.2s ease !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
 }
 
 .bt-transfer-card:hover,
@@ -2537,6 +2560,8 @@
     .bt-insurance-service,
     .bt-extra-service {
         flex-wrap: wrap !important;
+        width: 100% !important;
+        max-width: 100% !important;
     }
 
     .bt-transfer-service-checkbox,
@@ -2553,6 +2578,7 @@
     .bt-extra-service-content {
         flex: 1 !important;
         min-width: 0 !important;
+        max-width: 100% !important;
     }
 
     .bt-transfer-service-actions {
@@ -2563,6 +2589,8 @@
 
     .bt-cancellation-table {
         font-size: 14px !important;
+        width: 100% !important;
+        max-width: 100% !important;
     }
 
     .bt-cancellation-table th,
@@ -2577,6 +2605,27 @@
     .bt-date-range {
         flex-direction: column !important;
         align-items: flex-start !important;
+    }
+
+    /* Garantir que todos os cards e seus conteúdos respeitam o viewport */
+    .bt-transfer-card,
+    .bt-cancellation-card,
+    .bt-insurance-card,
+    .bt-extras-card,
+    .bt-legal-card {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+
+    .bt-transfer-body,
+    .bt-cancellation-body,
+    .bt-insurance-body,
+    .bt-extras-body,
+    .bt-legal-body {
+        width: 100% !important;
+        max-width: 100% !important;
     }
 }
 
