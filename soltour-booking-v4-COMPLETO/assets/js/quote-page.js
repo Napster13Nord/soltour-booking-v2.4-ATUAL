@@ -103,15 +103,15 @@
         // Debug de cancelamento
         const cancellationData = extractCancellationData(budget);
         console.log('❌ GASTOS DE CANCELAMENTO:');
-        console.log('  → Total de períodos:', cancellationData.charges.length);
-        console.log('  → Dados completos:', JSON.stringify(cancellationData.charges, null, 2));
+        console.log('  → Total de períodos:', cancellationData?.charges?.length || 0);
+        console.log('  → Dados completos:', JSON.stringify(cancellationData?.charges || [], null, 2));
         console.log('');
 
         // Debug de seguros (da resposta quote)
         const insuranceData = extractInsuranceData(packageData);
         console.log('🛡️ SEGUROS DISPONÍVEIS (QUOTE):');
-        console.log('  → Tem seguros?', insuranceData.hasInsurances);
-        if (insuranceData.hasInsurances) {
+        console.log('  → Tem seguros?', insuranceData?.hasInsurances || false);
+        if (insuranceData?.hasInsurances && insuranceData?.insurances) {
             console.log('  → Total de seguros:', insuranceData.insurances.length);
             console.log('  → Seguros:', JSON.stringify(insuranceData.insurances, null, 2));
         }
@@ -120,8 +120,8 @@
         // Debug de extras (da resposta quote)
         const extrasData = extractExtrasData(packageData);
         console.log('🎁 SERVIÇOS EXTRAS (QUOTE):');
-        console.log('  → Tem extras?', extrasData.hasExtras);
-        if (extrasData.hasExtras) {
+        console.log('  → Tem extras?', extrasData?.hasExtras || false);
+        if (extrasData?.hasExtras && extrasData?.extras) {
             console.log('  → Total de extras:', extrasData.extras.length);
             console.log('  → Extras:', JSON.stringify(extrasData.extras, null, 2));
         }
@@ -130,8 +130,8 @@
         // Debug de textos legais (da resposta quote)
         const legalData = extractLegalData(packageData);
         console.log('📋 INFORMAÇÕES LEGAIS (QUOTE):');
-        console.log('  → Tem informações legais?', legalData.hasLegalInfo);
-        if (legalData.hasLegalInfo) {
+        console.log('  → Tem informações legais?', legalData?.hasLegalInfo || false);
+        if (legalData?.hasLegalInfo && legalData?.legalTexts) {
             console.log('  → Total de textos:', legalData.legalTexts.length);
             console.log('  → Textos legais:', JSON.stringify(legalData.legalTexts, null, 2));
         }
@@ -1307,7 +1307,7 @@
      * Renderiza card de Transfers
      */
     function renderTransferCard(transferData) {
-        if (!transferData.hasTransfers) {
+        if (!transferData || !transferData.hasTransfers || !transferData.transferServices) {
             return ''; // Não mostrar card se não houver transfers
         }
 
@@ -1527,7 +1527,7 @@
      * Renderiza card de Seguros
      */
     function renderInsuranceCard(insuranceData) {
-        if (!insuranceData.hasInsurances) {
+        if (!insuranceData || !insuranceData.hasInsurances || !insuranceData.insurances) {
             return ''; // Não mostrar card se não houver seguros
         }
 
@@ -1614,7 +1614,7 @@
      * Renderiza card de Extras
      */
     function renderExtrasCard(extrasData) {
-        if (!extrasData.hasExtras) {
+        if (!extrasData || !extrasData.hasExtras || !extrasData.extras) {
             return ''; // Não mostrar card se não houver extras
         }
 
@@ -1700,7 +1700,7 @@
      * Renderiza card de Textos Legais e Condições
      */
     function renderLegalTextsCard(legalData) {
-        if (!legalData.hasLegalInfo) {
+        if (!legalData || !legalData.hasLegalInfo || !legalData.legalTexts) {
             return ''; // Não mostrar card se não houver informações legais
         }
 
