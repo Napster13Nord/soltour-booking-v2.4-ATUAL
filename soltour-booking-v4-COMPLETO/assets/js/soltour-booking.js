@@ -1212,7 +1212,7 @@
         });
     }
 
-    function paginatePackagesAjax(firstItem, itemCount) {
+    function paginatePackagesAjax(pageNumber, rowsPerPage) {
 
         // Mostrar modal de carregamento durante paginação
         showLoadingModal(
@@ -1230,8 +1230,8 @@
                 action: 'soltour_paginate_packages',
                 nonce: soltourData.nonce,
                 avail_token: SoltourApp.availToken,
-                first_item: firstItem,
-                item_count: itemCount,
+                page_number: pageNumber,
+                rows_per_page: rowsPerPage,
                 // Enviar parâmetros originais da busca
                 origin_code: SoltourApp.searchParams.origin_code,
                 destination_code: SoltourApp.searchParams.destination_code,
@@ -2348,10 +2348,10 @@
 
         console.log('');
         console.log('🔄 CHAMANDO ENDPOINT: soltour_prepare_quote');
-        console.log('  └─ Validação intermediária com fetchAvailability + quote');
+        console.log('  └─ Gerando cotação diretamente (sem fetchAvailability)');
 
         // ========================================
-        // NOVA VALIDAÇÃO INTERMEDIÁRIA: fetchAvailability + quote
+        // GERAÇÃO DE COTAÇÃO: Chamada direta ao endpoint /booking/quote
         // ========================================
         $.ajax({
             url: soltourData.ajaxurl,
@@ -2393,7 +2393,7 @@
                         numRoomsSearched: maxRooms,           // Número de quartos pesquisados
                         searchParams: SoltourApp.searchParams, // USAR searchParams COMPLETO que tem rooms
 
-                        // DADOS DO QUOTE (chamada direta, sem fetchAvailability)
+                        // DADOS DO QUOTE (da resposta /booking/quote)
                         quoteToken: response.data.quoteToken,
                         quoteData: response.data.quote
                     };
