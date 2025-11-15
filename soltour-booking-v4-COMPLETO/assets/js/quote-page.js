@@ -218,7 +218,7 @@
         // HTML da página
         const html = `
             <div class="bt-quote-header">
-                <h1>💼 Cotação do Seu Pacote</h1>
+                <h1>Cotação do Seu Pacote</h1>
                 <p>Preencha os dados abaixo para receber sua cotação personalizada</p>
             </div>
 
@@ -361,7 +361,6 @@
                     <!-- Seguros Disponíveis -->
                     ${insuranceData && insuranceData.hasInsurances ? `
                         <div class="bt-sidebar-section">
-                            <h3>Seguros Disponíveis</h3>
                             ${renderInsuranceCard(insuranceData)}
                         </div>
                     ` : ''}
