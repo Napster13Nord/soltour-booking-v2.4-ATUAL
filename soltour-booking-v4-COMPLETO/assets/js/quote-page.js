@@ -1436,7 +1436,7 @@
             const charges = cancellationData.chargesByService[serviceType];
 
             // Só renderizar se houver custos para este serviço
-            if (charges.length === 0) return;
+            if (!charges || charges.length === 0) return;
 
             const firstCharge = charges[0];
             const serviceIcon = firstCharge.serviceIcon;
