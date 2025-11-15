@@ -1,797 +1,656 @@
-# 📋 Próximos Passos - Finalização do Plugin Soltour Booking
-
-## 🎯 Estado Atual do Plugin (Atualizado em 15/11/2025)
-
-### ✅ Implementações Concluídas
-
-#### 1. Formulário de Busca (Sessão 14/11/2025)
-- ✅ Coleta de idade de **cada adulto** (18-100 anos)
-- ✅ Coleta de idade de **cada criança** (0-17 anos)
-- ✅ Suporte para **múltiplos quartos**
-- ✅ Dados estruturados corretamente no formato:
-```json
-{
-  "rooms": [
-    {
-      "passengers": [
-        { "type": "ADULT", "age": 30 },
-        { "type": "CHILD", "age": 6 }
-      ]
-    },
-    {
-      "passengers": [
-        { "type": "ADULT", "age": 26 },
-        { "type": "CHILD", "age": 6 }
-      ]
-    }
-  ]
-}
-```
-
-#### 2. Pré-seleção de Quartos (Sessão 14/11/2025)
-- ✅ Correção do bug onde apenas 1 quarto era pré-selecionado
-- ✅ Pré-seleção automática de N quartos (conforme busca)
-- ✅ `numRoomsSearched` extraído corretamente do sessionStorage
-
-#### 3. Página de Cotação - Estrutura Base (Sessão 14/11/2025)
-- ✅ Exibição de **TODOS os quartos** selecionados
-- ✅ Informações detalhadas por quarto (adultos, crianças, idades)
-- ✅ Dados completos salvos em `BeautyTravelQuote.budgetData`
-- ✅ `searchParams` com `rooms` completo disponível
-
-#### 4. Página de Cotação - Serviços Opcionais (Sessão 15/11/2025)
-- ✅ **Card de Transfers Privados** com:
-  - Checkbox funcional para seleção
-  - Pré-seleção automática de transfers incluídos
-  - Badge "Incluído" para transfers já no preço base
-  - Toggle "Mais informações" para exibir detalhes
-  - Validação (só exibe transfers válidos)
-  - Recálculo automático de preço ao selecionar/deselecionar
-- ✅ **Card de Custos de Cancelamento** com:
-  - Extração de dados de múltiplos serviços (hotel, voo, transfer, seguro)
-  - Tabela formatada com períodos e custos
-  - Ordenação cronológica
-  - Suporte para valores fixos (€) e percentuais (%)
-- ✅ **Card Informativo** sobre como guardar orçamento
-- ✅ **Tradução completa** para Português (Portugal)
-- ✅ **Responsividade mobile** corrigida (sem corte de conteúdo)
-- ✅ **Integração com módulo DelayedQuote** (disable/enable de checkboxes)
-
-#### 5. Sistema de Debug (Sessão 14/11/2025)
-- ✅ Logs detalhados da requisição para `/booking/availability`
-- ✅ Logs detalhados da resposta do endpoint
-- ✅ Visualização formatada de todos os parâmetros
-- ✅ Logs de erro completos para troubleshooting
-
-#### 6. Melhorias de UX (Sessões 14/11 e 15/11/2025)
-- ✅ Ícone de avião ✈️ no campo "Origem" (substituído telefone)
-- ✅ Labels descritivas para idades
-- ✅ Visual consistency em todo formulário
-- ✅ Interface 100% em português de Portugal
-- ✅ Feedback visual para seleção de serviços
-- ✅ Animações suaves para toggles e carregamento
+# 📋 Próximos Passos - Finalização Para Produção
+**Última atualização:** 15/11/2025
+**Status:** Plugin funcionando ✅ | Preparação para produção em andamento 🚀
 
 ---
 
-## 📊 Alinhamento com Plano "Next steps.md" (GitHub)
+## 🎯 Estado Atual do Plugin
 
-### Análise do Plano Original
+### ✅ O Que Está Funcionando Perfeitamente
 
-O plano define 4 partes principais:
+#### 1. **Sistema de Busca e Disponibilidade**
+- ✅ Formulário com múltiplos quartos
+- ✅ Coleta de idades (adultos e crianças)
+- ✅ Integração com `/booking/availability` (API Soltour)
+- ✅ Paginação server-side alinhada (pageNumber/rowsPerPage)
+- ✅ Deduplicação de hotéis (1 card por hotel, melhor preço)
+- ✅ Mapeamento correto de dados de hotel (sem "integración (NO SE USA)")
 
-#### Parte 1: O Que Funciona ✅
-- ✅ Busca de pacotes (endpoint availability)
-- ✅ Página de detalhes do hotel (endpoint details)
-- ✅ **Página de cotação - FRONTEND** (100% completo na sessão 15/11)
-- ✅ Sistema de email
+#### 2. **Página de Resultados**
+- ✅ Cards de pacotes com dados corretos
+- ✅ Preços calculados corretamente
+- ✅ Preço por pessoa preciso (via searchParams.rooms)
+- ✅ Imagens e descrições dos hotéis funcionando
+- ✅ Informações de voos (ida/volta)
 
-**Status:** COMPLETO
+#### 3. **Fluxo de Cotação**
+- ✅ Chamada direta ao `/booking/quote` (sem fetchAvailability)
+- ✅ Validação robusta de erros
+- ✅ Renderização de seguros, extras e textos legais
+- ✅ Cards de transfers e cancelamento
+- ✅ Cálculo automático de preço total
 
-#### Parte 2: Problemas Críticos ⚠️
-
-**Problema Identificado:**
-> "A Quote Page não chama o endpoint `/booking/quote` corretamente. Ao invés disso, está usando dados de availability."
-
-**Status Atual:**
-- ⚠️ **Backend ainda não implementa `/booking/quote`** - PRIORIDADE CRÍTICA
-- ✅ **Frontend está 100% pronto para receber dados de quote** (sessão 15/11)
-  - Card de transfers: ✅ Implementado
-  - Card de cancelamento: ✅ Implementado
-  - Estrutura para insurances: ⚠️ Aguardando endpoint
-  - Estrutura para extras: ⚠️ Aguardando endpoint
-  - Estrutura para legal text: ⚠️ Aguardando endpoint
-
-**Problema Identificado:**
-> "Quote page não exibe dados como insurances, extras, penalties, legal text"
-
-**Status Atual:**
-- ✅ **Penalties (cancellationCharges):** IMPLEMENTADO (sessão 15/11)
-- ⚠️ **Insurances:** Frontend pronto, aguardando dados de `/booking/quote`
-- ⚠️ **Extras:** Frontend pronto, aguardando dados de `/booking/quote`
-- ⚠️ **Legal text:** Frontend pronto, aguardando dados de `/booking/quote`
-
-**Problema Identificado:**
-> "Expedient flow incompleto - falta chamar generateExpedient"
-
-**Status Atual:**
-- ⚠️ Ainda não implementado
-- 📌 Depende de `/booking/quote` estar funcionando primeiro
-
-#### Parte 3: Endpoints Necessários
-
-| Endpoint | Status | Observações |
-|----------|--------|-------------|
-| `/booking/availability` | ✅ Funcionando | Dados de passageiros enviados corretamente |
-| `/booking/details` | ✅ Funcionando | Detalhes de hotel carregam corretamente |
-| `/booking/quote` | ⚠️ **PRIORIDADE** | **Backend precisa implementar integração** |
-| `/booking/generateExpedient` | ⚠️ Pendente | Necessário após quote funcionar |
-
-#### Parte 4: Workflow Final (7 Passos)
-
-1. ✅ Usuário preenche formulário e busca pacotes
-2. ✅ Sistema chama `/booking/availability` com dados de passageiros
-3. ✅ Usuário seleciona um pacote dos resultados
-4. ⚠️ **Sistema DEVERIA chamar `/booking/quote`** ← IMPLEMENTAR
-5. ⚠️ **Quote page DEVERIA exibir dados oficiais de quote** ← Frontend pronto, aguardando backend
-6. ✅ Usuário preenche dados dos passageiros na página de cotação
-7. ⚠️ Sistema chama `generateExpedient` e cria expediente ← IMPLEMENTAR
-
-**Resumo do Workflow:**
-- **Passos 1-3, 6:** ✅ FUNCIONANDO
-- **Passos 4-5:** ⚠️ Frontend pronto, backend pendente
-- **Passo 7:** ⚠️ Não implementado
+#### 4. **Qualidade de Código**
+- ✅ Sem referências a searchParams.adults/children incorretos
+- ✅ Código limpo (função fetch_availability removida)
+- ✅ Comentários e logs atualizados
+- ✅ Alinhamento total com documentação Soltour
 
 ---
 
-## 🎯 Conclusão da Análise
+## 🚧 Tarefas Para Finalização (Prioridade)
 
-### O Que Foi Completado Nesta Sessão (15/11/2025)
+### **FASE 1: Correções e Melhorias da UI** ⚠️
 
-✅ **Frontend da Quote Page - 100% Completo:**
-- Card de Transfers com seleção e recálculo de preço
-- Card de Custos de Cancelamento
-- Card informativo sobre guardar orçamento
-- Responsividade mobile perfeita
-- Tradução completa PT-PT
-- Integração com DelayedQuote module
-- Estrutura pronta para receber:
-  - Insurances (seguros)
-  - Extras (serviços opcionais)
-  - Legal text (texto legal)
+#### 1.1. Corrigir Card de Gastos de Cancelamento
+**Problema identificado:** "Não está fazendo muito sentido"
 
-### O Que Ainda Precisa Ser Feito (Crítico)
+**Arquivo:** `assets/js/quote-page.js` (linhas 1264-1321)
 
-⚠️ **Backend - Prioridade Máxima:**
-
-1. **Implementar integração com `/booking/quote`** no PHP
-   - Arquivo: `includes/class-soltour-ajax-handlers.php`
-   - Método: `generate_quote()` ou criar novo `fetch_quote()`
-   - Deve chamar API Soltour `/booking/quote` com availToken + budgetId
-
-2. **Processar resposta de quote** e retornar para frontend
-   - quoteToken
-   - insurances (seguros disponíveis)
-   - extras (serviços opcionais)
-   - legalText (condições legais)
-   - budgets atualizados com dados finais
-
-3. **Implementar `generateExpedient`** para criar expediente
-   - Salvar quoteToken
-   - Criar expediente na Soltour
-   - Enviar email com orçamento
-   - Permitir recuperação posterior
-
----
-
-## 🚀 Próxima Fase: Integração Backend do Endpoint Quote
-
-### 📍 Objetivo Principal
-Implementar chamada real ao endpoint `/booking/quote` no backend PHP e substituir uso de dados de availability por dados oficiais de cotação.
-
-### 📍 Objetivos Secundários
-- Renderizar insurances (seguros) no frontend
-- Renderizar extras (serviços opcionais) no frontend
-- Exibir texto legal e condições
-- Preparar integração com generateExpedient
-
----
-
-## 🔄 Detalhamento Técnico dos Endpoints
-
-### 1️⃣ `/booking/availability` (Busca Inicial)
-**Status:** ✅ FUNCIONANDO (validado na sessão 14/11)
-
-**O que deve ser enviado:**
-```json
-{
-  "action": "soltour_search_packages",
-  "origin_code": "LIS",
-  "destination_code": "PUJ",
-  "start_date": "2025-06-15",
-  "num_nights": 7,
-  "rooms": "[{\"passengers\":[{\"type\":\"ADULT\",\"age\":30},{\"type\":\"CHILD\",\"age\":6}]},{\"passengers\":[{\"type\":\"ADULT\",\"age\":26},{\"type\":\"CHILD\",\"age\":6}]}]",
-  "only_hotel": "N",
-  "product_type": "PACKAGE",
-  "force_avail": true,
-  "first_item": 0,
-  "item_count": 100
-}
-```
-
-**✅ IMPLEMENTADO E VALIDADO:**
-- Dados dos quartos com idades reais sendo coletados corretamente
-- Estrutura JSON correta enviada ao backend
-- Backend recebe e processa `rooms` corretamente
-- Payload montado no formato esperado pela API Soltour
-- Logs de debug confirmam envio correto
-
-**Resposta da API:**
-```json
-{
-  "availToken": "AVL123456789...",
-  "budgets": [...],
-  "params": {
-    "accomodation": {
-      "rooms": [
-        // Echo dos dados enviados
-      ]
-    }
-  }
-}
-```
-
----
-
-### 2️⃣ `/booking/fetchAvailability` (Ao clicar em um pacote)
-**Status:** ⚠️ REQUER IMPLEMENTAÇÃO
-
-**Quando chamar:**
-- Quando usuário clica em "Selecionar" ou "Ver Quartos" em um pacote
-
-**O que deve ser enviado:**
-```json
-{
-  "productType": "PACKAGE",
-  "availToken": "<mesmo do availability>",
-  "selectedBudgetId": "<id do pacote escolhido>"
-}
-```
-
-**⚠️ IMPORTANTE:**
-- **NÃO** enviar dados de `rooms` ou `passengers`
-- **NÃO** enviar `params.accomodation`
-- A Soltour usa `availToken + selectedBudgetId` para reconstruir tudo
-
-**O que a API retorna:**
-```json
-{
-  "budget": {
-    "budgetId": "H123##TI##...",
-    "hotelServices": [{
-      "mealPlan": {
-        "combination": {
-          "rooms": [
-            {
-              "passengers": [
-                { "type": "ADULT", "age": 30 },
-                { "type": "CHILD", "age": 6 }
-              ]
-            }
-          ]
-        }
-      }
-    }]
-  }
-}
-```
-
----
-
-### 3️⃣ `/booking/quote` (Página de Cotação Final)
-**Status:** ⚠️ **PRIORIDADE CRÍTICA - REQUER IMPLEMENTAÇÃO**
-
-**Quando chamar:**
-- Ao carregar a página de cotação (substituir uso de dados de availability)
-- Opcionalmente ao clicar em "Gerar Cotação Final" (se houver modificações)
-
-**O que deve ser enviado:**
-```json
-{
-  "productType": "PACKAGE",
-  "availToken": "<mesmo do availability>",
-  "budgetIds": ["<budgetId do pacote>"]
-}
-```
-
-**⚠️ IMPORTANTE:**
-- **NÃO** enviar dados de `rooms` ou `passengers`
-- **NÃO** enviar `params.accomodation`
-- Tudo vem amarrado ao `availToken + budgetId`
-
-**O que a API retorna:**
-- Cotação final com preços
-- Detalhes completos do pacote
-- Dados de voos, hotel, quartos (já com passageiros corretos)
-
----
-
-## 📝 Tarefas Prioritárias - Próxima Sessão
-
-### 🔧 Backend PHP - Crítico
-
-#### Arquivo: `includes/class-soltour-ajax-handlers.php`
-
-**1. ✅ Método `search_packages()` - JÁ IMPLEMENTADO**
-```php
-// ✅ JÁ ESTÁ FUNCIONANDO CORRETAMENTE
-// Envia dados de rooms com passengers e ages para /booking/availability
-// Validado na sessão 14/11/2025
-```
-
-**2. ⚠️ PRIORIDADE 1: Implementar integração com `/booking/quote`**
-
-Criar um novo método ou ajustar o existente `generate_quote()`:
-
-```php
-/**
- * Buscar cotação oficial usando /booking/quote
- * ATENÇÃO: NÃO enviar dados de passengers - já amarrados ao availToken
- */
-public function fetch_quote() {
-    // Validar nonce
-    check_ajax_referer('soltour_nonce', 'nonce');
-
-    // Receber parâmetros
-    $avail_token = isset($_POST['availToken']) ? sanitize_text_field($_POST['availToken']) : '';
-    $budget_ids = isset($_POST['budgetIds']) ? $_POST['budgetIds'] : [];
-    $product_type = isset($_POST['productType']) ? sanitize_text_field($_POST['productType']) : 'PACKAGE';
-
-    // Validar dados obrigatórios
-    if (empty($avail_token) || empty($budget_ids)) {
-        wp_send_json_error([
-            'message' => 'Dados insuficientes para gerar cotação'
-        ]);
-    }
-
-    try {
-        // Chamar API Soltour /booking/quote
-        // IMPORTANTE: NÃO enviar passengers - já estão no availToken
-        $response = $this->soltour_api->call_endpoint('/booking/quote', [
-            'productType' => $product_type,
-            'availToken' => $avail_token,
-            'budgetIds' => $budget_ids
-        ]);
-
-        // Processar resposta
-        if (isset($response['quoteToken'])) {
-            wp_send_json_success([
-                'quoteToken' => $response['quoteToken'],
-                'budgets' => $response['budgets'] ?? [],
-                'insurances' => $response['insurances'] ?? [],
-                'extras' => $response['extras'] ?? [],
-                'legalText' => $response['legalText'] ?? '',
-                'penalties' => $response['penalties'] ?? []
-            ]);
-        } else {
-            wp_send_json_error([
-                'message' => 'Resposta inválida da API Soltour',
-                'debug' => $response
-            ]);
-        }
-
-    } catch (Exception $e) {
-        error_log('Erro ao chamar /booking/quote: ' . $e->getMessage());
-        wp_send_json_error([
-            'message' => 'Erro ao gerar cotação: ' . $e->getMessage()
-        ]);
-    }
-}
-```
-
-**Registrar action AJAX:**
-```php
-// Em includes/class-soltour-ajax-handlers.php ou onde as actions são registradas
-add_action('wp_ajax_soltour_fetch_quote', [$this, 'fetch_quote']);
-add_action('wp_ajax_nopriv_soltour_fetch_quote', [$this, 'fetch_quote']);
-```
-
----
-
-### 🎨 Frontend JavaScript - Prioridade Alta
-
-#### Arquivo: `assets/js/quote-page.js`
-
-**⚠️ PRIORIDADE 1: Chamar `/booking/quote` ao carregar página**
-
-Adicionar chamada ao endpoint quote logo após renderizar página:
-
+**O que verificar:**
 ```javascript
+// Função atual: extractCancellationData(budget)
+// Renderização: renderCancellationCard(cancellationData)
+```
+
+**Possíveis problemas:**
+- [ ] Datas de cancelamento confusas (formato, ordem)
+- [ ] Valores percentuais vs valores fixos não claros
+- [ ] Falta de contexto sobre o que significa cada período
+- [ ] Tradução/texto pouco claro
+
+**Ação requerida:**
+1. Analisar estrutura de dados retornada pela API
+2. Melhorar labels e descrições
+3. Adicionar tooltip ou texto explicativo
+4. Formatar datas de forma mais clara (ex: "Até 7 dias antes: 50%")
+
+---
+
+#### 1.2. Melhorar UI da Página de Cotação
+**Objetivo:** Interface profissional e intuitiva
+
+**Arquivos:**
+- `assets/css/quote-page.css`
+- `assets/js/quote-page.js`
+
+**Melhorias necessárias:**
+- [ ] **Hierarquia visual** - Cards mais destacados
+- [ ] **Espaçamento** - Respiração entre elementos
+- [ ] **Cores** - Palette consistente e profissional
+- [ ] **Tipografia** - Tamanhos e pesos adequados
+- [ ] **Ícones** - Consistência visual
+- [ ] **Responsividade** - Testar em mobile/tablet
+- [ ] **Loading states** - Feedback visual durante carregamento
+- [ ] **Estados vazios** - Mensagens quando não há seguros/extras
+
+**Checklist de UI:**
+```css
+/* Verificar: */
+- Botões têm hover/active states claros
+- Cards têm sombras sutis
+- Checkboxes são grandes e clicáveis
+- Preços estão em destaque
+- Totais têm cor diferenciada
+- Formulários têm validação visual
+- Erros são exibidos claramente
+```
+
+---
+
+### **FASE 2: Sistema de Emails (SMTP)** 📧
+
+#### 2.1. Configurar SMTP
+**Objetivo:** Enviar emails profissionais via SMTP
+
+**Arquivo novo:** `includes/class-soltour-email.php`
+
+**Implementação:**
+```php
+<?php
 /**
- * Carrega cotação oficial da API Soltour
- * Substitui uso de dados de availability por dados de quote
+ * Classe para gerenciar emails do plugin Soltour
  */
-function loadOfficialQuote() {
-    console.log('🔄 Carregando cotação oficial...');
+class Soltour_Email {
 
-    // Mostrar loading ou usar DelayedQuote module
-    if (window.SoltourApp.DelayedQuote) {
-        window.SoltourApp.DelayedQuote.init({ delayedQuoteActive: true });
+    /**
+     * Configurar SMTP usando WordPress wp_mail
+     */
+    public function __construct() {
+        add_action('phpmailer_init', [$this, 'configure_smtp']);
     }
 
-    const budgetData = BeautyTravelQuote.budgetData;
-
-    $.ajax({
-        url: soltourData.ajaxurl,
-        type: 'POST',
-        data: {
-            action: 'soltour_fetch_quote',  // ← Nova action
-            nonce: soltourData.nonce,
-            productType: 'PACKAGE',
-            availToken: budgetData.availToken,
-            budgetIds: [budgetData.budgetId]
-            // ❌ NÃO ENVIAR: passengers, rooms (já amarrados ao availToken)
-        },
-        timeout: 30000,
-        success: function(response) {
-            console.log('✅ Cotação oficial recebida:', response);
-
-            if (response.success) {
-                // Atualizar página com dados oficiais de quote
-                updatePageWithQuoteData(response.data);
-
-                // Parar loading
-                if (window.SoltourApp.DelayedQuote) {
-                    window.SoltourApp.DelayedQuote.stopPriceBlinking();
-                    window.SoltourApp.DelayedQuote.enableInteractions();
-                    window.SoltourApp.DelayedQuote.hideBlinkingNotification();
-                }
-
-                // Salvar quoteToken para uso posterior
-                BeautyTravelQuote.quoteToken = response.data.quoteToken;
-
-            } else {
-                console.error('❌ Erro ao carregar cotação:', response);
-                handleQuoteError(response);
-            }
-        },
-        error: function(xhr, status, error) {
-            console.error('❌ Erro AJAX ao carregar cotação:', error);
-            handleQuoteError({ message: 'Erro ao comunicar com servidor' });
-        }
-    });
-}
-
-/**
- * Atualiza página com dados oficiais de quote
- */
-function updatePageWithQuoteData(quoteData) {
-    // 1. Atualizar budgets (preços podem ter mudado)
-    if (quoteData.budgets && quoteData.budgets.length > 0) {
-        const budget = quoteData.budgets[0];
-        BeautyTravelQuote.budgetData = budget;
-
-        // Re-renderizar seções com novos dados
-        // ...
-    }
-
-    // 2. Renderizar seguros (insurances)
-    if (quoteData.insurances && quoteData.insurances.length > 0) {
-        renderInsurancesCard(quoteData.insurances);
-    }
-
-    // 3. Renderizar extras (serviços opcionais)
-    if (quoteData.extras && quoteData.extras.length > 0) {
-        renderExtrasCard(quoteData.extras);
-    }
-
-    // 4. Exibir texto legal
-    if (quoteData.legalText) {
-        renderLegalText(quoteData.legalText);
-    }
-
-    console.log('✅ Página atualizada com dados oficiais de quote');
-}
-
-/**
- * Trata erros ao carregar cotação
- */
-function handleQuoteError(response) {
-    // Parar loading
-    if (window.SoltourApp.DelayedQuote) {
-        window.SoltourApp.DelayedQuote.stopPriceBlinking();
-        window.SoltourApp.DelayedQuote.hideBlinkingNotification();
-    }
-
-    // Mostrar erro ao usuário
-    if (window.SoltourApp.Toast) {
-        window.SoltourApp.Toast.error(
-            response.message || 'Não foi possível carregar a cotação',
-            6000
-        );
+    /**
+     * Configurar parâmetros SMTP
+     */
+    public function configure_smtp($phpmailer) {
+        $phpmailer->isSMTP();
+        $phpmailer->Host = get_option('soltour_smtp_host', 'smtp.gmail.com');
+        $phpmailer->SMTPAuth = true;
+        $phpmailer->Port = get_option('soltour_smtp_port', 587);
+        $phpmailer->Username = get_option('soltour_smtp_username', '');
+        $phpmailer->Password = get_option('soltour_smtp_password', '');
+        $phpmailer->SMTPSecure = get_option('soltour_smtp_encryption', 'tls');
+        $phpmailer->From = get_option('soltour_smtp_from_email', '');
+        $phpmailer->FromName = get_option('soltour_smtp_from_name', 'BeautyTravel');
     }
 }
 ```
 
-**Chamar função ao inicializar página:**
+**Página de configurações (admin):**
+- [ ] Criar página "Soltour > Configurações de Email"
+- [ ] Campos: Host, Port, Username, Password, From Email, From Name
+- [ ] Botão "Testar Email" para validar configurações
+- [ ] Salvar em options do WordPress
+
+---
+
+#### 2.2. Email para Agência
+**Quando enviar:** Ao clicar "Gerar Cotação Final"
+
+**Template:** `templates/email-agency.php`
+
+**Conteúdo do email:**
+```
+Assunto: 🎯 Nova Cotação Gerada - [Nome do Cliente]
+
+Olá Equipe BeautyTravel,
+
+Uma nova cotação foi gerada no sistema:
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📋 DADOS DO CLIENTE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Nome: [Nome Completo]
+Email: [email@exemplo.com]
+Telefone: [+351 912 345 678]
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📦 DADOS DO PACOTE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Destino: [Punta Cana, República Dominicana]
+Hotel: [Riu Palace Macao - 5⭐]
+Check-in: [19/04/2026]
+Check-out: [26/04/2026]
+Noites: [7]
+
+Passageiros:
+  • 2 Adultos
+  • 0 Crianças
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+💰 VALORES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Preço base: 1.500€
+Transfers: 100€
+Seguros: 50€
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+TOTAL: 1.650€
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔗 Ver detalhes completos no painel:
+[Link para admin WordPress com ID da cotação]
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔑 DADOS TÉCNICOS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Quote Token: [QT123456...]
+Budget ID: [H986##TI##0$...]
+Data/Hora: [15/11/2025 14:30]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Este email foi gerado automaticamente pelo sistema Soltour Booking.
+```
+
+---
+
+#### 2.3. Email para Cliente
+**Quando enviar:** Ao clicar "Gerar Cotação Final"
+
+**Template:** `templates/email-client.php`
+
+**Conteúdo do email:**
+```
+Assunto: ✈️ Sua Cotação de Viagem - BeautyTravel
+
+Olá [Nome],
+
+Obrigado por solicitar uma cotação connosco!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📦 RESUMO DA SUA VIAGEM
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Destino: [Punta Cana, República Dominicana]
+Hotel: [Riu Palace Macao ⭐⭐⭐⭐⭐]
+Check-in: [19/04/2026]
+Check-out: [26/04/2026]
+Duração: [7 noites]
+
+Passageiros: [2 adultos]
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+💰 VALOR TOTAL
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1.650€
+(Preço por pessoa: 825€)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+O QUE ESTÁ INCLUÍDO:
+✅ Voos de ida e volta
+✅ Alojamento com [Tudo Incluído]
+✅ Transfers aeroporto-hotel-aeroporto
+✅ Seguro de viagem
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📞 PRÓXIMOS PASSOS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+A nossa equipa entrará em contacto consigo nas próximas 24 horas para:
+• Confirmar todos os detalhes
+• Esclarecer quaisquer dúvidas
+• Finalizar a sua reserva
+
+Caso tenha alguma questão, não hesite em contactar-nos:
+📧 Email: [email@beautytravel.pt]
+📱 Telefone: [+351 XXX XXX XXX]
+
+Obrigado por escolher a BeautyTravel!
+
+Com os melhores cumprimentos,
+Equipa BeautyTravel
+```
+
+---
+
+### **FASE 3: Sistema de Logs no WordPress** 📊
+
+#### 3.1. Custom Post Type para Cotações
+**Objetivo:** Armazenar todas as cotações geradas
+
+**Arquivo:** `includes/class-soltour-cpt.php`
+
+**Implementação:**
+```php
+<?php
+/**
+ * Registrar Custom Post Type para Cotações
+ */
+class Soltour_CPT {
+
+    public function __construct() {
+        add_action('init', [$this, 'register_quote_cpt']);
+    }
+
+    public function register_quote_cpt() {
+        register_post_type('soltour_quote', [
+            'labels' => [
+                'name' => 'Cotações Soltour',
+                'singular_name' => 'Cotação',
+                'add_new' => 'Nova Cotação',
+                'add_new_item' => 'Adicionar Nova Cotação',
+                'edit_item' => 'Editar Cotação',
+                'view_item' => 'Ver Cotação',
+                'all_items' => 'Todas as Cotações',
+            ],
+            'public' => false,
+            'show_ui' => true,
+            'show_in_menu' => 'soltour-booking',
+            'capability_type' => 'post',
+            'supports' => ['title'],
+            'menu_icon' => 'dashicons-clipboard'
+        ]);
+    }
+}
+```
+
+---
+
+#### 3.2. Salvar Cotação ao Gerar
+**Quando:** Ao clicar "Gerar Cotação Final"
+
+**Dados a salvar:**
+```php
+// Meta fields da cotação
+$quote_data = [
+    // Cliente
+    'customer_name' => 'João Silva',
+    'customer_email' => 'joao@exemplo.com',
+    'customer_phone' => '+351 912 345 678',
+
+    // Pacote
+    'destination' => 'Punta Cana',
+    'hotel_name' => 'Riu Palace Macao',
+    'hotel_stars' => 5,
+    'check_in' => '2026-04-19',
+    'check_out' => '2026-04-26',
+    'nights' => 7,
+
+    // Passageiros
+    'adults' => 2,
+    'children' => 0,
+    'total_passengers' => 2,
+    'passengers_data' => json_encode($passengers), // Array completo
+
+    // Preços
+    'base_price' => 1500.00,
+    'transfers_price' => 100.00,
+    'insurance_price' => 50.00,
+    'total_price' => 1650.00,
+
+    // Técnico
+    'quote_token' => 'QT123456...',
+    'budget_id' => 'H986##TI##0$...',
+    'avail_token' => 'AVL...',
+
+    // Status
+    'status' => 'pending', // pending, contacted, confirmed, cancelled
+    'created_at' => current_time('mysql'),
+];
+
+// Criar post
+$post_id = wp_insert_post([
+    'post_type' => 'soltour_quote',
+    'post_title' => sprintf(
+        'Cotação #%d - %s - %s',
+        $next_id,
+        $quote_data['customer_name'],
+        $quote_data['destination']
+    ),
+    'post_status' => 'publish',
+]);
+
+// Salvar meta fields
+foreach ($quote_data as $key => $value) {
+    update_post_meta($post_id, '_soltour_' . $key, $value);
+}
+```
+
+---
+
+#### 3.3. Página de Listagem no Admin
+**Menu:** WordPress Admin > Soltour > Cotações
+
+**Colunas da tabela:**
+- [ ] **ID** - Número da cotação
+- [ ] **Cliente** - Nome + Email
+- [ ] **Destino** - Hotel + Destino
+- [ ] **Datas** - Check-in → Check-out
+- [ ] **Passageiros** - 2 adultos, 1 criança
+- [ ] **Valor Total** - 1.650€
+- [ ] **Status** - Badge colorido (Pendente, Contactado, Confirmado)
+- [ ] **Data** - Data/hora de criação
+- [ ] **Ações** - Ver detalhes | Marcar como contactado
+
+**Filtros:**
+- [ ] Por status
+- [ ] Por intervalo de datas
+- [ ] Por destino
+
+---
+
+#### 3.4. Página de Detalhes da Cotação
+**Exibir:**
+
+```
+╔══════════════════════════════════════════════╗
+║  COTAÇÃO #123 - João Silva                   ║
+║  Status: Pendente 🟡                         ║
+╚══════════════════════════════════════════════╝
+
+┌─ DADOS DO CLIENTE ────────────────────────┐
+│ Nome: João Silva                           │
+│ Email: joao@exemplo.com                    │
+│ Telefone: +351 912 345 678                 │
+└────────────────────────────────────────────┘
+
+┌─ DADOS DA VIAGEM ─────────────────────────┐
+│ Destino: Punta Cana, República Dominicana │
+│ Hotel: Riu Palace Macao (5⭐)              │
+│ Check-in: 19/04/2026                       │
+│ Check-out: 26/04/2026                      │
+│ Noites: 7                                  │
+│ Regime: Tudo Incluído                      │
+└────────────────────────────────────────────┘
+
+┌─ PASSAGEIROS ─────────────────────────────┐
+│ Adulto 1: João Silva (30 anos)            │
+│ Adulto 2: Maria Silva (28 anos)           │
+└────────────────────────────────────────────┘
+
+┌─ VALORES ─────────────────────────────────┐
+│ Preço base: 1.500€                         │
+│ Transfers: 100€                            │
+│ Seguros: 50€                               │
+│ ─────────────────────────────────────────  │
+│ TOTAL: 1.650€                              │
+└────────────────────────────────────────────┘
+
+┌─ DADOS TÉCNICOS ──────────────────────────┐
+│ Quote Token: QT123456...                   │
+│ Budget ID: H986##TI##0$...                 │
+│ Data/Hora: 15/11/2025 14:30               │
+└────────────────────────────────────────────┘
+
+[Botão: Marcar como Contactado]
+[Botão: Enviar Email Novamente]
+[Botão: Ver JSON Completo]
+```
+
+---
+
+### **FASE 4: Limpeza Para Produção** 🧹
+
+#### 4.1. Remover Console.logs
+**Arquivos a limpar:**
+- `assets/js/soltour-booking.js`
+- `assets/js/quote-page.js`
+- `assets/js/modules/*.js`
+
+**Estratégia:**
 ```javascript
-// No final de renderQuotePage() ou em init()
-if (BeautyTravelQuote.budgetData.availToken) {
-    loadOfficialQuote();
+// REMOVER ou comentar todos os console.log, exceto erros críticos
+
+// ❌ REMOVER:
+console.log('[SOLTOUR DEBUG] ...');
+console.log('╔═══════════════════');
+console.log('📦 DADOS COMPLETOS...');
+
+// ✅ MANTER (erros importantes):
+console.error('Erro ao carregar cotação:', error);
+console.warn('API Soltour não respondeu');
+```
+
+**Ferramenta sugerida:**
+```bash
+# Buscar todos os console.log
+grep -r "console.log" soltour-booking-v4-COMPLETO/assets/js/
+
+# Remover automaticamente (cuidado!)
+find soltour-booking-v4-COMPLETO/assets/js/ -type f -name "*.js" \
+  -exec sed -i '/console\.log/d' {} \;
+```
+
+---
+
+#### 4.2. Remover Comentários de Debug
+**Procurar por:**
+```php
+// DEBUG:
+// TODO:
+// FIXME:
+// TESTE:
+// REMOVER:
+error_log('[SOLTOUR DEBUG]...');
+```
+
+**Manter apenas:**
+- Comentários de documentação (PHPDoc)
+- Comentários explicativos importantes
+- error_log para erros críticos
+
+---
+
+#### 4.3. Limpar Código Morto
+**Verificar:**
+- [ ] Funções não utilizadas
+- [ ] Variáveis declaradas mas não usadas
+- [ ] Imports/requires desnecessários
+- [ ] CSS não aplicado
+- [ ] Arquivos obsoletos
+
+**Ferramentas:**
+```bash
+# PHP - encontrar funções não usadas
+phpmd soltour-booking-v4-COMPLETO/ text unusedcode
+
+# CSS - encontrar classes não usadas
+uncss quote-page.css --html quote-page.html
+```
+
+---
+
+#### 4.4. Minificar Assets (Opcional)
+**Arquivos a minificar:**
+- CSS: `quote-page.css` → `quote-page.min.css`
+- JS: `soltour-booking.js` → `soltour-booking.min.js`
+- JS: `quote-page.js` → `quote-page.min.js`
+
+**Ferramentas:**
+```bash
+# Minificar CSS
+cssnano assets/css/quote-page.css assets/css/quote-page.min.css
+
+# Minificar JS
+uglifyjs assets/js/soltour-booking.js -o assets/js/soltour-booking.min.js
+```
+
+**Carregar versão minificada em produção:**
+```php
+// Em soltour-booking.php
+if (WP_DEBUG) {
+    wp_enqueue_script('soltour-booking', SOLTOUR_URL . 'assets/js/soltour-booking.js');
+} else {
+    wp_enqueue_script('soltour-booking', SOLTOUR_URL . 'assets/js/soltour-booking.min.js');
 }
 ```
 
 ---
 
-## 🧪 Testes para Validar - Após Implementar `/booking/quote`
-
-### Teste 1: Carregamento da Página de Cotação
-**Objetivo:** Verificar que a página chama `/booking/quote` corretamente
-
-1. **Pré-requisito:** Fazer busca e selecionar um pacote
-2. **Abrir página de cotação**
-3. **Verificar no console do navegador:**
-   ```
-   🔄 Carregando cotação oficial...
-   [AJAX] POST /wp-admin/admin-ajax.php
-     action: soltour_fetch_quote
-     availToken: AVL...
-     budgetIds: [...]
-   ✅ Cotação oficial recebida: { success: true, data: {...} }
-   ✅ Página atualizada com dados oficiais de quote
-   ```
-
-4. **Verificar no backend PHP (error_log):**
-   ```php
-   [Soltour] Chamando /booking/quote
-   [Soltour] availToken: AVL...
-   [Soltour] budgetIds: [...]
-   [Soltour] Resposta recebida: { quoteToken: QT..., budgets: [...] }
-   ```
-
-5. **Verificar na página:**
-   - ✅ Card de Transfers exibido (se houver)
-   - ✅ Card de Custos de Cancelamento exibido (se houver)
-   - ✅ Card de Seguros exibido (se houver insurances na resposta)
-   - ✅ Card de Extras exibido (se houver extras na resposta)
-   - ✅ Texto legal exibido (se houver legalText na resposta)
-   - ✅ Preços atualizados corretamente
-
-### Teste 2: Interação com Transfers
-**Objetivo:** Verificar que seleção de transfers funciona com dados de quote
-
-1. **Marcar checkbox de um transfer**
-2. **Verificar:**
-   - ✅ Preço total recalcula automaticamente
-   - ✅ Valor correto é adicionado
-
-3. **Desmarcar checkbox**
-4. **Verificar:**
-   - ✅ Preço total volta ao original
-   - ✅ Cálculo está correto
-
-### Teste 3: Seguros (Insurances)
-**Objetivo:** Verificar renderização de seguros vindos de quote
-
-1. **Verificar se card de seguros aparece**
-2. **Verificar estrutura:**
-   - ✅ Checkbox para cada seguro
-   - ✅ Nome do seguro exibido
-   - ✅ Preço exibido
-   - ✅ Descrição exibida (se houver)
-
-3. **Marcar seguro**
-4. **Verificar:**
-   - ✅ Preço total atualiza
-   - ✅ Seguro marcado visualmente
-
-### Teste 4: Texto Legal
-**Objetivo:** Verificar exibição de condições legais
-
-1. **Verificar se seção de texto legal aparece**
-2. **Verificar:**
-   - ✅ Texto completo exibido
-   - ✅ Formatação correta
-   - ✅ Links funcionando (se houver)
-
-### Teste 5: Erro na API
-**Objetivo:** Verificar tratamento de erros
-
-1. **Simular erro** (desconectar da internet ou endpoint fora do ar)
-2. **Verificar:**
-   - ✅ Loading para
-   - ✅ Mensagem de erro exibida ao usuário
-   - ✅ Console mostra erro detalhado
-   - ✅ Página não quebra
+#### 4.5. Validar Segurança
+**Checklist:**
+- [ ] Todas as chamadas AJAX têm `check_ajax_referer`
+- [ ] Todos os inputs são sanitizados (`sanitize_text_field`, `intval`, etc)
+- [ ] Outputs têm `esc_html`, `esc_url`, `esc_attr`
+- [ ] Queries SQL usam `$wpdb->prepare`
+- [ ] Nenhuma senha/API key hardcoded no código
+- [ ] Configurações sensíveis armazenadas em options (não em código)
 
 ---
 
-## 📊 Checklist de Implementação - Próxima Sessão
-
-### Backend PHP - Crítico
-- [ ] **Implementar método `fetch_quote()`** em `class-soltour-ajax-handlers.php`
-- [ ] **Registrar action AJAX** `soltour_fetch_quote`
-- [ ] **Implementar chamada** à API Soltour `/booking/quote`
-- [ ] **Processar resposta** e retornar quoteToken, insurances, extras, legalText
-- [ ] **Adicionar logs** de debug para troubleshooting
-- [ ] **Testar** endpoint isoladamente
-
-### Frontend JavaScript - Crítico
-- [ ] **Implementar `loadOfficialQuote()`** em `quote-page.js`
-- [ ] **Implementar `updatePageWithQuoteData()`** para processar resposta
-- [ ] **Implementar `renderInsurancesCard()`** para exibir seguros
-- [ ] **Implementar `renderExtrasCard()`** para exibir extras
-- [ ] **Implementar `renderLegalText()`** para exibir condições
-- [ ] **Adicionar chamada** ao `loadOfficialQuote()` no init da página
-- [ ] **Integrar** com módulo DelayedQuote para loading
-- [ ] **Adicionar tratamento** de erros robusto
-
-### Integração Delayed Quote Module
-- [ ] **Verificar compatibilidade** com módulo existente delayed-quote.js
-- [ ] **Testar** disable/enable de checkboxes durante loading
-- [ ] **Garantir** que preços atualizam corretamente após quote carregar
-
-### Testes End-to-End
-- [ ] Testar fluxo completo: Busca → Seleção → Quote Page
-- [ ] Verificar que `/booking/quote` é chamado ao carregar página
-- [ ] Validar que dados de quote são exibidos corretamente
-- [ ] Testar com múltiplos quartos (1, 2, 3 quartos)
-- [ ] Testar interação com transfers (selecionar/deselecionar)
-- [ ] Testar interação com seguros (se disponíveis)
-- [ ] Testar tratamento de erros (API fora do ar, timeout, etc)
-
-### Validação de Dados
-- [ ] Verificar que `availToken` é preservado corretamente
-- [ ] Validar que `quoteToken` é salvo para uso posterior
-- [ ] Confirmar que idades dos passageiros vêm corretas na resposta
-- [ ] Verificar que múltiplos quartos são mantidos
-
-### Documentação
-- [ ] Atualizar README com novo fluxo de quote
-- [ ] Documentar estrutura de resposta do endpoint
-- [ ] Adicionar exemplos de uso
-- [ ] Criar guia de troubleshooting
+#### 4.6. Testes Finais
+**Cenários a testar:**
+- [ ] Busca com 1 quarto
+- [ ] Busca com múltiplos quartos
+- [ ] Busca só adultos
+- [ ] Busca com crianças
+- [ ] Selecionar pacote e gerar cotação
+- [ ] Marcar/desmarcar transfers
+- [ ] Marcar/desmarcar seguros
+- [ ] Preencher formulário com erros (validação)
+- [ ] Preencher formulário corretamente
+- [ ] Enviar cotação (verificar emails)
+- [ ] Verificar cotação salva no admin
+- [ ] Testar em Chrome, Firefox, Safari
+- [ ] Testar em mobile (iOS, Android)
 
 ---
 
-## 🎯 Resultado Esperado Após Implementação Completa
+## 📋 Checklist Completo de Finalização
 
-### Fluxo Ideal Funcionando 100%:
+### FASE 1: Correções e UI
+- [ ] Corrigir card de gastos de cancelamento
+- [ ] Melhorar UI da página de cotação
+- [ ] Adicionar loading states
+- [ ] Melhorar mensagens de erro
+- [ ] Validar responsividade mobile
 
-1. ✅ **Busca de Pacotes** (FUNCIONANDO)
-   - Usuário informa idades de adultos e crianças
-   - Dados enviados para `/booking/availability`
-   - API retorna `availToken` com dados amarrados
+### FASE 2: Sistema de Emails
+- [ ] Criar classe Soltour_Email
+- [ ] Configurar SMTP no admin
+- [ ] Criar template email agência
+- [ ] Criar template email cliente
+- [ ] Testar envio de emails
+- [ ] Validar templates em diferentes clientes de email
 
-2. ✅ **Seleção de Pacote** (FUNCIONANDO)
-   - Usuário clica em pacote
-   - Sistema salva budgetId e availToken
+### FASE 3: Logs e Acompanhamento
+- [ ] Criar CPT soltour_quote
+- [ ] Salvar cotações ao gerar
+- [ ] Criar página de listagem
+- [ ] Criar página de detalhes
+- [ ] Adicionar filtros e busca
+- [ ] Adicionar estatísticas (dashboard widget)
 
-3. ⚠️ **Página de Cotação - Carregamento** (IMPLEMENTAR)
-   - Sistema chama `/booking/quote` automaticamente
-   - Envia apenas `availToken + budgetId`
-   - NÃO reenvia dados de passengers
-   - API retorna quote oficial com:
-     - quoteToken
-     - budgets atualizados
-     - insurances disponíveis
-     - extras disponíveis
-     - legalText e condições
+### FASE 4: Limpeza
+- [ ] Remover console.logs
+- [ ] Remover comentários de debug
+- [ ] Limpar código morto
+- [ ] (Opcional) Minificar assets
+- [ ] Validar segurança
+- [ ] Testes completos
 
-4. ⚠️ **Página de Cotação - Exibição** (PARCIALMENTE PRONTO)
-   - ✅ Card de Transfers (já implementado)
-   - ✅ Card de Custos de Cancelamento (já implementado)
-   - ⚠️ Card de Seguros (aguardando dados de quote)
-   - ⚠️ Card de Extras (aguardando dados de quote)
-   - ⚠️ Texto Legal (aguardando dados de quote)
-   - ✅ Recálculo automático de preço (já implementado)
-
-5. ✅ **Interação do Usuário** (FUNCIONANDO)
-   - Usuário seleciona/deseleciona transfers
-   - Usuário seleciona/deseleciona seguros
-   - Preço atualiza em tempo real
-   - Usuário preenche dados dos passageiros
-
-6. ⚠️ **Geração de Expediente** (NÃO IMPLEMENTADO)
-   - Sistema chama `generateExpedient`
-   - Cria expediente na Soltour
-   - Envia email com orçamento
-   - Salva quoteToken para recuperação
-
-### Benefícios Após Implementação:
-
-✅ **Dados Oficiais:**
-- Página usa dados de quote (não availability)
-- Preços finais corretos
-- Seguros disponíveis exibidos
-- Condições legais mostradas
-
-✅ **UX Melhorado:**
-- Loading suave com DelayedQuote
-- Feedback visual claro
-- Tratamento de erros robusto
-- Interface 100% funcional
-
-✅ **Conformidade:**
-- Workflow alinhado com documentação Soltour
-- Endpoints usados corretamente
-- Dados não sendo reenviados desnecessariamente
+### FASE 5: Documentação
+- [ ] README atualizado
+- [ ] Guia de instalação
+- [ ] Guia de configuração
+- [ ] FAQ para cliente
+- [ ] Changelog completo
 
 ---
 
-## 📚 Referências de Código
+## 🚀 Prioridade de Execução
 
-### Arquivos Principais
-- **Backend:** `includes/class-soltour-ajax-handlers.php` (handlers AJAX)
-- **Frontend Quote:** `assets/js/quote-page.js` (página de cotação)
-- **Frontend Busca:** `assets/js/soltour-booking.js` (busca de pacotes)
-- **CSS Quote:** `assets/css/quote-page.css` (estilos da cotação)
-- **Module Delayed:** `assets/js/modules/delayed-quote.js` (loading assíncrono)
+### Sprint 1 (Crítico - 2-3 dias)
+1. ✅ Corrigir card de cancelamento
+2. ✅ Melhorar UI da página de cotação
+3. ✅ Sistema de emails (SMTP + templates)
 
-### Documentação de Referência
-- **Changelog Sessão 14/11:** `CHANGELOG_SESSAO_14_11_2025.md`
-- **Changelog Sessão 15/11:** `CHANGELOG_SESSAO_15_11_2025.md`
-- **Próximos Passos:** `PROXIMOS_PASSOS.md` (este arquivo)
-- **Plano GitHub:** https://github.com/Napster13Nord/soltour-booking-v2.4-ATUAL/blob/main/Next%20steps.md
-- **Estrutura API:** `soltour-cancellation-transfer-insurance.md`
-- **Availability Doc:** `soltour-availability-doc.md`
-- **Quote Doc:** `soltour-quote-doc.md`
+### Sprint 2 (Importante - 2 dias)
+4. ✅ Sistema de logs no WordPress
+5. ✅ Página de acompanhamento no admin
 
-### Commits Relevantes
-- **Sessão 15/11/2025:**
-  - `7849ad0` - fix: responsividade mobile
-  - `ca016b0` - refactor: texto info card e remoção observações
-  - `9b23d6d` - feat: card informativo
-  - `3e2a8bd` - feat: validação e pré-seleção transfers
-  - `e1c6d7c` - feat: cards transfers e cancelamento com PT-PT
+### Sprint 3 (Limpeza - 1 dia)
+6. ✅ Remover debugs
+7. ✅ Limpar código
+8. ✅ Testes finais
 
-- **Sessão 14/11/2025:**
-  - `8218c48` - fix: exibição múltiplos quartos
-  - `efc51df` - fix: ícone campo origem
-  - `b5d148c` - feat: sistema debug completo
-  - `01cf5c3` - feat: coleta idade adultos
-  - `804a565` - fix: pré-seleção quartos múltiplos
+### Sprint 4 (Documentação - 1 dia)
+9. ✅ Documentação completa
+10. ✅ Deploy em produção
+
+**Total estimado: 6-7 dias de trabalho**
 
 ---
 
-## 🚀 Resumo Executivo
+## 📝 Notas Importantes
 
-### ✅ O Que Está Completo (Sessões 14/11 + 15/11)
+### Sobre Emails
+- Usar WP Mail SMTP plugin como fallback
+- Testar com diferentes provedores (Gmail, Outlook, etc)
+- Garantir que emails não vão para spam
+- Adicionar SPF/DKIM records no DNS
 
-**Frontend Quote Page - 100%:**
-- Estrutura HTML completa
-- Cards de Transfers com checkbox e recálculo
-- Cards de Custos de Cancelamento
-- Card informativo
-- Responsividade mobile perfeita
-- Tradução PT-PT completa
-- Integração com DelayedQuote
-- Sistema de debug avançado
+### Sobre Logs
+- Não salvar dados sensíveis (cartões de crédito, etc)
+- Implementar limpeza automática de logs antigos (90 dias)
+- Adicionar export para Excel/CSV
+- GDPR compliance (direito de apagar dados)
 
-**Backend Availability - 100%:**
-- Coleta de idades de adultos e crianças
-- Envio correto para `/booking/availability`
-- Pré-seleção de múltiplos quartos
-- Logs de debug completos
-
-### ⚠️ O Que Precisa Ser Feito (Prioridade Crítica)
-
-**Backend Quote Endpoint:**
-- Implementar `fetch_quote()` method
-- Chamar API `/booking/quote`
-- Processar e retornar dados
-
-**Frontend Quote Integration:**
-- Implementar `loadOfficialQuote()`
-- Renderizar insurances e extras
-- Exibir texto legal
-
-**Expedient Flow:**
-- Implementar `generateExpedient`
-- Integração com email
+### Sobre Produção
+- Backup antes de deploy
+- Testar em staging primeiro
+- Monitorar erros nas primeiras 24h
+- Ter plano de rollback pronto
 
 ---
 
-**Última atualização:** 15/11/2025 - Sessão de Implementação Quote Page Frontend
-**Status:** Frontend completo ✅ | Backend quote pendente ⚠️
-**Próxima sessão:** Implementação backend `/booking/quote` endpoint
-**Branch:** `claude/plugin-development-continuation-01Ty8PnTfxGpYSqMxNtNqKFi`
+**Próxima Ação:** Começar pela FASE 1 - Correção do card de cancelamento e melhoria da UI da página de cotação.
