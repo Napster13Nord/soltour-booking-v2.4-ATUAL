@@ -69,51 +69,41 @@
     font-weight: 400 !important;
 }
 
-/* Card Informativo */
+/* Card Informativo - COMPACTO e ELEGANTE */
 .bt-info-notice {
-    background: #fff !important;
-    border: 2px solid #e0e0e0 !important;
-    border-left: 4px solid #019CB8 !important;
-    border-radius: 12px !important;
-    padding: 20px 25px !important;
-    margin: 30px 0 !important;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
+    background: #f0f8ff !important;
+    border: 1px solid #b3d9e6 !important;
+    border-left: 3px solid #019CB8 !important;
+    border-radius: 8px !important;
+    padding: 12px 18px !important;
+    margin: 20px 0 !important;
     display: flex !important;
-    align-items: flex-start !important;
-    gap: 15px !important;
+    align-items: center !important;
+    gap: 12px !important;
     width: 100% !important;
     box-sizing: border-box !important;
 }
 
 .bt-info-notice-icon {
     flex-shrink: 0 !important;
-    color: #019CB8 !important;
-    margin-top: 2px !important;
-}
-
-.bt-info-notice-icon svg {
-    width: 24px !important;
-    height: 24px !important;
+    font-size: 18px !important;
+    line-height: 1 !important;
 }
 
 .bt-info-notice-content {
     flex: 1 !important;
-}
-
-.bt-info-notice-content p {
-    margin: 0 !important;
-    font-size: 15px !important;
-    line-height: 1.6 !important;
-    color: #1a202c !important;
+    font-size: 13px !important;
+    line-height: 1.5 !important;
+    color: #4b5563 !important;
 }
 
 @media (max-width: 768px) {
     .bt-info-notice {
-        padding: 16px 20px !important;
+        padding: 10px 15px !important;
     }
 
-    .bt-info-notice-content p {
-        font-size: 14px !important;
+    .bt-info-notice-content {
+        font-size: 12px !important;
     }
 }
 
@@ -144,7 +134,7 @@
 .bt-quote-left-column {
     display: flex !important;
     flex-direction: column !important;
-    gap: 30px !important;
+    gap: 20px !important;
 }
 
 /* Resumo do pacote - COMPACTO */
@@ -223,6 +213,32 @@
     text-transform: uppercase !important;
     letter-spacing: 0.5px !important;
     line-height: 1.4 !important;
+}
+
+/* Passo 1 - Estilo Compacto */
+.bt-summary-compact {
+    margin-bottom: 16px !important;
+    padding-bottom: 12px !important;
+}
+
+.bt-summary-compact h3 {
+    font-size: 13px !important;
+    margin-bottom: 8px !important;
+}
+
+.bt-summary-value {
+    font-size: 15px !important;
+    line-height: 1.5 !important;
+    color: #1a202c !important;
+}
+
+.bt-summary-value strong {
+    font-weight: 600 !important;
+}
+
+.bt-stars {
+    font-size: 14px !important;
+    margin-left: 6px !important;
 }
 
 .bt-hotel-info {
@@ -430,13 +446,13 @@
     font-weight: 600 !important;
 }
 
-/* Seção de preço na sidebar */
+/* Seção de preço na sidebar - DESTAQUE MAIOR */
 .bt-sidebar-price {
-    background: #f0f8ff !important;
-    padding: 16px !important;
-    border-radius: 8px !important;
-    border: 1px solid #019CB8 !important;
-    border-bottom: none !important;
+    background: linear-gradient(135deg, #e6f7fb 0%, #f0f8ff 100%) !important;
+    padding: 20px !important;
+    border-radius: 10px !important;
+    border: 2px solid #019CB8 !important;
+    margin-top: 8px !important;
 }
 
 .bt-price-line {
@@ -447,28 +463,46 @@
     color: #4b5563 !important;
 }
 
+/* Preço Total - GRANDE DESTAQUE */
 .bt-price-total {
     display: flex !important;
-    justify-content: space-between !important;
-    padding: 12px 0 0 0 !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    padding: 16px 0 8px 0 !important;
     margin-top: 12px !important;
     border-top: 2px solid #019CB8 !important;
-    font-size: 20px !important;
-    font-weight: 800 !important;
-    color: #1a202c !important;
+}
+
+.bt-price-total-label {
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    color: #4b5563 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    margin-bottom: 8px !important;
 }
 
 .bt-price-total-amount {
+    font-size: 32px !important;
+    font-weight: 800 !important;
     color: #019CB8 !important;
+    line-height: 1 !important;
+    margin-bottom: 6px !important;
+}
+
+.bt-price-per-person {
+    font-size: 13px !important;
+    color: #6b7280 !important;
+    font-weight: 500 !important;
 }
 
 .bt-price-note {
     background: rgba(1, 156, 184, 0.1) !important;
-    padding: 10px !important;
+    padding: 8px 10px !important;
     font-size: 11px !important;
     color: #555 !important;
     line-height: 1.4 !important;
-    margin-top: 12px !important;
+    margin-top: 10px !important;
     border-radius: 6px !important;
 }
 
@@ -481,13 +515,13 @@
     font-size: 15px !important;
 }
 
-/* Formulário de passageiros */
+/* Formulário de passageiros - COMPACTO */
 .bt-passengers-form {
     background: #fff !important;
     border: 2px solid #e0e0e0 !important;
     border-radius: 12px !important;
-    padding: 25px !important;
-    margin-top: 30px !important;
+    padding: 20px !important;
+    margin-top: 20px !important;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
     width: 100% !important;
     box-sizing: border-box !important;
@@ -496,23 +530,23 @@
 
 @media (max-width: 768px) {
     .bt-passengers-form {
-        padding: 20px 15px !important;
+        padding: 16px 15px !important;
         margin: 20px 0 !important;
     }
 }
 
 .bt-passengers-form h2 {
-    font-size: 24px !important;
+    font-size: 22px !important;
     font-weight: 700 !important;
     color: #1a202c !important;
-    margin: 0 0 20px 0 !important;
-    padding-bottom: 15px !important;
+    margin: 0 0 16px 0 !important;
+    padding-bottom: 12px !important;
     border-bottom: 2px solid #e0e0e0 !important;
 }
 
 .bt-form-section {
-    margin-bottom: 30px !important;
-    padding: 20px !important;
+    margin-bottom: 20px !important;
+    padding: 16px !important;
     background: #f8f9fa !important;
     border-radius: 8px !important;
     width: 100% !important;
@@ -521,29 +555,41 @@
 
 @media (max-width: 768px) {
     .bt-form-section {
-        padding: 15px !important;
-        margin-bottom: 20px !important;
+        padding: 14px !important;
+        margin-bottom: 16px !important;
     }
 }
 
 .bt-form-section h3 {
-    font-size: 18px !important;
+    font-size: 16px !important;
     font-weight: 700 !important;
     color: #019CB8 !important;
-    margin: 0 0 20px 0 !important;
+    margin: 0 0 14px 0 !important;
 }
 
+/* Grid de 3 colunas para desktop, 1 para mobile */
 .bt-form-row {
     display: grid !important;
-    grid-template-columns: 1fr 1fr !important;
-    gap: 20px !important;
-    margin-bottom: 15px !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 14px !important;
+    margin-bottom: 12px !important;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 968px) {
+    .bt-form-row {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+}
+
+@media (max-width: 600px) {
     .bt-form-row {
         grid-template-columns: 1fr !important;
     }
+}
+
+/* Span completo para email e telefone */
+.bt-form-group.full-width {
+    grid-column: 1 / -1 !important;
 }
 
 .bt-form-group {
@@ -553,9 +599,9 @@
 
 .bt-form-group label {
     font-weight: 600 !important;
-    font-size: 14px !important;
+    font-size: 13px !important;
     color: #333 !important;
-    margin-bottom: 8px !important;
+    margin-bottom: 6px !important;
 }
 
 .bt-form-group label span.required {
@@ -564,10 +610,10 @@
 
 .bt-form-group input,
 .bt-form-group select {
-    padding: 12px 15px !important;
+    padding: 10px 12px !important;
     border: 2px solid #e0e0e0 !important;
-    border-radius: 8px !important;
-    font-size: 15px !important;
+    border-radius: 6px !important;
+    font-size: 14px !important;
     transition: all 0.2s !important;
     background: #fff !important;
     width: 100% !important;
@@ -1331,19 +1377,28 @@
    CARD DE TRANSFERS
    ======================================== */
 
+/* Acordeões - Cards Compactos e Elegantes */
 .bt-transfer-card,
-.bt-cancellation-card {
+.bt-cancellation-card,
+.bt-insurance-card,
+.bt-extras-card,
+.bt-legal-card {
     background: #fff !important;
-    border-radius: 12px !important;
+    border: 1px solid #e5e7eb !important;
+    border-radius: 8px !important;
     overflow: hidden !important;
-    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08) !important;
-    margin-bottom: 20px !important;
-    transition: all 0.3s ease !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+    margin-bottom: 12px !important;
+    transition: all 0.2s ease !important;
 }
 
 .bt-transfer-card:hover,
-.bt-cancellation-card:hover {
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12) !important;
+.bt-cancellation-card:hover,
+.bt-insurance-card:hover,
+.bt-extras-card:hover,
+.bt-legal-card:hover {
+    border-color: #019CB8 !important;
+    box-shadow: 0 2px 8px rgba(1, 156, 184, 0.15) !important;
 }
 
 .bt-transfer-header,
@@ -1351,15 +1406,15 @@
 .bt-insurance-header,
 .bt-extras-header,
 .bt-legal-header {
-    background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%) !important;
-    padding: 14px 18px !important;
+    background: #f9fafb !important;
+    padding: 12px 16px !important;
     display: flex !important;
     align-items: center !important;
     justify-content: space-between !important;
     cursor: pointer !important;
-    border-bottom: 1px solid #d1d5db !important;
-    border-radius: 8px !important;
-    transition: background 0.2s ease !important;
+    border-bottom: 1px solid #e5e7eb !important;
+    transition: all 0.2s ease !important;
+    user-select: none !important;
 }
 
 .bt-transfer-header:hover,
@@ -1367,7 +1422,17 @@
 .bt-insurance-header:hover,
 .bt-extras-header:hover,
 .bt-legal-header:hover {
-    background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%) !important;
+    background: #f0f8ff !important;
+}
+
+/* Header expandido */
+.bt-transfer-card.expanded .bt-transfer-header,
+.bt-cancellation-card.expanded .bt-cancellation-header,
+.bt-insurance-card.expanded .bt-insurance-header,
+.bt-extras-card.expanded .bt-extras-header,
+.bt-legal-card.expanded .bt-legal-header {
+    background: #e6f7fb !important;
+    border-bottom-color: #019CB8 !important;
 }
 
 .bt-transfer-header h3,
@@ -1376,11 +1441,12 @@
 .bt-extras-header h3,
 .bt-legal-header h3 {
     margin: 0 !important;
-    font-size: 14px !important;
+    font-size: 13px !important;
     font-weight: 700 !important;
-    color: #1f2937 !important;
+    color: #374151 !important;
     text-transform: uppercase !important;
-    letter-spacing: 0.5px !important;
+    letter-spacing: 0.3px !important;
+    flex: 1 !important;
 }
 
 .bt-transfer-toggle,
@@ -1412,7 +1478,7 @@
 .bt-insurance-body,
 .bt-extras-body,
 .bt-legal-body {
-    padding: 0 20px !important;
+    padding: 0 16px !important;
     max-height: 0 !important;
     overflow: hidden !important;
     transition: max-height 0.3s ease, padding 0.3s ease !important;
@@ -1424,7 +1490,7 @@
 .bt-extras-card.expanded .bt-extras-body,
 .bt-legal-card.expanded .bt-legal-body {
     max-height: 2000px !important;
-    padding: 20px !important;
+    padding: 16px !important;
 }
 
 .bt-transfer-description,
