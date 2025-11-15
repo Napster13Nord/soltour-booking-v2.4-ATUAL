@@ -2293,23 +2293,39 @@
      */
     function proceedWithPackageSelection(budgetId, hotelCode, providerCode) {
 
+        console.log('╔═══════════════════════════════════════════════════════════════════╗');
+        console.log('║     🎯 SOLTOUR - PREPARE QUOTE - FRONTEND VALIDATION             ║');
+        console.log('╚═══════════════════════════════════════════════════════════════════╝');
+        console.log('📥 INICIANDO VALIDAÇÃO DO PACOTE');
+        console.log('  ├─ budgetId:', budgetId);
+        console.log('  ├─ hotelCode:', hotelCode);
+        console.log('  └─ providerCode:', providerCode);
+
         // Buscar o pacote completo do array de resultados
         const fullPackage = SoltourApp.allUniqueHotels.find(pkg =>
             pkg.budget.budgetId === budgetId
         );
 
         if (!fullPackage) {
+            console.log('❌ ERRO: Pacote não encontrado no array de resultados');
+            console.log('╚═══════════════════════════════════════════════════════════════════╝');
             alert('Erro: Pacote não encontrado. Por favor, tente novamente.');
             hideLoadingModal();
             return;
         }
 
+        console.log('✅ Pacote encontrado no array de resultados');
+
         // Buscar quartos selecionados (já pre-selecionados automaticamente)
         const selectedRooms = SoltourApp.selectedRooms[budgetId] || [];
         const maxRooms = SoltourApp.numRoomsSearched || 1;
 
+        console.log('🛏️ QUARTOS SELECIONADOS:', selectedRooms.length, 'de', maxRooms);
+
         // Validação simples - quartos já vêm pre-selecionados
         if (selectedRooms.length === 0) {
+            console.log('❌ ERRO: Nenhum quarto selecionado');
+            console.log('╚═══════════════════════════════════════════════════════════════════╝');
             hideLoadingModal();
             alert('Por favor, selecione um quarto antes de continuar.');
             return;
@@ -2322,22 +2338,128 @@
         const firstFlightId = Object.keys(SoltourApp.flightsFromAvailability)[0];
         const flightData = SoltourApp.flightsFromAvailability[firstFlightId] || null;
 
-        // Salvar TODOS os dados no sessionStorage (APENAS do availability)
-        sessionStorage.setItem('soltour_selected_package', JSON.stringify({
-            budgetId: budgetId,
-            hotelCode: hotelCode,
-            providerCode: providerCode,
-            availToken: SoltourApp.availToken,
-            budget: fullPackage.budget,           // Budget completo do availability
-            hotelInfo: hotelInfo,                 // Info do hotel do availability (NÃO hotelDetails)
-            flightData: flightData,               // Dados dos voos do availability (outboundSegments/returnSegments)
-            selectedRooms: selectedRooms,         // Array de quartos selecionados (múltiplos quartos)
-            selectedRoom: selectedRooms[0],       // Manter compatibilidade com código legado
-            numRoomsSearched: maxRooms,           // Número de quartos pesquisados
-            searchParams: SoltourApp.searchParams // USAR searchParams COMPLETO que tem rooms
-        }));
+        console.log('🏨 HOTEL INFO:', hotelInfo ? 'ENCONTRADO' : 'NÃO ENCONTRADO');
+        console.log('✈️ FLIGHT DATA:', flightData ? 'ENCONTRADO' : 'NÃO ENCONTRADO');
 
-        window.location.href = `/cotacao/?budget=${budgetId}`;
+        // Atualizar modal para indicar validação
+        showLoadingModal('Validando pacote...', 'Por favor, aguarde enquanto validamos a disponibilidade');
+
+        console.log('');
+        console.log('🔄 CHAMANDO ENDPOINT: soltour_prepare_quote');
+        console.log('  └─ Validação intermediária com fetchAvailability + quote');
+
+        // ========================================
+        // NOVA VALIDAÇÃO INTERMEDIÁRIA: fetchAvailability + quote
+        // ========================================
+        $.ajax({
+            url: soltourData.ajaxurl,
+            type: 'POST',
+            data: {
+                action: 'soltour_prepare_quote',
+                nonce: soltourData.nonce,
+                avail_token: SoltourApp.availToken,
+                budget_id: budgetId,
+                hotel_code: hotelCode,
+                provider_code: providerCode
+            },
+            success: function(response) {
+                console.log('');
+                console.log('📥 RESPOSTA RECEBIDA DO BACKEND:');
+                console.log('  ├─ success:', response.success);
+
+                if (response.success) {
+                    console.log('  ├─ message:', response.data.message);
+                    console.log('  ├─ quoteToken:', response.data.quoteToken ? response.data.quoteToken.substring(0, 20) + '...' : 'NÃO GERADO');
+                    console.log('  ├─ fetchAvailability:', response.data.fetchAvailability ? 'RECEBIDO ✅' : 'AUSENTE ❌');
+                    console.log('  ├─ quote:', response.data.quote ? 'RECEBIDO ✅' : 'AUSENTE ❌');
+                    console.log('  └─ debugInfo:', response.data.debugInfo || 'N/A');
+
+                    console.log('');
+                    console.log('✅ VALIDAÇÃO CONCLUÍDA COM SUCESSO!');
+                    console.log('💾 Salvando dados completos no sessionStorage...');
+
+                    // Salvar TODOS os dados no sessionStorage incluindo quote
+                    const packageData = {
+                        budgetId: budgetId,
+                        hotelCode: hotelCode,
+                        providerCode: providerCode,
+                        availToken: SoltourApp.availToken,
+                        budget: fullPackage.budget,           // Budget completo do availability
+                        hotelInfo: hotelInfo,                 // Info do hotel do availability (NÃO hotelDetails)
+                        flightData: flightData,               // Dados dos voos do availability (outboundSegments/returnSegments)
+                        selectedRooms: selectedRooms,         // Array de quartos selecionados (múltiplos quartos)
+                        selectedRoom: selectedRooms[0],       // Manter compatibilidade com código legado
+                        numRoomsSearched: maxRooms,           // Número de quartos pesquisados
+                        searchParams: SoltourApp.searchParams, // USAR searchParams COMPLETO que tem rooms
+
+                        // NOVOS DADOS DO QUOTE
+                        quoteToken: response.data.quoteToken,
+                        quoteData: response.data.quote,
+                        fetchAvailabilityData: response.data.fetchAvailability
+                    };
+
+                    sessionStorage.setItem('soltour_selected_package', JSON.stringify(packageData));
+
+                    console.log('📦 DADOS SALVOS:', {
+                        budgetId: packageData.budgetId,
+                        quoteToken: packageData.quoteToken ? 'SALVO ✅' : 'AUSENTE',
+                        quoteData: packageData.quoteData ? 'SALVO ✅' : 'AUSENTE',
+                        totalItems: Object.keys(packageData).length
+                    });
+
+                    console.log('');
+                    console.log('🚀 REDIRECIONANDO PARA PÁGINA DE COTAÇÃO...');
+                    console.log('╚═══════════════════════════════════════════════════════════════════╝');
+
+                    // Redirecionar para página de cotação
+                    window.location.href = `/cotacao/?budget=${budgetId}`;
+
+                } else {
+                    // Erro na validação
+                    console.log('  ├─ message:', response.data ? response.data.message : 'Erro desconhecido');
+                    console.log('  ├─ error_type:', response.data ? response.data.error_type : 'N/A');
+                    console.log('  └─ error_details:', response.data ? response.data.error_details : 'N/A');
+
+                    console.log('');
+                    console.log('❌ VALIDAÇÃO FALHOU!');
+
+                    hideLoadingModal();
+
+                    const errorMessage = response.data && response.data.message
+                        ? response.data.message
+                        : 'Este pacote não está mais disponível. Por favor, selecione outro.';
+
+                    console.log('💬 MENSAGEM AO USUÁRIO:', errorMessage);
+                    console.log('╚═══════════════════════════════════════════════════════════════════╝');
+
+                    // Mostrar mensagem ao usuário
+                    if (window.SoltourApp.Toast) {
+                        window.SoltourApp.Toast.error(errorMessage, 6000);
+                    } else {
+                        alert(errorMessage);
+                    }
+
+                    // Se deve redirecionar de volta aos resultados
+                    if (response.data && response.data.redirect_to_results) {
+                        console.log('🔄 Redirecionando de volta aos resultados...');
+                        // Já estamos na página de resultados, apenas recarregar
+                        location.reload();
+                    }
+                }
+            },
+            error: function(xhr, status, error) {
+                console.log('');
+                console.log('❌ ERRO NA CHAMADA AJAX:');
+                console.log('  ├─ status:', status);
+                console.log('  ├─ error:', error);
+                console.log('  └─ xhr.status:', xhr.status);
+                console.log('╚═══════════════════════════════════════════════════════════════════╝');
+
+                hideLoadingModal();
+
+                alert('Erro ao validar pacote. Por favor, tente novamente.');
+            }
+        });
     }
 
     /**

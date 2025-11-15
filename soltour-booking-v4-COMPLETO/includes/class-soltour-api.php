@@ -811,6 +811,146 @@ class Soltour_API {
     }
 
     /**
+     * AJAX Handler: Preparar e validar cotação
+     * Fluxo: fetchAvailability → validar → quote
+     * Chamado quando usuário clica no botão "Selecionar" num card
+     */
+    public function ajax_prepare_quote() {
+        check_ajax_referer('soltour_booking_nonce', 'nonce');
+
+        $this->log('╔═══════════════════════════════════════════════════════════════════╗');
+        $this->log('║      🎯 SOLTOUR - PREPARE QUOTE - VALIDAÇÃO INTERMEDIÁRIA        ║');
+        $this->log('╚═══════════════════════════════════════════════════════════════════╝');
+
+        // Validar e sanitizar inputs
+        $avail_token = isset($_POST['avail_token']) ? sanitize_text_field($_POST['avail_token']) : '';
+        $budget_id = isset($_POST['budget_id']) ? sanitize_text_field($_POST['budget_id']) : '';
+        $hotel_code = isset($_POST['hotel_code']) ? sanitize_text_field($_POST['hotel_code']) : '';
+        $provider_code = isset($_POST['provider_code']) ? sanitize_text_field($_POST['provider_code']) : '';
+
+        $this->log('📥 DADOS RECEBIDOS DO FRONTEND:');
+        $this->log('  ├─ availToken: ' . ($avail_token ? substr($avail_token, 0, 20) . '...' : 'NÃO FORNECIDO'));
+        $this->log('  ├─ budgetId: ' . ($budget_id ?: 'NÃO FORNECIDO'));
+        $this->log('  ├─ hotelCode: ' . ($hotel_code ?: 'NÃO FORNECIDO'));
+        $this->log('  └─ providerCode: ' . ($provider_code ?: 'NÃO FORNECIDO'));
+
+        // Validar dados obrigatórios
+        if (empty($avail_token) || empty($budget_id)) {
+            $this->log('❌ ERRO: Dados obrigatórios ausentes', 'error');
+            wp_send_json_error(array(
+                'message' => 'Dados incompletos. Por favor, tente novamente.',
+                'debug' => array(
+                    'availToken' => !empty($avail_token),
+                    'budgetId' => !empty($budget_id)
+                )
+            ));
+            return;
+        }
+
+        // ========================================
+        // PASSO 1: fetchAvailability - Validar se budget ainda é válido
+        // ========================================
+        $this->log('');
+        $this->log('🔍 PASSO 1/2: Validando pacote com fetchAvailability...');
+        $this->log('  └─ Endpoint: POST /booking/fetchAvailability');
+
+        $fetch_response = $this->fetch_availability($avail_token, $budget_id);
+
+        $this->log('📦 RESPOSTA fetchAvailability:');
+        $this->log('  ├─ result.ok: ' . (isset($fetch_response['result']['ok']) ? ($fetch_response['result']['ok'] ? 'TRUE ✅' : 'FALSE ❌') : 'UNDEFINED'));
+
+        if (isset($fetch_response['result']['errorMessage'])) {
+            $this->log('  ├─ result.errorMessage: ' . $fetch_response['result']['errorMessage']);
+        }
+
+        $this->log('  ├─ budgets: ' . (isset($fetch_response['budgets']) ? count($fetch_response['budgets']) : '0'));
+        $this->log('  ├─ hotelServices: ' . (isset($fetch_response['hotelServices']) ? count($fetch_response['hotelServices']) : '0'));
+        $this->log('  ├─ flightServices: ' . (isset($fetch_response['flightServices']) ? count($fetch_response['flightServices']) : '0'));
+        $this->log('  └─ priceBreakdown: ' . (isset($fetch_response['priceBreakdown']) ? 'SIM ✅' : 'NÃO ❌'));
+
+        // Validar resposta do fetchAvailability
+        if (!isset($fetch_response['result']['ok']) || $fetch_response['result']['ok'] === false) {
+            $error_message = isset($fetch_response['result']['errorMessage'])
+                ? $fetch_response['result']['errorMessage']
+                : 'Budget não encontrado ou expirado';
+
+            $this->log('');
+            $this->log('❌ VALIDAÇÃO FALHOU: ' . $error_message);
+            $this->log('💡 AÇÃO: Redirecionar usuário de volta aos resultados');
+            $this->log('╚═══════════════════════════════════════════════════════════════════╝');
+
+            wp_send_json_error(array(
+                'message' => 'Este pacote não está mais disponível. Por favor, selecione outro.',
+                'error_type' => 'budget_expired',
+                'error_details' => $error_message,
+                'redirect_to_results' => true
+            ));
+            return;
+        }
+
+        // ========================================
+        // PASSO 2: quote - Gerar cotação oficial
+        // ========================================
+        $this->log('');
+        $this->log('✅ VALIDAÇÃO OK! Prosseguindo para quote...');
+        $this->log('🎫 PASSO 2/2: Gerando cotação oficial com /booking/quote...');
+        $this->log('  └─ Endpoint: POST /booking/quote');
+
+        $quote_response = $this->quote_package($avail_token, array($budget_id));
+
+        $this->log('📋 RESPOSTA quote:');
+        $this->log('  ├─ budget: ' . (isset($quote_response['budget']) ? 'SIM ✅' : 'NÃO ❌'));
+        $this->log('  ├─ quoteToken: ' . (isset($quote_response['quoteToken']) ? substr($quote_response['quoteToken'], 0, 20) . '... ✅' : 'NÃO ❌'));
+        $this->log('  ├─ insurances: ' . (isset($quote_response['insurances']) ? count($quote_response['insurances']) : '0'));
+        $this->log('  ├─ extras: ' . (isset($quote_response['extras']) ? count($quote_response['extras']) : '0'));
+        $this->log('  ├─ importantInformation: ' . (isset($quote_response['importantInformation']) ? count($quote_response['importantInformation']) : '0'));
+        $this->log('  ├─ cancellationChargeServices: ' . (isset($quote_response['cancellationChargeServices']) ? count($quote_response['cancellationChargeServices']) : '0'));
+
+        if (isset($quote_response['priceBreakdown'])) {
+            $pb = $quote_response['priceBreakdown'];
+            $this->log('  └─ priceBreakdown.totalPvp: ' . (isset($pb['totalPvp']) ? $pb['totalPvp'] . ' €' : 'N/A'));
+        }
+
+        // Validar resposta do quote
+        if (!isset($quote_response['budget'])) {
+            $this->log('');
+            $this->log('❌ ERRO: Quote não retornou budget válido');
+            $this->log('╚═══════════════════════════════════════════════════════════════════╝');
+
+            wp_send_json_error(array(
+                'message' => 'Erro ao gerar cotação. Por favor, tente novamente.',
+                'debug_data' => $quote_response
+            ));
+            return;
+        }
+
+        // ========================================
+        // SUCESSO: Retornar dados completos para o frontend
+        // ========================================
+        $this->log('');
+        $this->log('✅ SUCESSO! Preparação de cotação concluída');
+        $this->log('📤 RETORNANDO DADOS PARA FRONTEND:');
+        $this->log('  ├─ fetchAvailability: COMPLETO');
+        $this->log('  ├─ quote: COMPLETO');
+        $this->log('  └─ quoteToken: GERADO');
+        $this->log('╚═══════════════════════════════════════════════════════════════════╝');
+
+        wp_send_json_success(array(
+            'message' => 'Pacote validado com sucesso!',
+            'fetchAvailability' => $fetch_response,
+            'quote' => $quote_response,
+            'quoteToken' => isset($quote_response['quoteToken']) ? $quote_response['quoteToken'] : null,
+            'debugInfo' => array(
+                'availToken' => substr($avail_token, 0, 20) . '...',
+                'budgetId' => $budget_id,
+                'hotelCode' => $hotel_code,
+                'providerCode' => $provider_code,
+                'timestamp' => current_time('mysql')
+            )
+        ));
+    }
+
+    /**
      * AJAX Handler: Gerar cotação final na página de cotação
      * Função simplificada para apenas coletar dados e retornar sucesso
      */

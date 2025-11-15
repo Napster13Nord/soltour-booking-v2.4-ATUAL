@@ -88,6 +88,7 @@ class Soltour_Booking {
             'soltour_get_alternatives',
             'soltour_check_allowed_selling', // Verificar se venda está permitida
             'soltour_quote_package',
+            'soltour_prepare_quote', // NOVO - Validar pacote com fetchAvailability e gerar quote
             'soltour_generate_quote', // NOVO - Gerar cotação final na página de cotação
             'soltour_delayed_quote', // NOVO Sprint 1 - Delayed quote com preços finais
             'soltour_update_optional_service', // NOVO Sprint 1 - Adicionar/remover serviços opcionais
