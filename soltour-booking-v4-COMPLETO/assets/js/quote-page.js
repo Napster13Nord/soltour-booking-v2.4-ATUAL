@@ -378,8 +378,22 @@
                         </div>
                     </div>
 
+                    <!-- GDPR - Consentimento -->
+                    <div class="bt-gdpr-consent">
+                        <label class="bt-gdpr-label">
+                            <input type="checkbox" id="gdpr-consent" class="bt-gdpr-checkbox" required />
+                            <span class="bt-gdpr-text">
+                                Ao gerar a cotação, concordo com os
+                                <a href="https://beautytravel.pt/termos-e-condicoes" target="_blank" rel="noopener">Termos e Condições</a>
+                                e
+                                <a href="https://beautytravel.pt/politica-de-privacidade" target="_blank" rel="noopener">Política de Privacidade</a>
+                                da Beauty Travel.
+                            </span>
+                        </label>
+                    </div>
+
                     <!-- Botão de Gerar Cotação -->
-                    <button type="button" class="bt-btn-generate-quote" id="btn-generate-quote">
+                    <button type="button" class="bt-btn-generate-quote" id="btn-generate-quote" disabled>
                         <i class="fas fa-file-invoice"></i>
                         Gerar Cotação Final
                     </button>
@@ -872,6 +886,11 @@
      * Bind eventos da página
      */
     function bindQuoteEvents() {
+        // GDPR checkbox - habilitar/desabilitar botão
+        $('#gdpr-consent').off('change').on('change', function() {
+            $('#btn-generate-quote').prop('disabled', !$(this).is(':checked'));
+        });
+
         // Botão de gerar cotação
         $('#btn-generate-quote').off('click').on('click', function() {
             generateFinalQuote();
