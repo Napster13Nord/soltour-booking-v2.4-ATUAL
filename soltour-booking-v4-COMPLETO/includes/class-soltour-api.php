@@ -193,8 +193,8 @@ class Soltour_API {
                     'direction' => isset($params['orderDirection']) ? $params['orderDirection'] : 'ASC'
                 ),
                 'pagination' => array(
-                    'firstItem' => isset($params['firstItem']) ? intval($params['firstItem']) : 0,
-                    'itemCount' => isset($params['itemCount']) ? intval($params['itemCount']) : 20
+                    'pageNumber' => isset($params['pageNumber']) ? intval($params['pageNumber']) : 0,
+                    'rowsPerPage' => isset($params['rowsPerPage']) ? intval($params['rowsPerPage']) : 100
                 )
             ),
             'languageCode' => SOLTOUR_API_LANG,
@@ -223,8 +223,8 @@ class Soltour_API {
         );
 
         $this->log('Enviando para API Soltour (booking/availability):');
-        $this->log('  - criteria.pagination.firstItem: ' . $data['criteria']['pagination']['firstItem']);
-        $this->log('  - criteria.pagination.itemCount: ' . $data['criteria']['pagination']['itemCount']);
+        $this->log('  - criteria.pagination.pageNumber: ' . $data['criteria']['pagination']['pageNumber']);
+        $this->log('  - criteria.pagination.rowsPerPage: ' . $data['criteria']['pagination']['rowsPerPage']);
 
         return $this->make_request('booking/availability', $data);
     }
@@ -234,7 +234,7 @@ class Soltour_API {
      * Busca próxima página usando availToken existente
      * IMPORTANTE: Precisa enviar TODOS os params originais + availToken
      */
-    public function paginate_availability($avail_token, $first_item, $item_count, $original_params) {
+    public function paginate_availability($avail_token, $page_number, $rows_per_page, $original_params) {
         // Reconstruir estrutura de rooms dos params originais
         $rooms = array();
         if (isset($original_params['rooms']) && is_array($original_params['rooms'])) {
@@ -264,8 +264,8 @@ class Soltour_API {
                     'direction' => 'ASC'
                 ),
                 'pagination' => array(
-                    'firstItem' => intval($first_item),
-                    'itemCount' => intval($item_count)
+                    'pageNumber' => intval($page_number),
+                    'rowsPerPage' => intval($rows_per_page)
                 )
             ),
             'languageCode' => SOLTOUR_API_LANG,
@@ -295,8 +295,8 @@ class Soltour_API {
 
         $this->log('Paginando com availToken E params completos:');
         $this->log('  - availToken: ' . substr($avail_token, 0, 20) . '...');
-        $this->log('  - firstItem: ' . $first_item);
-        $this->log('  - itemCount: ' . $item_count);
+        $this->log('  - pageNumber: ' . $page_number);
+        $this->log('  - rowsPerPage: ' . $rows_per_page);
         $this->log('  - params incluídos: SIM');
 
         return $this->make_request('booking/availability', $data);
@@ -657,14 +657,14 @@ class Soltour_API {
             'onlyHotel' => isset($_POST['only_hotel']) ? sanitize_text_field($_POST['only_hotel']) : 'N',
             'forceAvail' => isset($_POST['force_avail']) ? filter_var($_POST['force_avail'], FILTER_VALIDATE_BOOLEAN) : false,
 
-            // Paginação
-            'firstItem' => isset($_POST['first_item']) ? intval($_POST['first_item']) : 0,
-            'itemCount' => isset($_POST['item_count']) ? intval($_POST['item_count']) : 10
+            // Paginação (corrigido para pageNumber/rowsPerPage conforme documentação Soltour)
+            'pageNumber' => isset($_POST['page_number']) ? intval($_POST['page_number']) : 0,
+            'rowsPerPage' => isset($_POST['rows_per_page']) ? intval($_POST['rows_per_page']) : 100
         );
 
         $this->log('Params recebidos do frontend:');
-        $this->log('  - first_item: ' . $params['firstItem']);
-        $this->log('  - item_count: ' . $params['itemCount']);
+        $this->log('  - pageNumber: ' . $params['pageNumber']);
+        $this->log('  - rowsPerPage: ' . $params['rowsPerPage']);
         $this->log('Params completos: ' . json_encode($params));
 
         $response = $this->search_availability($params);
@@ -689,8 +689,8 @@ class Soltour_API {
         $this->log('=== AJAX PAGINATE PACKAGES CALLED ===');
 
         $avail_token = sanitize_text_field($_POST['avail_token']);
-        $first_item = isset($_POST['first_item']) ? intval($_POST['first_item']) : 0;
-        $item_count = isset($_POST['item_count']) ? intval($_POST['item_count']) : 10;
+        $page_number = isset($_POST['page_number']) ? intval($_POST['page_number']) : 0;
+        $rows_per_page = isset($_POST['rows_per_page']) ? intval($_POST['rows_per_page']) : 100;
 
         // Receber parâmetros originais da busca
         $original_params = array(
@@ -702,11 +702,11 @@ class Soltour_API {
         );
 
         $this->log('Paginação requisitada:');
-        $this->log('  - first_item: ' . $first_item);
-        $this->log('  - item_count: ' . $item_count);
+        $this->log('  - pageNumber: ' . $page_number);
+        $this->log('  - rowsPerPage: ' . $rows_per_page);
         $this->log('  - original_params recebidos: SIM');
 
-        $response = $this->paginate_availability($avail_token, $first_item, $item_count, $original_params);
+        $response = $this->paginate_availability($avail_token, $page_number, $rows_per_page, $original_params);
 
         $this->log('Resposta da paginação:');
         $this->log('  - budgets: ' . (isset($response['budgets']) ? count($response['budgets']) : 0));
@@ -850,88 +850,16 @@ class Soltour_API {
         }
 
         // ========================================
-        // PASSO 1: fetchAvailability - Validar se budget ainda é válido
+        // FLUXO SIMPLIFICADO: IR DIRETO PARA /booking/quote
+        // fetchAvailability estava dando erro interno na API Soltour
+        // mesmo quando o budget existia. Conforme doc, quote é suficiente.
         // ========================================
         $this->log('');
-        $this->log('🔍 PASSO 1/2: Validando pacote com fetchAvailability...');
-        $this->log('  └─ Endpoint: POST /booking/fetchAvailability');
-
-        $fetch_response = $this->fetch_availability($avail_token, $budget_id);
-
-        $this->log('📦 RESPOSTA fetchAvailability:');
-        $this->log('  ├─ result.ok: ' . (isset($fetch_response['result']['ok']) ? ($fetch_response['result']['ok'] ? 'TRUE ✅' : 'FALSE ❌') : 'UNDEFINED'));
-
-        if (isset($fetch_response['result']['errorMessage'])) {
-            $this->log('  ├─ result.errorMessage: ' . $fetch_response['result']['errorMessage']);
-        }
-
-        $this->log('  ├─ budgets: ' . (isset($fetch_response['budgets']) ? count($fetch_response['budgets']) : '0'));
-        $this->log('  ├─ hotelServices: ' . (isset($fetch_response['hotelServices']) ? count($fetch_response['hotelServices']) : '0'));
-        $this->log('  ├─ flightServices: ' . (isset($fetch_response['flightServices']) ? count($fetch_response['flightServices']) : '0'));
-        $this->log('  └─ priceBreakdown: ' . (isset($fetch_response['priceBreakdown']) ? 'SIM ✅' : 'NÃO ❌'));
-
-        // DEBUG: Verificar se budgetId selecionado existe nos budgets retornados
-        if (isset($fetch_response['budgets']) && is_array($fetch_response['budgets'])) {
-            $found_budget = false;
-            $budget_ids_in_response = array();
-
-            foreach ($fetch_response['budgets'] as $idx => $budget) {
-                if (isset($budget['budgetId'])) {
-                    $budget_ids_in_response[] = $budget['budgetId'];
-                    if ($budget['budgetId'] === $budget_id) {
-                        $found_budget = true;
-                        $this->log('  └─ ✅ Budget ENCONTRADO na posição ' . $idx . ' da lista');
-                        break;
-                    }
-                }
-            }
-
-            if (!$found_budget) {
-                $this->log('  └─ ❌ Budget NÃO encontrado na lista de ' . count($fetch_response['budgets']) . ' budgets!');
-                $this->log('');
-                $this->log('🔍 DEBUG - BUDGETIDS DISPONÍVEIS:');
-                $this->log('  ├─ Buscado: ' . $budget_id);
-                $this->log('  ├─ Primeiro budgetId disponível: ' . (count($budget_ids_in_response) > 0 ? $budget_ids_in_response[0] : 'N/A'));
-                $this->log('  └─ Total de budgetIds: ' . count($budget_ids_in_response));
-            }
-        }
-        // Validar resposta do fetchAvailability
-        if (!isset($fetch_response['result']['ok']) || $fetch_response['result']['ok'] === false) {
-            $error_message = isset($fetch_response['result']['errorMessage'])
-                ? $fetch_response['result']['errorMessage']
-                : 'Budget não encontrado ou expirado';
-
-            $this->log('');
-            $this->log('❌ VALIDAÇÃO FALHOU: ' . $error_message);
-            $this->log('💡 AÇÃO: Mostrar erro ao usuário (pacote expirado)');
-            $this->log('📊 DEBUG INFO:');
-            $this->log('  ├─ availToken válido: ' . (!empty($avail_token) ? 'SIM' : 'NÃO'));
-            $this->log('  ├─ budgetId: ' . $budget_id);
-            $this->log('  └─ Possível causa: Budget removido da cache ou availToken expirado');
-            $this->log('╚═══════════════════════════════════════════════════════════════════╝');
-
-            wp_send_json_error(array(
-                'message' => 'Este pacote não está mais disponível. Por favor, selecione outro ou faça uma nova busca.',
-                'error_type' => 'budget_expired',
-                'error_details' => $error_message,
-                'technical_details' => array(
-                    'availToken_provided' => !empty($avail_token),
-                    'budgetId' => $budget_id,
-                    'fetch_response_result' => isset($fetch_response['result']) ? $fetch_response['result'] : null
-                ),
-                'redirect_to_results' => false  // NÃO redirecionar - deixar usuário escolher
-            ));
-            return;
-        }
-
-        // ========================================
-        // PASSO 2: quote - Gerar cotação oficial
-        // ========================================
-        $this->log('');
-        $this->log('✅ VALIDAÇÃO OK! Prosseguindo para quote...');
-        $this->log('🎫 PASSO 2/2: Gerando cotação oficial com /booking/quote...');
+        $this->log('🎫 Gerando cotação oficial com /booking/quote...');
         $this->log('  └─ Endpoint: POST /booking/quote');
+        $this->log('  └─ budgetIds: [' . $budget_id . ']');
 
+        // Chamar diretamente /booking/quote
         $quote_response = $this->quote_package($avail_token, array($budget_id));
 
         $this->log('📋 RESPOSTA quote:');
@@ -947,15 +875,53 @@ class Soltour_API {
             $this->log('  └─ priceBreakdown.totalPvp: ' . (isset($pb['totalPvp']) ? $pb['totalPvp'] . ' €' : 'N/A'));
         }
 
-        // Validar resposta do quote
-        if (!isset($quote_response['budget'])) {
+        // ========================================
+        // VALIDAÇÃO ROBUSTA DA RESPOSTA DO QUOTE
+        // ========================================
+
+        // Verificar se resposta tem estrutura válida
+        if (!is_array($quote_response)) {
             $this->log('');
-            $this->log('❌ ERRO: Quote não retornou budget válido');
+            $this->log('❌ ERRO: Resposta do quote inválida (não é array)');
             $this->log('╚═══════════════════════════════════════════════════════════════════╝');
 
             wp_send_json_error(array(
                 'message' => 'Erro ao gerar cotação. Por favor, tente novamente.',
-                'debug_data' => $quote_response
+                'error_type' => 'invalid_response',
+                'error_details' => 'Quote response is not an array'
+            ));
+            return;
+        }
+
+        // Verificar se tem result.ok
+        if (isset($quote_response['result']) && isset($quote_response['result']['ok']) && $quote_response['result']['ok'] === false) {
+            $error_message = isset($quote_response['result']['errorMessage'])
+                ? $quote_response['result']['errorMessage']
+                : 'Erro desconhecido ao gerar cotação';
+
+            $this->log('');
+            $this->log('❌ ERRO: Quote retornou result.ok = false');
+            $this->log('  └─ Erro: ' . $error_message);
+            $this->log('╚═══════════════════════════════════════════════════════════════════╝');
+
+            wp_send_json_error(array(
+                'message' => 'Este pacote não está mais disponível. Por favor, selecione outro.',
+                'error_type' => 'quote_failed',
+                'error_details' => $error_message
+            ));
+            return;
+        }
+
+        // Verificar se tem budget
+        if (!isset($quote_response['budget'])) {
+            $this->log('');
+            $this->log('❌ ERRO: Quote não retornou budget');
+            $this->log('╚═══════════════════════════════════════════════════════════════════╝');
+
+            wp_send_json_error(array(
+                'message' => 'Erro ao gerar cotação. Por favor, tente novamente.',
+                'error_type' => 'no_budget',
+                'debug_response' => array_keys($quote_response)
             ));
             return;
         }
@@ -964,16 +930,15 @@ class Soltour_API {
         // SUCESSO: Retornar dados completos para o frontend
         // ========================================
         $this->log('');
-        $this->log('✅ SUCESSO! Preparação de cotação concluída');
+        $this->log('✅ SUCESSO! Cotação gerada com sucesso');
         $this->log('📤 RETORNANDO DADOS PARA FRONTEND:');
-        $this->log('  ├─ fetchAvailability: COMPLETO');
         $this->log('  ├─ quote: COMPLETO');
-        $this->log('  └─ quoteToken: GERADO');
+        $this->log('  ├─ quoteToken: GERADO');
+        $this->log('  └─ budget: VÁLIDO');
         $this->log('╚═══════════════════════════════════════════════════════════════════╝');
 
         wp_send_json_success(array(
             'message' => 'Pacote validado com sucesso!',
-            'fetchAvailability' => $fetch_response,
             'quote' => $quote_response,
             'quoteToken' => isset($quote_response['quoteToken']) ? $quote_response['quoteToken'] : null,
             'debugInfo' => array(

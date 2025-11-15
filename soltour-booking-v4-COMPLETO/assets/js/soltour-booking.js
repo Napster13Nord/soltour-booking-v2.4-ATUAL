@@ -486,8 +486,9 @@
             product_type: productType,
             force_avail: true, // ✅ BUSCA DIRETA COM PREÇOS (removido DelayedAvailability)
 
-            first_item: 0,
-            item_count: 100 // Buscar todos os budgets de uma vez
+            // Paginação (corrigido para pageNumber/rowsPerPage conforme documentação Soltour)
+            page_number: 0,
+            rows_per_page: 100 // Buscar todos os budgets de uma vez
         };
 
         if ($('#soltour-results-list').length > 0) {
@@ -855,8 +856,8 @@
 
         // Buscar TODOS os resultados de uma vez (100 itens)
         const searchParamsWithLargeLimit = $.extend({}, SoltourApp.searchParams, {
-            first_item: 0,
-            item_count: 100  // Buscar 100 budgets de uma vez
+            page_number: 0,
+            rows_per_page: 100  // Buscar 100 budgets de uma vez
         });
 
         // ========================================
