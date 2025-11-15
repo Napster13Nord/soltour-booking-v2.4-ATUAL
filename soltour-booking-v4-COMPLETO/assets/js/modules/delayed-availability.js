@@ -3,8 +3,8 @@
  * Carregamento assíncrono de preços para melhorar performance
  *
  * Fluxo:
- * 1. Busca inicial rápida (forceAvail=false) - mostra hotéis sem preços
- * 2. Busca tardia (forceAvail=true) - atualiza preços em background
+ * 1. Busca inicial rápida - mostra hotéis sem preços
+ * 2. Busca tardia - atualiza preços em background
  */
 
 (function($) {
@@ -42,7 +42,7 @@
             // 3. Mostrar notification piscando
             this.showBlinkingNotification();
 
-            // 4. Fazer request com forceAvail=true
+            // 4. Fazer request para buscar preços reais
             this.loadDelayedPrices();
         },
 
@@ -178,16 +178,15 @@
         },
 
         /**
-         * Faz request com forceAvail=true para buscar preços reais
+         * Faz request para buscar preços reais
          */
         loadDelayedPrices: function() {
             const self = this;
 
 
-            // Preparar params com forceAvail=true
+            // Preparar params
             // IMPORTANTE: Buscar TODOS os budgets (100), não apenas os da página atual (10)
             const params = $.extend({}, window.SoltourApp.searchParams, {
-                force_avail: true,
                 avail_token: window.SoltourApp.availToken,
                 item_count: 100  // Buscar TODOS os budgets para garantir que todos os preços sejam atualizados
             });

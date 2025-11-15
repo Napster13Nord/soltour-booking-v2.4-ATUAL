@@ -181,12 +181,10 @@ class Soltour_API {
         // Parâmetros críticos vindos do frontend
         $product_type = isset($params['productType']) ? $params['productType'] : 'PACKAGE';
         $only_hotel = isset($params['onlyHotel']) ? $params['onlyHotel'] : 'N';
-        $force_avail = isset($params['forceAvail']) ? filter_var($params['forceAvail'], FILTER_VALIDATE_BOOLEAN) : false;
 
         $data = array(
             'productType' => $product_type,
             'onlyHotel' => $only_hotel,
-            'forceAvail' => $force_avail,
             'criteria' => array(
                 'order' => array(
                     'type' => isset($params['orderType']) ? $params['orderType'] : 'PRICE',
@@ -641,7 +639,6 @@ class Soltour_API {
             // Parâmetros críticos para API processar corretamente
             'productType' => isset($_POST['product_type']) ? sanitize_text_field($_POST['product_type']) : 'PACKAGE',
             'onlyHotel' => isset($_POST['only_hotel']) ? sanitize_text_field($_POST['only_hotel']) : 'N',
-            'forceAvail' => isset($_POST['force_avail']) ? filter_var($_POST['force_avail'], FILTER_VALIDATE_BOOLEAN) : false,
 
             // Paginação (corrigido para pageNumber/rowsPerPage conforme documentação Soltour)
             'pageNumber' => isset($_POST['page_number']) ? intval($_POST['page_number']) : 0,
