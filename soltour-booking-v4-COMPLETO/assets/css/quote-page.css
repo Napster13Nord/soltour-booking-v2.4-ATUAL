@@ -1189,6 +1189,22 @@
     cursor: pointer !important;
 }
 
+/* Checkbox desabilitado (transfer incluído) */
+.bt-transfer-checkbox:disabled {
+    opacity: 0.6 !important;
+    cursor: not-allowed !important;
+    background: #e5e7eb !important;
+}
+
+.bt-transfer-checkbox:disabled:checked {
+    background: #6b7280 !important;
+    border-color: #6b7280 !important;
+}
+
+.bt-transfer-service-checkbox label[for*="checkbox"]:has(+ input:disabled) {
+    cursor: not-allowed !important;
+}
+
 .bt-transfer-service-icon {
     flex-shrink: 0 !important;
     color: #019CB8 !important;
@@ -1203,6 +1219,30 @@
     font-weight: 600 !important;
     color: #1f2937 !important;
     margin-bottom: 4px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    flex-wrap: wrap !important;
+}
+
+/* Badge "Incluído" */
+.bt-included-badge {
+    display: inline-block !important;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+    color: #fff !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    padding: 3px 10px !important;
+    border-radius: 12px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    box-shadow: 0 2px 4px rgba(16, 185, 129, 0.3) !important;
+}
+
+/* Transfer incluído - estilo mais suave */
+.bt-transfer-service.bt-transfer-included {
+    background: #f0fdf4 !important;
+    border-color: #bbf7d0 !important;
 }
 
 .bt-transfer-service-details {
