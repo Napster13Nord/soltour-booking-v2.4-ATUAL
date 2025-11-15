@@ -202,7 +202,7 @@
                     </svg>
                 </div>
                 <div class="bt-info-notice-content">
-                    <p>Se desejar que guardemos o orçamento que acabou de criar, basta preencher os dados na secção «Dados do cliente» e clicar em «Guardar orçamento final». Depois de guardado, entraremos em contacto consigo para formalizar a compra. Enviaremos uma cópia do orçamento para o endereço de e-mail que nos forneceu.</p>
+                    <p>Se desejar que guardemos o orçamento que acabou de criar, basta preencher os dados na secção "Dados dos Passageiros" e clicar em "Gerar Cotação final". Depois de guardado, entraremos em contacto consigo para formalizar a compra. Enviaremos uma cópia do orçamento para o endereço de e-mail que nos forneceu.</p>
                 </div>
             </div>
 
@@ -327,15 +327,6 @@
             <div class="bt-passengers-form">
                 <h2>👥 Dados dos Passageiros</h2>
                 ${renderPassengerForms(allPassengers)}
-            </div>
-
-            <!-- Observações -->
-            <div class="bt-passengers-form">
-                <h2>📝 Observações (Opcional)</h2>
-                <div class="bt-form-group bt-form-full">
-                    <label for="quote-notes">Alguma solicitação especial?</label>
-                    <textarea id="quote-notes" name="notes" placeholder="Ex: Quarto com vista para o mar, necessidades especiais, etc."></textarea>
-                </div>
             </div>
 
             <!-- Botão de Gerar Cotação -->
