@@ -312,10 +312,10 @@
                         </div>
                     ` : ''}
 
-                    <!-- PASSO 4: Informações Importantes -->
+                    <!-- PASSO 3: Informações Importantes -->
                     ${legalData && legalData.hasLegalInfo ? `
                         <div class="bt-package-summary" style="margin-top: 20px;">
-                            <h2>📋 Passo 4: Informações Importantes e Condições</h2>
+                            <h2>📋 Passo 3: Informações Importantes e Condições</h2>
                             ${renderLegalTextsCard(legalData)}
                         </div>
                     ` : ''}
@@ -1798,7 +1798,7 @@
         let html = `
             <div class="bt-summary-section bt-legal-card expanded">
                 <div class="bt-legal-header" onclick="this.closest('.bt-legal-card').classList.toggle('expanded')">
-                    <h3>📋 INFORMAÇÕES IMPORTANTES E CONDIÇÕES</h3>
+                    <h3>INFORMAÇÕES IMPORTANTES E CONDIÇÕES</h3>
                     <button class="bt-legal-toggle">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <polyline points="6 9 12 15 18 9"></polyline>
@@ -1911,7 +1911,6 @@
                 <div class="bt-legal-item bt-legal-${categoryClass}" data-legal-type="${type}">
                     <div class="bt-legal-item-header" onclick="this.closest('.bt-legal-item').classList.toggle('expanded')">
                         <div class="bt-legal-item-title-wrapper">
-                            <span class="bt-legal-item-icon">${icon}</span>
                             <span class="bt-legal-item-title">${title}</span>
                         </div>
                         <svg class="bt-legal-item-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">

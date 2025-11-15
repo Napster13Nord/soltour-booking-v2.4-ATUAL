@@ -3,7 +3,7 @@
  * Plugin Name: Soltour Booking V4
  * Plugin URI: https://beautytravel.pt
  * Description: Integração API Soltour V5 - 100% COMPLETA (14/14 funcionalidades implementadas)
- * Version: 4.1.6
+ * Version: 4.1.7
  * Author: Beauty Travel
  * License: GPL v2 or later
  * Text Domain: soltour-booking
@@ -12,7 +12,7 @@
 if (!defined('ABSPATH')) exit;
 
 // Definições de constantes
-define('SOLTOUR_VERSION', '4.1.6');
+define('SOLTOUR_VERSION', '4.1.7');
 define('SOLTOUR_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('SOLTOUR_PLUGIN_URL', plugin_dir_url(__FILE__));
 
