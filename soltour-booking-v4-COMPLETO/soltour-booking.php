@@ -2,8 +2,8 @@
 /**
  * Plugin Name: Soltour Booking V4
  * Plugin URI: https://beautytravel.pt
- * Description: Integração API Soltour V5 - 100% COMPLETA (14/14 funcionalidades implementadas) + Sistema de Email Configurável
- * Version: 4.2.0
+ * Description: Integração API Soltour V5 - 100% COMPLETA (14/14 funcionalidades implementadas) + Sistema de Email Configurável + Modo de Teste
+ * Version: 4.2.1
  * Author: Beauty Travel
  * License: GPL v2 or later
  * Text Domain: soltour-booking
@@ -12,7 +12,7 @@
 if (!defined('ABSPATH')) exit;
 
 // Definições de constantes
-define('SOLTOUR_VERSION', '4.2.0');
+define('SOLTOUR_VERSION', '4.2.1');
 define('SOLTOUR_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('SOLTOUR_PLUGIN_URL', plugin_dir_url(__FILE__));
 
@@ -51,6 +51,14 @@ if (!defined('SOLTOUR_EMAIL_FROM_NAME')) {
 }
 if (!defined('SOLTOUR_EMAIL_REPLY_TO')) {
     define('SOLTOUR_EMAIL_REPLY_TO', 'reservas@beautytravel.pt');
+}
+
+// Modo de Teste - Todos os emails vão para este endereço
+if (!defined('SOLTOUR_TEST_MODE')) {
+    define('SOLTOUR_TEST_MODE', true); // Alterar para false em produção
+}
+if (!defined('SOLTOUR_TEST_EMAIL')) {
+    define('SOLTOUR_TEST_EMAIL', 'andre@wpexperts.pt');
 }
 
 /**
@@ -371,18 +379,49 @@ class Soltour_Booking {
         }
 
         // Mostrar informação sobre configurações de email
+        $is_test_mode = defined('SOLTOUR_TEST_MODE') && SOLTOUR_TEST_MODE === true;
         ?>
-        <div class="notice notice-info">
+        <div class="notice <?php echo $is_test_mode ? 'notice-warning' : 'notice-info'; ?>">
             <p><strong>Soltour Booking V4 - Configurações de Email:</strong></p>
+
+            <?php if ($is_test_mode): ?>
+            <div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 10px 0;">
+                <p style="margin: 0; font-size: 14px; font-weight: bold; color: #856404;">
+                    ⚠️ MODO DE TESTE ATIVADO
+                </p>
+                <p style="margin: 5px 0 0 0; color: #856404;">
+                    Todos os emails (agência e clientes) serão enviados para:
+                    <strong><?php echo esc_html(SOLTOUR_TEST_EMAIL); ?></strong>
+                </p>
+                <p style="margin: 5px 0 0 0; font-size: 12px; color: #856404;">
+                    Para desativar o modo de teste, defina <code>SOLTOUR_TEST_MODE</code> como <code>false</code> no arquivo do plugin.
+                </p>
+            </div>
+            <?php else: ?>
+            <div style="background: #d4edda; border-left: 4px solid #28a745; padding: 15px; margin: 10px 0;">
+                <p style="margin: 0; font-size: 14px; font-weight: bold; color: #155724;">
+                    ✅ MODO DE PRODUÇÃO
+                </p>
+                <p style="margin: 5px 0 0 0; color: #155724;">
+                    Os emails serão enviados para os destinatários reais.
+                </p>
+            </div>
+            <?php endif; ?>
+
             <ul style="list-style: disc; margin-left: 20px;">
                 <li><strong>FROM (remetente):</strong> <?php echo esc_html(SOLTOUR_EMAIL_FROM); ?> (<?php echo esc_html(SOLTOUR_EMAIL_FROM_NAME); ?>)</li>
                 <li><strong>REPLY-TO (responder para):</strong> <?php echo esc_html(SOLTOUR_EMAIL_REPLY_TO); ?></li>
+                <?php if ($is_test_mode): ?>
+                <li><strong>EMAIL DE TESTE:</strong> <?php echo esc_html(SOLTOUR_TEST_EMAIL); ?></li>
+                <?php endif; ?>
             </ul>
             <p style="margin-top: 10px;">
                 <em>Para alterar estas configurações, adicione as seguintes constantes no wp-config.php:</em><br>
                 <code style="background: #f5f5f5; padding: 2px 6px;">define('SOLTOUR_EMAIL_FROM', 'seu-email@dominio.com');</code><br>
                 <code style="background: #f5f5f5; padding: 2px 6px;">define('SOLTOUR_EMAIL_FROM_NAME', 'Seu Nome');</code><br>
-                <code style="background: #f5f5f5; padding: 2px 6px;">define('SOLTOUR_EMAIL_REPLY_TO', 'responder@dominio.com');</code>
+                <code style="background: #f5f5f5; padding: 2px 6px;">define('SOLTOUR_EMAIL_REPLY_TO', 'responder@dominio.com');</code><br>
+                <code style="background: #f5f5f5; padding: 2px 6px;">define('SOLTOUR_TEST_MODE', false); // true para teste, false para produção</code><br>
+                <code style="background: #f5f5f5; padding: 2px 6px;">define('SOLTOUR_TEST_EMAIL', 'teste@exemplo.com');</code>
             </p>
         </div>
         <?php
