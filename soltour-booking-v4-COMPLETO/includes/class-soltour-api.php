@@ -868,6 +868,31 @@ class Soltour_API {
         $this->log('  ├─ flightServices: ' . (isset($fetch_response['flightServices']) ? count($fetch_response['flightServices']) : '0'));
         $this->log('  └─ priceBreakdown: ' . (isset($fetch_response['priceBreakdown']) ? 'SIM ✅' : 'NÃO ❌'));
 
+        // DEBUG: Verificar se budgetId selecionado existe nos budgets retornados
+        if (isset($fetch_response['budgets']) && is_array($fetch_response['budgets'])) {
+            $found_budget = false;
+            $budget_ids_in_response = array();
+
+            foreach ($fetch_response['budgets'] as $idx => $budget) {
+                if (isset($budget['budgetId'])) {
+                    $budget_ids_in_response[] = $budget['budgetId'];
+                    if ($budget['budgetId'] === $budget_id) {
+                        $found_budget = true;
+                        $this->log('  └─ ✅ Budget ENCONTRADO na posição ' . $idx . ' da lista');
+                        break;
+                    }
+                }
+            }
+
+            if (!$found_budget) {
+                $this->log('  └─ ❌ Budget NÃO encontrado na lista de ' . count($fetch_response['budgets']) . ' budgets!');
+                $this->log('');
+                $this->log('🔍 DEBUG - BUDGETIDS DISPONÍVEIS:');
+                $this->log('  ├─ Buscado: ' . $budget_id);
+                $this->log('  ├─ Primeiro budgetId disponível: ' . (count($budget_ids_in_response) > 0 ? $budget_ids_in_response[0] : 'N/A'));
+                $this->log('  └─ Total de budgetIds: ' . count($budget_ids_in_response));
+            }
+        }
         // Validar resposta do fetchAvailability
         if (!isset($fetch_response['result']['ok']) || $fetch_response['result']['ok'] === false) {
             $error_message = isset($fetch_response['result']['errorMessage'])
