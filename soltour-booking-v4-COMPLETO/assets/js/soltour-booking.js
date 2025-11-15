@@ -2299,7 +2299,8 @@
         console.log('📥 INICIANDO VALIDAÇÃO DO PACOTE');
         console.log('  ├─ budgetId:', budgetId);
         console.log('  ├─ hotelCode:', hotelCode);
-        console.log('  └─ providerCode:', providerCode);
+        console.log('  ├─ providerCode:', providerCode);
+        console.log('  └─ availToken:', SoltourApp.availToken ? SoltourApp.availToken.substring(0, 30) + '...' : 'NÃO DEFINIDO ⚠️');
 
         // Buscar o pacote completo do array de resultados
         const fullPackage = SoltourApp.allUniqueHotels.find(pkg =>
@@ -2422,6 +2423,9 @@
 
                     console.log('');
                     console.log('❌ VALIDAÇÃO FALHOU!');
+                    console.log('');
+                    console.log('🔍 DEBUG - DADOS DO ERRO:');
+                    console.log('  └─ Resposta completa:', response);
 
                     hideLoadingModal();
 
@@ -2429,22 +2433,20 @@
                         ? response.data.message
                         : 'Este pacote não está mais disponível. Por favor, selecione outro.';
 
+                    console.log('');
                     console.log('💬 MENSAGEM AO USUÁRIO:', errorMessage);
+                    console.log('💡 AÇÃO: Pacote expirou. Tente novamente com outro pacote.');
                     console.log('╚═══════════════════════════════════════════════════════════════════╝');
 
                     // Mostrar mensagem ao usuário
                     if (window.SoltourApp.Toast) {
-                        window.SoltourApp.Toast.error(errorMessage, 6000);
+                        window.SoltourApp.Toast.error(errorMessage, 8000);
                     } else {
                         alert(errorMessage);
                     }
 
-                    // Se deve redirecionar de volta aos resultados
-                    if (response.data && response.data.redirect_to_results) {
-                        console.log('🔄 Redirecionando de volta aos resultados...');
-                        // Já estamos na página de resultados, apenas recarregar
-                        location.reload();
-                    }
+                    // NÃO recarregar página - usuário já está nos resultados
+                    // Deixar ele escolher outro pacote manualmente
                 }
             },
             error: function(xhr, status, error) {
@@ -2452,12 +2454,20 @@
                 console.log('❌ ERRO NA CHAMADA AJAX:');
                 console.log('  ├─ status:', status);
                 console.log('  ├─ error:', error);
-                console.log('  └─ xhr.status:', xhr.status);
+                console.log('  ├─ xhr.status:', xhr.status);
+                console.log('  ├─ xhr.statusText:', xhr.statusText);
+                console.log('  └─ xhr.responseText:', xhr.responseText ? xhr.responseText.substring(0, 200) : 'N/A');
+                console.log('');
+                console.log('🔍 DEBUG - DADOS ENVIADOS:');
+                console.log('  ├─ availToken:', SoltourApp.availToken ? SoltourApp.availToken.substring(0, 30) + '...' : 'NÃO DEFINIDO');
+                console.log('  ├─ budgetId:', budgetId);
+                console.log('  ├─ hotelCode:', hotelCode);
+                console.log('  └─ providerCode:', providerCode);
                 console.log('╚═══════════════════════════════════════════════════════════════════╝');
 
                 hideLoadingModal();
 
-                alert('Erro ao validar pacote. Por favor, tente novamente.');
+                alert('Erro ao validar pacote. Por favor, tente novamente.\n\nSe o problema persistir, faça uma nova busca.');
             }
         });
     }

@@ -876,14 +876,23 @@ class Soltour_API {
 
             $this->log('');
             $this->log('❌ VALIDAÇÃO FALHOU: ' . $error_message);
-            $this->log('💡 AÇÃO: Redirecionar usuário de volta aos resultados');
+            $this->log('💡 AÇÃO: Mostrar erro ao usuário (pacote expirado)');
+            $this->log('📊 DEBUG INFO:');
+            $this->log('  ├─ availToken válido: ' . (!empty($avail_token) ? 'SIM' : 'NÃO'));
+            $this->log('  ├─ budgetId: ' . $budget_id);
+            $this->log('  └─ Possível causa: Budget removido da cache ou availToken expirado');
             $this->log('╚═══════════════════════════════════════════════════════════════════╝');
 
             wp_send_json_error(array(
-                'message' => 'Este pacote não está mais disponível. Por favor, selecione outro.',
+                'message' => 'Este pacote não está mais disponível. Por favor, selecione outro ou faça uma nova busca.',
                 'error_type' => 'budget_expired',
                 'error_details' => $error_message,
-                'redirect_to_results' => true
+                'technical_details' => array(
+                    'availToken_provided' => !empty($avail_token),
+                    'budgetId' => $budget_id,
+                    'fetch_response_result' => isset($fetch_response['result']) ? $fetch_response['result'] : null
+                ),
+                'redirect_to_results' => false  // NÃO redirecionar - deixar usuário escolher
             ));
             return;
         }
