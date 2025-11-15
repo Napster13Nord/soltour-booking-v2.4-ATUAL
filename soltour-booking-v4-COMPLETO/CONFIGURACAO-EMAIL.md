@@ -4,6 +4,42 @@
 
 O plugin Soltour Booking V4 possui um sistema completo de envio de emails para notificar tanto a agência quanto os clientes sobre cotações geradas.
 
+## 🧪 Modo de Teste
+
+### IMPORTANTE: O plugin está ATUALMENTE em MODO DE TESTE
+
+Por padrão, o plugin está configurado com **MODO DE TESTE ATIVADO**. Isso significa que:
+
+- ✅ **TODOS os emails** (agência e clientes) são enviados para: `andre@wpexperts.pt`
+- ✅ O assunto dos emails inclui um prefixo indicando o destinatário original
+- ✅ Os emails incluem um banner vermelho identificando que é um teste
+- ✅ Logs indicam claramente quando um email foi redirecionado
+
+### Como Funciona o Modo de Teste
+
+Quando `SOLTOUR_TEST_MODE = true`:
+
+1. **Email da Agência**: Ao invés de ir para `reservas@beautytravel.pt`, vai para `andre@wpexperts.pt`
+   - Assunto: `[TESTE - AGÊNCIA → reservas@beautytravel.pt] Nova Cotação...`
+
+2. **Email do Cliente**: Ao invés de ir para o email do cliente, vai para `andre@wpexperts.pt`
+   - Assunto: `[TESTE - CLIENTE → cliente@email.com] Recebemos a sua cotação...`
+
+### Desativar Modo de Teste (Produção)
+
+Para desativar o modo de teste e começar a enviar emails reais, edite o arquivo:
+`soltour-booking-v4-COMPLETO/soltour-booking.php`
+
+Altere a linha 58 de:
+```php
+define('SOLTOUR_TEST_MODE', true); // Alterar para false em produção
+```
+
+Para:
+```php
+define('SOLTOUR_TEST_MODE', false); // MODO DE PRODUÇÃO
+```
+
 ## Configurações de Email
 
 ### Emails Padrão
@@ -13,6 +49,7 @@ Por padrão, o plugin está configurado com os seguintes emails:
 - **FROM (Remetente)**: `geral@beautytravel.pt`
 - **FROM NAME (Nome do Remetente)**: `Beauty Travel`
 - **REPLY-TO (Responder Para)**: `reservas@beautytravel.pt`
+- **TEST EMAIL**: `andre@wpexperts.pt` (apenas quando modo de teste está ativado)
 
 ### Como Personalizar
 
