@@ -1097,13 +1097,6 @@
         return 0;
     }
 
-    function getPassengerCount(budget) {
-        const hotelService = budget.hotelServices?.[0];
-        const adults = hotelService?.adults || 2;
-        const children = hotelService?.children || 0;
-        return adults + children;
-    }
-
     function getNumNights(budget) {
         const hotelService = budget.hotelServices?.[0];
         if (hotelService?.nights) return hotelService.nights;
