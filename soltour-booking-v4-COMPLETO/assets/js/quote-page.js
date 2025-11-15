@@ -1192,14 +1192,19 @@
      * - insuranceServices[].cancellationChargeServices[]
      */
     function extractCancellationData(budget) {
-        const charges = [];
+        const chargesByService = {
+            'HOTEL': [],
+            'FLIGHT': [],
+            'TRANSFER': [],
+            'INSURANCE': []
+        };
 
         // Grupos de serviços
         const serviceGroups = [
-            { type: 'HOTEL', services: budget.hotelServices || [] },
-            { type: 'FLIGHT', services: budget.flightServices || [] },
-            { type: 'TRANSFER', services: budget.transferServices || [] },
-            { type: 'INSURANCE', services: budget.insuranceServices || [] }
+            { type: 'HOTEL', services: budget.hotelServices || [], icon: '🏨', label: 'Hotel' },
+            { type: 'FLIGHT', services: budget.flightServices || [], icon: '✈️', label: 'Voos' },
+            { type: 'TRANSFER', services: budget.transferServices || [], icon: '🚗', label: 'Transfer' },
+            { type: 'INSURANCE', services: budget.insuranceServices || [], icon: '🛡️', label: 'Seguro' }
         ];
 
         // Iterar por todos os grupos
@@ -1208,8 +1213,10 @@
                 const cancellationServices = service.cancellationChargeServices || [];
 
                 cancellationServices.forEach(cancellation => {
-                    charges.push({
-                        serviceType: cancellation.serviceType || group.type,
+                    chargesByService[group.type].push({
+                        serviceType: group.type,
+                        serviceIcon: group.icon,
+                        serviceLabel: group.label,
                         startDate: cancellation.startDate || null,
                         endDate: cancellation.endDate || null,
                         amount: cancellation.priceInfo?.pvp || 0,
@@ -1219,14 +1226,20 @@
             });
         });
 
-        // Ordenar por data de início
-        charges.sort((a, b) => {
-            if (!a.startDate || !b.startDate) return 0;
-            return new Date(a.startDate) - new Date(b.startDate);
+        // Ordenar por data de início dentro de cada serviço
+        Object.keys(chargesByService).forEach(serviceType => {
+            chargesByService[serviceType].sort((a, b) => {
+                if (!a.startDate || !b.startDate) return 0;
+                return new Date(a.startDate) - new Date(b.startDate);
+            });
         });
 
+        // Verificar se há pelo menos um serviço com custos
+        const hasCharges = Object.values(chargesByService).some(charges => charges.length > 0);
+
         return {
-            charges: charges
+            chargesByService: chargesByService,
+            hasCharges: hasCharges
         };
     }
 
@@ -1397,53 +1410,95 @@
      * Renderiza card de Gastos de Cancelamento
      */
     function renderCancellationCard(cancellationData) {
-        if (cancellationData.charges.length === 0) {
+        if (!cancellationData.hasCharges) {
             return ''; // Não mostrar card se não houver gastos de cancelamento
         }
 
         let html = `
-            <div class="bt-summary-section bt-cancellation-card">
-                <div class="bt-cancellation-header">
+            <div class="bt-summary-section bt-cancellation-card expanded">
+                <div class="bt-cancellation-header" onclick="this.closest('.bt-cancellation-card').classList.toggle('expanded')">
                     <h3>❌ CUSTOS DE CANCELAMENTO</h3>
-                    <button class="bt-cancellation-toggle" onclick="this.closest('.bt-cancellation-card').classList.toggle('expanded')">
+                    <button class="bt-cancellation-toggle">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <polyline points="6 9 12 15 18 9"></polyline>
                         </svg>
                     </button>
                 </div>
                 <div class="bt-cancellation-body">
-                    <p class="bt-cancellation-description">Detalhamos os custos que serão aplicados por data de cancelamento</p>
-                    <div class="bt-cancellation-table-wrapper">
-                        <table class="bt-cancellation-table">
-                            <thead>
-                                <tr>
-                                    <th>De</th>
-                                    <th>Até</th>
-                                    <th class="bt-text-right">Valor</th>
-                                </tr>
-                            </thead>
-                            <tbody>
+                    <p class="bt-cancellation-description">Os custos de cancelamento variam conforme o serviço e a data. Consulte abaixo os detalhes por categoria:</p>
+                    <div class="bt-cancellation-accordion">
         `;
 
-        // Renderizar cada período de cancelamento
-        cancellationData.charges.forEach(charge => {
-            const startDate = charge.startDate ? formatDateSimple(charge.startDate) : 'N/A';
-            const endDate = charge.endDate ? formatDateSimple(charge.endDate) : 'N/A';
-            const amount = charge.amount.toFixed(2);
-            const currency = charge.currency === 'EUR' ? '€' : charge.currency;
+        // Renderizar cada tipo de serviço como um accordion
+        const serviceTypes = ['HOTEL', 'FLIGHT', 'TRANSFER', 'INSURANCE'];
+
+        serviceTypes.forEach(serviceType => {
+            const charges = cancellationData.chargesByService[serviceType];
+
+            // Só renderizar se houver custos para este serviço
+            if (charges.length === 0) return;
+
+            const firstCharge = charges[0];
+            const serviceIcon = firstCharge.serviceIcon;
+            const serviceLabel = firstCharge.serviceLabel;
 
             html += `
-                <tr>
-                    <td>${startDate}</td>
-                    <td>${endDate}</td>
-                    <td class="bt-text-right bt-amount">${amount}${currency}</td>
-                </tr>
+                <div class="bt-cancellation-service-item">
+                    <div class="bt-cancellation-service-header" onclick="this.closest('.bt-cancellation-service-item').classList.toggle('expanded')">
+                        <div class="bt-cancellation-service-title">
+                            <span class="bt-service-icon">${serviceIcon}</span>
+                            <span class="bt-service-label">${serviceLabel}</span>
+                            <span class="bt-service-count">${charges.length} período${charges.length > 1 ? 's' : ''}</span>
+                        </div>
+                        <svg class="bt-cancellation-service-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+                    <div class="bt-cancellation-service-content">
+                        <div class="bt-cancellation-table-wrapper">
+                            <table class="bt-cancellation-table">
+                                <thead>
+                                    <tr>
+                                        <th>Período de Cancelamento</th>
+                                        <th class="bt-text-right">Custo</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+            `;
+
+            // Renderizar cada período de cancelamento para este serviço
+            charges.forEach((charge, index) => {
+                const startDate = charge.startDate ? formatDateSimple(charge.startDate) : 'Desde a reserva';
+                const endDate = charge.endDate ? formatDateSimple(charge.endDate) : 'Início da viagem';
+                const amount = charge.amount.toFixed(2);
+                const currency = charge.currency === 'EUR' ? '€' : charge.currency;
+
+                html += `
+                    <tr>
+                        <td>
+                            <div class="bt-date-range">
+                                <span class="bt-date-label">De:</span> <strong>${startDate}</strong>
+                                <span class="bt-date-separator">até</span>
+                                <span class="bt-date-label">:</span> <strong>${endDate}</strong>
+                            </div>
+                        </td>
+                        <td class="bt-text-right">
+                            <span class="bt-amount">${amount}${currency}</span>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            html += `
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             `;
         });
 
         html += `
-                            </tbody>
-                        </table>
                     </div>
                 </div>
             </div>
@@ -1479,18 +1534,18 @@
         const insurances = insuranceData.insurances;
 
         let html = `
-            <div class="bt-summary-section bt-insurance-card">
-                <div class="bt-insurance-header">
+            <div class="bt-summary-section bt-insurance-card expanded">
+                <div class="bt-insurance-header" onclick="this.closest('.bt-insurance-card').classList.toggle('expanded')">
                     <h3>🛡️ SEGUROS DISPONÍVEIS</h3>
-                    <button class="bt-insurance-toggle" onclick="this.closest('.bt-insurance-card').classList.toggle('expanded')">
+                    <button class="bt-insurance-toggle">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <polyline points="6 9 12 15 18 9"></polyline>
                         </svg>
                     </button>
                 </div>
                 <div class="bt-insurance-body">
-                    <p class="bt-insurance-description">Proteja a sua viagem com um seguro de viagem completo.</p>
-                    <div class="bt-insurance-services">
+                    <p class="bt-insurance-description">Proteja a sua viagem com cobertura completa. Selecione os seguros adicionais que deseja incluir:</p>
+                    <div class="bt-insurance-grid">
         `;
 
         // Renderizar cada seguro disponível
@@ -1507,36 +1562,39 @@
             const checkedAttr = isIncluded ? 'checked' : '';
             const disabledAttr = isIncluded ? 'disabled' : '';
             const includedClass = isIncluded ? 'bt-insurance-included' : '';
-            const includedLabel = isIncluded ? '<span class="bt-included-badge">Incluído</span>' : '';
 
             html += `
-                <div class="bt-insurance-service ${includedClass}" data-insurance-id="${insuranceId}" data-insurance-price="${price}" data-included="${isIncluded}">
-                    <div class="bt-insurance-service-checkbox">
-                        <input type="checkbox"
-                               id="insurance-checkbox-${index}"
-                               class="bt-insurance-checkbox"
-                               data-insurance-price="${price}"
-                               data-insurance-id="${insuranceId}"
-                               data-included="${isIncluded}"
-                               ${checkedAttr}
-                               ${disabledAttr}>
-                        <label for="insurance-checkbox-${index}"></label>
-                    </div>
-                    <div class="bt-insurance-service-icon">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                        </svg>
-                    </div>
-                    <div class="bt-insurance-service-content">
-                        <div class="bt-insurance-service-title">
-                            ${name}
-                            ${includedLabel}
+                <div class="bt-insurance-item ${includedClass}" data-insurance-id="${insuranceId}" data-insurance-price="${price}" data-included="${isIncluded}">
+                    <div class="bt-insurance-item-header">
+                        <div class="bt-insurance-item-checkbox">
+                            <input type="checkbox"
+                                   id="insurance-checkbox-${index}"
+                                   class="bt-insurance-checkbox"
+                                   data-insurance-price="${price}"
+                                   data-insurance-id="${insuranceId}"
+                                   data-included="${isIncluded}"
+                                   ${checkedAttr}
+                                   ${disabledAttr}>
+                            <label for="insurance-checkbox-${index}"></label>
                         </div>
-                        <div class="bt-insurance-service-description">
+                        <div class="bt-insurance-item-icon">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="bt-insurance-item-content">
+                        <div class="bt-insurance-item-title">
+                            ${name}
+                            ${isIncluded ? '<span class="bt-included-badge">Incluído</span>' : ''}
+                        </div>
+                        <div class="bt-insurance-item-description">
                             ${description}
                         </div>
-                        <div class="bt-insurance-service-price">
-                            <strong>${isIncluded ? 'Incluído no pacote' : price.toFixed(2) + currencySymbol}</strong>
+                        <div class="bt-insurance-item-footer">
+                            <div class="bt-insurance-item-price">
+                                ${isIncluded ? '<span class="bt-price-included">Incluído no pacote</span>' : `<span class="bt-price-value">${price.toFixed(2)}${currencySymbol}</span>`}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1563,18 +1621,18 @@
         const extras = extrasData.extras;
 
         let html = `
-            <div class="bt-summary-section bt-extras-card">
-                <div class="bt-extras-header">
+            <div class="bt-summary-section bt-extras-card expanded">
+                <div class="bt-extras-header" onclick="this.closest('.bt-extras-card').classList.toggle('expanded')">
                     <h3>🎁 SERVIÇOS EXTRAS</h3>
-                    <button class="bt-extras-toggle" onclick="this.closest('.bt-extras-card').classList.toggle('expanded')">
+                    <button class="bt-extras-toggle">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <polyline points="6 9 12 15 18 9"></polyline>
                         </svg>
                     </button>
                 </div>
                 <div class="bt-extras-body">
-                    <p class="bt-extras-description">Personalize a sua viagem com serviços adicionais.</p>
-                    <div class="bt-extras-services">
+                    <p class="bt-extras-description">Personalize sua viagem com serviços adicionais:</p>
+                    <div class="bt-extras-grid">
         `;
 
         // Renderizar cada extra disponível
@@ -1591,35 +1649,38 @@
             const checkedAttr = isIncluded ? 'checked' : '';
             const disabledAttr = isIncluded ? 'disabled' : '';
             const includedClass = isIncluded ? 'bt-extra-included' : '';
-            const includedLabel = isIncluded ? '<span class="bt-included-badge">Incluído</span>' : '';
 
             html += `
-                <div class="bt-extra-service ${includedClass}" data-extra-id="${extraId}" data-extra-price="${price}" data-included="${isIncluded}">
-                    <div class="bt-extra-service-checkbox">
-                        <input type="checkbox"
-                               id="extra-checkbox-${index}"
-                               class="bt-extra-checkbox"
-                               data-extra-price="${price}"
-                               data-extra-id="${extraId}"
-                               data-included="${isIncluded}"
-                               ${checkedAttr}
-                               ${disabledAttr}>
-                        <label for="extra-checkbox-${index}"></label>
-                    </div>
-                    <div class="bt-extra-service-icon">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="12" cy="12" r="10"/>
-                            <path d="M12 6v6l4 2"/>
-                        </svg>
-                    </div>
-                    <div class="bt-extra-service-content">
-                        <div class="bt-extra-service-title">
-                            ${name}
-                            ${includedLabel}
+                <div class="bt-extra-item ${includedClass}" data-extra-id="${extraId}" data-extra-price="${price}" data-included="${isIncluded}">
+                    <div class="bt-extra-item-header">
+                        <div class="bt-extra-item-checkbox">
+                            <input type="checkbox"
+                                   id="extra-checkbox-${index}"
+                                   class="bt-extra-checkbox"
+                                   data-extra-price="${price}"
+                                   data-extra-id="${extraId}"
+                                   data-included="${isIncluded}"
+                                   ${checkedAttr}
+                                   ${disabledAttr}>
+                            <label for="extra-checkbox-${index}"></label>
                         </div>
-                        ${description ? `<div class="bt-extra-service-description">${description}</div>` : ''}
-                        <div class="bt-extra-service-price">
-                            <strong>${isIncluded ? 'Incluído no pacote' : price.toFixed(2) + currencySymbol}</strong>
+                        <div class="bt-extra-item-icon">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <path d="M12 6v6l4 2"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="bt-extra-item-content">
+                        <div class="bt-extra-item-title">
+                            ${name}
+                            ${isIncluded ? '<span class="bt-included-badge">Incluído</span>' : ''}
+                        </div>
+                        ${description ? `<div class="bt-extra-item-description">${description}</div>` : ''}
+                        <div class="bt-extra-item-footer">
+                            <div class="bt-extra-item-price">
+                                ${isIncluded ? '<span class="bt-price-included">Incluído no pacote</span>' : `<span class="bt-price-value">${price.toFixed(2)}${currencySymbol}</span>`}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1662,81 +1723,130 @@
         }
 
         let html = `
-            <div class="bt-summary-section bt-legal-card">
-                <div class="bt-legal-header">
+            <div class="bt-summary-section bt-legal-card expanded">
+                <div class="bt-legal-header" onclick="this.closest('.bt-legal-card').classList.toggle('expanded')">
                     <h3>📋 INFORMAÇÕES IMPORTANTES E CONDIÇÕES</h3>
-                    <button class="bt-legal-toggle" onclick="this.closest('.bt-legal-card').classList.toggle('expanded')">
+                    <button class="bt-legal-toggle">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <polyline points="6 9 12 15 18 9"></polyline>
                         </svg>
                     </button>
                 </div>
                 <div class="bt-legal-body">
+                    <p class="bt-legal-intro">Leia atentamente as informações e condições relacionadas à sua viagem:</p>
                     <div class="bt-legal-accordion">
         `;
 
         // Renderizar cada texto legal como item do accordion
         legalTexts.forEach((legalText, index) => {
             // Se for string, converter para objeto
-            let title, content, type;
+            let title, content, type, category;
 
             if (typeof legalText === 'string') {
                 // É uma string simples - tentar extrair um título inteligente
                 const trimmedText = legalText.trim();
                 const firstLine = trimmedText.split('\n')[0].trim();
 
-                // Detectar padrões comuns para criar títulos melhores
+                // Detectar padrões comuns para criar títulos melhores e categorias
                 if (firstLine.toUpperCase().includes('AIR EUROPA')) {
                     title = 'AIR EUROPA - Informações de voo';
+                    category = 'flight';
                 } else if (firstLine.toUpperCase().includes('IMPORTANTE')) {
                     title = 'Informações importantes';
+                    category = 'important';
                 } else if (trimmedText.includes('taxa turistica') || trimmedText.includes('taxa turística')) {
                     title = 'Taxa turística';
+                    category = 'fees';
                 } else if (trimmedText.includes('bagagem') || trimmedText.includes('Bagagem')) {
                     title = 'Política de bagagem';
+                    category = 'baggage';
                 } else if (trimmedText.includes('E-ticket') || trimmedText.includes('e-ticket')) {
                     title = 'E-ticket - República Dominicana';
+                    category = 'documentation';
                 } else if (trimmedText.includes('crianças') || trimmedText.includes('Crianças')) {
                     title = 'Política de crianças e acomodação';
+                    category = 'accommodation';
                 } else if (trimmedText.includes('check-in')) {
                     title = 'Informações de check-in';
+                    category = 'checkin';
                 } else if (trimmedText.toUpperCase().includes('NO SHOW')) {
                     title = 'Política de NO SHOW';
+                    category = 'policy';
                 } else if (trimmedText.includes('OBSERVAÇÕES')) {
                     title = 'Observações gerais';
+                    category = 'general';
                 } else {
                     // Usar as primeiras palavras como título
-                    const words = firstLine.split(' ').slice(0, 10).join(' ');
+                    const words = firstLine.split(' ').slice(0, 8).join(' ');
                     title = words.length < firstLine.length ? words + '...' : words;
+                    category = 'general';
                 }
 
                 content = legalText;
-                type = 'general';
+                type = category;
             } else {
                 // É um objeto - extrair propriedades
                 title = legalText.title || legalText.name || `Informação ${index + 1}`;
                 content = legalText.content || legalText.description || legalText.text || '';
                 type = legalText.type || 'general';
+                category = legalText.category || type;
             }
 
-            // Ícone baseado no tipo
+            // Ícone e cor baseado na categoria
             let icon = '📄';
-            if (type.toLowerCase().includes('cancel')) icon = '❌';
-            else if (type.toLowerCase().includes('payment')) icon = '💳';
-            else if (type.toLowerCase().includes('insurance')) icon = '🛡️';
-            else if (type.toLowerCase().includes('policy')) icon = '📜';
+            let categoryClass = 'general';
+
+            if (category.includes('cancel') || type.includes('cancel')) {
+                icon = '❌';
+                categoryClass = 'cancel';
+            } else if (category.includes('payment') || type.includes('payment')) {
+                icon = '💳';
+                categoryClass = 'payment';
+            } else if (category.includes('insurance') || type.includes('insurance')) {
+                icon = '🛡️';
+                categoryClass = 'insurance';
+            } else if (category.includes('policy') || type.includes('policy')) {
+                icon = '📜';
+                categoryClass = 'policy';
+            } else if (category.includes('flight') || type.includes('flight')) {
+                icon = '✈️';
+                categoryClass = 'flight';
+            } else if (category.includes('hotel') || category.includes('accommodation')) {
+                icon = '🏨';
+                categoryClass = 'hotel';
+            } else if (category.includes('baggage')) {
+                icon = '🧳';
+                categoryClass = 'baggage';
+            } else if (category.includes('important')) {
+                icon = '⚠️';
+                categoryClass = 'important';
+            } else if (category.includes('documentation')) {
+                icon = '📄';
+                categoryClass = 'documentation';
+            } else if (category.includes('fees')) {
+                icon = '💰';
+                categoryClass = 'fees';
+            } else if (category.includes('checkin')) {
+                icon = '🔑';
+                categoryClass = 'checkin';
+            }
+
+            // Formatar conteúdo com quebras de linha preservadas
+            const formattedContent = content.replace(/\n/g, '<br>');
 
             html += `
-                <div class="bt-legal-item" data-legal-type="${type}">
+                <div class="bt-legal-item bt-legal-${categoryClass}" data-legal-type="${type}">
                     <div class="bt-legal-item-header" onclick="this.closest('.bt-legal-item').classList.toggle('expanded')">
-                        <span class="bt-legal-item-icon">${icon}</span>
-                        <span class="bt-legal-item-title">${title}</span>
+                        <div class="bt-legal-item-title-wrapper">
+                            <span class="bt-legal-item-icon">${icon}</span>
+                            <span class="bt-legal-item-title">${title}</span>
+                        </div>
                         <svg class="bt-legal-item-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <polyline points="6 9 12 15 18 9"></polyline>
                         </svg>
                     </div>
                     <div class="bt-legal-item-content">
-                        <div class="bt-legal-item-text">${content}</div>
+                        <div class="bt-legal-item-text">${formattedContent}</div>
                     </div>
                 </div>
             `;

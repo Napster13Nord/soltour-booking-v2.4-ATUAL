@@ -1461,8 +1461,94 @@
    CARD DE GASTOS DE CANCELAMENTO
    ======================================== */
 
+/* Accordion de serviços de cancelamento */
+.bt-cancellation-accordion {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+}
+
+.bt-cancellation-service-item {
+    background: #f9fafb !important;
+    border: 1px solid #e5e7eb !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+    transition: all 0.2s ease !important;
+}
+
+.bt-cancellation-service-item:hover {
+    border-color: #d1d5db !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
+}
+
+.bt-cancellation-service-header {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: 14px 18px !important;
+    cursor: pointer !important;
+    background: #fff !important;
+    border-bottom: 1px solid #e5e7eb !important;
+    transition: background 0.2s ease !important;
+}
+
+.bt-cancellation-service-header:hover {
+    background: #f9fafb !important;
+}
+
+.bt-cancellation-service-title {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    font-size: 15px !important;
+    font-weight: 700 !important;
+    color: #1f2937 !important;
+}
+
+.bt-service-icon {
+    font-size: 20px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.bt-service-label {
+    font-weight: 700 !important;
+}
+
+.bt-service-count {
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    color: #6b7280 !important;
+    background: #f3f4f6 !important;
+    padding: 3px 10px !important;
+    border-radius: 12px !important;
+}
+
+.bt-cancellation-service-arrow {
+    flex-shrink: 0 !important;
+    color: #6b7280 !important;
+    transition: transform 0.3s ease !important;
+}
+
+.bt-cancellation-service-item.expanded .bt-cancellation-service-arrow {
+    transform: rotate(180deg) !important;
+}
+
+.bt-cancellation-service-content {
+    max-height: 0 !important;
+    overflow: hidden !important;
+    transition: max-height 0.3s ease !important;
+}
+
+.bt-cancellation-service-item.expanded .bt-cancellation-service-content {
+    max-height: 800px !important;
+}
+
+/* Tabela de cancelamento */
 .bt-cancellation-table-wrapper {
     overflow-x: auto !important;
+    padding: 0 !important;
 }
 
 .bt-cancellation-table {
@@ -1473,21 +1559,20 @@
 
 .bt-cancellation-table thead {
     background: #f9fafb !important;
-    border-bottom: 2px solid #e5e7eb !important;
 }
 
 .bt-cancellation-table th {
-    padding: 12px 16px !important;
+    padding: 12px 18px !important;
     text-align: left !important;
     font-weight: 700 !important;
     color: #374151 !important;
     text-transform: uppercase !important;
-    font-size: 12px !important;
+    font-size: 11px !important;
     letter-spacing: 0.5px !important;
 }
 
 .bt-cancellation-table td {
-    padding: 12px 16px !important;
+    padding: 14px 18px !important;
     border-bottom: 1px solid #e5e7eb !important;
     color: #1f2937 !important;
 }
@@ -1500,6 +1585,29 @@
     background: #f9fafb !important;
 }
 
+/* Formatação de datas */
+.bt-date-range {
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    flex-wrap: wrap !important;
+}
+
+.bt-date-label {
+    font-size: 13px !important;
+    color: #6b7280 !important;
+}
+
+.bt-date-separator {
+    color: #9ca3af !important;
+    margin: 0 2px !important;
+}
+
+.bt-date-range strong {
+    color: #1f2937 !important;
+    font-weight: 600 !important;
+}
+
 .bt-text-right {
     text-align: right !important;
 }
@@ -1507,7 +1615,442 @@
 .bt-amount {
     font-weight: 700 !important;
     color: #dc2626 !important;
-    font-size: 15px !important;
+    font-size: 16px !important;
+}
+
+/* ========================================
+   CARD DE SEGUROS DISPONÍVEIS
+   ======================================== */
+
+.bt-insurance-card {
+    background: #fff !important;
+    border-radius: 12px !important;
+    overflow: hidden !important;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08) !important;
+    margin-bottom: 20px !important;
+    transition: all 0.3s ease !important;
+}
+
+.bt-insurance-card:hover {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12) !important;
+}
+
+.bt-insurance-header {
+    background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%) !important;
+    padding: 16px 20px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    cursor: pointer !important;
+    border-bottom: 1px solid #d1d5db !important;
+}
+
+.bt-insurance-header h3 {
+    margin: 0 !important;
+    font-size: 16px !important;
+    font-weight: 700 !important;
+    color: #1f2937 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+}
+
+.bt-insurance-toggle {
+    background: transparent !important;
+    border: none !important;
+    cursor: pointer !important;
+    padding: 4px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: transform 0.3s ease !important;
+    color: #6b7280 !important;
+}
+
+.bt-insurance-card.expanded .bt-insurance-toggle {
+    transform: rotate(180deg) !important;
+}
+
+.bt-insurance-body {
+    padding: 20px !important;
+    max-height: 0 !important;
+    overflow: hidden !important;
+    transition: max-height 0.3s ease !important;
+}
+
+.bt-insurance-card.expanded .bt-insurance-body {
+    max-height: 2000px !important;
+}
+
+.bt-insurance-description {
+    font-size: 14px !important;
+    color: #6b7280 !important;
+    margin: 0 0 20px 0 !important;
+    line-height: 1.5 !important;
+}
+
+.bt-insurance-grid {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)) !important;
+    gap: 16px !important;
+}
+
+.bt-insurance-item {
+    background: #f9fafb !important;
+    border: 2px solid #e5e7eb !important;
+    border-radius: 12px !important;
+    padding: 20px !important;
+    transition: all 0.3s ease !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 14px !important;
+}
+
+.bt-insurance-item:hover {
+    border-color: #019CB8 !important;
+    box-shadow: 0 4px 12px rgba(1, 156, 184, 0.15) !important;
+    transform: translateY(-2px) !important;
+}
+
+.bt-insurance-item.bt-insurance-included {
+    background: #f0fdf4 !important;
+    border-color: #bbf7d0 !important;
+}
+
+.bt-insurance-item-header {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+}
+
+.bt-insurance-item-checkbox {
+    flex-shrink: 0 !important;
+    position: relative !important;
+}
+
+.bt-insurance-checkbox {
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    width: 24px !important;
+    height: 24px !important;
+    border: 2px solid #d1d5db !important;
+    border-radius: 6px !important;
+    cursor: pointer !important;
+    position: relative !important;
+    transition: all 0.2s ease !important;
+    background: #fff !important;
+}
+
+.bt-insurance-checkbox:hover {
+    border-color: #019CB8 !important;
+}
+
+.bt-insurance-checkbox:checked {
+    background: #019CB8 !important;
+    border-color: #019CB8 !important;
+}
+
+.bt-insurance-checkbox:checked::after {
+    content: '' !important;
+    position: absolute !important;
+    left: 7px !important;
+    top: 3px !important;
+    width: 6px !important;
+    height: 11px !important;
+    border: solid #fff !important;
+    border-width: 0 2px 2px 0 !important;
+    transform: rotate(45deg) !important;
+}
+
+.bt-insurance-checkbox:disabled {
+    opacity: 0.6 !important;
+    cursor: not-allowed !important;
+    background: #e5e7eb !important;
+}
+
+.bt-insurance-checkbox:disabled:checked {
+    background: #6b7280 !important;
+    border-color: #6b7280 !important;
+}
+
+.bt-insurance-item-checkbox label {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 24px !important;
+    height: 24px !important;
+    cursor: pointer !important;
+}
+
+.bt-insurance-item-icon {
+    flex-shrink: 0 !important;
+    color: #019CB8 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.bt-insurance-item.bt-insurance-included .bt-insurance-item-icon {
+    color: #10b981 !important;
+}
+
+.bt-insurance-item-content {
+    flex: 1 !important;
+}
+
+.bt-insurance-item-title {
+    font-size: 16px !important;
+    font-weight: 700 !important;
+    color: #1f2937 !important;
+    margin-bottom: 8px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    flex-wrap: wrap !important;
+}
+
+.bt-insurance-item-description {
+    font-size: 14px !important;
+    color: #6b7280 !important;
+    line-height: 1.5 !important;
+    margin-bottom: 12px !important;
+}
+
+.bt-insurance-item-footer {
+    padding-top: 12px !important;
+    border-top: 1px solid #e5e7eb !important;
+}
+
+.bt-insurance-item-price {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+}
+
+.bt-price-value {
+    font-size: 20px !important;
+    font-weight: 700 !important;
+    color: #019CB8 !important;
+}
+
+.bt-price-included {
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    color: #10b981 !important;
+}
+
+/* ========================================
+   CARD DE EXTRAS
+   ======================================== */
+
+.bt-extras-card {
+    background: #fff !important;
+    border-radius: 12px !important;
+    overflow: hidden !important;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08) !important;
+    margin-bottom: 20px !important;
+    transition: all 0.3s ease !important;
+}
+
+.bt-extras-card:hover {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12) !important;
+}
+
+.bt-extras-header {
+    background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%) !important;
+    padding: 16px 20px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    cursor: pointer !important;
+    border-bottom: 1px solid #d1d5db !important;
+}
+
+.bt-extras-header h3 {
+    margin: 0 !important;
+    font-size: 16px !important;
+    font-weight: 700 !important;
+    color: #1f2937 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+}
+
+.bt-extras-toggle {
+    background: transparent !important;
+    border: none !important;
+    cursor: pointer !important;
+    padding: 4px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: transform 0.3s ease !important;
+    color: #6b7280 !important;
+}
+
+.bt-extras-card.expanded .bt-extras-toggle {
+    transform: rotate(180deg) !important;
+}
+
+.bt-extras-body {
+    padding: 20px !important;
+    max-height: 0 !important;
+    overflow: hidden !important;
+    transition: max-height 0.3s ease !important;
+}
+
+.bt-extras-card.expanded .bt-extras-body {
+    max-height: 2000px !important;
+}
+
+.bt-extras-description {
+    font-size: 14px !important;
+    color: #6b7280 !important;
+    margin: 0 0 20px 0 !important;
+    line-height: 1.5 !important;
+}
+
+.bt-extras-grid {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)) !important;
+    gap: 16px !important;
+}
+
+.bt-extra-item {
+    background: #f9fafb !important;
+    border: 2px solid #e5e7eb !important;
+    border-radius: 12px !important;
+    padding: 20px !important;
+    transition: all 0.3s ease !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 14px !important;
+}
+
+.bt-extra-item:hover {
+    border-color: #f59e0b !important;
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.15) !important;
+    transform: translateY(-2px) !important;
+}
+
+.bt-extra-item.bt-extra-included {
+    background: #f0fdf4 !important;
+    border-color: #bbf7d0 !important;
+}
+
+.bt-extra-item-header {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+}
+
+.bt-extra-item-checkbox {
+    flex-shrink: 0 !important;
+    position: relative !important;
+}
+
+.bt-extra-checkbox {
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    width: 24px !important;
+    height: 24px !important;
+    border: 2px solid #d1d5db !important;
+    border-radius: 6px !important;
+    cursor: pointer !important;
+    position: relative !important;
+    transition: all 0.2s ease !important;
+    background: #fff !important;
+}
+
+.bt-extra-checkbox:hover {
+    border-color: #f59e0b !important;
+}
+
+.bt-extra-checkbox:checked {
+    background: #f59e0b !important;
+    border-color: #f59e0b !important;
+}
+
+.bt-extra-checkbox:checked::after {
+    content: '' !important;
+    position: absolute !important;
+    left: 7px !important;
+    top: 3px !important;
+    width: 6px !important;
+    height: 11px !important;
+    border: solid #fff !important;
+    border-width: 0 2px 2px 0 !important;
+    transform: rotate(45deg) !important;
+}
+
+.bt-extra-checkbox:disabled {
+    opacity: 0.6 !important;
+    cursor: not-allowed !important;
+    background: #e5e7eb !important;
+}
+
+.bt-extra-checkbox:disabled:checked {
+    background: #6b7280 !important;
+    border-color: #6b7280 !important;
+}
+
+.bt-extra-item-checkbox label {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 24px !important;
+    height: 24px !important;
+    cursor: pointer !important;
+}
+
+.bt-extra-item-icon {
+    flex-shrink: 0 !important;
+    color: #f59e0b !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.bt-extra-item.bt-extra-included .bt-extra-item-icon {
+    color: #10b981 !important;
+}
+
+.bt-extra-item-content {
+    flex: 1 !important;
+}
+
+.bt-extra-item-title {
+    font-size: 16px !important;
+    font-weight: 700 !important;
+    color: #1f2937 !important;
+    margin-bottom: 8px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    flex-wrap: wrap !important;
+}
+
+.bt-extra-item-description {
+    font-size: 14px !important;
+    color: #6b7280 !important;
+    line-height: 1.5 !important;
+    margin-bottom: 12px !important;
+}
+
+.bt-extra-item-footer {
+    padding-top: 12px !important;
+    border-top: 1px solid #e5e7eb !important;
+}
+
+.bt-extra-item-price {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+}
+
+/* Responsivo - ajustar grid para mobile */
+@media (max-width: 768px) {
+    .bt-extras-grid {
+        grid-template-columns: 1fr !important;
+    }
 }
 
 /* Responsivo */
@@ -1539,5 +2082,210 @@
     .bt-cancellation-table th,
     .bt-cancellation-table td {
         padding: 10px 12px !important;
+    }
+
+    .bt-insurance-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    .bt-date-range {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+    }
+}
+
+/* ========================================
+   CARD DE INFORMAÇÕES LEGAIS
+   ======================================== */
+
+.bt-legal-card {
+    background: #fff !important;
+    border-radius: 12px !important;
+    overflow: hidden !important;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08) !important;
+    margin-bottom: 20px !important;
+    transition: all 0.3s ease !important;
+}
+
+.bt-legal-card:hover {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12) !important;
+}
+
+.bt-legal-header {
+    background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%) !important;
+    padding: 16px 20px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    cursor: pointer !important;
+    border-bottom: 1px solid #d1d5db !important;
+}
+
+.bt-legal-header h3 {
+    margin: 0 !important;
+    font-size: 16px !important;
+    font-weight: 700 !important;
+    color: #1f2937 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+}
+
+.bt-legal-toggle {
+    background: transparent !important;
+    border: none !important;
+    cursor: pointer !important;
+    padding: 4px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: transform 0.3s ease !important;
+    color: #6b7280 !important;
+}
+
+.bt-legal-card.expanded .bt-legal-toggle {
+    transform: rotate(180deg) !important;
+}
+
+.bt-legal-body {
+    padding: 20px !important;
+    max-height: 0 !important;
+    overflow: hidden !important;
+    transition: max-height 0.3s ease !important;
+}
+
+.bt-legal-card.expanded .bt-legal-body {
+    max-height: 3000px !important;
+}
+
+.bt-legal-intro {
+    font-size: 14px !important;
+    color: #6b7280 !important;
+    margin: 0 0 20px 0 !important;
+    line-height: 1.5 !important;
+}
+
+.bt-legal-accordion {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+}
+
+.bt-legal-item {
+    background: #f9fafb !important;
+    border: 1px solid #e5e7eb !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+    transition: all 0.2s ease !important;
+}
+
+.bt-legal-item:hover {
+    border-color: #d1d5db !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
+}
+
+/* Cores de destaque por categoria */
+.bt-legal-item.bt-legal-important {
+    border-left: 4px solid #f59e0b !important;
+}
+
+.bt-legal-item.bt-legal-cancel {
+    border-left: 4px solid #dc2626 !important;
+}
+
+.bt-legal-item.bt-legal-policy {
+    border-left: 4px solid #6366f1 !important;
+}
+
+.bt-legal-item.bt-legal-flight {
+    border-left: 4px solid #019CB8 !important;
+}
+
+.bt-legal-item.bt-legal-hotel {
+    border-left: 4px solid #8b5cf6 !important;
+}
+
+.bt-legal-item.bt-legal-baggage {
+    border-left: 4px solid #3b82f6 !important;
+}
+
+.bt-legal-item.bt-legal-fees {
+    border-left: 4px solid #10b981 !important;
+}
+
+.bt-legal-item-header {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: 14px 18px !important;
+    cursor: pointer !important;
+    background: #fff !important;
+    transition: background 0.2s ease !important;
+}
+
+.bt-legal-item-header:hover {
+    background: #f9fafb !important;
+}
+
+.bt-legal-item-title-wrapper {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    flex: 1 !important;
+}
+
+.bt-legal-item-icon {
+    font-size: 20px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-shrink: 0 !important;
+}
+
+.bt-legal-item-title {
+    font-size: 15px !important;
+    font-weight: 600 !important;
+    color: #1f2937 !important;
+    line-height: 1.4 !important;
+}
+
+.bt-legal-item-arrow {
+    flex-shrink: 0 !important;
+    color: #6b7280 !important;
+    transition: transform 0.3s ease !important;
+    margin-left: 12px !important;
+}
+
+.bt-legal-item.expanded .bt-legal-item-arrow {
+    transform: rotate(180deg) !important;
+}
+
+.bt-legal-item-content {
+    max-height: 0 !important;
+    overflow: hidden !important;
+    transition: max-height 0.3s ease !important;
+}
+
+.bt-legal-item.expanded .bt-legal-item-content {
+    max-height: 1000px !important;
+}
+
+.bt-legal-item-text {
+    padding: 16px 18px !important;
+    font-size: 14px !important;
+    color: #4b5563 !important;
+    line-height: 1.7 !important;
+    background: #fff !important;
+    border-top: 1px solid #e5e7eb !important;
+}
+
+/* Responsivo para legal */
+@media (max-width: 768px) {
+    .bt-legal-item-title {
+        font-size: 14px !important;
+    }
+
+    .bt-legal-item-text {
+        padding: 14px 16px !important;
+        font-size: 13px !important;
     }
 }
