@@ -823,14 +823,16 @@ class Soltour_API {
         $this->log('╚═══════════════════════════════════════════════════════════════════╝');
 
         // Validar e sanitizar inputs
+        // IMPORTANTE: Não usar sanitize_text_field() no budgetId pois pode alterar caracteres especiais (##, $, @@)
         $avail_token = isset($_POST['avail_token']) ? sanitize_text_field($_POST['avail_token']) : '';
-        $budget_id = isset($_POST['budget_id']) ? sanitize_text_field($_POST['budget_id']) : '';
+        $budget_id = isset($_POST['budget_id']) ? trim(wp_unslash($_POST['budget_id'])) : '';
         $hotel_code = isset($_POST['hotel_code']) ? sanitize_text_field($_POST['hotel_code']) : '';
         $provider_code = isset($_POST['provider_code']) ? sanitize_text_field($_POST['provider_code']) : '';
 
         $this->log('📥 DADOS RECEBIDOS DO FRONTEND:');
         $this->log('  ├─ availToken: ' . ($avail_token ? substr($avail_token, 0, 20) . '...' : 'NÃO FORNECIDO'));
-        $this->log('  ├─ budgetId: ' . ($budget_id ?: 'NÃO FORNECIDO'));
+        $this->log('  ├─ budgetId (RAW): ' . ($budget_id ?: 'NÃO FORNECIDO'));
+        $this->log('  ├─ budgetId (strlen): ' . strlen($budget_id));
         $this->log('  ├─ hotelCode: ' . ($hotel_code ?: 'NÃO FORNECIDO'));
         $this->log('  └─ providerCode: ' . ($provider_code ?: 'NÃO FORNECIDO'));
 
