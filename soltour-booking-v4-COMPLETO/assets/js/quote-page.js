@@ -237,143 +237,146 @@
             </div>
 
             <div class="bt-quote-grid">
-                <!-- Resumo do Pacote -->
-                <div class="bt-package-summary">
-                    <h2>📦 Resumo do Pacote</h2>
+                <!-- COLUNA ESQUERDA (70%) -->
+                <div class="bt-quote-left-column">
 
-                    <!-- Container para Hotel e Voos lado a lado -->
-                    <div class="bt-cards-row">
-                        <!-- Hotel - Card Bonito -->
+                    <!-- PASSO 1: Resumo do Pacote (simplificado) -->
+                    <div class="bt-package-summary">
+                        <h2>📦 Passo 1: Resumo do Pacote</h2>
+
+                        <!-- Acomodação - Todos os Quartos -->
                         <div class="bt-summary-section">
-                            <div class="bt-hotel-card">
-                                <div class="bt-hotel-card-content">
-                                    <h3 class="bt-card-section-title">🏨 Hotel selecionado</h3>
-                                    <h4 class="bt-hotel-card-title">
-                                        ${hotelName}
-                                    </h4>
-                                    ${hotelLocation ? `
-                                        <p class="bt-hotel-card-location">
-                                            <span class="bt-location-icon">📍</span>
-                                            ${hotelLocation}
-                                        </p>
-                                    ` : ''}
-                                    ${hotelStars > 0 ? `
-                                    <div class="bt-hotel-card-footer">
-                                        <div class="bt-hotel-stars-badge">
-                                            ${'⭐'.repeat(hotelStars)}
+                            <h3>🛏️ Acomodação${numRoomsSearched > 1 ? 's' : ''}</h3>
+                            ${selectedRooms.map((room, index) => {
+                                const adultsInRoom = room.passengers ? room.passengers.filter(p => p.type === 'ADULT').length : 0;
+                                const childrenInRoom = room.passengers ? room.passengers.filter(p => p.type === 'CHILD').length : 0;
+                                const totalInRoom = room.passengers ? room.passengers.length : 0;
+
+                                return `
+                                    <div class="bt-room-item" style="background: #f9fafb; padding: 12px; border-radius: 8px; margin-bottom: ${index < selectedRooms.length - 1 ? '10px' : '0'};">
+                                        ${numRoomsSearched > 1 ? `<div class="bt-room-number" style="font-weight: 600; color: #1f2937; margin-bottom: 4px;">Quarto ${index + 1}</div>` : ''}
+                                        <div class="bt-room-name" style="font-weight: 600; color: #1a202c; margin-bottom: 4px;">${room.description || 'Quarto Duplo'}</div>
+                                        <div class="bt-room-occupancy" style="color: #6b7280; font-size: 14px;">
+                                            👥 ${totalInRoom} passageiro${totalInRoom !== 1 ? 's' : ''} (${adultsInRoom} adulto${adultsInRoom !== 1 ? 's' : ''}${childrenInRoom > 0 ? `, ${childrenInRoom} criança${childrenInRoom !== 1 ? 's' : ''}` : ''})
                                         </div>
                                     </div>
-                                    ` : ''}
-
-                                    <!-- Acomodação - Todos os Quartos -->
-                                    <div class="bt-room-info">
-                                        <div class="bt-room-label">🛏️ Acomodação${numRoomsSearched > 1 ? 's' : ''} (${numRoomsSearched} quarto${numRoomsSearched > 1 ? 's' : ''})</div>
-                                        ${selectedRooms.map((room, index) => {
-                                            const adultsInRoom = room.passengers ? room.passengers.filter(p => p.type === 'ADULT').length : 0;
-                                            const childrenInRoom = room.passengers ? room.passengers.filter(p => p.type === 'CHILD').length : 0;
-                                            const totalInRoom = room.passengers ? room.passengers.length : 0;
-
-                                            return `
-                                                <div class="bt-room-item" style="margin-top: ${index > 0 ? '12px' : '0'}; padding-top: ${index > 0 ? '12px' : '0'}; border-top: ${index > 0 ? '1px solid #e5e7eb' : 'none'};">
-                                                    ${numRoomsSearched > 1 ? `<div class="bt-room-number" style="font-weight: 600; color: #1f2937; margin-bottom: 4px;">Quarto ${index + 1}</div>` : ''}
-                                                    <div class="bt-room-name">${room.description || 'Quarto Duplo'}</div>
-                                                    <div class="bt-room-occupancy" style="margin-top: 4px; color: #6b7280; font-size: 14px;">
-                                                        👥 ${totalInRoom} passageiro${totalInRoom !== 1 ? 's' : ''} (${adultsInRoom} adulto${adultsInRoom !== 1 ? 's' : ''}${childrenInRoom > 0 ? `, ${childrenInRoom} criança${childrenInRoom !== 1 ? 's' : ''}` : ''})
-                                                    </div>
-                                                </div>
-                                            `;
-                                        }).join('')}
-                                    </div>
-                                </div>
-                            </div>
+                                `;
+                            }).join('')}
                         </div>
 
-                        <!-- Voos - Cards Compactos -->
-                        ${flightData ? `
-                            <div class="bt-summary-section">
-                                <div class="bt-flights-card">
-                                    ${renderFlightsCompact(flightData)}
-                                </div>
-                            </div>
-                        ` : ''}
+                        <!-- Card de Transfers (se disponível) -->
+                        ${renderTransferCard(transferData)}
                     </div>
 
-                    <!-- Informações -->
-                    <div class="bt-summary-section">
-                        <h3>ℹ️ Informações</h3>
-                        <div class="bt-info-row">
-                            <span class="bt-info-label">Check-in:</span>
-                            <span class="bt-info-value">${startDate}</span>
-                        </div>
-                        <div class="bt-info-row">
-                            <span class="bt-info-label">Check-out:</span>
-                            <span class="bt-info-value">${endDate}</span>
-                        </div>
-                        <div class="bt-info-row">
-                            <span class="bt-info-label">Noites:</span>
-                            <span class="bt-info-value">${numNights}</span>
-                        </div>
-                        <div class="bt-info-row">
-                            <span class="bt-info-label">Regime:</span>
-                            <span class="bt-info-value">${mealPlan}</span>
-                        </div>
-                        <div class="bt-info-row">
-                            <span class="bt-info-label">Passageiros:</span>
-                            <span class="bt-info-value">${passengerCount} pessoa${passengerCount > 1 ? 's' : ''}</span>
-                        </div>
+                    <!-- PASSO 2: Dados dos Passageiros -->
+                    <div class="bt-passengers-form">
+                        <h2>👥 Passo 2: Dados dos Passageiros</h2>
+                        ${renderPassengerForms(allPassengers)}
                     </div>
 
-                    <!-- Card de Transfers (se disponível) -->
-                    ${renderTransferCard(transferData)}
+                    <!-- PASSO 3: Custos de Cancelamento -->
+                    ${cancellationData && cancellationData.charges && cancellationData.charges.length > 0 ? `
+                        <div class="bt-package-summary" style="margin-top: 30px;">
+                            <h2>❌ Passo 3: Custos de Cancelamento</h2>
+                            ${renderCancellationCard(cancellationData)}
+                        </div>
+                    ` : ''}
 
-                    <!-- Card de Gastos de Cancelamento -->
-                    ${renderCancellationCard(cancellationData)}
+                    <!-- PASSO 4: Seguros -->
+                    ${insuranceData && insuranceData.hasInsurances ? `
+                        <div class="bt-package-summary" style="margin-top: 30px;">
+                            <h2>🛡️ Passo 4: Seguros Disponíveis</h2>
+                            ${renderInsuranceCard(insuranceData)}
+                        </div>
+                    ` : ''}
 
-                    <!-- Card de Seguros (da resposta quote) -->
-                    ${renderInsuranceCard(insuranceData)}
+                    <!-- PASSO 5: Informações Importantes -->
+                    ${legalData && legalData.hasLegalInfo ? `
+                        <div class="bt-package-summary" style="margin-top: 30px;">
+                            <h2>📋 Passo 5: Informações Importantes e Condições</h2>
+                            ${renderLegalTextsCard(legalData)}
+                        </div>
+                    ` : ''}
 
-                    <!-- Card de Extras (da resposta quote) -->
-                    ${renderExtrasCard(extrasData)}
-
-                    <!-- Card de Informações Legais (da resposta quote) -->
-                    ${renderLegalTextsCard(legalData)}
+                    <!-- Extras (se disponível) -->
+                    ${extrasData && extrasData.hasExtras ? `
+                        <div class="bt-package-summary" style="margin-top: 30px;">
+                            <h2>🎁 Serviços Extras</h2>
+                            ${renderExtrasCard(extrasData)}
+                        </div>
+                    ` : ''}
                 </div>
 
-                <!-- Sidebar de Preço -->
+                <!-- COLUNA DIREITA (30%) - SIDEBAR FIXA -->
                 <div class="bt-price-sidebar">
-                    <h2>💰 Preço</h2>
-                    <div class="bt-price-breakdown">
+                    <h2>💰 Resumo & Preço</h2>
+
+                    <!-- Hotel -->
+                    <div class="bt-sidebar-section">
+                        <h3 class="bt-sidebar-title">🏨 Hotel</h3>
+                        <div class="bt-sidebar-hotel-name">${hotelName}</div>
+                        ${hotelLocation ? `<div class="bt-sidebar-hotel-location">📍 ${hotelLocation}</div>` : ''}
+                        ${hotelStars > 0 ? `<div class="bt-sidebar-hotel-stars">${'⭐'.repeat(hotelStars)}</div>` : ''}
+                    </div>
+
+                    <!-- Voos -->
+                    ${flightData ? `
+                        <div class="bt-sidebar-section">
+                            <h3 class="bt-sidebar-title">✈️ Voos</h3>
+                            ${renderFlightsSidebar(flightData)}
+                        </div>
+                    ` : ''}
+
+                    <!-- Informações da Viagem -->
+                    <div class="bt-sidebar-section">
+                        <h3 class="bt-sidebar-title">ℹ️ Detalhes da Viagem</h3>
+                        <div class="bt-sidebar-info-row">
+                            <span>Check-in:</span>
+                            <strong>${startDate}</strong>
+                        </div>
+                        <div class="bt-sidebar-info-row">
+                            <span>Check-out:</span>
+                            <strong>${endDate}</strong>
+                        </div>
+                        <div class="bt-sidebar-info-row">
+                            <span>Noites:</span>
+                            <strong>${numNights}</strong>
+                        </div>
+                        <div class="bt-sidebar-info-row">
+                            <span>Regime:</span>
+                            <strong>${mealPlan}</strong>
+                        </div>
+                        <div class="bt-sidebar-info-row">
+                            <span>Passageiros:</span>
+                            <strong>${passengerCount} pessoa${passengerCount > 1 ? 's' : ''}</strong>
+                        </div>
+                    </div>
+
+                    <!-- Preço -->
+                    <div class="bt-sidebar-section bt-sidebar-price">
                         <div class="bt-price-line">
                             <span>Preço por pessoa:</span>
                             <span>${pricePerPerson.toFixed(0)}€</span>
                         </div>
                         <div class="bt-price-line">
-                            <span>Número de passageiros:</span>
+                            <span>Nº de passageiros:</span>
                             <span>× ${passengerCount}</span>
                         </div>
+                        <div class="bt-price-total">
+                            <span>Total:</span>
+                            <span class="bt-price-total-amount">${price.toFixed(0)}€</span>
+                        </div>
+                        <div class="bt-price-note">
+                            💡 Valor estimado. O preço final será confirmado após preencher os dados.
+                        </div>
                     </div>
-                    <div class="bt-price-total">
-                        <span>Total:</span>
-                        <span class="bt-price-total-amount">${price.toFixed(0)}€</span>
-                    </div>
-                    <div class="bt-price-note">
-                        💡 Este é um valor estimado. O preço final será confirmado após o preenchimento dos dados dos passageiros.
-                    </div>
+
+                    <!-- Botão de Gerar Cotação -->
+                    <button type="button" class="bt-btn-generate-quote" id="btn-generate-quote">
+                        <i class="fas fa-file-invoice"></i>
+                        Gerar Cotação Final
+                    </button>
                 </div>
-            </div>
-
-            <!-- Formulário de Passageiros -->
-            <div class="bt-passengers-form">
-                <h2>👥 Dados dos Passageiros</h2>
-                ${renderPassengerForms(allPassengers)}
-            </div>
-
-            <!-- Botão de Gerar Cotação -->
-            <div class="bt-quote-actions">
-                <button type="button" class="bt-btn-generate-quote" id="btn-generate-quote">
-                    <i class="fas fa-file-invoice"></i>
-                    Gerar Cotação Final
-                </button>
             </div>
         `;
 
@@ -399,6 +402,50 @@
             }
         }
 
+    }
+
+    /**
+     * Renderizar voos para sidebar (versão ultra-compacta)
+     */
+    function renderFlightsSidebar(flightData) {
+        if (!flightData) return '';
+
+        const outboundSegments = flightData.outboundSegments || [];
+        const returnSegments = flightData.returnSegments || [];
+
+        let html = '';
+
+        // Voo de IDA
+        if (outboundSegments.length > 0) {
+            const firstSeg = outboundSegments[0];
+            const lastSeg = outboundSegments[outboundSegments.length - 1];
+            const stopInfo = outboundSegments.length > 1 ? `${outboundSegments.length - 1} escala${outboundSegments.length > 2 ? 's' : ''}` : 'Direto';
+
+            html += `
+                <div class="bt-sidebar-flight">
+                    <div class="bt-sidebar-flight-type">🛫 IDA</div>
+                    <div class="bt-sidebar-flight-route">${firstSeg.originAirport} → ${lastSeg.destinationAirport}</div>
+                    <div class="bt-sidebar-flight-stops">${stopInfo}</div>
+                </div>
+            `;
+        }
+
+        // Voo de VOLTA
+        if (returnSegments.length > 0) {
+            const firstSeg = returnSegments[0];
+            const lastSeg = returnSegments[returnSegments.length - 1];
+            const stopInfo = returnSegments.length > 1 ? `${returnSegments.length - 1} escala${returnSegments.length > 2 ? 's' : ''}` : 'Direto';
+
+            html += `
+                <div class="bt-sidebar-flight">
+                    <div class="bt-sidebar-flight-type">🛬 VOLTA</div>
+                    <div class="bt-sidebar-flight-route">${firstSeg.originAirport} → ${lastSeg.destinationAirport}</div>
+                    <div class="bt-sidebar-flight-stops">${stopInfo}</div>
+                </div>
+            `;
+        }
+
+        return html;
     }
 
     /**

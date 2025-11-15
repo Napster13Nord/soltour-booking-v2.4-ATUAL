@@ -129,6 +129,22 @@
     .bt-quote-grid {
         grid-template-columns: 1fr !important;
     }
+
+    /* Em mobile, inverter ordem para sidebar aparecer primeiro */
+    .bt-quote-left-column {
+        order: 2 !important;
+    }
+
+    .bt-price-sidebar {
+        order: 1 !important;
+    }
+}
+
+/* Coluna esquerda */
+.bt-quote-left-column {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 30px !important;
 }
 
 /* Resumo do pacote - COMPACTO */
@@ -292,12 +308,12 @@
     font-weight: 600 !important;
 }
 
-/* Sidebar de preço */
+/* Sidebar de preço - REDESENHADA */
 .bt-price-sidebar {
     background: #fff !important;
     border: 2px solid #e0e0e0 !important;
     border-radius: 12px !important;
-    padding: 25px !important;
+    padding: 20px !important;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
     height: fit-content !important;
     position: sticky !important;
@@ -305,45 +321,139 @@
     width: 100% !important;
     box-sizing: border-box !important;
     overflow: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 20px !important;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 968px) {
     .bt-price-sidebar {
         padding: 20px 15px !important;
         position: relative !important;
         top: 0 !important;
-        margin: 0 !important;
+        margin: 0 0 30px 0 !important;
     }
 }
 
 .bt-price-sidebar h2 {
-    font-size: 20px !important;
+    font-size: 18px !important;
     font-weight: 700 !important;
     color: #1a202c !important;
-    margin: 0 0 20px 0 !important;
-    padding-bottom: 15px !important;
+    margin: 0 0 16px 0 !important;
+    padding-bottom: 12px !important;
     border-bottom: 2px solid #e0e0e0 !important;
 }
 
-.bt-price-breakdown {
-    margin-bottom: 20px !important;
+/* Seções dentro da sidebar */
+.bt-sidebar-section {
+    padding-bottom: 16px !important;
+    border-bottom: 1px solid #e5e7eb !important;
+}
+
+.bt-sidebar-section:last-of-type {
+    border-bottom: none !important;
+    padding-bottom: 0 !important;
+}
+
+.bt-sidebar-title {
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    color: #019CB8 !important;
+    margin: 0 0 10px 0 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+}
+
+/* Hotel na sidebar */
+.bt-sidebar-hotel-name {
+    font-size: 15px !important;
+    font-weight: 700 !important;
+    color: #1a202c !important;
+    margin-bottom: 6px !important;
+    line-height: 1.3 !important;
+}
+
+.bt-sidebar-hotel-location {
+    font-size: 13px !important;
+    color: #6b7280 !important;
+    margin-bottom: 6px !important;
+}
+
+.bt-sidebar-hotel-stars {
+    font-size: 14px !important;
+    line-height: 1 !important;
+}
+
+/* Voos na sidebar */
+.bt-sidebar-flight {
+    background: #f9fafb !important;
+    padding: 10px 12px !important;
+    border-radius: 6px !important;
+    margin-bottom: 8px !important;
+}
+
+.bt-sidebar-flight:last-child {
+    margin-bottom: 0 !important;
+}
+
+.bt-sidebar-flight-type {
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    color: #019CB8 !important;
+    margin-bottom: 4px !important;
+}
+
+.bt-sidebar-flight-route {
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    color: #1a202c !important;
+    margin-bottom: 3px !important;
+}
+
+.bt-sidebar-flight-stops {
+    font-size: 12px !important;
+    color: #6b7280 !important;
+}
+
+/* Linhas de informação na sidebar */
+.bt-sidebar-info-row {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    padding: 6px 0 !important;
+    font-size: 13px !important;
+    color: #6b7280 !important;
+}
+
+.bt-sidebar-info-row strong {
+    color: #1a202c !important;
+    font-weight: 600 !important;
+}
+
+/* Seção de preço na sidebar */
+.bt-sidebar-price {
+    background: #f0f8ff !important;
+    padding: 16px !important;
+    border-radius: 8px !important;
+    border: 1px solid #019CB8 !important;
+    border-bottom: none !important;
 }
 
 .bt-price-line {
     display: flex !important;
     justify-content: space-between !important;
-    padding: 10px 0 !important;
-    font-size: 15px !important;
-    color: #6b7280 !important;
+    padding: 6px 0 !important;
+    font-size: 14px !important;
+    color: #4b5563 !important;
 }
 
 .bt-price-total {
     display: flex !important;
     justify-content: space-between !important;
-    padding: 20px 0 0 0 !important;
-    margin-top: 20px !important;
-    border-top: 2px solid #e0e0e0 !important;
-    font-size: 24px !important;
+    padding: 12px 0 0 0 !important;
+    margin-top: 12px !important;
+    border-top: 2px solid #019CB8 !important;
+    font-size: 20px !important;
     font-weight: 800 !important;
     color: #1a202c !important;
 }
@@ -353,14 +463,22 @@
 }
 
 .bt-price-note {
-    background: #f0f8ff !important;
-    border-left: 4px solid #019CB8 !important;
-    padding: 12px !important;
-    font-size: 13px !important;
+    background: rgba(1, 156, 184, 0.1) !important;
+    padding: 10px !important;
+    font-size: 11px !important;
     color: #555 !important;
-    line-height: 1.5 !important;
-    margin-top: 15px !important;
-    border-radius: 4px !important;
+    line-height: 1.4 !important;
+    margin-top: 12px !important;
+    border-radius: 6px !important;
+}
+
+/* Botão na sidebar - 100% width */
+.bt-price-sidebar .bt-btn-generate-quote {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 14px 24px !important;
+    font-size: 15px !important;
 }
 
 /* Formulário de passageiros */
