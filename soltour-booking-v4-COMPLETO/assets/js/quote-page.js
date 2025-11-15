@@ -72,11 +72,42 @@
         const numRoomsSearched = packageData.numRoomsSearched || 1;
         const hotelService = budget.hotelServices && budget.hotelServices[0];
 
-        // Debug: Verificar dados dos quartos
-        console.log('[SOLTOUR DEBUG] Renderizando página de cotação');
-        console.log('[SOLTOUR DEBUG] Número de quartos pesquisados:', numRoomsSearched);
-        console.log('[SOLTOUR DEBUG] Quartos selecionados:', selectedRooms);
-        console.log('[SOLTOUR DEBUG] Total de quartos no array:', selectedRooms.length);
+        // ==============================================
+        // DEBUG AVANÇADO - Requisição e Resposta da API
+        // ==============================================
+        console.log('╔═══════════════════════════════════════════════════════════════════╗');
+        console.log('║           🔍 SOLTOUR - DEBUG AVANÇADO - PÁGINA DE COTAÇÃO         ║');
+        console.log('╚═══════════════════════════════════════════════════════════════════╝');
+        console.log('');
+        console.log('📦 DADOS COMPLETOS DO PACOTE:');
+        console.log(JSON.stringify(packageData, null, 2));
+        console.log('');
+        console.log('🏨 BUDGET COMPLETO (availability response):');
+        console.log(JSON.stringify(budget, null, 2));
+        console.log('');
+        console.log('🛏️ QUARTOS SELECIONADOS:');
+        console.log('  → Número de quartos pesquisados:', numRoomsSearched);
+        console.log('  → Quartos selecionados:', selectedRooms);
+        console.log('  → Total de quartos no array:', selectedRooms.length);
+        console.log('');
+
+        // Debug de transfers
+        const transferData = extractTransferData(budget);
+        console.log('🚗 TRANSFERS DETECTADOS:');
+        console.log('  → Tem transfers?', transferData.hasTransfers);
+        if (transferData.hasTransfers) {
+            console.log('  → Serviços de transfer:', JSON.stringify(transferData.transferServices, null, 2));
+        }
+        console.log('');
+
+        // Debug de cancelamento
+        const cancellationData = extractCancellationData(budget);
+        console.log('❌ GASTOS DE CANCELAMENTO:');
+        console.log('  → Total de períodos:', cancellationData.charges.length);
+        console.log('  → Dados completos:', JSON.stringify(cancellationData.charges, null, 2));
+        console.log('');
+        console.log('═══════════════════════════════════════════════════════════════════');
+        console.log('');
 
         // USAR APENAS DADOS DO AVAILABILITY (budget)
         // NÃO usar details.hotelDetails que vem de chamada separada
@@ -247,6 +278,12 @@
                             <span class="bt-info-value">${passengerCount} pessoa${passengerCount > 1 ? 's' : ''}</span>
                         </div>
                     </div>
+
+                    <!-- Card de Transfers (se disponível) -->
+                    ${renderTransferCard(transferData)}
+
+                    <!-- Card de Gastos de Cancelamento -->
+                    ${renderCancellationCard(cancellationData)}
                 </div>
 
                 <!-- Sidebar de Preço -->
@@ -297,6 +334,9 @@
         `;
 
         $container.html(html);
+
+        // Expandir cards de transfer e cancelamento por padrão
+        $('.bt-transfer-card, .bt-cancellation-card').addClass('expanded');
 
         // Bind eventos
         bindQuoteEvents();
@@ -985,6 +1025,203 @@
         const date = new Date();
         date.setFullYear(date.getFullYear() - yearsAgo);
         return date.toISOString().split('T')[0];
+    }
+
+    // ===========================
+    // FUNÇÕES DE EXTRAÇÃO DE DADOS
+    // ===========================
+
+    /**
+     * Extrai dados de transfers do budget
+     * Conforme documentação: budget.transferServices[]
+     */
+    function extractTransferData(budget) {
+        const transferServices = budget.transferServices || [];
+        const hasTransfers = transferServices.length > 0;
+
+        return {
+            hasTransfers: hasTransfers,
+            transferServices: transferServices
+        };
+    }
+
+    /**
+     * Extrai dados de cancelamento de todos os serviços
+     * Conforme documentação:
+     * - hotelServices[].cancellationChargeServices[]
+     * - flightServices[].cancellationChargeServices[]
+     * - transferServices[].cancellationChargeServices[]
+     * - insuranceServices[].cancellationChargeServices[]
+     */
+    function extractCancellationData(budget) {
+        const charges = [];
+
+        // Grupos de serviços
+        const serviceGroups = [
+            { type: 'HOTEL', services: budget.hotelServices || [] },
+            { type: 'FLIGHT', services: budget.flightServices || [] },
+            { type: 'TRANSFER', services: budget.transferServices || [] },
+            { type: 'INSURANCE', services: budget.insuranceServices || [] }
+        ];
+
+        // Iterar por todos os grupos
+        serviceGroups.forEach(group => {
+            group.services.forEach(service => {
+                const cancellationServices = service.cancellationChargeServices || [];
+
+                cancellationServices.forEach(cancellation => {
+                    charges.push({
+                        serviceType: cancellation.serviceType || group.type,
+                        startDate: cancellation.startDate || null,
+                        endDate: cancellation.endDate || null,
+                        amount: cancellation.priceInfo?.pvp || 0,
+                        currency: cancellation.priceInfo?.currency || 'EUR'
+                    });
+                });
+            });
+        });
+
+        // Ordenar por data de início
+        charges.sort((a, b) => {
+            if (!a.startDate || !b.startDate) return 0;
+            return new Date(a.startDate) - new Date(b.startDate);
+        });
+
+        return {
+            charges: charges
+        };
+    }
+
+    /**
+     * Renderiza card de Transfers
+     */
+    function renderTransferCard(transferData) {
+        if (!transferData.hasTransfers) {
+            return ''; // Não mostrar card se não houver transfers
+        }
+
+        let html = `
+            <div class="bt-summary-section bt-transfer-card">
+                <div class="bt-transfer-header">
+                    <h3>🚗 TRASLADO PRIVADO</h3>
+                    <button class="bt-transfer-toggle" onclick="this.closest('.bt-transfer-card').classList.toggle('expanded')">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </button>
+                </div>
+                <div class="bt-transfer-body">
+                    <p class="bt-transfer-description">Oferece a tu cliente un servicio directo al hotel en un coche privado.</p>
+                    <div class="bt-transfer-services">
+        `;
+
+        // Renderizar cada serviço de transfer
+        transferData.transferServices.forEach((transfer, index) => {
+            const title = transfer.title || transfer.description || 'Traslado privado';
+            const hasDetails = transfer.startDate || transfer.type;
+
+            html += `
+                <div class="bt-transfer-service">
+                    <div class="bt-transfer-service-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M5 17h14v-5H5v5z"/>
+                            <path d="M3 13h18M5 17l-2 2M19 17l2 2"/>
+                        </svg>
+                    </div>
+                    <div class="bt-transfer-service-content">
+                        <div class="bt-transfer-service-title">${title}</div>
+                        ${hasDetails ? `<div class="bt-transfer-service-details">Data: ${transfer.startDate || 'N/A'}</div>` : ''}
+                    </div>
+                    <div class="bt-transfer-service-actions">
+                        <a href="#" class="bt-transfer-link" onclick="event.preventDefault();">Ver información</a>
+                        <span class="bt-transfer-status">Calculando</span>
+                    </div>
+                </div>
+            `;
+        });
+
+        html += `
+                    </div>
+                </div>
+            </div>
+        `;
+
+        return html;
+    }
+
+    /**
+     * Renderiza card de Gastos de Cancelamento
+     */
+    function renderCancellationCard(cancellationData) {
+        if (cancellationData.charges.length === 0) {
+            return ''; // Não mostrar card se não houver gastos de cancelamento
+        }
+
+        let html = `
+            <div class="bt-summary-section bt-cancellation-card">
+                <div class="bt-cancellation-header">
+                    <h3>❌ GASTOS DE CANCELACIÓN</h3>
+                    <button class="bt-cancellation-toggle" onclick="this.closest('.bt-cancellation-card').classList.toggle('expanded')">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </button>
+                </div>
+                <div class="bt-cancellation-body">
+                    <p class="bt-cancellation-description">Te detallamos los gastos que se aplicarán por fecha de cancelación</p>
+                    <div class="bt-cancellation-table-wrapper">
+                        <table class="bt-cancellation-table">
+                            <thead>
+                                <tr>
+                                    <th>Desde</th>
+                                    <th>Hasta</th>
+                                    <th class="bt-text-right">Importe</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+        `;
+
+        // Renderizar cada período de cancelamento
+        cancellationData.charges.forEach(charge => {
+            const startDate = charge.startDate ? formatDateSimple(charge.startDate) : 'N/A';
+            const endDate = charge.endDate ? formatDateSimple(charge.endDate) : 'N/A';
+            const amount = charge.amount.toFixed(2);
+            const currency = charge.currency === 'EUR' ? '€' : charge.currency;
+
+            html += `
+                <tr>
+                    <td>${startDate}</td>
+                    <td>${endDate}</td>
+                    <td class="bt-text-right bt-amount">${amount}${currency}</td>
+                </tr>
+            `;
+        });
+
+        html += `
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        return html;
+    }
+
+    /**
+     * Formatar data no formato dd/mm/yyyy
+     */
+    function formatDateSimple(dateStr) {
+        if (!dateStr) return '';
+        try {
+            const date = new Date(dateStr);
+            const day = date.getDate().toString().padStart(2, '0');
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const year = date.getFullYear();
+            return `${day}/${month}/${year}`;
+        } catch (e) {
+            return dateStr;
+        }
     }
 
 })(jQuery);
