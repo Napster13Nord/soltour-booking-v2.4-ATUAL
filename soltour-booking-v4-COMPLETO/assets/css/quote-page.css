@@ -25,46 +25,48 @@
     }
 }
 
-/* Header da cotação */
+/* Header da cotação - REDUZIDO */
 .bt-quote-header {
     background: linear-gradient(135deg, #019CB8 0%, #0176a8 100%) !important;
     color: #fff !important;
-    padding: 30px !important;
-    border-radius: 12px !important;
+    padding: 20px 30px !important;
+    border-radius: 8px !important;
     margin-bottom: 30px !important;
-    text-align: center !important;
+    text-align: left !important;
     width: 100% !important;
     box-sizing: border-box !important;
 }
 
 @media (max-width: 768px) {
     .bt-quote-header {
-        padding: 20px 15px !important;
+        padding: 16px 20px !important;
         margin-bottom: 20px !important;
+        text-align: center !important;
     }
 
     .bt-quote-header h1 {
-        font-size: 24px !important;
+        font-size: 20px !important;
     }
 
     .bt-quote-header p {
-        font-size: 14px !important;
+        font-size: 13px !important;
     }
 }
 
 .bt-quote-header h1 {
-    font-size: 32px !important;
-    font-weight: 800 !important;
-    margin: 0 0 10px 0 !important;
+    font-size: 24px !important;
+    font-weight: 700 !important;
+    margin: 0 0 6px 0 !important;
     color: #fff !important;
-    line-height: 1.2 !important;
+    line-height: 1.3 !important;
 }
 
 .bt-quote-header p {
-    font-size: 16px !important;
+    font-size: 14px !important;
     margin: 0 !important;
-    opacity: 0.95 !important;
+    opacity: 0.9 !important;
     color: #fff !important;
+    font-weight: 400 !important;
 }
 
 /* Card Informativo */
@@ -129,12 +131,12 @@
     }
 }
 
-/* Resumo do pacote */
+/* Resumo do pacote - COMPACTO */
 .bt-package-summary {
     background: #fff !important;
     border: 2px solid #e0e0e0 !important;
     border-radius: 12px !important;
-    padding: 25px !important;
+    padding: 20px !important;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
     width: 100% !important;
     box-sizing: border-box !important;
@@ -143,24 +145,24 @@
 
 @media (max-width: 768px) {
     .bt-package-summary {
-        padding: 20px 15px !important;
+        padding: 16px !important;
         margin: 0 !important;
     }
 }
 
 .bt-package-summary h2 {
-    font-size: 24px !important;
+    font-size: 20px !important;
     font-weight: 700 !important;
     color: #1a202c !important;
-    margin: 0 0 20px 0 !important;
-    padding-bottom: 15px !important;
+    margin: 0 0 16px 0 !important;
+    padding-bottom: 12px !important;
     border-bottom: 2px solid #e0e0e0 !important;
     line-height: 1.3 !important;
 }
 
 @media (max-width: 768px) {
     .bt-package-summary h2 {
-        font-size: 20px !important;
+        font-size: 18px !important;
     }
 }
 
@@ -179,8 +181,8 @@
 }
 
 .bt-summary-section {
-    margin-bottom: 25px !important;
-    padding-bottom: 20px !important;
+    margin-bottom: 20px !important;
+    padding-bottom: 16px !important;
     border-bottom: 1px solid #f0f0f0 !important;
 }
 
@@ -198,10 +200,10 @@
 }
 
 .bt-summary-section h3 {
-    font-size: 16px !important;
+    font-size: 14px !important;
     font-weight: 700 !important;
     color: #019CB8 !important;
-    margin: 0 0 12px 0 !important;
+    margin: 0 0 10px 0 !important;
     text-transform: uppercase !important;
     letter-spacing: 0.5px !important;
     line-height: 1.4 !important;
@@ -276,8 +278,8 @@
 .bt-info-row {
     display: flex !important;
     justify-content: space-between !important;
-    padding: 10px 0 !important;
-    font-size: 15px !important;
+    padding: 8px 0 !important;
+    font-size: 14px !important;
 }
 
 .bt-info-label {
@@ -638,35 +640,35 @@
    CARD BONITO DE HOTEL
    ======================================== */
 
-/* Título da seção do card */
+/* Título da seção do card - COMPACTO */
 .bt-card-section-title {
-    font-size: 18px !important;
+    font-size: 14px !important;
     font-weight: 700 !important;
     color: #019CB8 !important;
-    margin: 0 0 20px 0 !important;
-    padding-bottom: 12px !important;
+    margin: 0 0 12px 0 !important;
+    padding-bottom: 8px !important;
     border-bottom: 2px solid #e5e7eb !important;
-    text-transform: none !important;
-    letter-spacing: normal !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
 }
 
 .bt-hotel-card {
     background: #fff !important;
-    border-radius: 12px !important;
+    border-radius: 8px !important;
     overflow: hidden !important;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1) !important;
-    margin-bottom: 20px !important;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08) !important;
+    margin-bottom: 0 !important;
     transition: all 0.3s ease !important;
 }
 
 .bt-hotel-card:hover {
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15) !important;
-    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12) !important;
+    transform: translateY(-1px) !important;
 }
 
 .bt-hotel-card-image {
     width: 100% !important;
-    height: 250px !important;
+    height: 180px !important;
     background-size: cover !important;
     background-position: center !important;
     position: relative !important;
@@ -697,14 +699,14 @@
 }
 
 .bt-hotel-card-content {
-    padding: 25px !important;
+    padding: 16px !important;
 }
 
 .bt-hotel-card-title {
-    font-size: 20px !important;
+    font-size: 16px !important;
     font-weight: 700 !important;
     color: #1a202c !important;
-    margin: 0 0 12px 0 !important;
+    margin: 0 0 8px 0 !important;
 }
 
 .bt-hotel-icon {
@@ -972,13 +974,13 @@
    CARDS DE VOOS COMPACTOS
    ======================================== */
 
-/* Container do card de voos */
+/* Container do card de voos - COMPACTO */
 .bt-flights-card {
     background: #fff !important;
-    border-radius: 12px !important;
+    border-radius: 8px !important;
     overflow: hidden !important;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1) !important;
-    padding: 20px !important;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08) !important;
+    padding: 16px !important;
     height: 100% !important;
 }
 
@@ -1227,20 +1229,36 @@
 }
 
 .bt-transfer-header,
-.bt-cancellation-header {
+.bt-cancellation-header,
+.bt-insurance-header,
+.bt-extras-header,
+.bt-legal-header {
     background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%) !important;
-    padding: 16px 20px !important;
+    padding: 14px 18px !important;
     display: flex !important;
     align-items: center !important;
     justify-content: space-between !important;
     cursor: pointer !important;
     border-bottom: 1px solid #d1d5db !important;
+    border-radius: 8px !important;
+    transition: background 0.2s ease !important;
+}
+
+.bt-transfer-header:hover,
+.bt-cancellation-header:hover,
+.bt-insurance-header:hover,
+.bt-extras-header:hover,
+.bt-legal-header:hover {
+    background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%) !important;
 }
 
 .bt-transfer-header h3,
-.bt-cancellation-header h3 {
+.bt-cancellation-header h3,
+.bt-insurance-header h3,
+.bt-extras-header h3,
+.bt-legal-header h3 {
     margin: 0 !important;
-    font-size: 16px !important;
+    font-size: 14px !important;
     font-weight: 700 !important;
     color: #1f2937 !important;
     text-transform: uppercase !important;
@@ -1248,7 +1266,10 @@
 }
 
 .bt-transfer-toggle,
-.bt-cancellation-toggle {
+.bt-cancellation-toggle,
+.bt-insurance-toggle,
+.bt-extras-toggle,
+.bt-legal-toggle {
     background: transparent !important;
     border: none !important;
     cursor: pointer !important;
@@ -1261,30 +1282,31 @@
 }
 
 .bt-transfer-card.expanded .bt-transfer-toggle,
-.bt-cancellation-card.expanded .bt-cancellation-toggle {
+.bt-cancellation-card.expanded .bt-cancellation-toggle,
+.bt-insurance-card.expanded .bt-insurance-toggle,
+.bt-extras-card.expanded .bt-extras-toggle,
+.bt-legal-card.expanded .bt-legal-toggle {
     transform: rotate(180deg) !important;
 }
 
 .bt-transfer-body,
-.bt-cancellation-body {
-    padding: 20px !important;
+.bt-cancellation-body,
+.bt-insurance-body,
+.bt-extras-body,
+.bt-legal-body {
+    padding: 0 20px !important;
     max-height: 0 !important;
     overflow: hidden !important;
-    transition: max-height 0.3s ease !important;
+    transition: max-height 0.3s ease, padding 0.3s ease !important;
 }
 
-.bt-transfer-card.expanded .bt-transfer-body {
-    max-height: 1000px !important;
-}
-
-.bt-cancellation-card.expanded .bt-cancellation-body {
-    max-height: 1000px !important;
-}
-
-/* Por padrão, mostrar expandido */
-.bt-transfer-card,
-.bt-cancellation-card {
-    /* Adicionar classe expanded por padrão via JavaScript */
+.bt-transfer-card.expanded .bt-transfer-body,
+.bt-cancellation-card.expanded .bt-cancellation-body,
+.bt-insurance-card.expanded .bt-insurance-body,
+.bt-extras-card.expanded .bt-extras-body,
+.bt-legal-card.expanded .bt-legal-body {
+    max-height: 2000px !important;
+    padding: 20px !important;
 }
 
 .bt-transfer-description,
@@ -2053,18 +2075,238 @@
     }
 }
 
+/* ========================================
+   CARDS DE SEGUROS E EXTRAS
+   ======================================== */
+
+.bt-insurance-services,
+.bt-extras-services {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+}
+
+.bt-insurance-service,
+.bt-extra-service {
+    background: #f9fafb !important;
+    border: 1px solid #e5e7eb !important;
+    border-radius: 8px !important;
+    padding: 16px !important;
+    display: flex !important;
+    align-items: flex-start !important;
+    gap: 12px !important;
+    transition: all 0.2s ease !important;
+}
+
+.bt-insurance-service:hover,
+.bt-extra-service:hover {
+    background: #f3f4f6 !important;
+    border-color: #d1d5db !important;
+}
+
+.bt-insurance-service-checkbox,
+.bt-extra-service-checkbox {
+    flex-shrink: 0 !important;
+    position: relative !important;
+    margin-top: 2px !important;
+}
+
+.bt-insurance-checkbox,
+.bt-extra-checkbox {
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    width: 22px !important;
+    height: 22px !important;
+    border: 2px solid #d1d5db !important;
+    border-radius: 4px !important;
+    cursor: pointer !important;
+    position: relative !important;
+    transition: all 0.2s ease !important;
+    background: #fff !important;
+}
+
+.bt-insurance-checkbox:hover,
+.bt-extra-checkbox:hover {
+    border-color: #019CB8 !important;
+}
+
+.bt-insurance-checkbox:checked,
+.bt-extra-checkbox:checked {
+    background: #019CB8 !important;
+    border-color: #019CB8 !important;
+}
+
+.bt-insurance-checkbox:checked::after,
+.bt-extra-checkbox:checked::after {
+    content: '' !important;
+    position: absolute !important;
+    left: 6px !important;
+    top: 2px !important;
+    width: 5px !important;
+    height: 10px !important;
+    border: solid #fff !important;
+    border-width: 0 2px 2px 0 !important;
+    transform: rotate(45deg) !important;
+}
+
+.bt-insurance-checkbox:disabled,
+.bt-extra-checkbox:disabled {
+    opacity: 0.6 !important;
+    cursor: not-allowed !important;
+    background: #e5e7eb !important;
+}
+
+.bt-insurance-service-icon,
+.bt-extra-service-icon {
+    flex-shrink: 0 !important;
+    color: #019CB8 !important;
+    margin-top: 2px !important;
+}
+
+.bt-insurance-service-content,
+.bt-extra-service-content {
+    flex: 1 !important;
+}
+
+.bt-insurance-service-title,
+.bt-extra-service-title {
+    font-size: 15px !important;
+    font-weight: 600 !important;
+    color: #1f2937 !important;
+    margin-bottom: 6px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    flex-wrap: wrap !important;
+}
+
+.bt-insurance-service-description,
+.bt-extra-service-description {
+    font-size: 13px !important;
+    color: #6b7280 !important;
+    line-height: 1.5 !important;
+    margin-bottom: 8px !important;
+}
+
+.bt-insurance-service-price,
+.bt-extra-service-price {
+    font-size: 14px !important;
+    color: #019CB8 !important;
+    font-weight: 700 !important;
+}
+
+.bt-insurance-service.bt-insurance-included,
+.bt-extra-service.bt-extra-included {
+    background: #f0fdf4 !important;
+    border-color: #bbf7d0 !important;
+}
+
+.bt-insurance-description,
+.bt-extras-description,
+.bt-legal-description {
+    font-size: 13px !important;
+    color: #6b7280 !important;
+    margin: 0 0 16px 0 !important;
+    line-height: 1.5 !important;
+}
+
+/* ========================================
+   ACCORDION DE TEXTOS LEGAIS
+   ======================================== */
+
+.bt-legal-accordion {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+}
+
+.bt-legal-item {
+    background: #fff !important;
+    border: 1px solid #e5e7eb !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+    transition: all 0.2s ease !important;
+}
+
+.bt-legal-item:hover {
+    border-color: #d1d5db !important;
+}
+
+.bt-legal-item-header {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    padding: 12px 16px !important;
+    cursor: pointer !important;
+    background: #f9fafb !important;
+    transition: background 0.2s ease !important;
+}
+
+.bt-legal-item-header:hover {
+    background: #f3f4f6 !important;
+}
+
+.bt-legal-item-icon {
+    flex-shrink: 0 !important;
+    font-size: 18px !important;
+}
+
+.bt-legal-item-title {
+    flex: 1 !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    color: #1f2937 !important;
+}
+
+.bt-legal-item-arrow {
+    flex-shrink: 0 !important;
+    transition: transform 0.3s ease !important;
+    color: #6b7280 !important;
+}
+
+.bt-legal-item.expanded .bt-legal-item-arrow {
+    transform: rotate(180deg) !important;
+}
+
+.bt-legal-item-content {
+    max-height: 0 !important;
+    overflow: hidden !important;
+    transition: max-height 0.3s ease, padding 0.3s ease !important;
+    padding: 0 16px !important;
+}
+
+.bt-legal-item.expanded .bt-legal-item-content {
+    max-height: 1000px !important;
+    padding: 16px !important;
+}
+
+.bt-legal-item-text {
+    font-size: 13px !important;
+    color: #4b5563 !important;
+    line-height: 1.6 !important;
+    white-space: pre-wrap !important;
+}
+
 /* Responsivo */
 @media (max-width: 768px) {
-    .bt-transfer-service {
+    .bt-transfer-service,
+    .bt-insurance-service,
+    .bt-extra-service {
         flex-wrap: wrap !important;
     }
 
     .bt-transfer-service-checkbox,
-    .bt-transfer-service-icon {
+    .bt-transfer-service-icon,
+    .bt-insurance-service-checkbox,
+    .bt-insurance-service-icon,
+    .bt-extra-service-checkbox,
+    .bt-extra-service-icon {
         flex-shrink: 0 !important;
     }
 
-    .bt-transfer-service-content {
+    .bt-transfer-service-content,
+    .bt-insurance-service-content,
+    .bt-extra-service-content {
         flex: 1 !important;
         min-width: 0 !important;
     }

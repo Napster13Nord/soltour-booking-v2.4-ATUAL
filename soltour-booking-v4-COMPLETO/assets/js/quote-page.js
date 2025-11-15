@@ -379,8 +379,8 @@
 
         $container.html(html);
 
-        // Expandir cards por padrão
-        $('.bt-transfer-card, .bt-cancellation-card, .bt-insurance-card, .bt-extras-card, .bt-legal-card').addClass('expanded');
+        // NÃO expandir cards por padrão - deixar fechados para layout mais limpo
+        // $('.bt-transfer-card, .bt-cancellation-card, .bt-insurance-card, .bt-extras-card, .bt-legal-card').addClass('expanded');
 
         // Bind eventos
         bindQuoteEvents();
