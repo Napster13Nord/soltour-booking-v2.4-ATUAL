@@ -368,6 +368,12 @@
     letter-spacing: -0.01em !important;
 }
 
+@media (max-width: 768px) {
+    .bt-price-sidebar h2 {
+        font-size: 18px !important;
+    }
+}
+
 /* Seções dentro da sidebar */
 .bt-sidebar-section {
     padding-bottom: 16px !important;
@@ -591,6 +597,12 @@
     margin: 0 0 16px 0 !important;
     padding-bottom: 12px !important;
     border-bottom: 2px solid #e0e0e0 !important;
+}
+
+@media (max-width: 768px) {
+    .bt-passengers-form h2 {
+        font-size: 18px !important;
+    }
 }
 
 .bt-form-section {
@@ -2656,35 +2668,6 @@
 .bt-legal-item:hover {
     border-color: #d1d5db !important;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
-}
-
-/* Cores de destaque por categoria */
-.bt-legal-item.bt-legal-important {
-    border-left: 4px solid #f59e0b !important;
-}
-
-.bt-legal-item.bt-legal-cancel {
-    border-left: 4px solid #dc2626 !important;
-}
-
-.bt-legal-item.bt-legal-policy {
-    border-left: 4px solid #6366f1 !important;
-}
-
-.bt-legal-item.bt-legal-flight {
-    border-left: 4px solid #019CB8 !important;
-}
-
-.bt-legal-item.bt-legal-hotel {
-    border-left: 4px solid #8b5cf6 !important;
-}
-
-.bt-legal-item.bt-legal-baggage {
-    border-left: 4px solid #3b82f6 !important;
-}
-
-.bt-legal-item.bt-legal-fees {
-    border-left: 4px solid #10b981 !important;
 }
 
 .bt-legal-item-header {
