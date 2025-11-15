@@ -127,7 +127,7 @@
     box-sizing: border-box !important;
 }
 
-@media (max-width: 968px) {
+@media (max-width: 992px) {
     .bt-quote-grid {
         grid-template-columns: 1fr !important;
         gap: 20px !important;
@@ -148,6 +148,7 @@
         width: 100% !important;
         max-width: 100% !important;
         margin: 0 !important;
+        position: static !important;
     }
 }
 
@@ -156,6 +157,9 @@
     display: flex !important;
     flex-direction: column !important;
     gap: 20px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
 }
 
 /* Resumo do pacote - COMPACTO */
@@ -372,11 +376,11 @@
     gap: 20px !important;
 }
 
-@media (max-width: 968px) {
+@media (max-width: 992px) {
     .bt-price-sidebar {
         padding: 15px !important;
-        position: relative !important;
-        top: 0 !important;
+        position: static !important;
+        top: auto !important;
         margin: 0 0 20px 0 !important;
         width: 100% !important;
         max-width: 100% !important;
@@ -413,6 +417,9 @@
 .bt-sidebar-section {
     padding-bottom: 16px !important;
     border-bottom: 1px solid #e5e7eb !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
 }
 
 .bt-sidebar-section:last-of-type {
@@ -543,6 +550,9 @@
     border-radius: 10px !important;
     border: 2px solid #019CB8 !important;
     margin-top: 8px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
 }
 
 .bt-price-line {
