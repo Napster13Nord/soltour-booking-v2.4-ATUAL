@@ -352,20 +352,6 @@ class Soltour_API {
         return $this->make_request('booking/getAlternatives', $data);
     }
 
-    /**
-     * POST /booking/fetchAvailability
-     * Recalcula availability após selecionar alternativa
-     */
-    public function fetch_availability($avail_token, $selected_budget_id) {
-        $data = array(
-            'productType' => 'PACKAGE',
-            'availToken' => $avail_token,
-            'selectedBudgetId' => $selected_budget_id
-        );
-
-        return $this->make_request('booking/fetchAvailability', $data);
-    }
-
     // ========================================
     // 5) CARRINHO E CHECKOUT
     // ========================================

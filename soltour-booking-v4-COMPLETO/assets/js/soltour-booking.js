@@ -1957,11 +1957,23 @@
                 }
             });
         }
-        // Fallback: usar dados da busca original
-        if (numPassengers === 0 && SoltourApp.searchParams) {
-            numPassengers = (SoltourApp.searchParams.adults || 2) + (SoltourApp.searchParams.children || 0);
+        // Fallback: usar dados da busca original (searchParams.rooms)
+        if (numPassengers === 0 && SoltourApp.searchParams && SoltourApp.searchParams.rooms) {
+            try {
+                const rooms = typeof SoltourApp.searchParams.rooms === 'string'
+                    ? JSON.parse(SoltourApp.searchParams.rooms)
+                    : SoltourApp.searchParams.rooms;
+
+                rooms.forEach(room => {
+                    if (room.passengers) {
+                        numPassengers += room.passengers.length;
+                    }
+                });
+            } catch (e) {
+                console.error('Erro ao calcular passageiros do searchParams.rooms:', e);
+            }
         }
-        // Garantir pelo menos 1 passageiro
+        // Último fallback: garantir pelo menos 2 passageiros (mínimo razoável)
         if (numPassengers === 0) numPassengers = 2;
 
         // (K.2) PREÇO POR PESSOA
