@@ -236,7 +236,7 @@
 
                     <!-- PASSO 1: Resumo do Pacote (expandido) -->
                     <div class="bt-package-summary">
-                        <h2>Passo 1: Resumo do Pacote</h2>
+                        <h2>Resumo do Pacote</h2>
 
                         <!-- Hotel -->
                         <div class="bt-summary-section bt-summary-compact">
@@ -300,14 +300,14 @@
 
                     <!-- PASSO 2: Dados dos Passageiros -->
                     <div class="bt-passengers-form">
-                        <h2>Passo 2: Dados dos Passageiros</h2>
+                        <h2>Dados dos Passageiros</h2>
                         ${renderPassengerForms(allPassengers)}
                     </div>
 
                     <!-- PASSO 3: Custos de Cancelamento -->
                     ${cancellationData && cancellationData.charges && cancellationData.charges.length > 0 ? `
                         <div class="bt-package-summary" style="margin-top: 20px;">
-                            <h2>Passo 3: Custos de Cancelamento</h2>
+                            <h2>Custos de Cancelamento</h2>
                             ${renderCancellationCard(cancellationData)}
                         </div>
                     ` : ''}
@@ -315,7 +315,7 @@
                     <!-- PASSO 3: Informações Importantes -->
                     ${legalData && legalData.hasLegalInfo ? `
                         <div class="bt-package-summary" style="margin-top: 20px;">
-                            <h2>Passo 3: Informações Importantes e Condições</h2>
+                            <h2>Informações Importantes e Condições</h2>
                             ${renderLegalTextsCard(legalData)}
                         </div>
                     ` : ''}
