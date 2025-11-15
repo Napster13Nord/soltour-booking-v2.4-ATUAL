@@ -1650,7 +1650,23 @@
             return ''; // Não mostrar card se não houver informações legais
         }
 
-        const legalTexts = legalData.legalTexts;
+        // Filtrar valores null, undefined ou vazios do array
+        const legalTexts = legalData.legalTexts.filter(item => {
+            if (item === null || item === undefined) return false;
+
+            // Se for string, verificar se não está vazia
+            if (typeof item === 'string') {
+                return item.trim().length > 0;
+            }
+
+            // Se for objeto, aceitar
+            return true;
+        });
+
+        // Se após filtrar não houver textos válidos, não mostrar o card
+        if (legalTexts.length === 0) {
+            return '';
+        }
 
         let html = `
             <div class="bt-summary-section bt-legal-card">
@@ -1668,9 +1684,47 @@
 
         // Renderizar cada texto legal como item do accordion
         legalTexts.forEach((legalText, index) => {
-            const title = legalText.title || legalText.name || `Informação ${index + 1}`;
-            const content = legalText.content || legalText.description || legalText.text || '';
-            const type = legalText.type || 'general';
+            // Se for string, converter para objeto
+            let title, content, type;
+
+            if (typeof legalText === 'string') {
+                // É uma string simples - tentar extrair um título inteligente
+                const trimmedText = legalText.trim();
+                const firstLine = trimmedText.split('\n')[0].trim();
+
+                // Detectar padrões comuns para criar títulos melhores
+                if (firstLine.toUpperCase().includes('AIR EUROPA')) {
+                    title = 'AIR EUROPA - Informações de voo';
+                } else if (firstLine.toUpperCase().includes('IMPORTANTE')) {
+                    title = 'Informações importantes';
+                } else if (trimmedText.includes('taxa turistica') || trimmedText.includes('taxa turística')) {
+                    title = 'Taxa turística';
+                } else if (trimmedText.includes('bagagem') || trimmedText.includes('Bagagem')) {
+                    title = 'Política de bagagem';
+                } else if (trimmedText.includes('E-ticket') || trimmedText.includes('e-ticket')) {
+                    title = 'E-ticket - República Dominicana';
+                } else if (trimmedText.includes('crianças') || trimmedText.includes('Crianças')) {
+                    title = 'Política de crianças e acomodação';
+                } else if (trimmedText.includes('check-in')) {
+                    title = 'Informações de check-in';
+                } else if (trimmedText.toUpperCase().includes('NO SHOW')) {
+                    title = 'Política de NO SHOW';
+                } else if (trimmedText.includes('OBSERVAÇÕES')) {
+                    title = 'Observações gerais';
+                } else {
+                    // Usar as primeiras palavras como título
+                    const words = firstLine.split(' ').slice(0, 10).join(' ');
+                    title = words.length < firstLine.length ? words + '...' : words;
+                }
+
+                content = legalText;
+                type = 'general';
+            } else {
+                // É um objeto - extrair propriedades
+                title = legalText.title || legalText.name || `Informação ${index + 1}`;
+                content = legalText.content || legalText.description || legalText.text || '';
+                type = legalText.type || 'general';
+            }
 
             // Ícone baseado no tipo
             let icon = '📄';
