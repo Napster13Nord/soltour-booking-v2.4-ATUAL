@@ -192,6 +192,20 @@
                 <p>Preencha os dados abaixo para receber sua cotação personalizada</p>
             </div>
 
+            <!-- Card Informativo sobre Guardar Orçamento -->
+            <div class="bt-info-notice">
+                <div class="bt-info-notice-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="16" x2="12" y2="12"></line>
+                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                    </svg>
+                </div>
+                <div class="bt-info-notice-content">
+                    <p>Se desejar que guardemos o orçamento que acabou de criar, basta preencher os dados na secção «Dados do cliente» e clicar em «Guardar orçamento final». Depois de guardado, entraremos em contacto consigo para formalizar a compra. Enviaremos uma cópia do orçamento para o endereço de e-mail que nos forneceu.</p>
+                </div>
+            </div>
+
             <div class="bt-quote-grid">
                 <!-- Resumo do Pacote -->
                 <div class="bt-package-summary">
