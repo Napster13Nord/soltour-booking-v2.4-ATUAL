@@ -525,7 +525,6 @@
     align-items: center !important;
     padding: 16px 0 8px 0 !important;
     margin-top: 12px !important;
-    border-top: 2px solid #019CB8 !important;
 }
 
 .bt-price-total-label {
@@ -538,7 +537,7 @@
 }
 
 .bt-price-total-amount {
-    font-size: 24px !important;
+    font-size: 26px !important;
     font-weight: 800 !important;
     color: #019CB8 !important;
     line-height: 1 !important;
@@ -546,7 +545,7 @@
 }
 
 .bt-price-per-person {
-    font-size: 14px !important;
+    font-size: 16px !important;
     color: #6b7280 !important;
     font-weight: 500 !important;
 }
