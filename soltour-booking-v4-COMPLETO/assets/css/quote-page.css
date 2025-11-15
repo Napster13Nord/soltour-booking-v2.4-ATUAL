@@ -135,20 +135,20 @@
         padding: 0 !important;
     }
 
-    /* Em mobile, inverter ordem para sidebar aparecer primeiro */
+    /* Em mobile, conteúdo primeiro e sidebar por último */
     .bt-quote-left-column {
-        order: 2 !important;
-        width: 100% !important;
-        max-width: 100% !important;
-        margin: 0 !important;
-        padding: 0 !important;
-    }
-
-    .bt-price-sidebar {
         order: 1 !important;
         width: 100% !important;
         max-width: 100% !important;
         margin: 0 0 20px 0 !important;
+        padding: 0 !important;
+    }
+
+    .bt-price-sidebar {
+        order: 2 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
         position: static !important;
     }
 }
