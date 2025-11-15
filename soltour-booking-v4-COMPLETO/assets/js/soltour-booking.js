@@ -2372,12 +2372,11 @@
                 if (response.success) {
                     console.log('  ├─ message:', response.data.message);
                     console.log('  ├─ quoteToken:', response.data.quoteToken ? response.data.quoteToken.substring(0, 20) + '...' : 'NÃO GERADO');
-                    console.log('  ├─ fetchAvailability:', response.data.fetchAvailability ? 'RECEBIDO ✅' : 'AUSENTE ❌');
                     console.log('  ├─ quote:', response.data.quote ? 'RECEBIDO ✅' : 'AUSENTE ❌');
                     console.log('  └─ debugInfo:', response.data.debugInfo || 'N/A');
 
                     console.log('');
-                    console.log('✅ VALIDAÇÃO CONCLUÍDA COM SUCESSO!');
+                    console.log('✅ COTAÇÃO GERADA COM SUCESSO!');
                     console.log('💾 Salvando dados completos no sessionStorage...');
 
                     // Salvar TODOS os dados no sessionStorage incluindo quote
@@ -2394,10 +2393,9 @@
                         numRoomsSearched: maxRooms,           // Número de quartos pesquisados
                         searchParams: SoltourApp.searchParams, // USAR searchParams COMPLETO que tem rooms
 
-                        // NOVOS DADOS DO QUOTE
+                        // DADOS DO QUOTE (chamada direta, sem fetchAvailability)
                         quoteToken: response.data.quoteToken,
-                        quoteData: response.data.quote,
-                        fetchAvailabilityData: response.data.fetchAvailability
+                        quoteData: response.data.quote
                     };
 
                     sessionStorage.setItem('soltour_selected_package', JSON.stringify(packageData));
