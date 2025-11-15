@@ -224,15 +224,9 @@
 
             <!-- Card Informativo sobre Guardar Orçamento -->
             <div class="bt-info-notice">
-                <div class="bt-info-notice-icon">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <line x1="12" y1="16" x2="12" y2="12"></line>
-                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
-                    </svg>
-                </div>
+                <div class="bt-info-notice-icon">ℹ️</div>
                 <div class="bt-info-notice-content">
-                    <p>Se desejar que guardemos o orçamento que acabou de criar, basta preencher os dados na secção "Dados dos Passageiros" e clicar em "Gerar Cotação final". Depois de guardado, entraremos em contacto consigo para formalizar a compra. Enviaremos uma cópia do orçamento para o endereço de e-mail que nos forneceu.</p>
+                    Após gerar a cotação final, entraremos em contacto consigo para formalizar a reserva. Enviaremos uma cópia para o seu e-mail.
                 </div>
             </div>
 
@@ -240,28 +234,64 @@
                 <!-- COLUNA ESQUERDA (70%) -->
                 <div class="bt-quote-left-column">
 
-                    <!-- PASSO 1: Resumo do Pacote (simplificado) -->
+                    <!-- PASSO 1: Resumo do Pacote (expandido) -->
                     <div class="bt-package-summary">
                         <h2>📦 Passo 1: Resumo do Pacote</h2>
 
-                        <!-- Acomodação - Todos os Quartos -->
-                        <div class="bt-summary-section">
-                            <h3>🛏️ Acomodação${numRoomsSearched > 1 ? 's' : ''}</h3>
-                            ${selectedRooms.map((room, index) => {
-                                const adultsInRoom = room.passengers ? room.passengers.filter(p => p.type === 'ADULT').length : 0;
-                                const childrenInRoom = room.passengers ? room.passengers.filter(p => p.type === 'CHILD').length : 0;
-                                const totalInRoom = room.passengers ? room.passengers.length : 0;
+                        <!-- Hotel -->
+                        <div class="bt-summary-section bt-summary-compact">
+                            <h3>🏨 Hotel</h3>
+                            <div class="bt-summary-value">
+                                <strong>${hotelName}</strong> ${hotelStars > 0 ? `<span class="bt-stars">${'⭐'.repeat(hotelStars)}</span>` : ''}
+                                ${hotelLocation ? `<div style="color: #6b7280; font-size: 14px; margin-top: 4px;">📍 ${hotelLocation}${mealPlan ? ` | ${mealPlan}` : ''}</div>` : ''}
+                            </div>
+                        </div>
 
-                                return `
-                                    <div class="bt-room-item" style="background: #f9fafb; padding: 12px; border-radius: 8px; margin-bottom: ${index < selectedRooms.length - 1 ? '10px' : '0'};">
-                                        ${numRoomsSearched > 1 ? `<div class="bt-room-number" style="font-weight: 600; color: #1f2937; margin-bottom: 4px;">Quarto ${index + 1}</div>` : ''}
-                                        <div class="bt-room-name" style="font-weight: 600; color: #1a202c; margin-bottom: 4px;">${room.description || 'Quarto Duplo'}</div>
-                                        <div class="bt-room-occupancy" style="color: #6b7280; font-size: 14px;">
-                                            👥 ${totalInRoom} passageiro${totalInRoom !== 1 ? 's' : ''} (${adultsInRoom} adulto${adultsInRoom !== 1 ? 's' : ''}${childrenInRoom > 0 ? `, ${childrenInRoom} criança${childrenInRoom !== 1 ? 's' : ''}` : ''})
-                                        </div>
-                                    </div>
-                                `;
-                            }).join('')}
+                        <!-- Quartos -->
+                        <div class="bt-summary-section bt-summary-compact">
+                            <h3>🛏️ Quarto${numRoomsSearched > 1 ? 's' : ''}</h3>
+                            ${selectedRooms.map((room, index) => `
+                                <div class="bt-summary-value" style="margin-bottom: ${index < selectedRooms.length - 1 ? '8px' : '0'};">
+                                    ${numRoomsSearched > 1 ? `<strong>Quarto ${index + 1}:</strong> ` : ''}${room.description || 'Quarto Duplo'}
+                                </div>
+                            `).join('')}
+                        </div>
+
+                        <!-- Voos (se disponível) -->
+                        ${flightData ? `
+                            <div class="bt-summary-section bt-summary-compact">
+                                <h3>✈️ Voos</h3>
+                                ${(() => {
+                                    const outbound = flightData.outboundSegments || [];
+                                    const returnFlight = flightData.returnSegments || [];
+                                    let flightsHtml = '';
+
+                                    if (outbound.length > 0) {
+                                        const firstSeg = outbound[0];
+                                        const lastSeg = outbound[outbound.length - 1];
+                                        flightsHtml += `<div class="bt-summary-value">${firstSeg.originAirport} → ${lastSeg.destinationAirport} <span style="color: #6b7280;">(Ida)</span></div>`;
+                                    }
+
+                                    if (returnFlight.length > 0) {
+                                        const firstSeg = returnFlight[0];
+                                        const lastSeg = returnFlight[returnFlight.length - 1];
+                                        flightsHtml += `<div class="bt-summary-value" style="margin-top: 4px;">${firstSeg.originAirport} → ${lastSeg.destinationAirport} <span style="color: #6b7280;">(Volta)</span></div>`;
+                                    }
+
+                                    return flightsHtml;
+                                })()}
+                            </div>
+                        ` : ''}
+
+                        <!-- Datas -->
+                        <div class="bt-summary-section bt-summary-compact">
+                            <h3>📅 Datas</h3>
+                            <div class="bt-summary-value">
+                                ${startDate} → ${endDate}
+                                <div style="color: #6b7280; font-size: 14px; margin-top: 4px;">
+                                    ${numNights} noite${numNights !== 1 ? 's' : ''} | ${adults} adulto${adults !== 1 ? 's' : ''}${children > 0 ? ` + ${children} criança${children !== 1 ? 's' : ''}` : ''}
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Card de Transfers (se disponível) -->
@@ -354,17 +384,10 @@
 
                     <!-- Preço -->
                     <div class="bt-sidebar-section bt-sidebar-price">
-                        <div class="bt-price-line">
-                            <span>Preço por pessoa:</span>
-                            <span>${pricePerPerson.toFixed(0)}€</span>
-                        </div>
-                        <div class="bt-price-line">
-                            <span>Nº de passageiros:</span>
-                            <span>× ${passengerCount}</span>
-                        </div>
                         <div class="bt-price-total">
-                            <span>Total:</span>
-                            <span class="bt-price-total-amount">${price.toFixed(0)}€</span>
+                            <div class="bt-price-total-label">Preço Total</div>
+                            <div class="bt-price-total-amount">${price.toFixed(0)}€</div>
+                            <div class="bt-price-per-person">(${pricePerPerson.toFixed(0)}€ por pessoa)</div>
                         </div>
                         <div class="bt-price-note">
                             💡 Valor estimado. O preço final será confirmado após preencher os dados.
