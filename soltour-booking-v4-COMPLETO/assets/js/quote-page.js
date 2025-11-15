@@ -106,6 +106,36 @@
         console.log('  → Total de períodos:', cancellationData.charges.length);
         console.log('  → Dados completos:', JSON.stringify(cancellationData.charges, null, 2));
         console.log('');
+
+        // Debug de seguros (da resposta quote)
+        const insuranceData = extractInsuranceData(packageData);
+        console.log('🛡️ SEGUROS DISPONÍVEIS (QUOTE):');
+        console.log('  → Tem seguros?', insuranceData.hasInsurances);
+        if (insuranceData.hasInsurances) {
+            console.log('  → Total de seguros:', insuranceData.insurances.length);
+            console.log('  → Seguros:', JSON.stringify(insuranceData.insurances, null, 2));
+        }
+        console.log('');
+
+        // Debug de extras (da resposta quote)
+        const extrasData = extractExtrasData(packageData);
+        console.log('🎁 SERVIÇOS EXTRAS (QUOTE):');
+        console.log('  → Tem extras?', extrasData.hasExtras);
+        if (extrasData.hasExtras) {
+            console.log('  → Total de extras:', extrasData.extras.length);
+            console.log('  → Extras:', JSON.stringify(extrasData.extras, null, 2));
+        }
+        console.log('');
+
+        // Debug de textos legais (da resposta quote)
+        const legalData = extractLegalData(packageData);
+        console.log('📋 INFORMAÇÕES LEGAIS (QUOTE):');
+        console.log('  → Tem informações legais?', legalData.hasLegalInfo);
+        if (legalData.hasLegalInfo) {
+            console.log('  → Total de textos:', legalData.legalTexts.length);
+            console.log('  → Textos legais:', JSON.stringify(legalData.legalTexts, null, 2));
+        }
+        console.log('');
         console.log('═══════════════════════════════════════════════════════════════════');
         console.log('');
 
@@ -298,6 +328,15 @@
 
                     <!-- Card de Gastos de Cancelamento -->
                     ${renderCancellationCard(cancellationData)}
+
+                    <!-- Card de Seguros (da resposta quote) -->
+                    ${renderInsuranceCard(insuranceData)}
+
+                    <!-- Card de Extras (da resposta quote) -->
+                    ${renderExtrasCard(extrasData)}
+
+                    <!-- Card de Informações Legais (da resposta quote) -->
+                    ${renderLegalTextsCard(legalData)}
                 </div>
 
                 <!-- Sidebar de Preço -->
@@ -340,8 +379,8 @@
 
         $container.html(html);
 
-        // Expandir cards de transfer e cancelamento por padrão
-        $('.bt-transfer-card, .bt-cancellation-card').addClass('expanded');
+        // Expandir cards por padrão
+        $('.bt-transfer-card, .bt-cancellation-card, .bt-insurance-card, .bt-extras-card, .bt-legal-card').addClass('expanded');
 
         // Bind eventos
         bindQuoteEvents();
@@ -789,6 +828,16 @@
             updateTotalPrice();
         });
 
+        // Event listener para checkboxes de seguros
+        $('.bt-insurance-checkbox').off('change').on('change', function() {
+            updateTotalPrice();
+        });
+
+        // Event listener para checkboxes de extras
+        $('.bt-extra-checkbox').off('change').on('change', function() {
+            updateTotalPrice();
+        });
+
         // Event listener para links "Mais informações"
         $('.bt-transfer-link').off('click').on('click', function(e) {
             e.preventDefault();
@@ -805,7 +854,7 @@
     }
 
     /**
-     * Atualizar preço total com transfers selecionados
+     * Atualizar preço total com transfers, seguros e extras selecionados
      */
     function updateTotalPrice() {
         // Obter preço base do packageData
@@ -831,8 +880,38 @@
             }
         });
 
+        // Somar preços dos seguros marcados (excluindo os já incluídos)
+        let insurancesTotal = 0;
+        $('.bt-insurance-checkbox:checked').each(function() {
+            const isIncluded = $(this).data('included') === true || $(this).data('included') === 'true';
+
+            // Só adicionar ao total se NÃO estiver incluído
+            if (!isIncluded) {
+                const insurancePrice = parseFloat($(this).data('insurance-price')) || 0;
+                insurancesTotal += insurancePrice;
+                console.log('[SOLTOUR] + Seguro (adicional):', insurancePrice.toFixed(2) + '€');
+            } else {
+                console.log('[SOLTOUR] • Seguro incluído (já no preço base)');
+            }
+        });
+
+        // Somar preços dos extras marcados (excluindo os já incluídos)
+        let extrasTotal = 0;
+        $('.bt-extra-checkbox:checked').each(function() {
+            const isIncluded = $(this).data('included') === true || $(this).data('included') === 'true';
+
+            // Só adicionar ao total se NÃO estiver incluído
+            if (!isIncluded) {
+                const extraPrice = parseFloat($(this).data('extra-price')) || 0;
+                extrasTotal += extraPrice;
+                console.log('[SOLTOUR] + Extra (adicional):', extraPrice.toFixed(2) + '€');
+            } else {
+                console.log('[SOLTOUR] • Extra incluído (já no preço base)');
+            }
+        });
+
         // Calcular novo total
-        const newTotal = basePrice + transfersTotal;
+        const newTotal = basePrice + transfersTotal + insurancesTotal + extrasTotal;
 
         console.log('[SOLTOUR] = Total final:', newTotal.toFixed(2) + '€');
         console.log('');
@@ -1159,6 +1238,66 @@
     }
 
     /**
+     * Extrai dados de seguros da resposta quote
+     * Conforme documentação: quoteData.insurances[]
+     */
+    function extractInsuranceData(packageData) {
+        // Verificar se temos quoteData
+        const quoteData = packageData.quoteData || packageData.quote;
+        if (!quoteData) {
+            return { hasInsurances: false, insurances: [] };
+        }
+
+        const insurances = quoteData.insurances || [];
+        const hasInsurances = insurances.length > 0;
+
+        return {
+            hasInsurances: hasInsurances,
+            insurances: insurances
+        };
+    }
+
+    /**
+     * Extrai dados de extras da resposta quote
+     * Conforme documentação: quoteData.extras[]
+     */
+    function extractExtrasData(packageData) {
+        // Verificar se temos quoteData
+        const quoteData = packageData.quoteData || packageData.quote;
+        if (!quoteData) {
+            return { hasExtras: false, extras: [] };
+        }
+
+        const extras = quoteData.extras || [];
+        const hasExtras = extras.length > 0;
+
+        return {
+            hasExtras: hasExtras,
+            extras: extras
+        };
+    }
+
+    /**
+     * Extrai textos legais e condições da resposta quote
+     * Conforme documentação: quoteData.importantInformation[]
+     */
+    function extractLegalData(packageData) {
+        // Verificar se temos quoteData
+        const quoteData = packageData.quoteData || packageData.quote;
+        if (!quoteData) {
+            return { hasLegalInfo: false, legalTexts: [] };
+        }
+
+        const legalTexts = quoteData.importantInformation || [];
+        const hasLegalInfo = legalTexts.length > 0;
+
+        return {
+            hasLegalInfo: hasLegalInfo,
+            legalTexts: legalTexts
+        };
+    }
+
+    /**
      * Renderiza card de Transfers
      */
     function renderTransferCard(transferData) {
@@ -1334,6 +1473,235 @@
         } catch (e) {
             return dateStr;
         }
+    }
+
+    /**
+     * Renderiza card de Seguros
+     */
+    function renderInsuranceCard(insuranceData) {
+        if (!insuranceData.hasInsurances) {
+            return ''; // Não mostrar card se não houver seguros
+        }
+
+        const insurances = insuranceData.insurances;
+
+        let html = `
+            <div class="bt-summary-section bt-insurance-card">
+                <div class="bt-insurance-header">
+                    <h3>🛡️ SEGUROS DISPONÍVEIS</h3>
+                    <button class="bt-insurance-toggle" onclick="this.closest('.bt-insurance-card').classList.toggle('expanded')">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </button>
+                </div>
+                <div class="bt-insurance-body">
+                    <p class="bt-insurance-description">Proteja a sua viagem com um seguro de viagem completo.</p>
+                    <div class="bt-insurance-services">
+        `;
+
+        // Renderizar cada seguro disponível
+        insurances.forEach((insurance, index) => {
+            const name = insurance.name || insurance.title || 'Seguro de Viagem';
+            const description = insurance.description || 'Cobertura completa para a sua viagem';
+            const price = insurance.priceInfo?.pvp || insurance.price?.pvp || 0;
+            const currency = insurance.priceInfo?.currency || insurance.price?.currency || 'EUR';
+            const currencySymbol = currency === 'EUR' ? '€' : currency;
+            const insuranceId = insurance.insuranceId || insurance.serviceId || `insurance-${index}`;
+
+            // Verificar se já está incluído
+            const isIncluded = price === 0 || insurance.included === true || insurance.status === 'INCLUDED';
+            const checkedAttr = isIncluded ? 'checked' : '';
+            const disabledAttr = isIncluded ? 'disabled' : '';
+            const includedClass = isIncluded ? 'bt-insurance-included' : '';
+            const includedLabel = isIncluded ? '<span class="bt-included-badge">Incluído</span>' : '';
+
+            html += `
+                <div class="bt-insurance-service ${includedClass}" data-insurance-id="${insuranceId}" data-insurance-price="${price}" data-included="${isIncluded}">
+                    <div class="bt-insurance-service-checkbox">
+                        <input type="checkbox"
+                               id="insurance-checkbox-${index}"
+                               class="bt-insurance-checkbox"
+                               data-insurance-price="${price}"
+                               data-insurance-id="${insuranceId}"
+                               data-included="${isIncluded}"
+                               ${checkedAttr}
+                               ${disabledAttr}>
+                        <label for="insurance-checkbox-${index}"></label>
+                    </div>
+                    <div class="bt-insurance-service-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        </svg>
+                    </div>
+                    <div class="bt-insurance-service-content">
+                        <div class="bt-insurance-service-title">
+                            ${name}
+                            ${includedLabel}
+                        </div>
+                        <div class="bt-insurance-service-description">
+                            ${description}
+                        </div>
+                        <div class="bt-insurance-service-price">
+                            <strong>${isIncluded ? 'Incluído no pacote' : price.toFixed(2) + currencySymbol}</strong>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+
+        html += `
+                    </div>
+                </div>
+            </div>
+        `;
+
+        return html;
+    }
+
+    /**
+     * Renderiza card de Extras
+     */
+    function renderExtrasCard(extrasData) {
+        if (!extrasData.hasExtras) {
+            return ''; // Não mostrar card se não houver extras
+        }
+
+        const extras = extrasData.extras;
+
+        let html = `
+            <div class="bt-summary-section bt-extras-card">
+                <div class="bt-extras-header">
+                    <h3>🎁 SERVIÇOS EXTRAS</h3>
+                    <button class="bt-extras-toggle" onclick="this.closest('.bt-extras-card').classList.toggle('expanded')">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </button>
+                </div>
+                <div class="bt-extras-body">
+                    <p class="bt-extras-description">Personalize a sua viagem com serviços adicionais.</p>
+                    <div class="bt-extras-services">
+        `;
+
+        // Renderizar cada extra disponível
+        extras.forEach((extra, index) => {
+            const name = extra.name || extra.title || extra.description || 'Serviço Extra';
+            const description = extra.description || extra.shortDescription || '';
+            const price = extra.priceInfo?.pvp || extra.price?.pvp || 0;
+            const currency = extra.priceInfo?.currency || extra.price?.currency || 'EUR';
+            const currencySymbol = currency === 'EUR' ? '€' : currency;
+            const extraId = extra.extraId || extra.serviceId || `extra-${index}`;
+
+            // Verificar se já está incluído
+            const isIncluded = price === 0 || extra.included === true || extra.status === 'INCLUDED';
+            const checkedAttr = isIncluded ? 'checked' : '';
+            const disabledAttr = isIncluded ? 'disabled' : '';
+            const includedClass = isIncluded ? 'bt-extra-included' : '';
+            const includedLabel = isIncluded ? '<span class="bt-included-badge">Incluído</span>' : '';
+
+            html += `
+                <div class="bt-extra-service ${includedClass}" data-extra-id="${extraId}" data-extra-price="${price}" data-included="${isIncluded}">
+                    <div class="bt-extra-service-checkbox">
+                        <input type="checkbox"
+                               id="extra-checkbox-${index}"
+                               class="bt-extra-checkbox"
+                               data-extra-price="${price}"
+                               data-extra-id="${extraId}"
+                               data-included="${isIncluded}"
+                               ${checkedAttr}
+                               ${disabledAttr}>
+                        <label for="extra-checkbox-${index}"></label>
+                    </div>
+                    <div class="bt-extra-service-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 6v6l4 2"/>
+                        </svg>
+                    </div>
+                    <div class="bt-extra-service-content">
+                        <div class="bt-extra-service-title">
+                            ${name}
+                            ${includedLabel}
+                        </div>
+                        ${description ? `<div class="bt-extra-service-description">${description}</div>` : ''}
+                        <div class="bt-extra-service-price">
+                            <strong>${isIncluded ? 'Incluído no pacote' : price.toFixed(2) + currencySymbol}</strong>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+
+        html += `
+                    </div>
+                </div>
+            </div>
+        `;
+
+        return html;
+    }
+
+    /**
+     * Renderiza card de Textos Legais e Condições
+     */
+    function renderLegalTextsCard(legalData) {
+        if (!legalData.hasLegalInfo) {
+            return ''; // Não mostrar card se não houver informações legais
+        }
+
+        const legalTexts = legalData.legalTexts;
+
+        let html = `
+            <div class="bt-summary-section bt-legal-card">
+                <div class="bt-legal-header">
+                    <h3>📋 INFORMAÇÕES IMPORTANTES E CONDIÇÕES</h3>
+                    <button class="bt-legal-toggle" onclick="this.closest('.bt-legal-card').classList.toggle('expanded')">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </button>
+                </div>
+                <div class="bt-legal-body">
+                    <div class="bt-legal-accordion">
+        `;
+
+        // Renderizar cada texto legal como item do accordion
+        legalTexts.forEach((legalText, index) => {
+            const title = legalText.title || legalText.name || `Informação ${index + 1}`;
+            const content = legalText.content || legalText.description || legalText.text || '';
+            const type = legalText.type || 'general';
+
+            // Ícone baseado no tipo
+            let icon = '📄';
+            if (type.toLowerCase().includes('cancel')) icon = '❌';
+            else if (type.toLowerCase().includes('payment')) icon = '💳';
+            else if (type.toLowerCase().includes('insurance')) icon = '🛡️';
+            else if (type.toLowerCase().includes('policy')) icon = '📜';
+
+            html += `
+                <div class="bt-legal-item" data-legal-type="${type}">
+                    <div class="bt-legal-item-header" onclick="this.closest('.bt-legal-item').classList.toggle('expanded')">
+                        <span class="bt-legal-item-icon">${icon}</span>
+                        <span class="bt-legal-item-title">${title}</span>
+                        <svg class="bt-legal-item-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+                    <div class="bt-legal-item-content">
+                        <div class="bt-legal-item-text">${content}</div>
+                    </div>
+                </div>
+            `;
+        });
+
+        html += `
+                    </div>
+                </div>
+            </div>
+        `;
+
+        return html;
     }
 
 })(jQuery);
