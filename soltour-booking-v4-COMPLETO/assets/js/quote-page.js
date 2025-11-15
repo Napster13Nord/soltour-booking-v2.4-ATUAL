@@ -811,18 +811,25 @@
         console.log('[SOLTOUR] 💰 Recalculando preço total...');
         console.log('[SOLTOUR] Preço base:', basePrice.toFixed(2) + '€');
 
-        // Somar preços dos transfers marcados
+        // Somar preços dos transfers marcados (excluindo os já incluídos)
         let transfersTotal = 0;
         $('.bt-transfer-checkbox:checked').each(function() {
-            const transferPrice = parseFloat($(this).data('transfer-price')) || 0;
-            transfersTotal += transferPrice;
-            console.log('[SOLTOUR] + Transfer:', transferPrice.toFixed(2) + '€');
+            const isIncluded = $(this).data('included') === true || $(this).data('included') === 'true';
+
+            // Só adicionar ao total se NÃO estiver incluído
+            if (!isIncluded) {
+                const transferPrice = parseFloat($(this).data('transfer-price')) || 0;
+                transfersTotal += transferPrice;
+                console.log('[SOLTOUR] + Transfer (adicional):', transferPrice.toFixed(2) + '€');
+            } else {
+                console.log('[SOLTOUR] • Transfer incluído (já no preço base)');
+            }
         });
 
         // Calcular novo total
         const newTotal = basePrice + transfersTotal;
 
-        console.log('[SOLTOUR] = Total com transfers:', newTotal.toFixed(2) + '€');
+        console.log('[SOLTOUR] = Total final:', newTotal.toFixed(2) + '€');
         console.log('');
 
         // Atualizar display do preço
@@ -1154,6 +1161,19 @@
             return ''; // Não mostrar card se não houver transfers
         }
 
+        // Filtrar apenas transfers que têm informação válida (com ou sem preço)
+        const validTransfers = transferData.transferServices.filter(transfer => {
+            // Transfer é válido se tiver título/descrição OU preço definido
+            const hasDescription = transfer.title || transfer.description;
+            const hasPrice = transfer.priceInfo?.pvp !== undefined || transfer.price?.pvp !== undefined;
+            return hasDescription || hasPrice;
+        });
+
+        // Se não houver transfers válidos, não mostrar card
+        if (validTransfers.length === 0) {
+            return '';
+        }
+
         let html = `
             <div class="bt-summary-section bt-transfer-card">
                 <div class="bt-transfer-header">
@@ -1169,8 +1189,8 @@
                     <div class="bt-transfer-services">
         `;
 
-        // Renderizar cada serviço de transfer
-        transferData.transferServices.forEach((transfer, index) => {
+        // Renderizar cada serviço de transfer válido
+        validTransfers.forEach((transfer, index) => {
             const title = transfer.title || transfer.description || 'Transfer privado';
             const serviceId = transfer.serviceId || `transfer-${index}`;
 
@@ -1179,14 +1199,30 @@
             const currency = transfer.priceInfo?.currency || transfer.price?.currency || 'EUR';
             const currencySymbol = currency === 'EUR' ? '€' : currency;
 
+            // Verificar se transfer já está incluído no preço
+            // Transfer incluído = preço 0 OU propriedade included = true OU status = "INCLUDED"
+            const isIncluded = transferPrice === 0 ||
+                              transfer.included === true ||
+                              transfer.status === 'INCLUDED' ||
+                              transfer.priceInfo?.included === true;
+
+            // Se incluído, vem pré-selecionado e bloqueado
+            const checkedAttr = isIncluded ? 'checked' : '';
+            const disabledAttr = isIncluded ? 'disabled' : '';
+            const includedClass = isIncluded ? 'bt-transfer-included' : '';
+            const includedLabel = isIncluded ? '<span class="bt-included-badge">Incluído</span>' : '';
+
             html += `
-                <div class="bt-transfer-service" data-transfer-id="${serviceId}" data-transfer-price="${transferPrice}">
+                <div class="bt-transfer-service ${includedClass}" data-transfer-id="${serviceId}" data-transfer-price="${transferPrice}" data-included="${isIncluded}">
                     <div class="bt-transfer-service-checkbox">
                         <input type="checkbox"
                                id="transfer-checkbox-${index}"
                                class="bt-transfer-checkbox"
                                data-transfer-price="${transferPrice}"
-                               data-transfer-id="${serviceId}">
+                               data-transfer-id="${serviceId}"
+                               data-included="${isIncluded}"
+                               ${checkedAttr}
+                               ${disabledAttr}>
                         <label for="transfer-checkbox-${index}"></label>
                     </div>
                     <div class="bt-transfer-service-icon">
@@ -1196,9 +1232,12 @@
                         </svg>
                     </div>
                     <div class="bt-transfer-service-content">
-                        <div class="bt-transfer-service-title">${title}</div>
+                        <div class="bt-transfer-service-title">
+                            ${title}
+                            ${includedLabel}
+                        </div>
                         <div class="bt-transfer-service-details" style="display: none;">
-                            <strong>Preço:</strong> ${transferPrice.toFixed(2)}${currencySymbol}
+                            <strong>Preço:</strong> ${isIncluded ? 'Incluído no pacote' : transferPrice.toFixed(2) + currencySymbol}
                         </div>
                     </div>
                     <div class="bt-transfer-service-actions">
