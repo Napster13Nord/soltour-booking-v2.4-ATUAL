@@ -361,7 +361,7 @@
                     <!-- Seguros Disponíveis -->
                     ${insuranceData && insuranceData.hasInsurances ? `
                         <div class="bt-sidebar-section">
-                            <h3 class="bt-sidebar-title">Seguros Disponíveis</h3>
+                            <h3>Seguros Disponíveis</h3>
                             ${renderInsuranceCard(insuranceData)}
                         </div>
                     ` : ''}
