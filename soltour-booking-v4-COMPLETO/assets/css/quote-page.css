@@ -49,24 +49,25 @@
     }
 
     .bt-quote-header h1 {
-        font-size: 20px !important;
+        font-size: 22px !important;
     }
 
     .bt-quote-header p {
-        font-size: 13px !important;
+        font-size: 14px !important;
     }
 }
 
 .bt-quote-header h1 {
-    font-size: 25px !important;
+    font-size: 28px !important;
     font-weight: 700 !important;
     margin: 0 0 6px 0 !important;
     color: #fff !important;
     line-height: 1.3 !important;
+    letter-spacing: -0.01em !important;
 }
 
 .bt-quote-header p {
-    font-size: 15px !important;
+    font-size: 16px !important;
     margin: 0 !important;
     opacity: 0.9 !important;
     color: #fff !important;
@@ -96,7 +97,7 @@
 
 .bt-info-notice-content {
     flex: 1 !important;
-    font-size: 14px !important;
+    font-size: 15px !important;
     line-height: 1.5 !important;
     color: #4b5563 !important;
 }
@@ -107,7 +108,7 @@
     }
 
     .bt-info-notice-content {
-        font-size: 13px !important;
+        font-size: 14px !important;
     }
 }
 
@@ -161,13 +162,14 @@
 }
 
 .bt-package-summary h2 {
-    font-size: 20px !important;
+    font-size: 22px !important;
     font-weight: 700 !important;
     color: #1a202c !important;
     margin: 0 0 16px 0 !important;
     padding-bottom: 12px !important;
     border-bottom: 2px solid #e0e0e0 !important;
     line-height: 1.3 !important;
+    letter-spacing: -0.01em !important;
 }
 
 @media (max-width: 768px) {
@@ -210,12 +212,12 @@
 }
 
 .bt-summary-section h3 {
-    font-size: 14px !important;
-    font-weight: 700 !important;
+    font-size: 18px !important;
+    font-weight: 600 !important;
     color: #019CB8 !important;
     margin: 0 0 10px 0 !important;
     text-transform: uppercase !important;
-    letter-spacing: 0.5px !important;
+    letter-spacing: 0 !important;
     line-height: 1.4 !important;
 }
 
@@ -226,12 +228,13 @@
 }
 
 .bt-summary-compact h3 {
-    font-size: 13px !important;
+    font-size: 18px !important;
+    font-weight: 600 !important;
     margin-bottom: 8px !important;
 }
 
 .bt-summary-value {
-    font-size: 15px !important;
+    font-size: 16px !important;
     line-height: 1.5 !important;
     color: #1a202c !important;
 }
@@ -292,7 +295,7 @@
 }
 
 .bt-flight-type {
-    font-size: 12px !important;
+    font-size: 14px !important;
     font-weight: 700 !important;
     color: #019CB8 !important;
     text-transform: uppercase !important;
@@ -356,12 +359,13 @@
 }
 
 .bt-price-sidebar h2 {
-    font-size: 18px !important;
+    font-size: 22px !important;
     font-weight: 700 !important;
     color: #1a202c !important;
     margin: 0 0 16px 0 !important;
     padding-bottom: 12px !important;
     border-bottom: 2px solid #e0e0e0 !important;
+    letter-spacing: -0.01em !important;
 }
 
 /* Seções dentro da sidebar */
@@ -376,7 +380,7 @@
 }
 
 .bt-sidebar-title {
-    font-size: 13px !important;
+    font-size: 14px !important;
     font-weight: 700 !important;
     color: #019CB8 !important;
     margin: 0 0 10px 0 !important;
@@ -394,7 +398,7 @@
 }
 
 .bt-sidebar-hotel-location {
-    font-size: 13px !important;
+    font-size: 14px !important;
     color: #6b7280 !important;
     margin-bottom: 6px !important;
 }
@@ -417,21 +421,21 @@
 }
 
 .bt-sidebar-flight-type {
-    font-size: 11px !important;
+    font-size: 14px !important;
     font-weight: 700 !important;
     color: #019CB8 !important;
     margin-bottom: 4px !important;
 }
 
 .bt-sidebar-flight-route {
-    font-size: 14px !important;
+    font-size: 15px !important;
     font-weight: 600 !important;
     color: #1a202c !important;
     margin-bottom: 3px !important;
 }
 
 .bt-sidebar-flight-stops {
-    font-size: 12px !important;
+    font-size: 14px !important;
     color: #6b7280 !important;
 }
 
@@ -441,7 +445,7 @@
     justify-content: space-between !important;
     align-items: center !important;
     padding: 6px 0 !important;
-    font-size: 13px !important;
+    font-size: 14px !important;
     color: #6b7280 !important;
 }
 
@@ -463,7 +467,7 @@
 }
 
 .bt-price-sidebar .bt-insurance-header h3 {
-    font-size: 12px !important;
+    font-size: 14px !important;
 }
 
 .bt-price-sidebar .bt-insurance-body {
@@ -480,15 +484,15 @@
 }
 
 .bt-price-sidebar .bt-insurance-name {
-    font-size: 13px !important;
+    font-size: 14px !important;
 }
 
 .bt-price-sidebar .bt-insurance-description {
-    font-size: 12px !important;
+    font-size: 14px !important;
 }
 
 .bt-price-sidebar .bt-insurance-price {
-    font-size: 14px !important;
+    font-size: 15px !important;
 }
 
 /* Seção de preço na sidebar - DESTAQUE MAIOR */
@@ -528,7 +532,7 @@
 }
 
 .bt-price-total-amount {
-    font-size: 33px !important;
+    font-size: 24px !important;
     font-weight: 800 !important;
     color: #019CB8 !important;
     line-height: 1 !important;
@@ -544,7 +548,7 @@
 .bt-price-note {
     background: rgba(1, 156, 184, 0.1) !important;
     padding: 8px 10px !important;
-    font-size: 12px !important;
+    font-size: 14px !important;
     color: #555 !important;
     line-height: 1.4 !important;
     margin-top: 10px !important;
@@ -606,8 +610,8 @@
 }
 
 .bt-form-section h3 {
-    font-size: 16px !important;
-    font-weight: 700 !important;
+    font-size: 18px !important;
+    font-weight: 600 !important;
     color: #019CB8 !important;
     margin: 0 0 14px 0 !important;
 }
@@ -643,8 +647,8 @@
 }
 
 .bt-form-group label {
-    font-weight: 600 !important;
-    font-size: 13px !important;
+    font-weight: 500 !important;
+    font-size: 14px !important;
     color: #333 !important;
     margin-bottom: 6px !important;
 }
@@ -658,7 +662,7 @@
     padding: 10px 12px !important;
     border: 2px solid #e0e0e0 !important;
     border-radius: 6px !important;
-    font-size: 14px !important;
+    font-size: 15px !important;
     transition: all 0.2s !important;
     background: #fff !important;
     width: 100% !important;
@@ -851,8 +855,8 @@
 
 /* Título da seção do card - COMPACTO */
 .bt-card-section-title {
-    font-size: 14px !important;
-    font-weight: 700 !important;
+    font-size: 16px !important;
+    font-weight: 600 !important;
     color: #019CB8 !important;
     margin: 0 0 12px 0 !important;
     padding-bottom: 8px !important;
@@ -1077,7 +1081,7 @@
 }
 
 .bt-city-name {
-    font-size: 12px !important;
+    font-size: 14px !important;
     color: #6b7280 !important;
     margin-bottom: 8px !important;
     text-transform: capitalize !important;
@@ -1122,13 +1126,13 @@
 }
 
 .bt-duration {
-    font-size: 13px !important;
+    font-size: 14px !important;
     color: #4b5563 !important;
     font-weight: 600 !important;
 }
 
 .bt-stops {
-    font-size: 12px !important;
+    font-size: 14px !important;
     background: #f3f4f6 !important;
     color: #6b7280 !important;
     padding: 3px 10px !important;
@@ -1159,7 +1163,7 @@
 }
 
 .bt-flight-number {
-    font-size: 12px !important;
+    font-size: 14px !important;
     background: #f0f8ff !important;
     color: #019CB8 !important;
     padding: 4px 10px !important;
@@ -1219,7 +1223,7 @@
 }
 
 .flight-type-label {
-    font-size: 13px !important;
+    font-size: 14px !important;
     font-weight: 700 !important;
     color: #019CB8 !important;
 }
@@ -1257,7 +1261,7 @@
     display: flex !important;
     align-items: center !important;
     gap: 12px !important;
-    font-size: 13px !important;
+    font-size: 14px !important;
     color: #6b7280 !important;
 }
 
@@ -1271,7 +1275,7 @@
 }
 
 .flight-compact-date {
-    font-size: 12px !important;
+    font-size: 14px !important;
     color: #6b7280 !important;
     font-weight: 600 !important;
 }
@@ -1313,13 +1317,13 @@
 }
 
 .flight-compact-stops {
-    font-size: 11px !important;
+    font-size: 14px !important;
     color: #6b7280 !important;
     white-space: nowrap !important;
 }
 
 .flight-compact-number {
-    font-size: 12px !important;
+    font-size: 14px !important;
     background: #f0f8ff !important;
     color: #019CB8 !important;
     padding: 3px 8px !important;
@@ -1486,8 +1490,8 @@
 .bt-extras-header h3,
 .bt-legal-header h3 {
     margin: 0 !important;
-    font-size: 13px !important;
-    font-weight: 700 !important;
+    font-size: 16px !important;
+    font-weight: 600 !important;
     color: #374151 !important;
     text-transform: uppercase !important;
     letter-spacing: 0.3px !important;
@@ -1540,7 +1544,7 @@
 
 .bt-transfer-description,
 .bt-cancellation-description {
-    font-size: 14px !important;
+    font-size: 15px !important;
     color: #6b7280 !important;
     margin: 0 0 16px 0 !important;
     line-height: 1.5 !important;
@@ -1659,7 +1663,7 @@
     display: inline-block !important;
     background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
     color: #fff !important;
-    font-size: 11px !important;
+    font-size: 14px !important;
     font-weight: 700 !important;
     padding: 3px 10px !important;
     border-radius: 12px !important;
@@ -1696,7 +1700,7 @@
 }
 
 .bt-transfer-link {
-    font-size: 13px !important;
+    font-size: 14px !important;
     color: #019CB8 !important;
     text-decoration: none !important;
     font-weight: 600 !important;
@@ -1768,7 +1772,7 @@
 }
 
 .bt-service-count {
-    font-size: 12px !important;
+    font-size: 14px !important;
     font-weight: 600 !important;
     color: #6b7280 !important;
     background: #f3f4f6 !important;
@@ -1818,7 +1822,7 @@
     font-weight: 700 !important;
     color: #374151 !important;
     text-transform: uppercase !important;
-    font-size: 11px !important;
+    font-size: 14px !important;
     letter-spacing: 0.5px !important;
 }
 
@@ -1845,7 +1849,7 @@
 }
 
 .bt-date-label {
-    font-size: 13px !important;
+    font-size: 14px !important;
     color: #6b7280 !important;
 }
 
@@ -1933,7 +1937,7 @@
 }
 
 .bt-insurance-description {
-    font-size: 14px !important;
+    font-size: 15px !important;
     color: #6b7280 !important;
     margin: 0 0 20px 0 !important;
     line-height: 1.5 !important;
@@ -2153,7 +2157,7 @@
 }
 
 .bt-extras-description {
-    font-size: 14px !important;
+    font-size: 15px !important;
     color: #6b7280 !important;
     margin: 0 0 20px 0 !important;
     line-height: 1.5 !important;
@@ -2411,7 +2415,7 @@
 
 .bt-insurance-service-description,
 .bt-extra-service-description {
-    font-size: 13px !important;
+    font-size: 14px !important;
     color: #6b7280 !important;
     line-height: 1.5 !important;
     margin-bottom: 8px !important;
@@ -2433,7 +2437,7 @@
 .bt-insurance-description,
 .bt-extras-description,
 .bt-legal-description {
-    font-size: 13px !important;
+    font-size: 15px !important;
     color: #6b7280 !important;
     margin: 0 0 16px 0 !important;
     line-height: 1.5 !important;
@@ -2482,7 +2486,7 @@
 
 .bt-legal-item-title {
     flex: 1 !important;
-    font-size: 14px !important;
+    font-size: 15px !important;
     font-weight: 600 !important;
     color: #1f2937 !important;
 }
@@ -2547,7 +2551,7 @@
     }
 
     .bt-cancellation-table {
-        font-size: 13px !important;
+        font-size: 14px !important;
     }
 
     .bt-cancellation-table th,
@@ -2629,7 +2633,7 @@
 }
 
 .bt-legal-intro {
-    font-size: 14px !important;
+    font-size: 15px !important;
     color: #6b7280 !important;
     margin: 0 0 20px 0 !important;
     line-height: 1.5 !important;
@@ -2742,7 +2746,7 @@
 
 .bt-legal-item-text {
     padding: 16px 18px !important;
-    font-size: 14px !important;
+    font-size: 15px !important;
     color: #4b5563 !important;
     line-height: 1.7 !important;
     background: #fff !important;
@@ -2757,7 +2761,7 @@
 
     .bt-legal-item-text {
         padding: 14px 16px !important;
-        font-size: 13px !important;
+        font-size: 14px !important;
     }
 }
 
@@ -2791,7 +2795,7 @@
 
 .bt-gdpr-text {
     flex: 1 !important;
-    font-size: 13px !important;
+    font-size: 14px !important;
     line-height: 1.5 !important;
     color: #4b5563 !important;
 }
@@ -2825,7 +2829,7 @@
     }
 
     .bt-gdpr-text {
-        font-size: 12px !important;
+        font-size: 14px !important;
     }
 
     .bt-gdpr-checkbox {
