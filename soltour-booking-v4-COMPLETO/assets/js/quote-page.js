@@ -778,6 +778,60 @@
         $('#btn-generate-quote').off('click').on('click', function() {
             generateFinalQuote();
         });
+
+        // Event listener para checkboxes de transfer
+        $('.bt-transfer-checkbox').off('change').on('change', function() {
+            updateTotalPrice();
+        });
+
+        // Event listener para links "Mais informações"
+        $('.bt-transfer-link').off('click').on('click', function(e) {
+            e.preventDefault();
+            const $service = $(this).closest('.bt-transfer-service');
+            const $details = $service.find('.bt-transfer-service-details');
+
+            // Toggle detalhes
+            $details.slideToggle(300);
+
+            // Mudar texto do link
+            const isVisible = $details.is(':visible');
+            $(this).text(isVisible ? 'Menos informações' : 'Mais informações');
+        });
+    }
+
+    /**
+     * Atualizar preço total com transfers selecionados
+     */
+    function updateTotalPrice() {
+        // Obter preço base do packageData
+        const packageData = BeautyTravelQuote.packageData;
+        const budget = packageData.budget || {};
+        let basePrice = extractPrice(budget);
+
+        console.log('[SOLTOUR] 💰 Recalculando preço total...');
+        console.log('[SOLTOUR] Preço base:', basePrice.toFixed(2) + '€');
+
+        // Somar preços dos transfers marcados
+        let transfersTotal = 0;
+        $('.bt-transfer-checkbox:checked').each(function() {
+            const transferPrice = parseFloat($(this).data('transfer-price')) || 0;
+            transfersTotal += transferPrice;
+            console.log('[SOLTOUR] + Transfer:', transferPrice.toFixed(2) + '€');
+        });
+
+        // Calcular novo total
+        const newTotal = basePrice + transfersTotal;
+
+        console.log('[SOLTOUR] = Total com transfers:', newTotal.toFixed(2) + '€');
+        console.log('');
+
+        // Atualizar display do preço
+        $('.bt-price-total-amount').text(newTotal.toFixed(0) + '€');
+
+        // Atualizar também no objeto global
+        if (BeautyTravelQuote.packageData) {
+            BeautyTravelQuote.packageData.calculatedTotal = newTotal;
+        }
     }
 
     /**
@@ -1103,7 +1157,7 @@
         let html = `
             <div class="bt-summary-section bt-transfer-card">
                 <div class="bt-transfer-header">
-                    <h3>🚗 TRASLADO PRIVADO</h3>
+                    <h3>🚗 TRANSFER PRIVADO</h3>
                     <button class="bt-transfer-toggle" onclick="this.closest('.bt-transfer-card').classList.toggle('expanded')">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <polyline points="6 9 12 15 18 9"></polyline>
@@ -1111,17 +1165,30 @@
                     </button>
                 </div>
                 <div class="bt-transfer-body">
-                    <p class="bt-transfer-description">Oferece a tu cliente un servicio directo al hotel en un coche privado.</p>
+                    <p class="bt-transfer-description">Ofereça ao seu cliente um serviço directo ao hotel num carro privado.</p>
                     <div class="bt-transfer-services">
         `;
 
         // Renderizar cada serviço de transfer
         transferData.transferServices.forEach((transfer, index) => {
-            const title = transfer.title || transfer.description || 'Traslado privado';
-            const hasDetails = transfer.startDate || transfer.type;
+            const title = transfer.title || transfer.description || 'Transfer privado';
+            const serviceId = transfer.serviceId || `transfer-${index}`;
+
+            // Extrair preço do transfer
+            const transferPrice = transfer.priceInfo?.pvp || transfer.price?.pvp || 0;
+            const currency = transfer.priceInfo?.currency || transfer.price?.currency || 'EUR';
+            const currencySymbol = currency === 'EUR' ? '€' : currency;
 
             html += `
-                <div class="bt-transfer-service">
+                <div class="bt-transfer-service" data-transfer-id="${serviceId}" data-transfer-price="${transferPrice}">
+                    <div class="bt-transfer-service-checkbox">
+                        <input type="checkbox"
+                               id="transfer-checkbox-${index}"
+                               class="bt-transfer-checkbox"
+                               data-transfer-price="${transferPrice}"
+                               data-transfer-id="${serviceId}">
+                        <label for="transfer-checkbox-${index}"></label>
+                    </div>
                     <div class="bt-transfer-service-icon">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M5 17h14v-5H5v5z"/>
@@ -1130,11 +1197,12 @@
                     </div>
                     <div class="bt-transfer-service-content">
                         <div class="bt-transfer-service-title">${title}</div>
-                        ${hasDetails ? `<div class="bt-transfer-service-details">Data: ${transfer.startDate || 'N/A'}</div>` : ''}
+                        <div class="bt-transfer-service-details" style="display: none;">
+                            <strong>Preço:</strong> ${transferPrice.toFixed(2)}${currencySymbol}
+                        </div>
                     </div>
                     <div class="bt-transfer-service-actions">
-                        <a href="#" class="bt-transfer-link" onclick="event.preventDefault();">Ver información</a>
-                        <span class="bt-transfer-status">Calculando</span>
+                        <a href="#" class="bt-transfer-link" data-transfer-index="${index}">Mais informações</a>
                     </div>
                 </div>
             `;
@@ -1160,7 +1228,7 @@
         let html = `
             <div class="bt-summary-section bt-cancellation-card">
                 <div class="bt-cancellation-header">
-                    <h3>❌ GASTOS DE CANCELACIÓN</h3>
+                    <h3>❌ CUSTOS DE CANCELAMENTO</h3>
                     <button class="bt-cancellation-toggle" onclick="this.closest('.bt-cancellation-card').classList.toggle('expanded')">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <polyline points="6 9 12 15 18 9"></polyline>
@@ -1168,14 +1236,14 @@
                     </button>
                 </div>
                 <div class="bt-cancellation-body">
-                    <p class="bt-cancellation-description">Te detallamos los gastos que se aplicarán por fecha de cancelación</p>
+                    <p class="bt-cancellation-description">Detalhamos os custos que serão aplicados por data de cancelamento</p>
                     <div class="bt-cancellation-table-wrapper">
                         <table class="bt-cancellation-table">
                             <thead>
                                 <tr>
-                                    <th>Desde</th>
-                                    <th>Hasta</th>
-                                    <th class="bt-text-right">Importe</th>
+                                    <th>De</th>
+                                    <th>Até</th>
+                                    <th class="bt-text-right">Valor</th>
                                 </tr>
                             </thead>
                             <tbody>
