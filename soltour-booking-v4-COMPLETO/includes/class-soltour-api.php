@@ -936,51 +936,113 @@ class Soltour_API {
 
     /**
      * AJAX Handler: Gerar cotação final na página de cotação
-     * Função simplificada para apenas coletar dados e retornar sucesso
+     * Coleta dados, envia emails para agência e cliente
      */
     public function ajax_generate_quote() {
         check_ajax_referer('soltour_booking_nonce', 'nonce');
 
+        $this->log('=== GENERATE FINAL QUOTE ===');
+
         // Coletar dados do POST
         $budget_data = isset($_POST['budget_data']) ? json_decode(stripslashes($_POST['budget_data']), true) : array();
         $passengers = isset($_POST['passengers']) ? json_decode(stripslashes($_POST['passengers']), true) : array();
+        $client_data = isset($_POST['client_data']) ? json_decode(stripslashes($_POST['client_data']), true) : array();
+        $trip_data = isset($_POST['trip_data']) ? json_decode(stripslashes($_POST['trip_data']), true) : array();
         $notes = isset($_POST['notes']) ? sanitize_textarea_field($_POST['notes']) : '';
 
         // Validar dados básicos
-        if (empty($budget_data) || empty($budget_data['budgetId']) || empty($passengers)) {
+        if (empty($budget_data) || empty($passengers) || empty($client_data)) {
+            $this->log('Dados incompletos recebidos', 'error');
             wp_send_json_error(array(
                 'message' => 'Dados incompletos. Por favor, preencha todos os campos obrigatórios.'
             ));
             return;
         }
 
-        // Log dos dados recebidos
-        error_log('[Soltour Quote] Budget ID: ' . $budget_data['budgetId']);
-        error_log('[Soltour Quote] Passageiros: ' . count($passengers));
-        error_log('[Soltour Quote] Notas: ' . $notes);
+        $this->log('Dados recebidos:');
+        $this->log('  - Passageiros: ' . count($passengers));
+        $this->log('  - Cliente: ' . $client_data['nome']);
+        $this->log('  - Hotel: ' . $trip_data['hotelName']);
 
-        // Preparar dados da cotação
-        $quote_data = array(
-            'budgetId' => $budget_data['budgetId'],
-            'hotelCode' => $budget_data['hotelCode'],
-            'availToken' => $budget_data['availToken'],
-            'passengers' => $passengers,
-            'notes' => $notes,
-            'date' => current_time('mysql'),
-            'status' => 'pending'
+        // Preparar dados para emails
+        $email_data = array(
+            'cliente' => array(
+                'nome' => sanitize_text_field($client_data['nome']),
+                'sobrenome' => sanitize_text_field($client_data['sobrenome']),
+                'email' => sanitize_email($client_data['email']),
+                'telefone' => sanitize_text_field($client_data['telefone'])
+            ),
+            'viagem' => array(
+                'hotelName' => sanitize_text_field($trip_data['hotelName']),
+                'destino' => sanitize_text_field($trip_data['destino']),
+                'checkin' => sanitize_text_field($trip_data['checkin']),
+                'checkout' => sanitize_text_field($trip_data['checkout']),
+                'noites' => intval($trip_data['noites']),
+                'quartos' => intval($trip_data['quartos']),
+                'regime' => sanitize_text_field($trip_data['regime']),
+                'precoTotal' => floatval($trip_data['precoTotal'])
+            ),
+            'passageiros' => array(),
+            'observacoes' => $notes,
+            'linkCotacao' => home_url('/cotacao-confirmada/')
         );
 
-        // Salvar no banco de dados (opcional - pode ser implementado depois)
-        // Por enquanto, apenas simular sucesso
+        // Sanitizar dados dos passageiros
+        foreach ($passengers as $pax) {
+            $email_data['passageiros'][] = array(
+                'tipo' => sanitize_text_field($pax['tipo']),
+                'nome' => sanitize_text_field($pax['nome']),
+                'sobrenome' => sanitize_text_field($pax['sobrenome']),
+                'nascimento' => sanitize_text_field($pax['nascimento']),
+                'documento' => sanitize_text_field($pax['documento'])
+            );
+        }
 
-        // TODO: Enviar email com a cotação (pode ser implementado depois)
-        // TODO: Chamar API da Soltour para gerar quote oficial (pode ser implementado depois)
+        // Gerar ID único para a cotação
+        $quote_id = uniqid('BT-', true);
+
+        $this->log('Cotação gerada: ' . $quote_id);
+
+        // Enviar email para a agência
+        $this->log('Enviando email para agência...');
+        $agency_email_sent = $this->send_agency_notification_email($email_data);
+
+        if ($agency_email_sent) {
+            $this->log('Email enviado para agência com sucesso');
+        } else {
+            $this->log('Erro ao enviar email para agência', 'error');
+        }
+
+        // Enviar email para o cliente
+        $this->log('Enviando email para cliente...');
+        $client_email_sent = $this->send_client_confirmation_email($email_data);
+
+        if ($client_email_sent) {
+            $this->log('Email enviado para cliente com sucesso');
+        } else {
+            $this->log('Erro ao enviar email para cliente', 'error');
+        }
+
+        // Verificar se pelo menos um email foi enviado
+        if (!$agency_email_sent && !$client_email_sent) {
+            $this->log('Nenhum email foi enviado com sucesso', 'error');
+            wp_send_json_error(array(
+                'message' => 'Erro ao enviar emails. Por favor, tente novamente ou contacte o suporte.'
+            ));
+            return;
+        }
 
         // Retornar sucesso
+        $this->log('Cotação finalizada com sucesso: ' . $quote_id);
+
         wp_send_json_success(array(
-            'message' => 'Cotação gerada com sucesso!',
-            'quote_id' => uniqid('quote_', true),
-            'quote_data' => $quote_data
+            'message' => 'Cotação gerada com sucesso! Verifique seu email.',
+            'quote_id' => $quote_id,
+            'emails_sent' => array(
+                'agency' => $agency_email_sent,
+                'client' => $client_email_sent
+            ),
+            'redirect_url' => home_url('/cotacao-confirmada/')
         ));
     }
 
@@ -1509,7 +1571,11 @@ class Soltour_API {
 
         $subject = 'Sua Cotação Soltour';
         $message = $this->build_quote_email_html($email_data);
-        $headers = array('Content-Type: text/html; charset=UTF-8');
+        $headers = array(
+            'Content-Type: text/html; charset=UTF-8',
+            'From: ' . SOLTOUR_EMAIL_FROM_NAME . ' <' . SOLTOUR_EMAIL_FROM . '>',
+            'Reply-To: ' . SOLTOUR_EMAIL_REPLY_TO
+        );
 
         $sent = wp_mail($to_email, $subject, $message, $headers);
 
@@ -1539,5 +1605,205 @@ class Soltour_API {
         $html .= '</body></html>';
 
         return $html;
+    }
+
+    /**
+     * Envia email interno para a agência com detalhes da cotação
+     */
+    public function send_agency_notification_email($data) {
+        $to = SOLTOUR_EMAIL_REPLY_TO; // Email da agência (reservas@beautytravel.pt)
+        $subject = 'Nova Cotação Recebida - ' . $data['viagem']['hotelName'] . ' (' . date('d/m/Y') . ')';
+
+        ob_start();
+        ?>
+        <div style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; background: #f5f5f5; padding: 20px;">
+            <div style="background: linear-gradient(135deg, #019CB8 0%, #0176a8 100%); color: white; padding: 30px; text-align: center;">
+                <h1 style="margin: 0;">Nova Cotação - Beauty Travel</h1>
+                <p style="margin: 10px 0 0 0; opacity: 0.9;">Sistema de Gestão de Reservas</p>
+            </div>
+
+            <div style="padding: 30px; background: white; margin-top: 2px;">
+                <h2 style="color: #019CB8; border-bottom: 2px solid #019CB8; padding-bottom: 10px;">
+                    📋 Dados do Cliente
+                </h2>
+                <table style="width: 100%; margin: 20px 0;">
+                    <tr>
+                        <td style="padding: 8px 0;"><strong>Nome:</strong></td>
+                        <td><?php echo esc_html($data['cliente']['nome'] . ' ' . $data['cliente']['sobrenome']); ?></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px 0;"><strong>Email:</strong></td>
+                        <td><a href="mailto:<?php echo esc_attr($data['cliente']['email']); ?>"><?php echo esc_html($data['cliente']['email']); ?></a></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px 0;"><strong>Telefone:</strong></td>
+                        <td><?php echo esc_html($data['cliente']['telefone']); ?></td>
+                    </tr>
+                </table>
+
+                <h2 style="color: #019CB8; border-bottom: 2px solid #019CB8; padding-bottom: 10px; margin-top: 40px;">
+                    ✈️ Detalhes da Viagem
+                </h2>
+                <div style="background: #f9fafb; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                    <h3 style="color: #019CB8; margin-top: 0;">
+                        🏨 <?php echo esc_html($data['viagem']['hotelName']); ?>
+                    </h3>
+                    <table style="width: 100%;">
+                        <tr>
+                            <td style="padding: 5px 0;"><strong>Destino:</strong></td>
+                            <td><?php echo esc_html($data['viagem']['destino']); ?></td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 5px 0;"><strong>Check-in:</strong></td>
+                            <td><?php echo esc_html(date('d/m/Y', strtotime($data['viagem']['checkin']))); ?></td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 5px 0;"><strong>Check-out:</strong></td>
+                            <td><?php echo esc_html(date('d/m/Y', strtotime($data['viagem']['checkout']))); ?></td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 5px 0;"><strong>Noites:</strong></td>
+                            <td><?php echo esc_html($data['viagem']['noites']); ?> noite(s)</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 5px 0;"><strong>Quartos:</strong></td>
+                            <td><?php echo esc_html($data['viagem']['quartos']); ?></td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 5px 0;"><strong>Regime:</strong></td>
+                            <td><?php echo esc_html($data['viagem']['regime']); ?></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <h2 style="color: #019CB8; border-bottom: 2px solid #019CB8; padding-bottom: 10px; margin-top: 40px;">
+                    👥 Passageiros (<?php echo count($data['passageiros']); ?>)
+                </h2>
+                <div style="background: #f9fafb; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                    <?php foreach ($data['passageiros'] as $index => $pax): ?>
+                        <div style="padding: 10px 0; <?php echo $index > 0 ? 'border-top: 1px solid #ddd;' : ''; ?>">
+                            <strong><?php echo ($index + 1); ?>.</strong>
+                            <?php echo esc_html($pax['nome'] . ' ' . $pax['sobrenome']); ?>
+                            (<?php echo esc_html($pax['tipo']); ?>)
+                            - Nasc: <?php echo esc_html($pax['nascimento']); ?>
+                            - Doc: <?php echo esc_html($pax['documento']); ?>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+
+                <?php if (isset($data['observacoes']) && !empty($data['observacoes'])): ?>
+                <h2 style="color: #019CB8; border-bottom: 2px solid #019CB8; padding-bottom: 10px; margin-top: 40px;">
+                    📝 Observações
+                </h2>
+                <div style="background: #fff3cd; padding: 15px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #ffc107;">
+                    <?php echo nl2br(esc_html($data['observacoes'])); ?>
+                </div>
+                <?php endif; ?>
+
+                <h2 style="color: #019CB8; border-bottom: 2px solid #019CB8; padding-bottom: 10px; margin-top: 40px;">
+                    💰 Valores
+                </h2>
+                <div style="background: #e8f5e9; padding: 20px; border-radius: 8px; margin: 20px 0; text-align: center;">
+                    <div style="font-size: 14px; color: #666; margin-bottom: 10px;">Valor Total Estimado</div>
+                    <div style="font-size: 36px; font-weight: bold; color: #019CB8;">
+                        €<?php echo number_format($data['viagem']['precoTotal'], 2, ',', '.'); ?>
+                    </div>
+                </div>
+
+                <p style="text-align: center; margin-top: 30px;">
+                    <a href="<?php echo esc_url($data['linkCotacao']); ?>"
+                       style="background: #019CB8; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; display: inline-block;">
+                        Ver Cotação no WordPress
+                    </a>
+                </p>
+            </div>
+
+            <div style="background: #1a202c; color: white; padding: 20px; text-align: center; font-size: 12px; margin-top: 2px;">
+                <p style="margin: 0;">© <?php echo date('Y'); ?> Beauty Travel - Sistema Interno de Gestão</p>
+            </div>
+        </div>
+        <?php
+        $body = ob_get_clean();
+
+        $headers = array(
+            'Content-Type: text/html; charset=UTF-8',
+            'From: ' . SOLTOUR_EMAIL_FROM_NAME . ' <' . SOLTOUR_EMAIL_FROM . '>',
+            'Reply-To: ' . $data['cliente']['email']
+        );
+
+        return wp_mail($to, $subject, $body, $headers);
+    }
+
+    /**
+     * Envia email de confirmação para o cliente
+     */
+    public function send_client_confirmation_email($data) {
+        $to = $data['cliente']['email'];
+        $subject = 'Recebemos a sua cotação – Beauty Travel';
+
+        ob_start();
+        ?>
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+            <div style="background: linear-gradient(135deg, #019CB8 0%, #0176a8 100%); color: white; padding: 30px; text-align: center;">
+                <h1 style="margin: 0;">Beauty Travel</h1>
+                <p style="margin: 10px 0 0 0; opacity: 0.9;">A sua agência de viagens de confiança</p>
+            </div>
+
+            <div style="padding: 30px; background: #f9fafb;">
+                <p>Olá <strong><?php echo esc_html($data['cliente']['nome']); ?></strong>,</p>
+
+                <p>Recebemos a sua solicitação de cotação para:</p>
+
+                <div style="background: white; padding: 20px; border-radius: 8px; margin: 20px 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                    <h3 style="color: #019CB8; margin-top: 0;">
+                        🏨 <?php echo esc_html($data['viagem']['hotelName']); ?>
+                    </h3>
+                    <p style="line-height: 1.8;">
+                        📍 <?php echo esc_html($data['viagem']['destino']); ?><br>
+                        📅 <?php echo esc_html(date('d/m/Y', strtotime($data['viagem']['checkin']))); ?>
+                        a <?php echo esc_html(date('d/m/Y', strtotime($data['viagem']['checkout']))); ?><br>
+                        🌙 <?php echo esc_html($data['viagem']['noites']); ?> noite(s)<br>
+                        👥 <?php echo count($data['passageiros']); ?> passageiro(s)<br>
+                        🍽️ <?php echo esc_html($data['viagem']['regime']); ?>
+                    </p>
+                </div>
+
+                <p><strong>Próximos passos:</strong></p>
+                <ol style="line-height: 1.8;">
+                    <li>A nossa equipa vai validar os valores finais</li>
+                    <li>Entraremos em contacto consigo nas próximas 24 horas</li>
+                    <li>Após confirmação, enviaremos os dados de pagamento</li>
+                </ol>
+
+                <div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 20px 0; border-radius: 4px;">
+                    <strong>⚠️ Importante:</strong> Este email não constitui reserva confirmada.
+                    Aguarde o nosso contacto para confirmação final dos valores.
+                </div>
+
+                <p>Se tiver alguma dúvida, pode responder a este email ou contactar-nos através de:</p>
+                <p style="line-height: 1.8;">
+                    📧 <a href="mailto:<?php echo esc_attr(SOLTOUR_EMAIL_REPLY_TO); ?>" style="color: #019CB8;"><?php echo esc_html(SOLTOUR_EMAIL_REPLY_TO); ?></a><br>
+                    📞 +351 XXX XXX XXX
+                </p>
+
+                <p style="margin-top: 30px; text-align: center;">
+                    Obrigado por escolher a Beauty Travel 💙
+                </p>
+            </div>
+
+            <div style="background: #1a202c; color: white; padding: 20px; text-align: center; font-size: 12px;">
+                <p style="margin: 0;">© <?php echo date('Y'); ?> Beauty Travel. Todos os direitos reservados.</p>
+            </div>
+        </div>
+        <?php
+        $body = ob_get_clean();
+
+        $headers = array(
+            'Content-Type: text/html; charset=UTF-8',
+            'From: ' . SOLTOUR_EMAIL_FROM_NAME . ' <' . SOLTOUR_EMAIL_FROM . '>',
+            'Reply-To: ' . SOLTOUR_EMAIL_REPLY_TO
+        );
+
+        return wp_mail($to, $subject, $body, $headers);
     }
 }

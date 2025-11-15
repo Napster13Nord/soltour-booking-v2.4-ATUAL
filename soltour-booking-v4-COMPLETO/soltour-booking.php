@@ -2,8 +2,8 @@
 /**
  * Plugin Name: Soltour Booking V4
  * Plugin URI: https://beautytravel.pt
- * Description: Integração API Soltour V5 - 100% COMPLETA (14/14 funcionalidades implementadas)
- * Version: 4.1.9
+ * Description: Integração API Soltour V5 - 100% COMPLETA (14/14 funcionalidades implementadas) + Sistema de Email Configurável
+ * Version: 4.2.0
  * Author: Beauty Travel
  * License: GPL v2 or later
  * Text Domain: soltour-booking
@@ -12,7 +12,7 @@
 if (!defined('ABSPATH')) exit;
 
 // Definições de constantes
-define('SOLTOUR_VERSION', '4.1.9');
+define('SOLTOUR_VERSION', '4.2.0');
 define('SOLTOUR_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('SOLTOUR_PLUGIN_URL', plugin_dir_url(__FILE__));
 
@@ -40,6 +40,17 @@ if (!defined('SOLTOUR_API_MARKET')) {
 }
 if (!defined('SOLTOUR_API_LANG')) {
     define('SOLTOUR_API_LANG', defined('SOLTOUR_LANG') ? constant('SOLTOUR_LANG') : 'PT');
+}
+
+// Configurações de Email
+if (!defined('SOLTOUR_EMAIL_FROM')) {
+    define('SOLTOUR_EMAIL_FROM', 'geral@beautytravel.pt');
+}
+if (!defined('SOLTOUR_EMAIL_FROM_NAME')) {
+    define('SOLTOUR_EMAIL_FROM_NAME', 'Beauty Travel');
+}
+if (!defined('SOLTOUR_EMAIL_REPLY_TO')) {
+    define('SOLTOUR_EMAIL_REPLY_TO', 'reservas@beautytravel.pt');
 }
 
 /**
@@ -72,10 +83,15 @@ class Soltour_Booking {
     private function init_hooks() {
         // Enqueue scripts e styles
         add_action('wp_enqueue_scripts', array($this, 'enqueue_assets'));
-        
+
         // Registrar shortcodes
         add_action('init', array($this, 'register_shortcodes'));
-        
+
+        // Configurar emails do plugin
+        add_filter('wp_mail_from', array($this, 'set_mail_from'));
+        add_filter('wp_mail_from_name', array($this, 'set_mail_from_name'));
+        add_filter('wp_mail_content_type', array($this, 'set_mail_content_type'));
+
         // AJAX endpoints para usuários logados e não logados
         $ajax_actions = array(
             'soltour_get_destinations',
@@ -312,12 +328,35 @@ class Soltour_Booking {
         add_shortcode('soltour_booking_confirmation', array($shortcodes, 'confirmation_page'));
     }
 
+    /**
+     * Configurar email FROM
+     */
+    public function set_mail_from($original_email) {
+        return SOLTOUR_EMAIL_FROM;
+    }
+
+    /**
+     * Configurar nome do remetente
+     */
+    public function set_mail_from_name($original_name) {
+        return SOLTOUR_EMAIL_FROM_NAME;
+    }
+
+    /**
+     * Configurar tipo de conteúdo do email
+     */
+    public function set_mail_content_type($content_type) {
+        return 'text/html';
+    }
+
     public function check_credentials_notice() {
-        if (empty(SOLTOUR_API_USERNAME) || empty(SOLTOUR_API_PASSWORD) || 
-            empty(SOLTOUR_API_CLIENT_ID) || empty(SOLTOUR_API_CLIENT_SECRET)) {
+        $missing_api_creds = empty(SOLTOUR_API_USERNAME) || empty(SOLTOUR_API_PASSWORD) ||
+            empty(SOLTOUR_API_CLIENT_ID) || empty(SOLTOUR_API_CLIENT_SECRET);
+
+        if ($missing_api_creds) {
             ?>
             <div class="notice notice-warning is-dismissible">
-                <p><strong>Soltour Booking V2:</strong> Por favor, configure todas as credenciais da API no wp-config.php:</p>
+                <p><strong>Soltour Booking V4:</strong> Por favor, configure todas as credenciais da API no wp-config.php:</p>
                 <ul style="list-style: disc; margin-left: 20px;">
                     <li>SOLTOUR_USERNAME</li>
                     <li>SOLTOUR_PASSWORD</li>
@@ -330,6 +369,23 @@ class Soltour_Booking {
             </div>
             <?php
         }
+
+        // Mostrar informação sobre configurações de email
+        ?>
+        <div class="notice notice-info">
+            <p><strong>Soltour Booking V4 - Configurações de Email:</strong></p>
+            <ul style="list-style: disc; margin-left: 20px;">
+                <li><strong>FROM (remetente):</strong> <?php echo esc_html(SOLTOUR_EMAIL_FROM); ?> (<?php echo esc_html(SOLTOUR_EMAIL_FROM_NAME); ?>)</li>
+                <li><strong>REPLY-TO (responder para):</strong> <?php echo esc_html(SOLTOUR_EMAIL_REPLY_TO); ?></li>
+            </ul>
+            <p style="margin-top: 10px;">
+                <em>Para alterar estas configurações, adicione as seguintes constantes no wp-config.php:</em><br>
+                <code style="background: #f5f5f5; padding: 2px 6px;">define('SOLTOUR_EMAIL_FROM', 'seu-email@dominio.com');</code><br>
+                <code style="background: #f5f5f5; padding: 2px 6px;">define('SOLTOUR_EMAIL_FROM_NAME', 'Seu Nome');</code><br>
+                <code style="background: #f5f5f5; padding: 2px 6px;">define('SOLTOUR_EMAIL_REPLY_TO', 'responder@dominio.com');</code>
+            </p>
+        </div>
+        <?php
     }
 }
 
