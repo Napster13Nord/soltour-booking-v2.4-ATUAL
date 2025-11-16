@@ -157,10 +157,10 @@
 }
 
 .soltour-room-header h4 {
-    font-size: 18px;
-    font-weight: 600;
-    color: #1f2937;
-    margin: 0;
+    font-size: 18px !important;
+    font-weight: 600 !important;
+    color: #1f2937 !important;
+    margin: 0 !important;
 }
 
 .soltour-room-fields {
