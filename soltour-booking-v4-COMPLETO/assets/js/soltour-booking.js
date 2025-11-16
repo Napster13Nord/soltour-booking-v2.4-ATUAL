@@ -500,8 +500,6 @@
         // Armazenar número de quartos pesquisados
         SoltourApp.numRoomsSearched = rooms.length;
 
-        console.log('[SOLTOUR DEBUG] Busca iniciada com', SoltourApp.numRoomsSearched, 'quarto(s)');
-        console.log('[SOLTOUR DEBUG] Dados dos quartos:', JSON.stringify(rooms, null, 2));
 
         // Resetar para primeira página na nova busca
         SoltourApp.currentPage = 1;
@@ -568,12 +566,10 @@
                         SoltourApp.numRoomsSearched = SoltourApp.searchParams.rooms.length;
                     }
                 } catch(e) {
-                    console.error('Erro ao determinar número de quartos:', e);
                     SoltourApp.numRoomsSearched = 1; // fallback
                 }
             }
 
-            console.log('[SOLTOUR DEBUG] Página de resultados carregada com', SoltourApp.numRoomsSearched, 'quarto(s)');
 
             searchPackagesAjax();
         }
@@ -902,28 +898,6 @@
         // ========================================
         // 🔍 DEBUG: Log detalhado da requisição
         // ========================================
-        console.log('');
-        console.log('═══════════════════════════════════════════════════════════════');
-        console.log('🚀 [SOLTOUR DEBUG] REQUISIÇÃO PARA ENDPOINT AVAILABILITY');
-        console.log('═══════════════════════════════════════════════════════════════');
-        console.log('');
-        console.log('📍 URL:', soltourData.ajaxurl);
-        console.log('📤 Método:', 'POST');
-        console.log('');
-        console.log('📋 PARÂMETROS DA REQUISIÇÃO:');
-        console.log('─────────────────────────────────────────────────────────────');
-        console.log('Action:', searchParamsWithLargeLimit.action);
-        console.log('Origin Code:', searchParamsWithLargeLimit.origin_code);
-        console.log('Destination Code:', searchParamsWithLargeLimit.destination_code);
-        console.log('Start Date:', searchParamsWithLargeLimit.start_date);
-        console.log('Number of Nights:', searchParamsWithLargeLimit.num_nights);
-        console.log('Only Hotel:', searchParamsWithLargeLimit.only_hotel);
-        console.log('Product Type:', searchParamsWithLargeLimit.product_type);
-        console.log('First Item:', searchParamsWithLargeLimit.first_item);
-        console.log('Item Count:', searchParamsWithLargeLimit.item_count);
-        console.log('');
-        console.log('👥 DADOS DOS QUARTOS E PASSAGEIROS:');
-        console.log('─────────────────────────────────────────────────────────────');
 
         // Parse e exibir rooms de forma formatada
         let roomsData;
@@ -932,43 +906,26 @@
                 ? JSON.parse(searchParamsWithLargeLimit.rooms)
                 : searchParamsWithLargeLimit.rooms;
 
-            console.log('Número de quartos:', roomsData.length);
-            console.log('');
 
             roomsData.forEach((room, index) => {
-                console.log(`🛏️  Quarto ${index + 1}:`);
-                console.log(`   Total de passageiros: ${room.passengers.length}`);
 
                 const adults = room.passengers.filter(p => p.type === 'ADULT');
                 const children = room.passengers.filter(p => p.type === 'CHILD');
 
                 if (adults.length > 0) {
-                    console.log(`   👤 Adultos (${adults.length}):`);
                     adults.forEach((adult, i) => {
-                        console.log(`      - Adulto ${i + 1}: ${adult.age} anos`);
                     });
                 }
 
                 if (children.length > 0) {
-                    console.log(`   👶 Crianças (${children.length}):`);
                     children.forEach((child, i) => {
-                        console.log(`      - Criança ${i + 1}: ${child.age} anos`);
                     });
                 }
-                console.log('');
             });
 
         } catch (e) {
-            console.error('❌ Erro ao parsear rooms:', e);
-            console.log('Rooms (raw):', searchParamsWithLargeLimit.rooms);
         }
 
-        console.log('📦 PAYLOAD COMPLETO (JSON):');
-        console.log('─────────────────────────────────────────────────────────────');
-        console.log(JSON.stringify(searchParamsWithLargeLimit, null, 2));
-        console.log('');
-        console.log('═══════════════════════════════════════════════════════════════');
-        console.log('');
 
         $.ajax({
             url: soltourData.ajaxurl,
@@ -980,39 +937,14 @@
                 // ========================================
                 // 🔍 DEBUG: Log detalhado da resposta
                 // ========================================
-                console.log('');
-                console.log('═══════════════════════════════════════════════════════════════');
-                console.log('✅ [SOLTOUR DEBUG] RESPOSTA DO ENDPOINT AVAILABILITY');
-                console.log('═══════════════════════════════════════════════════════════════');
-                console.log('');
-                console.log('📥 STATUS:', response.success ? 'SUCCESS' : 'FAILED');
-                console.log('');
 
                 if (response.success && response.data) {
-                    console.log('📊 DADOS RECEBIDOS:');
-                    console.log('─────────────────────────────────────────────────────────────');
-                    console.log('Avail Token:', response.data.availToken);
-                    console.log('Total de Budgets:', response.data.budgets ? response.data.budgets.length : 0);
-                    console.log('Total Count:', response.data.totalCount);
-                    console.log('Hotéis recebidos:', response.data.hotels ? response.data.hotels.length : 0);
-                    console.log('Voos recebidos:', response.data.flights ? response.data.flights.length : 0);
-                    console.log('');
 
                     if (response.data.budgets && response.data.budgets.length > 0) {
-                        console.log('📦 EXEMPLO DE BUDGET (primeiro):');
-                        console.log('─────────────────────────────────────────────────────────────');
-                        console.log(JSON.stringify(response.data.budgets[0], null, 2));
-                        console.log('');
                     }
                 } else {
-                    console.error('❌ RESPOSTA SEM DADOS:');
-                    console.log('─────────────────────────────────────────────────────────────');
-                    console.log('Response:', JSON.stringify(response, null, 2));
-                    console.log('');
                 }
 
-                console.log('═══════════════════════════════════════════════════════════════');
-                console.log('');
 
                 if (response.success && response.data) {
                     SoltourApp.availToken = response.data.availToken;
@@ -1069,27 +1001,13 @@
                 // ========================================
                 // 🔍 DEBUG: Log de erro
                 // ========================================
-                console.log('');
-                console.log('═══════════════════════════════════════════════════════════════');
-                console.error('❌ [SOLTOUR DEBUG] ERRO NA REQUISIÇÃO AVAILABILITY');
-                console.log('═══════════════════════════════════════════════════════════════');
-                console.log('');
-                console.error('Status:', status);
-                console.error('Error:', error);
-                console.error('XHR Status:', xhr.status);
-                console.error('XHR Status Text:', xhr.statusText);
-                console.log('');
                 if (xhr.responseText) {
-                    console.error('Response Text:', xhr.responseText);
                     try {
                         const responseJson = JSON.parse(xhr.responseText);
-                        console.error('Response JSON:', JSON.stringify(responseJson, null, 2));
                     } catch (e) {
                         // Response não é JSON válido
                     }
                 }
-                console.log('═══════════════════════════════════════════════════════════════');
-                console.log('');
 
                 // Esconder modal em caso de erro
                 hideLoadingModal();
@@ -2008,7 +1926,6 @@
                     }
                 });
             } catch (e) {
-                console.error('Erro ao calcular passageiros do searchParams.rooms:', e);
             }
         }
         // Último fallback: garantir pelo menos 2 passageiros (mínimo razoável)
@@ -2118,14 +2035,7 @@
 
                                 // Debug log
                                 if (index === 0) {
-                                    console.log('[SOLTOUR DEBUG] Renderizando quartos:', {
-                                        budgetId: budget.budgetId,
-                                        totalRooms: availableRooms.length,
-                                        numRoomsSearched: SoltourApp.numRoomsSearched,
-                                        maxRooms: maxRooms
-                                    });
                                 }
-                                console.log(`[SOLTOUR DEBUG] Quarto ${index}: isAutoSelected=${isAutoSelected}`);
 
                                 return `
                                     <div class="room-option ${isAutoSelected ? 'selected' : ''}"
@@ -2166,12 +2076,6 @@
         // Pre-selecionar automaticamente os N primeiros quartos
         const maxRooms = SoltourApp.numRoomsSearched || 1;
 
-        console.log('[SOLTOUR DEBUG] Pre-seleção automática:', {
-            budgetId: budget.budgetId,
-            maxRooms: maxRooms,
-            availableRoomsCount: availableRooms.length,
-            numRoomsSearched: SoltourApp.numRoomsSearched
-        });
 
         if (availableRooms.length > 0) {
             // Inicializar como array vazio se não existir
@@ -2182,7 +2086,6 @@
             // Pre-selecionar os primeiros N quartos
             SoltourApp.selectedRooms[budget.budgetId] = availableRooms.slice(0, maxRooms);
 
-            console.log('[SOLTOUR DEBUG] Quartos pre-selecionados:', SoltourApp.selectedRooms[budget.budgetId]);
         }
 
         // Atualizar contador visual se houver múltiplos quartos
@@ -2347,14 +2250,6 @@
      */
     function proceedWithPackageSelection(budgetId, hotelCode, providerCode) {
 
-        console.log('╔═══════════════════════════════════════════════════════════════════╗');
-        console.log('║     🎯 SOLTOUR - PREPARE QUOTE - FRONTEND VALIDATION             ║');
-        console.log('╚═══════════════════════════════════════════════════════════════════╝');
-        console.log('📥 INICIANDO VALIDAÇÃO DO PACOTE');
-        console.log('  ├─ budgetId:', budgetId);
-        console.log('  ├─ hotelCode:', hotelCode);
-        console.log('  ├─ providerCode:', providerCode);
-        console.log('  └─ availToken:', SoltourApp.availToken ? SoltourApp.availToken.substring(0, 30) + '...' : 'NÃO DEFINIDO ⚠️');
 
         // Buscar o pacote completo do array de resultados
         const fullPackage = SoltourApp.allUniqueHotels.find(pkg =>
@@ -2362,25 +2257,19 @@
         );
 
         if (!fullPackage) {
-            console.log('❌ ERRO: Pacote não encontrado no array de resultados');
-            console.log('╚═══════════════════════════════════════════════════════════════════╝');
             alert('Erro: Pacote não encontrado. Por favor, tente novamente.');
             hideLoadingModal();
             return;
         }
 
-        console.log('✅ Pacote encontrado no array de resultados');
 
         // Buscar quartos selecionados (já pre-selecionados automaticamente)
         const selectedRooms = SoltourApp.selectedRooms[budgetId] || [];
         const maxRooms = SoltourApp.numRoomsSearched || 1;
 
-        console.log('🛏️ QUARTOS SELECIONADOS:', selectedRooms.length, 'de', maxRooms);
 
         // Validação simples - quartos já vêm pre-selecionados
         if (selectedRooms.length === 0) {
-            console.log('❌ ERRO: Nenhum quarto selecionado');
-            console.log('╚═══════════════════════════════════════════════════════════════════╝');
             hideLoadingModal();
             alert('Por favor, selecione um quarto antes de continuar.');
             return;
@@ -2393,15 +2282,10 @@
         const firstFlightId = Object.keys(SoltourApp.flightsFromAvailability)[0];
         const flightData = SoltourApp.flightsFromAvailability[firstFlightId] || null;
 
-        console.log('🏨 HOTEL INFO:', hotelInfo ? 'ENCONTRADO' : 'NÃO ENCONTRADO');
-        console.log('✈️ FLIGHT DATA:', flightData ? 'ENCONTRADO' : 'NÃO ENCONTRADO');
 
         // Atualizar modal para indicar validação
         showLoadingModal('Validando pacote...', 'Por favor, aguarde enquanto validamos a disponibilidade');
 
-        console.log('');
-        console.log('🔄 CHAMANDO ENDPOINT: soltour_prepare_quote');
-        console.log('  └─ Gerando cotação diretamente (sem fetchAvailability)');
 
         // ========================================
         // GERAÇÃO DE COTAÇÃO: Chamada direta ao endpoint /booking/quote
@@ -2418,19 +2302,9 @@
                 provider_code: providerCode
             },
             success: function(response) {
-                console.log('');
-                console.log('📥 RESPOSTA RECEBIDA DO BACKEND:');
-                console.log('  ├─ success:', response.success);
 
                 if (response.success) {
-                    console.log('  ├─ message:', response.data.message);
-                    console.log('  ├─ quoteToken:', response.data.quoteToken ? response.data.quoteToken.substring(0, 20) + '...' : 'NÃO GERADO');
-                    console.log('  ├─ quote:', response.data.quote ? 'RECEBIDO ✅' : 'AUSENTE ❌');
-                    console.log('  └─ debugInfo:', response.data.debugInfo || 'N/A');
 
-                    console.log('');
-                    console.log('✅ COTAÇÃO GERADA COM SUCESSO!');
-                    console.log('💾 Salvando dados completos no sessionStorage...');
 
                     // Salvar TODOS os dados no sessionStorage incluindo quote
                     const packageData = {
@@ -2453,31 +2327,14 @@
 
                     sessionStorage.setItem('soltour_selected_package', JSON.stringify(packageData));
 
-                    console.log('📦 DADOS SALVOS:', {
-                        budgetId: packageData.budgetId,
-                        quoteToken: packageData.quoteToken ? 'SALVO ✅' : 'AUSENTE',
-                        quoteData: packageData.quoteData ? 'SALVO ✅' : 'AUSENTE',
-                        totalItems: Object.keys(packageData).length
-                    });
 
-                    console.log('');
-                    console.log('🚀 REDIRECIONANDO PARA PÁGINA DE COTAÇÃO...');
-                    console.log('╚═══════════════════════════════════════════════════════════════════╝');
 
                     // Redirecionar para página de cotação
                     window.location.href = `/cotacao/?budget=${budgetId}`;
 
                 } else {
                     // Erro na validação
-                    console.log('  ├─ message:', response.data ? response.data.message : 'Erro desconhecido');
-                    console.log('  ├─ error_type:', response.data ? response.data.error_type : 'N/A');
-                    console.log('  └─ error_details:', response.data ? response.data.error_details : 'N/A');
 
-                    console.log('');
-                    console.log('❌ VALIDAÇÃO FALHOU!');
-                    console.log('');
-                    console.log('🔍 DEBUG - DADOS DO ERRO:');
-                    console.log('  └─ Resposta completa:', response);
 
                     hideLoadingModal();
 
@@ -2485,10 +2342,6 @@
                         ? response.data.message
                         : 'Este pacote não está mais disponível. Por favor, selecione outro.';
 
-                    console.log('');
-                    console.log('💬 MENSAGEM AO USUÁRIO:', errorMessage);
-                    console.log('💡 AÇÃO: Pacote expirou. Tente novamente com outro pacote.');
-                    console.log('╚═══════════════════════════════════════════════════════════════════╝');
 
                     // Mostrar mensagem ao usuário
                     if (window.SoltourApp.Toast) {
@@ -2502,20 +2355,6 @@
                 }
             },
             error: function(xhr, status, error) {
-                console.log('');
-                console.log('❌ ERRO NA CHAMADA AJAX:');
-                console.log('  ├─ status:', status);
-                console.log('  ├─ error:', error);
-                console.log('  ├─ xhr.status:', xhr.status);
-                console.log('  ├─ xhr.statusText:', xhr.statusText);
-                console.log('  └─ xhr.responseText:', xhr.responseText ? xhr.responseText.substring(0, 200) : 'N/A');
-                console.log('');
-                console.log('🔍 DEBUG - DADOS ENVIADOS:');
-                console.log('  ├─ availToken:', SoltourApp.availToken ? SoltourApp.availToken.substring(0, 30) + '...' : 'NÃO DEFINIDO');
-                console.log('  ├─ budgetId:', budgetId);
-                console.log('  ├─ hotelCode:', hotelCode);
-                console.log('  └─ providerCode:', providerCode);
-                console.log('╚═══════════════════════════════════════════════════════════════════╝');
 
                 hideLoadingModal();
 
@@ -2627,7 +2466,6 @@
             updateRoomCounter($card, budgetId, maxRooms);
         }
 
-        console.log('Quartos selecionados:', budgetId, SoltourApp.selectedRooms[budgetId]);
     };
 
     /**
@@ -2636,12 +2474,10 @@
     function updateRoomCounter($card, budgetId, maxRooms) {
         // Validar parâmetros
         if (!$card || $card.length === 0) {
-            console.warn('updateRoomCounter: Card não encontrado');
             return;
         }
 
         if (!budgetId) {
-            console.warn('updateRoomCounter: budgetId inválido');
             return;
         }
 
@@ -2661,7 +2497,6 @@
                 $counter = $('<div class="room-selection-counter"></div>');
                 $roomsList.after($counter);
             } else {
-                console.warn('updateRoomCounter: rooms-list não encontrada');
                 return;
             }
         }
