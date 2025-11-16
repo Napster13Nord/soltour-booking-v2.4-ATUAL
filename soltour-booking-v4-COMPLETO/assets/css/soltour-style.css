@@ -1883,6 +1883,29 @@
    ESPECIFICIDADE MÁXIMA - NÃO REMOVER!
    ======================================== */
 
+/* SOBREPOR ESTILOS GENÉRICOS DE BOTÕES DO TEMA/ELEMENTOR */
+.soltour-search-wrapper [type=button],
+.soltour-search-wrapper [type=submit],
+.soltour-search-wrapper button,
+.soltour-package-card [type=button],
+.soltour-package-card [type=submit],
+.soltour-package-card button {
+    display: inline-block !important;
+    font-weight: 400 !important;
+    color: #c36 !important;
+    text-align: center !important;
+    white-space: nowrap !important;
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    user-select: none !important;
+    background-color: transparent !important;
+    border: 1px solid #c36 !important;
+    padding: .5rem 1rem !important;
+    font-size: 1rem !important;
+    border-radius: 3px !important;
+    transition: all .3s !important;
+}
+
 /* BOTÃO DE BUSCA - MÁXIMA PRIORIDADE */
 .soltour-search-wrapper .soltour-search-form button.soltour-btn.soltour-btn-primary,
 .soltour-search-wrapper form.soltour-search-form button.soltour-btn.soltour-btn-primary,
@@ -2712,293 +2735,4 @@ body .soltour-pagination .page-ellipsis {
     .flight-route {
         font-size: 12px;
     }
-}
-
-/* ========================================
-   PROTEÇÃO CONTRA ELEMENTOR - PÁGINA DE PACOTES
-   ESPECIFICIDADE MÁXIMA PARA GARANTIR ESTILOS DO PLUGIN
-   ======================================== */
-
-/* Container principal de pacotes */
-.soltour-packages-grid,
-.elementor .soltour-packages-grid,
-.elementor-section .soltour-packages-grid,
-.elementor-widget-container .soltour-packages-grid,
-body .soltour-packages-grid,
-body .elementor .soltour-packages-grid {
-    display: grid !important;
-    gap: 20px !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    list-style: none !important;
-    width: 100% !important;
-    box-sizing: border-box !important;
-}
-
-/* Cards de pacotes */
-.soltour-package-card,
-.soltour-packages-grid .soltour-package-card,
-.elementor .soltour-package-card,
-.elementor-section .soltour-package-card,
-body .soltour-package-card {
-    background: #fff !important;
-    border-radius: 12px !important;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
-    overflow: hidden !important;
-    transition: transform 0.3s, box-shadow 0.3s !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    width: 100% !important;
-    box-sizing: border-box !important;
-}
-
-/* Imagem do pacote */
-.soltour-package-card .package-image,
-.soltour-package-card .package-image img,
-.elementor .soltour-package-card .package-image,
-.elementor .soltour-package-card .package-image img,
-body .soltour-package-card .package-image img {
-    width: 100% !important;
-    height: auto !important;
-    max-height: 200px !important;
-    object-fit: cover !important;
-    display: block !important;
-    margin: 0 !important;
-    padding: 0 !important;
-}
-
-/* Conteúdo do pacote */
-.soltour-package-card .package-content,
-.elementor .soltour-package-card .package-content,
-body .soltour-package-card .package-content {
-    padding: 20px !important;
-    margin: 0 !important;
-}
-
-/* Título do pacote */
-.soltour-package-card h3,
-.soltour-package-card .package-title,
-.elementor .soltour-package-card h3,
-.elementor .soltour-package-card .package-title,
-body .soltour-package-card h3 {
-    font-size: 20px !important;
-    font-weight: 700 !important;
-    color: #1a202c !important;
-    margin: 0 0 15px 0 !important;
-    padding: 0 !important;
-    line-height: 1.3 !important;
-}
-
-/* Detalhes do pacote */
-.soltour-package-card .package-details,
-.elementor .soltour-package-card .package-details,
-body .soltour-package-card .package-details {
-    margin: 10px 0 !important;
-    padding: 0 !important;
-}
-
-.soltour-package-card .package-details p,
-.elementor .soltour-package-card .package-details p,
-body .soltour-package-card .package-details p {
-    margin: 5px 0 !important;
-    padding: 0 !important;
-    font-size: 14px !important;
-    color: #4a5568 !important;
-    line-height: 1.6 !important;
-}
-
-/* Seção de quartos disponíveis */
-.soltour-package-card .available-rooms-section,
-.elementor .soltour-package-card .available-rooms-section,
-body .soltour-package-card .available-rooms-section {
-    margin-top: 20px !important;
-    padding-top: 20px !important;
-    border-top: 2px solid #e5e7eb !important;
-}
-
-.soltour-package-card .available-rooms-section .rooms-title,
-.elementor .soltour-package-card .available-rooms-section .rooms-title,
-body .soltour-package-card .available-rooms-section .rooms-title {
-    font-size: 16px !important;
-    font-weight: 700 !important;
-    color: #1a202c !important;
-    margin: 0 0 15px 0 !important;
-    padding: 0 !important;
-    line-height: 1.4 !important;
-}
-
-/* Lista de quartos */
-.soltour-package-card .rooms-list,
-.elementor .soltour-package-card .rooms-list,
-body .soltour-package-card .rooms-list {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 10px !important;
-    margin: 0 !important;
-    padding: 0 !important;
-}
-
-/* Opções de quarto */
-.soltour-package-card .room-option,
-.elementor .soltour-package-card .room-option,
-body .soltour-package-card .room-option {
-    padding: 12px 15px !important;
-    border: 2px solid #e5e7eb !important;
-    border-radius: 8px !important;
-    cursor: pointer !important;
-    transition: all 0.3s !important;
-    background: #fff !important;
-    margin: 0 !important;
-}
-
-.soltour-package-card .room-option:hover,
-.elementor .soltour-package-card .room-option:hover,
-body .soltour-package-card .room-option:hover {
-    border-color: #019CB8 !important;
-    background: #f0f9fa !important;
-}
-
-.soltour-package-card .room-option.selected,
-.elementor .soltour-package-card .room-option.selected,
-body .soltour-package-card .room-option.selected {
-    border-color: #019CB8 !important;
-    background: #e6f7f9 !important;
-}
-
-/* Info do quarto */
-.soltour-package-card .room-info,
-.elementor .soltour-package-card .room-info,
-body .soltour-package-card .room-info {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 5px !important;
-    margin: 0 !important;
-    padding: 0 !important;
-}
-
-.soltour-package-card .room-name,
-.elementor .soltour-package-card .room-name,
-body .soltour-package-card .room-name {
-    font-size: 14px !important;
-    font-weight: 600 !important;
-    color: #1a202c !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    line-height: 1.4 !important;
-}
-
-.soltour-package-card .room-occupancy,
-.elementor .soltour-package-card .room-occupancy,
-body .soltour-package-card .room-occupancy {
-    font-size: 13px !important;
-    color: #6b7280 !important;
-    display: flex !important;
-    align-items: center !important;
-    gap: 5px !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    line-height: 1.4 !important;
-}
-
-/* Preço do pacote */
-.soltour-package-card .package-price,
-.elementor .soltour-package-card .package-price,
-body .soltour-package-card .package-price {
-    padding: 20px !important;
-    background: #f7fafc !important;
-    border-top: 1px solid #e5e7eb !important;
-    margin: 0 !important;
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    gap: 15px !important;
-}
-
-.soltour-package-card .price-amount,
-.elementor .soltour-package-card .price-amount,
-body .soltour-package-card .price-amount {
-    font-size: 28px !important;
-    font-weight: 700 !important;
-    color: #019CB8 !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    line-height: 1 !important;
-}
-
-.soltour-package-card .price-label,
-.elementor .soltour-package-card .price-label,
-body .soltour-package-card .price-label {
-    font-size: 12px !important;
-    color: #6b7280 !important;
-    margin: 0 !important;
-    padding: 0 !important;
-}
-
-/* Voos do pacote */
-.soltour-package-card .package-flights,
-.elementor .soltour-package-card .package-flights,
-body .soltour-package-card .package-flights {
-    margin: 15px 0 !important;
-    padding: 15px !important;
-    background: #f8f9fa !important;
-    border-radius: 8px !important;
-    border-left: 4px solid #019CB8 !important;
-}
-
-/* Filtros */
-.soltour-filters,
-.elementor .soltour-filters,
-body .soltour-filters {
-    margin-bottom: 30px !important;
-    padding: 20px !important;
-    background: #fff !important;
-    border-radius: 8px !important;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
-}
-
-.soltour-filters select,
-.elementor .soltour-filters select,
-body .soltour-filters select {
-    padding: 10px 15px !important;
-    border: 1px solid #d1d5db !important;
-    border-radius: 6px !important;
-    font-size: 14px !important;
-    color: #374151 !important;
-    background: #fff !important;
-    width: 100% !important;
-    max-width: 300px !important;
-}
-
-/* Loading state */
-.soltour-loading,
-.elementor .soltour-loading,
-body .soltour-loading {
-    text-align: center !important;
-    padding: 40px 20px !important;
-    color: #6b7280 !important;
-}
-
-/* Resultados vazios */
-.soltour-no-results,
-.elementor .soltour-no-results,
-body .soltour-no-results {
-    text-align: center !important;
-    padding: 60px 20px !important;
-    color: #6b7280 !important;
-}
-
-.soltour-no-results h3,
-.elementor .soltour-no-results h3,
-body .soltour-no-results h3 {
-    font-size: 24px !important;
-    color: #374151 !important;
-    margin: 0 0 10px 0 !important;
-}
-
-.soltour-no-results p,
-.elementor .soltour-no-results p,
-body .soltour-no-results p {
-    font-size: 16px !important;
-    color: #6b7280 !important;
-    margin: 0 !important;
 }
