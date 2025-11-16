@@ -838,8 +838,8 @@
                         </div>
                         <div class="bt-form-row">
                             <div class="bt-form-group">
-                                <label for="adult-${i}-birthdate">Data de Nascimento <span class="required">*</span></label>
-                                <input type="date" id="adult-${i}-birthdate" name="adult_${i}_birthdate" required max="${getMaxBirthdate(18)}" />
+                                <label for="adult-${i}-age">Idade <span class="required">*</span></label>
+                                <input type="number" id="adult-${i}-age" name="adult_${i}_age" required min="18" max="120" placeholder="30" />
                             </div>
                             <div class="bt-form-group">
                                 <label for="adult-${i}-document">Documento (Passaporte/BI) <span class="required">*</span></label>
@@ -893,8 +893,8 @@
                         </div>
                         <div class="bt-form-row">
                             <div class="bt-form-group">
-                                <label for="child-${i}-birthdate">Data de Nascimento <span class="required">*</span></label>
-                                <input type="date" id="child-${i}-birthdate" name="child_${i}_birthdate" required min="${getMaxBirthdate(18)}" max="${getMaxBirthdate(0)}" />
+                                <label for="child-${i}-age">Idade <span class="required">*</span></label>
+                                <input type="number" id="child-${i}-age" name="child_${i}_age" required min="0" max="17" placeholder="${age}" />
                             </div>
                             <div class="bt-form-group">
                                 <label for="child-${i}-document">Documento (Passaporte/BI) <span class="required">*</span></label>
@@ -1104,15 +1104,18 @@
             const firstName = $section.find('input[name*="firstname"]').val()?.trim();
             const lastName = $section.find('input[name*="lastname"]:not([name*="lastname2"])').val()?.trim();
             const lastName2 = $section.find('input[name*="lastname2"]').val()?.trim();
-            const birthDate = $section.find('input[name*="birthdate"]').val();
+            const age = $section.find('input[name*="age"]').val();
             const document = $section.find('input[name*="document"]').val()?.trim();
             const email = $section.find('input[name*="email"]').val()?.trim();
             const phone = $section.find('input[name*="phone"]').val()?.trim();
 
-            // Validar campos obrigatórios (gender agora é obrigatório)
-            if (!gender || !firstName || !lastName || !birthDate || !document) {
+            // Validar campos obrigatórios
+            if (!gender || !firstName || !lastName || !age || !document) {
                 return false; // Inválido
             }
+
+            // Calcular data de nascimento a partir da idade
+            const birthDate = calculateBirthDateFromAge(parseInt(age));
 
             // Se tiver email, é o cliente principal (titular)
             if (email && phone && !clientData) {
@@ -1306,6 +1309,18 @@
         const date = new Date();
         date.setFullYear(date.getFullYear() - yearsAgo);
         return date.toISOString().split('T')[0];
+    }
+
+    /**
+     * Calcular data de nascimento a partir da idade
+     * Retorna no formato YYYY-MM-DD
+     */
+    function calculateBirthDateFromAge(age) {
+        const today = new Date();
+        const birthYear = today.getFullYear() - age;
+        // Usar 1 de janeiro do ano de nascimento como aproximação
+        const birthDate = new Date(birthYear, 0, 1);
+        return birthDate.toISOString().split('T')[0];
     }
 
     // ===========================
