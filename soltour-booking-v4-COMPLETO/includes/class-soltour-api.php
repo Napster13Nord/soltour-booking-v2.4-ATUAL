@@ -1673,7 +1673,7 @@ class Soltour_API {
      * Envia email interno para a agência com detalhes da cotação
      */
     public function send_agency_notification_email($data) {
-        $to = SOLTOUR_EMAIL_REPLY_TO; // Email da agência
+        $to = SOLTOUR_AGENCY_EMAIL; // Email de destino da agência
         $subject = 'Nova Cotação Recebida - ' . $data['viagem']['hotelName'] . ' (' . date('d/m/Y') . ')';
 
         // Extrair dados do budget_data_completo
@@ -2051,7 +2051,7 @@ class Soltour_API {
 
         // Determinar para quais emails foram enviados
         $email_sent_to = array();
-        $email_sent_to[] = SOLTOUR_EMAIL_REPLY_TO . ' (Agência)';
+        $email_sent_to[] = SOLTOUR_AGENCY_EMAIL . ' (Agência)';
         $email_sent_to[] = $client_email . ' (Cliente)';
 
         // Inserir no banco de dados
