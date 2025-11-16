@@ -1029,7 +1029,8 @@ class Soltour_API {
                 'noites' => intval($trip_data['noites']),
                 'quartos' => intval($trip_data['quartos']),
                 'regime' => sanitize_text_field($trip_data['regime']),
-                'precoTotal' => floatval($trip_data['precoTotal'])
+                'precoTotal' => floatval($trip_data['precoTotal']),
+                'roomName' => isset($trip_data['roomName']) ? sanitize_text_field($trip_data['roomName']) : 'Quarto'
             ),
             'passageiros' => array(),
             'observacoes' => $notes,
@@ -1956,12 +1957,15 @@ class Soltour_API {
                         🏨 <?php echo esc_html($data['viagem']['hotelName']); ?>
                     </h3>
                     <p style="line-height: 1.8;">
-                        📍 <?php echo esc_html($data['viagem']['destino']); ?><br>
-                        📅 <?php echo esc_html(date('d/m/Y', strtotime($data['viagem']['checkin']))); ?>
-                        a <?php echo esc_html(date('d/m/Y', strtotime($data['viagem']['checkout']))); ?><br>
-                        🌙 <?php echo esc_html($data['viagem']['noites']); ?> noite(s)<br>
-                        👥 <?php echo count($data['passageiros']); ?> passageiro(s)<br>
-                        🍽️ <?php echo esc_html($data['viagem']['regime']); ?>
+                        📍 <strong>Destino:</strong> <?php echo esc_html($data['viagem']['destino']); ?><br>
+                        📅 <strong>Check-in:</strong> <?php echo esc_html(date('d/m/Y', strtotime($data['viagem']['checkin']))); ?><br>
+                        📅 <strong>Check-out:</strong> <?php echo esc_html(date('d/m/Y', strtotime($data['viagem']['checkout']))); ?><br>
+                        🌙 <strong>Duração:</strong> <?php echo esc_html($data['viagem']['noites']); ?> noite(s)<br>
+                        🛏️ <strong>Tipo de Quarto:</strong> <?php echo esc_html($data['viagem']['roomName']); ?><br>
+                        🏠 <strong>Número de Quartos:</strong> <?php echo esc_html($data['viagem']['quartos']); ?><br>
+                        👥 <strong>Passageiros:</strong> <?php echo count($data['passageiros']); ?> pessoa(s)<br>
+                        🍽️ <strong>Regime:</strong> <?php echo esc_html($data['viagem']['regime']); ?><br>
+                        💰 <strong>Preço Total:</strong> €<?php echo number_format($data['viagem']['precoTotal'], 2, ',', '.'); ?>
                     </p>
                 </div>
 

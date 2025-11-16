@@ -1123,6 +1123,17 @@
         const packageData = BeautyTravelQuote.packageData;
         const budget = packageData.budget || {};
         const hotelService = budget.hotelServices?.[0];
+        const selectedRooms = packageData.selectedRooms || [];
+
+        // Obter nome do quarto (primeiro selecionado ou todos)
+        let roomName = 'Quarto';
+        if (selectedRooms.length > 0) {
+            if (selectedRooms.length === 1) {
+                roomName = selectedRooms[0].description || 'Quarto';
+            } else {
+                roomName = selectedRooms.map(r => r.description || 'Quarto').join(', ');
+            }
+        }
 
         const tripData = {
             hotelName: packageData.hotelInfo?.name || hotelService?.hotelName || 'Hotel',
@@ -1132,7 +1143,8 @@
             noites: getNumNights(budget),
             quartos: packageData.numRoomsSearched || 1,
             regime: getMealPlan(budget),
-            precoTotal: extractPrice(budget)
+            precoTotal: extractPrice(budget),
+            roomName: roomName
         };
 
         return {
