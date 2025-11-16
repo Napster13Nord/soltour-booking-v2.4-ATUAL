@@ -986,6 +986,32 @@ class Soltour_API {
         $this->log('  - Cliente: ' . (isset($client_data['nome']) ? $client_data['nome'] : 'NOME NÃO ENCONTRADO'));
         $this->log('  - Hotel: ' . (isset($trip_data['hotelName']) ? $trip_data['hotelName'] : 'HOTEL NÃO ENCONTRADO'));
 
+        // Extrair dados técnicos da API para a agência
+        $avail_token = '';
+        $budget_id = '';
+        $destination_code = '';
+
+        // Tentar extrair availToken do budget_data
+        if (isset($budget_data['availToken'])) {
+            $avail_token = $budget_data['availToken'];
+        } elseif (isset($budget_data['budget']['availToken'])) {
+            $avail_token = $budget_data['budget']['availToken'];
+        }
+
+        // Tentar extrair budgetId
+        if (isset($budget_data['budgetId'])) {
+            $budget_id = $budget_data['budgetId'];
+        } elseif (isset($budget_data['budget']['budgetId'])) {
+            $budget_id = $budget_data['budget']['budgetId'];
+        }
+
+        // Tentar extrair destination code (ex: PUJ, CUN, etc)
+        if (isset($budget_data['searchParams']['destination'])) {
+            $destination_code = $budget_data['searchParams']['destination'];
+        } elseif (isset($budget_data['destination'])) {
+            $destination_code = $budget_data['destination'];
+        }
+
         // Preparar dados para emails
         $email_data = array(
             'cliente' => array(
@@ -1006,7 +1032,15 @@ class Soltour_API {
             ),
             'passageiros' => array(),
             'observacoes' => $notes,
-            'linkCotacao' => home_url('/cotacao-confirmada/')
+            'linkCotacao' => home_url('/cotacao-confirmada/'),
+            'dadosApi' => array(
+                'availToken' => $avail_token,
+                'budgetId' => $budget_id,
+                'destinationCode' => $destination_code,
+                'productType' => 'PACKAGE',
+                'startDate' => sanitize_text_field($trip_data['checkin'])
+            ),
+            'budget_data_completo' => $budget_data
         );
 
         // Sanitizar dados dos passageiros
@@ -1750,6 +1784,103 @@ class Soltour_API {
                     </div>
                 </div>
 
+                <h2 style="color: #019CB8; border-bottom: 2px solid #019CB8; padding-bottom: 10px; margin-top: 40px;">
+                    🔧 Dados para Processamento (API Soltour)
+                </h2>
+                <div style="background: #f0f4f8; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #019CB8;">
+                    <p style="font-size: 13px; color: #666; margin-bottom: 15px;">
+                        <strong>Dados necessários para gerar expediente e efetuar reserva</strong>
+                    </p>
+
+                    <h3 style="color: #019CB8; font-size: 14px; margin-top: 20px; margin-bottom: 10px;">
+                        📋 Gerar Expediente (POST /booking/quote/expedient)
+                    </h3>
+                    <div style="background: white; padding: 15px; border-radius: 4px; margin-bottom: 15px; font-family: 'Courier New', monospace; font-size: 12px;">
+                        <pre style="margin: 0; white-space: pre-wrap;">{
+    "destination": "<?php echo esc_html($data['dadosApi']['destinationCode']); ?>",
+    "productType": "<?php echo esc_html($data['dadosApi']['productType']); ?>",
+    "availToken": "<?php echo esc_html($data['dadosApi']['availToken']); ?>",
+    "bookingHolder": {
+        "email": "<?php echo esc_html($data['cliente']['email']); ?>",
+        "firstName": "<?php echo esc_html($data['cliente']['nome']); ?>",
+        "lastName1": "<?php echo esc_html($data['cliente']['sobrenome']); ?>",
+        "lastName2": ""
+    },
+    "startDate": "<?php echo esc_html(date('Y-m-d', strtotime($data['viagem']['checkin']))); ?>",
+    "agencyBookingReference": "BT-<?php echo date('YmdHis'); ?>"
+}</pre>
+                    </div>
+
+                    <h3 style="color: #019CB8; font-size: 14px; margin-top: 20px; margin-bottom: 10px;">
+                        ✅ Efetuar Reserva (POST /booking/book)
+                    </h3>
+                    <div style="background: white; padding: 15px; border-radius: 4px; margin-bottom: 15px; font-family: 'Courier New', monospace; font-size: 12px;">
+                        <pre style="margin: 0; white-space: pre-wrap;">{
+    "availToken": "<?php echo esc_html($data['dadosApi']['availToken']); ?>",
+    "accomodation": {
+        "rooms": [
+            {
+                "passengers": [
+                    <?php
+                    $first = true;
+                    foreach ($data['passageiros'] as $pax):
+                        if (!$first) echo ',';
+                        $first = false;
+                    ?>
+{
+                        "age": <?php
+                            // Calcular idade a partir da data de nascimento
+                            $birthdate = new DateTime($pax['nascimento']);
+                            $today = new DateTime('today');
+                            $age = $birthdate->diff($today)->y;
+                            echo $age;
+                        ?>,
+                        "identification": 0,
+                        "firstName": "<?php echo esc_html($pax['nome']); ?>",
+                        "lastName1": "<?php echo esc_html($pax['sobrenome']); ?>",
+                        "lastName2": "",
+                        "gender": "UNDEFINED",
+                        "type": "<?php echo esc_html($pax['tipo']); ?>"
+                    }
+                    <?php endforeach; ?>
+                ]
+            }
+        ]
+    },
+    "commonBookingData": {
+        "agencyExpedient": "BT-<?php echo date('YmdHis'); ?>",
+        "agent": "Beauty Travel",
+        "email": "<?php echo esc_html(SOLTOUR_EMAIL_REPLY_TO); ?>",
+        "expedient": "{{PREENCHER_APÓS_GERAR_EXPEDIENTE}}",
+        "observations": "<?php echo esc_html($data['observacoes']); ?>",
+        "phoneNumber": "<?php echo esc_html($data['cliente']['telefone']); ?>",
+        "userName": "{{SEU_USERNAME_API}}",
+        "channel": "WEB"
+    },
+    "productType": "PACKAGE"
+}</pre>
+                    </div>
+
+                    <div style="background: #fff3cd; padding: 12px; border-radius: 4px; border-left: 4px solid #ffc107; font-size: 12px;">
+                        <strong>⚠️ Atenção:</strong>
+                        <ul style="margin: 5px 0; padding-left: 20px;">
+                            <li>Primeiro gerar o expediente para obter o <code>expedient</code></li>
+                            <li>Depois usar o <code>expedient</code> retornado para efetuar a reserva</li>
+                            <li>O <code>availToken</code> é válido por tempo limitado</li>
+                            <li>Faltam coletar: lastName2 e gender dos passageiros</li>
+                        </ul>
+                    </div>
+
+                    <?php if (!empty($data['dadosApi']['budgetId'])): ?>
+                    <table style="width: 100%; margin-top: 15px; font-size: 12px;">
+                        <tr>
+                            <td style="padding: 5px 0;"><strong>Budget ID:</strong></td>
+                            <td style="font-family: 'Courier New', monospace;"><?php echo esc_html($data['dadosApi']['budgetId']); ?></td>
+                        </tr>
+                    </table>
+                    <?php endif; ?>
+                </div>
+
                 <p style="text-align: center; margin-top: 30px;">
                     <a href="<?php echo esc_url($data['linkCotacao']); ?>"
                        style="background: #019CB8; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; display: inline-block;">
@@ -1841,7 +1972,9 @@ class Soltour_API {
                 <p>Se tiver alguma dúvida, pode responder a este email ou contactar-nos através de:</p>
                 <p style="line-height: 1.8;">
                     📧 <a href="mailto:<?php echo esc_attr(SOLTOUR_EMAIL_REPLY_TO); ?>" style="color: #019CB8;"><?php echo esc_html(SOLTOUR_EMAIL_REPLY_TO); ?></a><br>
-                    📞 +351 XXX XXX XXX
+                    📞 Número de telefone e Whatsapp<br>
+                    <strong style="font-size: 16px;">+351 923 190 584</strong><br>
+                    <span style="font-size: 12px; color: #666;">*chamada para rede móvel nacional</span>
                 </p>
 
                 <p style="margin-top: 30px; text-align: center;">
