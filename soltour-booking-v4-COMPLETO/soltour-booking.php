@@ -1,10 +1,10 @@
 <?php
 /**
- * Plugin Name: Soltour Booking V4
- * Plugin URI: https://beautytravel.pt
- * Description: Integração API Soltour V5 - 100% COMPLETA (14/14 funcionalidades implementadas) + Sistema de Email Configurável + Modo de Teste
- * Version: 4.2.7
- * Author: Beauty Travel
+ * Plugin Name: Soltour Booking
+ * Plugin URI: https://wpexperts.pt
+ * Description: Integração completa com API Soltour V5 para reservas de pacotes turísticos
+ * Version: 5.0.0
+ * Author: WPexperts.pt
  * License: GPL v2 or later
  * Text Domain: soltour-booking
  */
@@ -12,7 +12,7 @@
 if (!defined('ABSPATH')) exit;
 
 // Definições de constantes
-define('SOLTOUR_VERSION', '4.2.7');
+define('SOLTOUR_VERSION', '5.0.0');
 define('SOLTOUR_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('SOLTOUR_PLUGIN_URL', plugin_dir_url(__FILE__));
 
