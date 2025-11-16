@@ -1018,6 +1018,8 @@
         console.log('[SOLTOUR DEBUG] Gerando cotação com os seguintes dados:');
         console.log('[SOLTOUR DEBUG] Budget Data:', BeautyTravelQuote.budgetData);
         console.log('[SOLTOUR DEBUG] Passengers:', formData.passengers);
+        console.log('[SOLTOUR DEBUG] Client Data:', formData.clientData);
+        console.log('[SOLTOUR DEBUG] Trip Data:', formData.tripData);
         console.log('[SOLTOUR DEBUG] Rooms (searchParams):', BeautyTravelQuote.budgetData?.searchParams?.rooms);
 
         // Enviar para o servidor
@@ -1029,6 +1031,8 @@
                 nonce: soltourData.nonce,
                 budget_data: BeautyTravelQuote.budgetData,
                 passengers: formData.passengers,
+                client_data: formData.clientData,
+                trip_data: formData.tripData,
                 notes: formData.notes
             },
             success: function(response) {
@@ -1060,6 +1064,7 @@
      */
     function collectFormData() {
         const passengers = [];
+        let clientData = null;
 
         // Pegar todos os inputs do formulário
         $('.bt-form-section').each(function() {
@@ -1079,12 +1084,22 @@
                 return false; // Inválido
             }
 
+            // Se tiver email, é o cliente principal (titular)
+            if (email && phone && !clientData) {
+                clientData = {
+                    nome: firstName,
+                    sobrenome: lastName,
+                    email: email,
+                    telefone: phone
+                };
+            }
+
             passengers.push({
-                type: title.includes('Adulto') ? 'adult' : 'child',
-                firstName: firstName,
-                lastName: lastName,
-                birthDate: birthDate,
-                document: document,
+                tipo: title.includes('Adulto') ? 'ADULT' : 'CHILD',
+                nome: firstName,
+                sobrenome: lastName,
+                nascimento: birthDate,
+                documento: document,
                 email: email || null,
                 phone: phone || null,
                 isMainPassenger: email ? true : false
@@ -1092,12 +1107,35 @@
         });
 
         // Verificar se todos os passageiros foram preenchidos
-        if (passengers.length === 0 || passengers.some(p => !p.firstName)) {
+        if (passengers.length === 0 || passengers.some(p => !p.nome)) {
             return null;
         }
 
+        // Verificar se temos dados do cliente
+        if (!clientData) {
+            return null;
+        }
+
+        // Extrair trip_data do packageData
+        const packageData = BeautyTravelQuote.packageData;
+        const budget = packageData.budget || {};
+        const hotelService = budget.hotelServices?.[0];
+
+        const tripData = {
+            hotelName: packageData.hotelInfo?.name || hotelService?.hotelName || 'Hotel',
+            destino: packageData.hotelInfo?.destinationDescription || '',
+            checkin: hotelService?.checkIn || hotelService?.startDate || '',
+            checkout: hotelService?.checkOut || hotelService?.endDate || '',
+            noites: getNumNights(budget),
+            quartos: packageData.numRoomsSearched || 1,
+            regime: getMealPlan(budget),
+            precoTotal: extractPrice(budget)
+        };
+
         return {
             passengers: passengers,
+            clientData: clientData,
+            tripData: tripData,
             notes: $('#quote-notes').val()?.trim() || ''
         };
     }
