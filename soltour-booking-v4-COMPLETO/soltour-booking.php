@@ -3,7 +3,7 @@
  * Plugin Name: Soltour Booking V4
  * Plugin URI: https://beautytravel.pt
  * Description: Integração API Soltour V5 - 100% COMPLETA (14/14 funcionalidades implementadas) + Sistema de Email Configurável + Modo de Teste
- * Version: 4.2.1
+ * Version: 4.2.2
  * Author: Beauty Travel
  * License: GPL v2 or later
  * Text Domain: soltour-booking
@@ -12,7 +12,7 @@
 if (!defined('ABSPATH')) exit;
 
 // Definições de constantes
-define('SOLTOUR_VERSION', '4.2.1');
+define('SOLTOUR_VERSION', '4.2.2');
 define('SOLTOUR_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('SOLTOUR_PLUGIN_URL', plugin_dir_url(__FILE__));
 
@@ -94,11 +94,6 @@ class Soltour_Booking {
 
         // Registrar shortcodes
         add_action('init', array($this, 'register_shortcodes'));
-
-        // Configurar emails do plugin
-        add_filter('wp_mail_from', array($this, 'set_mail_from'));
-        add_filter('wp_mail_from_name', array($this, 'set_mail_from_name'));
-        add_filter('wp_mail_content_type', array($this, 'set_mail_content_type'));
 
         // AJAX endpoints para usuários logados e não logados
         $ajax_actions = array(
@@ -334,27 +329,6 @@ class Soltour_Booking {
         add_shortcode('soltour_quote', array($shortcodes, 'quote_page')); // Nova página de cotação
         add_shortcode('soltour_checkout', array($shortcodes, 'checkout_page'));
         add_shortcode('soltour_booking_confirmation', array($shortcodes, 'confirmation_page'));
-    }
-
-    /**
-     * Configurar email FROM
-     */
-    public function set_mail_from($original_email) {
-        return SOLTOUR_EMAIL_FROM;
-    }
-
-    /**
-     * Configurar nome do remetente
-     */
-    public function set_mail_from_name($original_name) {
-        return SOLTOUR_EMAIL_FROM_NAME;
-    }
-
-    /**
-     * Configurar tipo de conteúdo do email
-     */
-    public function set_mail_content_type($content_type) {
-        return 'text/html';
     }
 
     public function check_credentials_notice() {
