@@ -178,48 +178,48 @@
 }
 
 .soltour-btn-search {
-    width: 100%;
-    padding: 18px 40px;
-    background: linear-gradient(135deg, #019CB8 0%, #017a94 100%);
-    color: #ffffff;
-    border: none;
-    border-radius: 12px;
-    font-size: 18px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    box-shadow: 0 4px 20px rgba(1, 156, 184, 0.3);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    width: 100% !important;
+    padding: 18px 40px !important;
+    background: linear-gradient(135deg, #019CB8 0%, #017a94 100%) !important;
+    color: #ffffff !important;
+    border: none !important;
+    border-radius: 12px !important;
+    font-size: 18px !important;
+    font-weight: 700 !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 12px !important;
+    box-shadow: 0 4px 20px rgba(1, 156, 184, 0.3) !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
 }
 
 .soltour-btn-search:hover {
-    background: linear-gradient(135deg, #017a94 0%, #015a6e 100%);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 30px rgba(1, 156, 184, 0.4);
+    background: linear-gradient(135deg, #017a94 0%, #015a6e 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 30px rgba(1, 156, 184, 0.4) !important;
 }
 
 .soltour-btn-search:active {
-    transform: translateY(0);
-    box-shadow: 0 4px 15px rgba(1, 156, 184, 0.3);
+    transform: translateY(0) !important;
+    box-shadow: 0 4px 15px rgba(1, 156, 184, 0.3) !important;
 }
 
 .soltour-btn-search:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    transform: none;
+    opacity: 0.6 !important;
+    cursor: not-allowed !important;
+    transform: none !important;
 }
 
 .soltour-btn-search svg {
-    transition: transform 0.3s ease;
+    transition: transform 0.3s ease !important;
 }
 
 .soltour-btn-search:hover svg {
-    transform: scale(1.1);
+    transform: scale(1.1) !important;
 }
 
 /* ========================================
