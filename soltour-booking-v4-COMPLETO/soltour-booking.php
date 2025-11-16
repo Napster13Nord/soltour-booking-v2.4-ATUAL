@@ -84,8 +84,15 @@ class Soltour_Booking {
     private function load_dependencies() {
         require_once SOLTOUR_PLUGIN_DIR . 'includes/class-soltour-api.php';
         require_once SOLTOUR_PLUGIN_DIR . 'includes/class-soltour-shortcodes.php';
-        
+        require_once SOLTOUR_PLUGIN_DIR . 'includes/class-soltour-admin.php';
+
         $this->api_handler = new Soltour_API();
+
+        // Inicializar área administrativa
+        if (is_admin()) {
+            $admin = Soltour_Admin::get_instance();
+            $admin->set_api_handler($this->api_handler);
+        }
     }
 
     private function init_hooks() {
@@ -415,12 +422,34 @@ add_action('plugins_loaded', 'soltour_booking_init');
  */
 register_activation_hook(__FILE__, 'soltour_booking_activate');
 function soltour_booking_activate() {
-    // Criar tabela para armazenar sessões/tokens se necessário
+    global $wpdb;
+
+    $charset_collate = $wpdb->get_charset_collate();
+    $table_name = $wpdb->prefix . 'soltour_quotes';
+
+    // Criar tabela para armazenar cotações
+    $sql = "CREATE TABLE IF NOT EXISTS $table_name (
+        id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+        client_name varchar(255) NOT NULL,
+        client_email varchar(255) NOT NULL,
+        total_price decimal(10,2) NOT NULL,
+        quote_data longtext NOT NULL,
+        email_sent_to varchar(500) DEFAULT NULL,
+        created_at datetime DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY (id),
+        KEY client_email (client_email),
+        KEY created_at (created_at)
+    ) $charset_collate;";
+
+    require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+    dbDelta($sql);
+
     flush_rewrite_rules();
-    
+
     // Log de ativação
     if (defined('WP_DEBUG') && WP_DEBUG) {
-        error_log('Soltour Booking V2: Plugin ativado com sucesso');
+        error_log('Soltour Booking V4: Plugin ativado com sucesso');
+        error_log('Soltour Booking V4: Tabela de cotações criada: ' . $table_name);
     }
 }
 
