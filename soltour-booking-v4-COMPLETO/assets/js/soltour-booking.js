@@ -75,8 +75,9 @@
      * Mostra o modal de carregamento com mensagem personalizada
      * @param {string} title - Título do modal (opcional)
      * @param {string} message - Mensagem do modal (opcional)
+     * @param {boolean} rotateMessages - Se true, rotaciona mensagens de busca (padrão: false)
      */
-    function showLoadingModal(title, message) {
+    function showLoadingModal(title, message, rotateMessages) {
         const modal = $('#soltour-loading-modal');
 
         if (modal.length) {
@@ -94,13 +95,15 @@
             // Prevenir scroll do body
             $('body').css('overflow', 'hidden');
 
-            // Iniciar rotação de mensagens
-            startLoadingMessageRotation();
+            // Iniciar rotação de mensagens APENAS se solicitado
+            if (rotateMessages === true) {
+                startLoadingMessageRotation();
+            }
         }
     }
 
     /**
-     * Rotaciona as mensagens do modal de loading a cada 5 segundos
+     * Rotaciona as mensagens do modal de loading a cada 7 segundos
      */
     var loadingMessageInterval = null;
     function startLoadingMessageRotation() {
@@ -120,11 +123,11 @@
         // Definir primeira mensagem
         $('#loading-modal-title').text(messages[currentIndex]);
 
-        // Rotacionar a cada 5 segundos
+        // Rotacionar a cada 7 segundos
         loadingMessageInterval = setInterval(function() {
             currentIndex = (currentIndex + 1) % messages.length;
             $('#loading-modal-title').text(messages[currentIndex]);
-        }, 5000);
+        }, 7000);
     }
 
     /**
@@ -542,7 +545,8 @@
             // MOSTRAR MODAL IMEDIATAMENTE ao carregar página de resultados
             showLoadingModal(
                 'Buscando os melhores pacotes...',
-                'Encontraremos as melhores opções para sua viagem'
+                'Encontraremos as melhores opções para sua viagem',
+                true  // Ativar rotação de mensagens a cada 7 segundos
             );
 
             SoltourApp.searchParams = JSON.parse(savedParams);
