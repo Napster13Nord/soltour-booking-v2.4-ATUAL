@@ -244,8 +244,13 @@ class Soltour_Admin {
                                 <div class="soltour-quote-id">
                                     <strong>Cotação #<?php echo esc_html($quote->id); ?></strong>
                                     <span class="soltour-quote-date">
-                                        <?php echo esc_html(date_i18n('d/m/Y H:i', strtotime($quote->created_at))); ?>
+                                        📅 <?php echo esc_html(date_i18n('d/m/Y H:i', strtotime($quote->created_at))); ?>
                                     </span>
+                                    <?php if (!empty($quote_data['budget_id'])): ?>
+                                    <span class="soltour-quote-budget">
+                                        🔖 Budget: <?php echo esc_html($quote_data['budget_id']); ?>
+                                    </span>
+                                    <?php endif; ?>
                                 </div>
                                 <div class="soltour-quote-price">
                                     <?php echo esc_html(number_format($quote->total_price, 2, ',', '.')); ?> €
@@ -270,7 +275,8 @@ class Soltour_Admin {
                                         <?php echo esc_html($quote_data['client']['telefone'] ?? 'N/A'); ?>
                                     </div>
                                     <div class="soltour-quote-col">
-                                        <!-- Espaço vazio para manter o layout de 2 colunas -->
+                                        <strong>Data de Criação:</strong>
+                                        <?php echo esc_html(date_i18n('d/m/Y', strtotime($quote->created_at))); ?>
                                     </div>
                                 </div>
 
