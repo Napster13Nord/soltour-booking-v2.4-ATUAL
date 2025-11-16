@@ -99,6 +99,66 @@
             });
         });
 
+        /**
+         * Deletar Cotação
+         */
+        $(document).on('click', '.soltour-delete-quote', function(e) {
+            e.preventDefault();
+
+            var $button = $(this);
+            var quoteId = $button.data('quote-id');
+            var $card = $button.closest('.soltour-quote-card');
+
+            if (!confirm('Tem certeza que deseja deletar esta cotação? Esta ação não pode ser desfeita.')) {
+                return;
+            }
+
+            // Desabilitar botão e mostrar loading
+            $button.prop('disabled', true).text('Deletando...');
+
+            // Fazer requisição AJAX
+            $.ajax({
+                url: soltourAdmin.ajaxurl,
+                type: 'POST',
+                data: {
+                    action: 'soltour_delete_quote',
+                    nonce: soltourAdmin.nonce,
+                    quote_id: quoteId
+                },
+                success: function(response) {
+                    if (response.success) {
+                        // Animar remoção do card
+                        $card.fadeOut(300, function() {
+                            $(this).remove();
+
+                            // Verificar se ainda há cotações
+                            if ($('.soltour-quote-card').length === 0) {
+                                $('.soltour-quotes-list').html(
+                                    '<div class="notice notice-info"><p>Nenhuma cotação encontrada.</p></div>'
+                                );
+                            }
+                        });
+
+                        // Mostrar mensagem de sucesso (opcional)
+                        if (typeof window.wp !== 'undefined' && window.wp.data) {
+                            // WordPress 5.6+ com Gutenberg
+                            window.wp.data.dispatch('core/notices').createSuccessNotice(
+                                response.data.message,
+                                { type: 'snackbar' }
+                            );
+                        }
+                    } else {
+                        alert('Erro: ' + (response.data && response.data.message ? response.data.message : 'Erro ao deletar cotação.'));
+                        $button.prop('disabled', false).html('<span class="dashicons dashicons-trash"></span> Deletar Cotação');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    alert('Erro de comunicação ao deletar cotação: ' + error);
+                    $button.prop('disabled', false).html('<span class="dashicons dashicons-trash"></span> Deletar Cotação');
+                }
+            });
+        });
+
     });
 
 })(jQuery);
