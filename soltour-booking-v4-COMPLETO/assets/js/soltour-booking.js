@@ -2104,7 +2104,9 @@
                             ${availableRooms.map((room, index) => {
                                 const roomDescription = room.description || 'Quarto';
                                 const numRoomPassengers = room.passengers ? room.passengers.length : 0;
-                                const paxLabel = `${numRoomPassengers} passageiro${numRoomPassengers > 1 ? 's' : ''}`;
+                                // GARANTIR ESPAÇO ENTRE NÚMERO E PALAVRA
+                                const passageiroText = numRoomPassengers > 1 ? 'passageiros' : 'passageiro';
+                                const paxLabel = numRoomPassengers + ' ' + passageiroText;
                                 const roomCode = room.roomCode || '';
                                 const maxRooms = SoltourApp.numRoomsSearched || 1;
                                 // Pre-selecionar os N primeiros quartos automaticamente
