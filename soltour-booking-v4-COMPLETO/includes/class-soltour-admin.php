@@ -265,6 +265,16 @@ class Soltour_Admin {
 
                                 <div class="soltour-quote-row">
                                     <div class="soltour-quote-col">
+                                        <strong>Telefone:</strong>
+                                        <?php echo esc_html($quote_data['client']['telefone'] ?? 'N/A'); ?>
+                                    </div>
+                                    <div class="soltour-quote-col">
+                                        <!-- Espaço vazio para manter o layout de 2 colunas -->
+                                    </div>
+                                </div>
+
+                                <div class="soltour-quote-row">
+                                    <div class="soltour-quote-col">
                                         <strong>Destino:</strong>
                                         <?php echo esc_html($quote_data['destination_name'] ?? 'N/A'); ?>
                                     </div>
@@ -326,12 +336,6 @@ class Soltour_Admin {
                                         </div>
                                     </div>
                                 <?php endif; ?>
-                            </div>
-
-                            <div class="soltour-quote-footer">
-                                <button type="button" class="button soltour-view-details" data-quote-id="<?php echo esc_attr($quote->id); ?>">
-                                    Ver Detalhes Completos
-                                </button>
                             </div>
                         </div>
                     <?php endforeach; ?>

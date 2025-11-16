@@ -99,18 +99,6 @@
             });
         });
 
-        /**
-         * Ver Detalhes Completos da Cotação (placeholder)
-         */
-        $(document).on('click', '.soltour-view-details', function(e) {
-            e.preventDefault();
-
-            var quoteId = $(this).data('quote-id');
-
-            // TODO: Implementar modal com detalhes completos
-            alert('Visualização detalhada da cotação #' + quoteId + ' será implementada em breve.');
-        });
-
     });
 
 })(jQuery);
