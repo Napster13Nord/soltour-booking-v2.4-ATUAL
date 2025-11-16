@@ -2104,6 +2104,7 @@
                             ${availableRooms.map((room, index) => {
                                 const roomDescription = room.description || 'Quarto';
                                 const numRoomPassengers = room.passengers ? room.passengers.length : 0;
+                                const paxLabel = `${numRoomPassengers} passageiro${numRoomPassengers > 1 ? 's' : ''}`;
                                 const roomCode = room.roomCode || '';
                                 const maxRooms = SoltourApp.numRoomsSearched || 1;
                                 // Pre-selecionar os N primeiros quartos automaticamente
@@ -2128,7 +2129,7 @@
                                          onclick="SoltourApp.selectRoom('${budget.budgetId}', this)">
                                         <div class="room-info">
                                             <div class="room-name">${roomDescription}</div>
-                                            <div class="room-occupancy"><span>👥</span> <span>${numRoomPassengers} passageiro${numRoomPassengers !== 1 ? 's' : ''}</span></div>
+                                            <div class="room-occupancy"><span>👥</span> <span>${paxLabel}</span></div>
                                         </div>
                                     </div>
                                 `;
