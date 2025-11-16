@@ -367,77 +367,46 @@ class Soltour_Admin {
         }
 
         try {
-            // Tentar obter token de acesso
-            $token_url = SOLTOUR_API_BASE_URL . 'oauth/token';
+            // Limpar cache do token para forçar nova autenticação
+            delete_transient('soltour_session_token');
 
-            $response = wp_remote_post($token_url, array(
-                'timeout' => 30,
-                'headers' => array(
-                    'Content-Type' => 'application/x-www-form-urlencoded',
-                ),
-                'body' => array(
-                    'grant_type' => 'password',
-                    'username' => SOLTOUR_API_USERNAME,
-                    'password' => SOLTOUR_API_PASSWORD,
-                    'client_id' => SOLTOUR_API_CLIENT_ID,
-                    'client_secret' => SOLTOUR_API_CLIENT_SECRET,
-                )
-            ));
-
-            if (is_wp_error($response)) {
+            // Usar o mesmo método que o plugin usa para se conectar
+            if (!$this->api_handler) {
                 wp_send_json_error(array(
-                    'message' => 'Erro de conexão: ' . $response->get_error_message()
+                    'message' => 'API handler não está disponível.'
                 ));
+                return;
             }
 
-            $status_code = wp_remote_retrieve_response_code($response);
-            $body = json_decode(wp_remote_retrieve_body($response), true);
+            // Tentar buscar destinos (isso irá fazer login automaticamente)
+            $response = $this->api_handler->get_all_destinations();
 
-            if ($status_code === 200 && isset($body['access_token'])) {
-                // Testar uma chamada real à API (buscar destinos)
-                $destinations_url = SOLTOUR_API_BASE_URL . 'destinations';
+            if (isset($response['error'])) {
+                wp_send_json_error(array(
+                    'message' => 'Erro ao conectar com a API: ' . (isset($response['message']) ? $response['message'] : 'Erro desconhecido'),
+                    'details' => $response
+                ));
+                return;
+            }
 
-                $test_response = wp_remote_get($destinations_url, array(
-                    'timeout' => 30,
-                    'headers' => array(
-                        'Authorization' => 'Bearer ' . $body['access_token'],
+            if (isset($response['destinations']) && is_array($response['destinations'])) {
+                $destinations_count = count($response['destinations']);
+
+                wp_send_json_success(array(
+                    'message' => 'Conexão com a API Soltour estabelecida com sucesso!',
+                    'details' => array(
+                        'authentication' => 'Session Token obtido',
+                        'destinations_count' => $destinations_count,
+                        'api_version' => 'v5',
                         'brand' => SOLTOUR_API_BRAND,
                         'market' => SOLTOUR_API_MARKET,
-                        'lang' => SOLTOUR_API_LANG,
+                        'timestamp' => current_time('mysql')
                     )
                 ));
-
-                if (is_wp_error($test_response)) {
-                    wp_send_json_error(array(
-                        'message' => 'Autenticação OK, mas erro ao buscar destinos: ' . $test_response->get_error_message()
-                    ));
-                }
-
-                $test_status = wp_remote_retrieve_response_code($test_response);
-                $test_body = json_decode(wp_remote_retrieve_body($test_response), true);
-
-                if ($test_status === 200) {
-                    $destinations_count = isset($test_body['destination']) ? count($test_body['destination']) : 0;
-
-                    wp_send_json_success(array(
-                        'message' => 'Conexão com a API Soltour estabelecida com sucesso!',
-                        'details' => array(
-                            'token_obtained' => true,
-                            'destinations_count' => $destinations_count,
-                            'api_version' => 'v5',
-                            'timestamp' => current_time('mysql')
-                        )
-                    ));
-                } else {
-                    wp_send_json_error(array(
-                        'message' => 'Autenticação OK, mas erro ao buscar destinos. Status: ' . $test_status
-                    ));
-                }
             } else {
                 wp_send_json_error(array(
-                    'message' => 'Falha na autenticação. Verifique as credenciais.',
-                    'status_code' => $status_code,
-                    'response' => $body
+                    'message' => 'Resposta inesperada da API. Verifique os logs.',
+                    'response' => $response
                 ));
             }
 

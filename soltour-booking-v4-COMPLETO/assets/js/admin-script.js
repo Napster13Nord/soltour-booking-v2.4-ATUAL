@@ -39,11 +39,20 @@
                         var html = '<div class="soltour-test-result success">' +
                                    '<h3>✓ ' + response.data.message + '</h3>';
 
-                        if (details.destinations_count) {
+                        if (details.destinations_count !== undefined) {
                             html += '<ul>' +
+                                    '<li><strong>Autenticação:</strong> ' + (details.authentication || 'OK') + '</li>' +
                                     '<li><strong>Destinos disponíveis:</strong> ' + details.destinations_count + '</li>' +
-                                    '<li><strong>Versão da API:</strong> ' + details.api_version + '</li>' +
-                                    '<li><strong>Timestamp:</strong> ' + details.timestamp + '</li>' +
+                                    '<li><strong>Versão da API:</strong> ' + details.api_version + '</li>';
+
+                            if (details.brand) {
+                                html += '<li><strong>Brand:</strong> ' + details.brand + '</li>';
+                            }
+                            if (details.market) {
+                                html += '<li><strong>Market:</strong> ' + details.market + '</li>';
+                            }
+
+                            html += '<li><strong>Timestamp:</strong> ' + details.timestamp + '</li>' +
                                     '</ul>';
                         }
 
@@ -60,6 +69,15 @@
 
                         if (response.data && response.data.status_code) {
                             html += '<p><strong>Status Code:</strong> ' + response.data.status_code + '</p>';
+                        }
+
+                        if (response.data && response.data.details) {
+                            html += '<details style="margin-top: 10px;">' +
+                                    '<summary style="cursor: pointer; font-weight: bold;">Detalhes técnicos</summary>' +
+                                    '<pre style="background: #f5f5f5; padding: 10px; margin-top: 5px; overflow: auto;">' +
+                                    JSON.stringify(response.data.details, null, 2) +
+                                    '</pre>' +
+                                    '</details>';
                         }
 
                         html += '</div>';
