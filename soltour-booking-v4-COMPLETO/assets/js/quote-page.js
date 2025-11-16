@@ -54,7 +54,6 @@
             renderQuotePage();
 
         } catch (error) {
-            console.error('Erro ao carregar pacote:', error);
             renderError('Erro ao carregar pacote', 'Os dados do pacote selecionado estão corrompidos.');
         }
     }
@@ -75,69 +74,29 @@
         // ==============================================
         // DEBUG AVANÇADO - Requisição e Resposta da API
         // ==============================================
-        console.log('╔═══════════════════════════════════════════════════════════════════╗');
-        console.log('║           🔍 SOLTOUR - DEBUG AVANÇADO - PÁGINA DE COTAÇÃO         ║');
-        console.log('╚═══════════════════════════════════════════════════════════════════╝');
-        console.log('');
-        console.log('📦 DADOS COMPLETOS DO PACOTE:');
-        console.log(JSON.stringify(packageData, null, 2));
-        console.log('');
-        console.log('🏨 BUDGET COMPLETO (availability response):');
-        console.log(JSON.stringify(budget, null, 2));
-        console.log('');
-        console.log('🛏️ QUARTOS SELECIONADOS:');
-        console.log('  → Número de quartos pesquisados:', numRoomsSearched);
-        console.log('  → Quartos selecionados:', selectedRooms);
-        console.log('  → Total de quartos no array:', selectedRooms.length);
-        console.log('');
 
         // Debug de transfers
         const transferData = extractTransferData(budget);
-        console.log('🚗 TRANSFERS DETECTADOS:');
-        console.log('  → Tem transfers?', transferData.hasTransfers);
         if (transferData.hasTransfers) {
-            console.log('  → Serviços de transfer:', JSON.stringify(transferData.transferServices, null, 2));
         }
-        console.log('');
 
         // Debug de cancelamento
         const cancellationData = extractCancellationData(budget);
-        console.log('❌ GASTOS DE CANCELAMENTO:');
-        console.log('  → Total de períodos:', cancellationData?.charges?.length || 0);
-        console.log('  → Dados completos:', JSON.stringify(cancellationData?.charges || [], null, 2));
-        console.log('');
 
         // Debug de seguros (da resposta quote)
         const insuranceData = extractInsuranceData(packageData);
-        console.log('🛡️ SEGUROS DISPONÍVEIS (QUOTE):');
-        console.log('  → Tem seguros?', insuranceData?.hasInsurances || false);
         if (insuranceData?.hasInsurances && insuranceData?.insurances) {
-            console.log('  → Total de seguros:', insuranceData.insurances.length);
-            console.log('  → Seguros:', JSON.stringify(insuranceData.insurances, null, 2));
         }
-        console.log('');
 
         // Debug de extras (da resposta quote)
         const extrasData = extractExtrasData(packageData);
-        console.log('🎁 SERVIÇOS EXTRAS (QUOTE):');
-        console.log('  → Tem extras?', extrasData?.hasExtras || false);
         if (extrasData?.hasExtras && extrasData?.extras) {
-            console.log('  → Total de extras:', extrasData.extras.length);
-            console.log('  → Extras:', JSON.stringify(extrasData.extras, null, 2));
         }
-        console.log('');
 
         // Debug de textos legais (da resposta quote)
         const legalData = extractLegalData(packageData);
-        console.log('📋 INFORMAÇÕES LEGAIS (QUOTE):');
-        console.log('  → Tem informações legais?', legalData?.hasLegalInfo || false);
         if (legalData?.hasLegalInfo && legalData?.legalTexts) {
-            console.log('  → Total de textos:', legalData.legalTexts.length);
-            console.log('  → Textos legais:', JSON.stringify(legalData.legalTexts, null, 2));
         }
-        console.log('');
-        console.log('═══════════════════════════════════════════════════════════════════');
-        console.log('');
 
         // USAR APENAS DADOS DO AVAILABILITY (budget)
         // NÃO usar details.hotelDetails que vem de chamada separada
@@ -180,8 +139,6 @@
                     ? JSON.parse(packageData.searchParams.rooms)
                     : packageData.searchParams.rooms;
 
-                console.log('[SOLTOUR DEBUG] Página de cotação carregada');
-                console.log('[SOLTOUR DEBUG] Dados dos quartos:', JSON.stringify(rooms, null, 2));
 
                 // Coletar todos os passageiros de todos os quartos
                 rooms.forEach(room => {
@@ -195,9 +152,7 @@
                 });
 
                 passengerCount = allPassengers.length;
-                console.log('[SOLTOUR DEBUG] Total de passageiros:', passengerCount, '(Adultos:', adults, ', Crianças:', children, ')');
             } catch (e) {
-                console.error('Erro ao parsear rooms:', e);
             }
         }
 
@@ -962,8 +917,6 @@
         const budget = packageData.budget || {};
         let basePrice = extractPrice(budget);
 
-        console.log('[SOLTOUR] 💰 Recalculando preço total...');
-        console.log('[SOLTOUR] Preço base:', basePrice.toFixed(2) + '€');
 
         // Somar preços dos transfers marcados (excluindo os já incluídos)
         let transfersTotal = 0;
@@ -974,9 +927,7 @@
             if (!isIncluded) {
                 const transferPrice = parseFloat($(this).data('transfer-price')) || 0;
                 transfersTotal += transferPrice;
-                console.log('[SOLTOUR] + Transfer (adicional):', transferPrice.toFixed(2) + '€');
             } else {
-                console.log('[SOLTOUR] • Transfer incluído (já no preço base)');
             }
         });
 
@@ -989,9 +940,7 @@
             if (!isIncluded) {
                 const insurancePrice = parseFloat($(this).data('insurance-price')) || 0;
                 insurancesTotal += insurancePrice;
-                console.log('[SOLTOUR] + Seguro (adicional):', insurancePrice.toFixed(2) + '€');
             } else {
-                console.log('[SOLTOUR] • Seguro incluído (já no preço base)');
             }
         });
 
@@ -1004,17 +953,13 @@
             if (!isIncluded) {
                 const extraPrice = parseFloat($(this).data('extra-price')) || 0;
                 extrasTotal += extraPrice;
-                console.log('[SOLTOUR] + Extra (adicional):', extraPrice.toFixed(2) + '€');
             } else {
-                console.log('[SOLTOUR] • Extra incluído (já no preço base)');
             }
         });
 
         // Calcular novo total
         const newTotal = basePrice + transfersTotal + insurancesTotal + extrasTotal;
 
-        console.log('[SOLTOUR] = Total final:', newTotal.toFixed(2) + '€');
-        console.log('');
 
         // Atualizar display do preço
         $('.bt-price-total-amount').text(newTotal.toFixed(0) + '€');
@@ -1030,7 +975,6 @@
      */
     function generateFinalQuote() {
 
-        console.log('[SOLTOUR] ========== INICIANDO GERAÇÃO DE COTAÇÃO ==========');
 
         // Primeiro validar HTML5 (campos required)
         const $forms = $('.bt-form-section input[required], .bt-form-section select[required]');
@@ -1040,7 +984,6 @@
             if (!this.value || this.value.trim() === '') {
                 hasEmptyFields = true;
                 $(this).addClass('error-field');
-                console.error('[SOLTOUR] Campo vazio:', this.name, this.id);
             } else {
                 $(this).removeClass('error-field');
             }
@@ -1064,12 +1007,6 @@
         $btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Gerando cotação...');
 
         // Log de debug para verificar dados enviados
-        console.log('[SOLTOUR DEBUG] Gerando cotação com os seguintes dados:');
-        console.log('[SOLTOUR DEBUG] Budget Data:', BeautyTravelQuote.budgetData);
-        console.log('[SOLTOUR DEBUG] Passengers:', formData.passengers);
-        console.log('[SOLTOUR DEBUG] Client Data:', formData.clientData);
-        console.log('[SOLTOUR DEBUG] Trip Data:', formData.tripData);
-        console.log('[SOLTOUR DEBUG] Rooms (searchParams):', BeautyTravelQuote.budgetData?.searchParams?.rooms);
 
         // Enviar para o servidor
         $.ajax({
@@ -1134,12 +1071,6 @@
             // Validar campos obrigatórios
             if (!gender || !firstName || !lastName || !age || !document) {
                 hasErrors = true;
-                console.error('[SOLTOUR] Campos obrigatórios faltando para:', title);
-                console.error('[SOLTOUR] - Gender:', gender);
-                console.error('[SOLTOUR] - FirstName:', firstName);
-                console.error('[SOLTOUR] - LastName:', lastName);
-                console.error('[SOLTOUR] - Age:', age);
-                console.error('[SOLTOUR] - Document:', document);
                 return; // Continua iteração mas marca erro
             }
 
@@ -1170,32 +1101,23 @@
                 isMainPassenger: email ? true : false
             });
 
-            console.log('[SOLTOUR] Passageiro adicionado:', {
-                tipo: title.includes('Adulto') ? 'ADULT' : 'CHILD',
-                nome: firstName,
-                sobrenome: lastName
-            });
         });
 
         // Verificar se houve erros
         if (hasErrors) {
-            console.error('[SOLTOUR] Validação falhou: campos obrigatórios faltando');
             return null;
         }
 
         // Verificar se todos os passageiros foram preenchidos
         if (passengers.length === 0) {
-            console.error('[SOLTOUR] Nenhum passageiro foi coletado');
             return null;
         }
 
         // Verificar se temos dados do cliente
         if (!clientData) {
-            console.error('[SOLTOUR] Dados do cliente não encontrados');
             return null;
         }
 
-        console.log('[SOLTOUR] Total de passageiros coletados:', passengers.length);
 
         // Extrair trip_data do packageData
         const packageData = BeautyTravelQuote.packageData;
