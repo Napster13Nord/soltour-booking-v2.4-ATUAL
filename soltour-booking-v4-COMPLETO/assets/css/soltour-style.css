@@ -247,6 +247,26 @@
     color: #333;
 }
 
+/* Botões no Elementor */
+.elementor-widget-container .soltour-btn,
+.elementor-section .soltour-btn,
+.elementor-column .soltour-btn,
+.elementor-element .soltour-btn,
+.elementor .soltour-btn,
+body.elementor-page .soltour-btn,
+body .elementor .soltour-btn {
+    padding: 20px 35px !important;
+    border-radius: 100px !important;
+    background: #019CB8 !important;
+    background-color: #019CB8 !important;
+    color: #fff !important;
+    border: none !important;
+    border-width: 0 !important;
+    box-sizing: border-box !important;
+    white-space: normal;
+    display: flex;
+}
+
 .soltour-btn-secondary:hover {
     background: #e0e0e0;
 }
@@ -454,13 +474,13 @@
     border-radius: 50%;
     cursor: pointer;
     font-size: 20px;
-    color: #019CB8;
+    color: #fff;
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 10;
     transition: all 0.3s ease;
-    opacity: 0;
+    opacity: 1;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
