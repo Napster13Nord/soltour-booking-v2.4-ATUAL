@@ -830,44 +830,63 @@
     };
 
     // ===================================
-    // SUPORTE TOUCH/SWIPE PARA MOBILE
+    // SUPORTE TOUCH/SWIPE PARA MOBILE - MELHORADO
     // ===================================
 
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchEndX = 0;
+    let touchEndY = 0;
+    let activeCarousel = null;
+
+    // Detectar início do toque
     $(document).on('touchstart', '.package-image-carousel', function(e) {
-        const carousel = this;
-        carousel.touchStartX = e.touches[0].clientX;
-        carousel.touchStartY = e.touches[0].clientY;
+        activeCarousel = this;
+        const touch = e.touches[0] || e.changedTouches[0];
+        touchStartX = touch.clientX;
+        touchStartY = touch.clientY;
+
+        console.log('Touch Start:', touchStartX, touchStartY);
     });
 
+    // Detectar movimento do toque
     $(document).on('touchmove', '.package-image-carousel', function(e) {
-        if (!this.touchStartX || !this.touchStartY) return;
+        if (!activeCarousel) return;
 
-        const carousel = this;
-        const touchEndX = e.touches[0].clientX;
-        const touchEndY = e.touches[0].clientY;
+        const touch = e.touches[0] || e.changedTouches[0];
+        touchEndX = touch.clientX;
+        touchEndY = touch.clientY;
 
-        const diffX = carousel.touchStartX - touchEndX;
-        const diffY = carousel.touchStartY - touchEndY;
+        const diffX = touchStartX - touchEndX;
+        const diffY = touchStartY - touchEndY;
 
-        // Apenas swipe horizontal (ignorar vertical)
-        if (Math.abs(diffX) > Math.abs(diffY)) {
+        // Se está fazendo swipe horizontal, prevenir scroll
+        if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 10) {
             e.preventDefault();
         }
     });
 
+    // Detectar fim do toque e executar swipe
     $(document).on('touchend', '.package-image-carousel', function(e) {
-        if (!this.touchStartX || !this.touchStartY) return;
+        if (!activeCarousel) return;
 
-        const carousel = this;
-        const touchEndX = e.changedTouches[0].clientX;
-        const touchEndY = e.changedTouches[0].clientY;
+        const touch = e.changedTouches[0];
+        touchEndX = touch.clientX;
+        touchEndY = touch.clientY;
 
-        const diffX = carousel.touchStartX - touchEndX;
-        const diffY = carousel.touchStartY - touchEndY;
+        const diffX = touchStartX - touchEndX;
+        const diffY = touchStartY - touchEndY;
 
-        // Swipe horizontal com threshold mínimo de 50px
-        if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
-            const carouselId = carousel.id;
+        console.log('Touch End - diffX:', diffX, 'diffY:', diffY);
+
+        // Threshold menor para facilitar o swipe
+        const threshold = 30;
+
+        // Verificar se foi um swipe horizontal significativo
+        if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > threshold) {
+            const carouselId = activeCarousel.id;
+            console.log('Swipe detectado! Carousel:', carouselId, 'Direction:', diffX > 0 ? 'left' : 'right');
+
             if (diffX > 0) {
                 // Swipe left - próxima imagem
                 SoltourApp.changeSlide(carouselId, 1);
@@ -878,8 +897,20 @@
         }
 
         // Limpar valores
-        carousel.touchStartX = null;
-        carousel.touchStartY = null;
+        touchStartX = 0;
+        touchStartY = 0;
+        touchEndX = 0;
+        touchEndY = 0;
+        activeCarousel = null;
+    });
+
+    // Prevenir comportamento padrão em alguns casos
+    $(document).on('touchcancel', '.package-image-carousel', function(e) {
+        touchStartX = 0;
+        touchStartY = 0;
+        touchEndX = 0;
+        touchEndY = 0;
+        activeCarousel = null;
     });
 
 })(jQuery);
