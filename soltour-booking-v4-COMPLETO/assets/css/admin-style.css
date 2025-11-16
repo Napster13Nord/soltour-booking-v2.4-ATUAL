@@ -247,6 +247,26 @@
     text-align: right;
 }
 
+.soltour-delete-quote {
+    color: #b32d2e;
+    border-color: #b32d2e;
+}
+
+.soltour-delete-quote:hover {
+    background: #b32d2e;
+    color: #fff;
+    border-color: #b32d2e;
+}
+
+.soltour-delete-quote .dashicons {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    vertical-align: middle;
+    margin-right: 5px;
+    margin-top: -2px;
+}
+
 /* Paginação */
 .soltour-pagination {
     margin-top: 30px;

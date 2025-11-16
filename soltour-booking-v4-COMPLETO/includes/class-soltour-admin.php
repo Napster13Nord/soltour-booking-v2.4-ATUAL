@@ -22,6 +22,7 @@ class Soltour_Admin {
         add_action('admin_menu', array($this, 'register_admin_menu'));
         add_action('admin_enqueue_scripts', array($this, 'enqueue_admin_assets'));
         add_action('wp_ajax_soltour_test_connection', array($this, 'ajax_test_connection'));
+        add_action('wp_ajax_soltour_delete_quote', array($this, 'ajax_delete_quote'));
     }
 
     public function set_api_handler($api_handler) {
@@ -337,6 +338,13 @@ class Soltour_Admin {
                                     </div>
                                 <?php endif; ?>
                             </div>
+
+                            <div class="soltour-quote-footer">
+                                <button type="button" class="button button-secondary soltour-delete-quote" data-quote-id="<?php echo esc_attr($quote->id); ?>">
+                                    <span class="dashicons dashicons-trash"></span>
+                                    Deletar Cotação
+                                </button>
+                            </div>
                         </div>
                     <?php endforeach; ?>
                 </div>
@@ -418,6 +426,38 @@ class Soltour_Admin {
             wp_send_json_error(array(
                 'message' => 'Erro inesperado: ' . $e->getMessage()
             ));
+        }
+    }
+
+    /**
+     * AJAX: Deletar cotação
+     */
+    public function ajax_delete_quote() {
+        check_ajax_referer('soltour_admin_nonce', 'nonce');
+
+        if (!current_user_can('manage_options')) {
+            wp_send_json_error(array('message' => 'Permissão negada.'));
+        }
+
+        $quote_id = isset($_POST['quote_id']) ? intval($_POST['quote_id']) : 0;
+
+        if (!$quote_id) {
+            wp_send_json_error(array('message' => 'ID da cotação inválido.'));
+        }
+
+        global $wpdb;
+        $table_name = $wpdb->prefix . 'soltour_quotes';
+
+        $deleted = $wpdb->delete(
+            $table_name,
+            array('id' => $quote_id),
+            array('%d')
+        );
+
+        if ($deleted) {
+            wp_send_json_success(array('message' => 'Cotação deletada com sucesso!'));
+        } else {
+            wp_send_json_error(array('message' => 'Erro ao deletar cotação.'));
         }
     }
 }

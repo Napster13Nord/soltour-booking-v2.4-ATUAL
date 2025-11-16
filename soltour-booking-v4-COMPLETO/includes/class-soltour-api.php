@@ -1673,17 +1673,8 @@ class Soltour_API {
      * Envia email interno para a agência com detalhes da cotação
      */
     public function send_agency_notification_email($data) {
-        $to_original = SOLTOUR_EMAIL_REPLY_TO; // Email da agência (reservas@beautytravel.pt)
+        $to = SOLTOUR_EMAIL_REPLY_TO; // Email da agência
         $subject = 'Nova Cotação Recebida - ' . $data['viagem']['hotelName'] . ' (' . date('d/m/Y') . ')';
-
-        // Modo de teste: redirecionar email e adicionar prefixo
-        if (defined('SOLTOUR_TEST_MODE') && SOLTOUR_TEST_MODE === true) {
-            $to = SOLTOUR_TEST_EMAIL;
-            $subject = '[TESTE - AGÊNCIA → ' . $to_original . '] ' . $subject;
-            $this->log('MODO TESTE ATIVADO: Email redirecionado de ' . $to_original . ' para ' . $to);
-        } else {
-            $to = $to_original;
-        }
 
         // Extrair dados do budget_data_completo
         $budget = isset($data['budget_data_completo']) ? $data['budget_data_completo'] : array();
@@ -1698,15 +1689,6 @@ class Soltour_API {
         ob_start();
         ?>
         <div style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; background: #f5f5f5; padding: 20px;">
-            <?php if (defined('SOLTOUR_TEST_MODE') && SOLTOUR_TEST_MODE === true): ?>
-            <div style="background: #ff6b6b; color: white; padding: 20px; text-align: center; margin-bottom: 10px; border-radius: 8px;">
-                <h2 style="margin: 0; font-size: 18px;">⚠️ MODO DE TESTE ATIVADO ⚠️</h2>
-                <p style="margin: 5px 0 0 0; font-size: 14px;">
-                    Este email seria enviado para: <strong><?php echo esc_html($to_original); ?></strong><br>
-                    Redirecionado para: <strong><?php echo esc_html(SOLTOUR_TEST_EMAIL); ?></strong>
-                </p>
-            </div>
-            <?php endif; ?>
             <div style="background: linear-gradient(135deg, #019CB8 0%, #0176a8 100%); color: white; padding: 30px; text-align: center;">
                 <h1 style="margin: 0;">Nova Cotação - Beauty Travel</h1>
                 <p style="margin: 10px 0 0 0; opacity: 0.9;">Sistema de Gestão de Reservas</p>
@@ -1953,30 +1935,12 @@ class Soltour_API {
      * Envia email de confirmação para o cliente
      */
     public function send_client_confirmation_email($data) {
-        $to_original = $data['cliente']['email'];
+        $to = $data['cliente']['email'];
         $subject = 'Recebemos a sua cotação – Beauty Travel';
-
-        // Modo de teste: redirecionar email e adicionar prefixo
-        if (defined('SOLTOUR_TEST_MODE') && SOLTOUR_TEST_MODE === true) {
-            $to = SOLTOUR_TEST_EMAIL;
-            $subject = '[TESTE - CLIENTE → ' . $to_original . '] ' . $subject;
-            $this->log('MODO TESTE ATIVADO: Email redirecionado de ' . $to_original . ' para ' . $to);
-        } else {
-            $to = $to_original;
-        }
 
         ob_start();
         ?>
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-            <?php if (defined('SOLTOUR_TEST_MODE') && SOLTOUR_TEST_MODE === true): ?>
-            <div style="background: #ff6b6b; color: white; padding: 20px; text-align: center; margin-bottom: 10px; border-radius: 8px;">
-                <h2 style="margin: 0; font-size: 18px;">⚠️ MODO DE TESTE ATIVADO ⚠️</h2>
-                <p style="margin: 5px 0 0 0; font-size: 14px;">
-                    Este email seria enviado para: <strong><?php echo esc_html($to_original); ?></strong><br>
-                    Redirecionado para: <strong><?php echo esc_html(SOLTOUR_TEST_EMAIL); ?></strong>
-                </p>
-            </div>
-            <?php endif; ?>
             <div style="background: linear-gradient(135deg, #019CB8 0%, #0176a8 100%); color: white; padding: 30px; text-align: center;">
                 <h1 style="margin: 0;">Beauty Travel</h1>
                 <p style="margin: 10px 0 0 0; opacity: 0.9;">A sua agência de viagens de confiança</p>
@@ -2087,12 +2051,8 @@ class Soltour_API {
 
         // Determinar para quais emails foram enviados
         $email_sent_to = array();
-        if (defined('SOLTOUR_TEST_MODE') && SOLTOUR_TEST_MODE === true) {
-            $email_sent_to[] = SOLTOUR_TEST_EMAIL . ' (TESTE)';
-        } else {
-            $email_sent_to[] = SOLTOUR_EMAIL_REPLY_TO . ' (Agência)';
-            $email_sent_to[] = $client_email . ' (Cliente)';
-        }
+        $email_sent_to[] = SOLTOUR_EMAIL_REPLY_TO . ' (Agência)';
+        $email_sent_to[] = $client_email . ' (Cliente)';
 
         // Inserir no banco de dados
         $inserted = $wpdb->insert(
