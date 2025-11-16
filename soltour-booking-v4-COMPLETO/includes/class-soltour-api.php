@@ -1091,6 +1091,9 @@ class Soltour_API {
             return;
         }
 
+        // Salvar cotação no banco de dados para consulta no admin
+        $this->save_quote_to_database($email_data, $quote_id);
+
         // Retornar sucesso
         $this->log('Cotação finalizada com sucesso: ' . $quote_id);
 
@@ -1999,5 +2002,78 @@ class Soltour_API {
         );
 
         return wp_mail($to, $subject, $body, $headers);
+    }
+
+    /**
+     * Salva cotação no banco de dados para consulta no admin
+     */
+    private function save_quote_to_database($email_data, $quote_id) {
+        global $wpdb;
+
+        $table_name = $wpdb->prefix . 'soltour_quotes';
+
+        // Preparar dados para salvar
+        $client_name = $email_data['cliente']['nome'] . ' ' . $email_data['cliente']['sobrenome'];
+        $client_email = $email_data['cliente']['email'];
+        $total_price = $email_data['viagem']['precoTotal'];
+
+        // Preparar dados completos da cotação para armazenar em JSON
+        $quote_data = array(
+            'destination_name' => $email_data['viagem']['destino'],
+            'hotel_name' => $email_data['viagem']['hotelName'],
+            'checkin' => $email_data['viagem']['checkin'],
+            'checkout' => $email_data['viagem']['checkout'],
+            'nights' => $email_data['viagem']['noites'],
+            'rooms' => $email_data['viagem']['quartos'],
+            'board_name' => $email_data['viagem']['regime'],
+            'room_name' => isset($email_data['viagem']['roomName']) ? $email_data['viagem']['roomName'] : 'N/A',
+            'adults' => 0,
+            'children' => 0,
+            'passengers' => $email_data['passageiros'],
+            'client' => $email_data['cliente'],
+            'observations' => isset($email_data['observacoes']) ? $email_data['observacoes'] : '',
+            'expedient' => isset($email_data['dadosApi']['expedient']) ? $email_data['dadosApi']['expedient'] : '',
+            'avail_token' => $email_data['dadosApi']['availToken'],
+            'budget_id' => $email_data['dadosApi']['budgetId'],
+            'quote_id' => $quote_id
+        );
+
+        // Contar adultos e crianças
+        foreach ($email_data['passageiros'] as $pax) {
+            if (strtoupper($pax['tipo']) === 'ADULT') {
+                $quote_data['adults']++;
+            } elseif (strtoupper($pax['tipo']) === 'CHILD') {
+                $quote_data['children']++;
+            }
+        }
+
+        // Determinar para quais emails foram enviados
+        $email_sent_to = array();
+        if (defined('SOLTOUR_TEST_MODE') && SOLTOUR_TEST_MODE === true) {
+            $email_sent_to[] = SOLTOUR_TEST_EMAIL . ' (TESTE)';
+        } else {
+            $email_sent_to[] = SOLTOUR_EMAIL_REPLY_TO . ' (Agência)';
+            $email_sent_to[] = $client_email . ' (Cliente)';
+        }
+
+        // Inserir no banco de dados
+        $inserted = $wpdb->insert(
+            $table_name,
+            array(
+                'client_name' => $client_name,
+                'client_email' => $client_email,
+                'total_price' => $total_price,
+                'quote_data' => json_encode($quote_data, JSON_UNESCAPED_UNICODE),
+                'email_sent_to' => implode(', ', $email_sent_to),
+                'created_at' => current_time('mysql')
+            ),
+            array('%s', '%s', '%f', '%s', '%s', '%s')
+        );
+
+        if ($inserted) {
+            $this->log('Cotação salva no banco de dados com ID: ' . $wpdb->insert_id);
+        } else {
+            $this->log('Erro ao salvar cotação no banco de dados: ' . $wpdb->last_error, 'error');
+        }
     }
 }
