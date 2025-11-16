@@ -1685,6 +1685,16 @@ class Soltour_API {
             $to = $to_original;
         }
 
+        // Extrair dados do budget_data_completo
+        $budget = isset($data['budget_data_completo']) ? $data['budget_data_completo'] : array();
+        $accommodation = isset($budget['accommodation']) ? $budget['accommodation'][0] : array();
+        $flights = isset($budget['flights']) ? $budget['flights'] : array();
+        $priceInfo = isset($budget['priceInfo']) ? $budget['priceInfo'] : array();
+
+        // Extrair informações de voos
+        $outbound_flight = isset($flights['outboundFlight']) ? $flights['outboundFlight'] : null;
+        $inbound_flight = isset($flights['inboundFlight']) ? $flights['inboundFlight'] : null;
+
         ob_start();
         ?>
         <div style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; background: #f5f5f5; padding: 20px;">
@@ -1703,72 +1713,207 @@ class Soltour_API {
             </div>
 
             <div style="padding: 30px; background: white; margin-top: 2px;">
+                <!-- 1. IDENTIFICAÇÃO DO PRODUTO -->
                 <h2 style="color: #019CB8; border-bottom: 2px solid #019CB8; padding-bottom: 10px;">
-                    📋 Dados do Cliente
+                    🔖 1. Identificação do Produto
                 </h2>
-                <table style="width: 100%; margin: 20px 0;">
-                    <tr>
-                        <td style="padding: 8px 0;"><strong>Nome:</strong></td>
-                        <td><?php echo esc_html($data['cliente']['nome'] . ' ' . $data['cliente']['sobrenome']); ?></td>
+                <table style="width: 100%; margin: 20px 0; border-collapse: collapse;">
+                    <tr style="background: #f9fafb;">
+                        <td style="padding: 8px; border: 1px solid #ddd;"><strong>Budget ID:</strong></td>
+                        <td style="padding: 8px; border: 1px solid #ddd; font-family: monospace;"><?php echo esc_html($data['dadosApi']['budgetId'] ?? 'N/A'); ?></td>
                     </tr>
                     <tr>
-                        <td style="padding: 8px 0;"><strong>Email:</strong></td>
-                        <td><a href="mailto:<?php echo esc_attr($data['cliente']['email']); ?>"><?php echo esc_html($data['cliente']['email']); ?></a></td>
+                        <td style="padding: 8px; border: 1px solid #ddd;"><strong>Quote Token:</strong></td>
+                        <td style="padding: 8px; border: 1px solid #ddd; font-family: monospace; word-break: break-all;"><?php echo esc_html(isset($budget['quoteToken']) ? $budget['quoteToken'] : 'N/A'); ?></td>
+                    </tr>
+                    <tr style="background: #f9fafb;">
+                        <td style="padding: 8px; border: 1px solid #ddd;"><strong>Avail Token:</strong></td>
+                        <td style="padding: 8px; border: 1px solid #ddd; font-family: monospace; word-break: break-all;"><?php echo esc_html($data['dadosApi']['availToken'] ?? 'N/A'); ?></td>
                     </tr>
                     <tr>
-                        <td style="padding: 8px 0;"><strong>Telefone:</strong></td>
-                        <td><?php echo esc_html($data['cliente']['telefone']); ?></td>
+                        <td style="padding: 8px; border: 1px solid #ddd;"><strong>Product Type:</strong></td>
+                        <td style="padding: 8px; border: 1px solid #ddd;"><?php echo esc_html($data['dadosApi']['productType'] ?? 'PACKAGE'); ?></td>
+                    </tr>
+                    <tr style="background: #f9fafb;">
+                        <td style="padding: 8px; border: 1px solid #ddd;"><strong>Market:</strong></td>
+                        <td style="padding: 8px; border: 1px solid #ddd;"><?php echo esc_html(SOLTOUR_API_MARKET); ?></td>
                     </tr>
                 </table>
 
+                <!-- 2. DADOS DA ESTADIA -->
                 <h2 style="color: #019CB8; border-bottom: 2px solid #019CB8; padding-bottom: 10px; margin-top: 40px;">
-                    ✈️ Detalhes da Viagem
+                    🏨 2. Dados da Estadia
                 </h2>
-                <div style="background: #f9fafb; padding: 20px; border-radius: 8px; margin: 20px 0;">
-                    <h3 style="color: #019CB8; margin-top: 0;">
-                        🏨 <?php echo esc_html($data['viagem']['hotelName']); ?>
-                    </h3>
+                <table style="width: 100%; margin: 20px 0; border-collapse: collapse;">
+                    <tr style="background: #f9fafb;">
+                        <td style="padding: 8px; border: 1px solid #ddd;"><strong>Hotel:</strong></td>
+                        <td style="padding: 8px; border: 1px solid #ddd;"><?php echo esc_html($data['viagem']['hotelName']); ?></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px; border: 1px solid #ddd;"><strong>Código Hotel:</strong></td>
+                        <td style="padding: 8px; border: 1px solid #ddd; font-family: monospace;"><?php echo esc_html(isset($accommodation['hotelCode']) ? $accommodation['hotelCode'] : 'N/A'); ?></td>
+                    </tr>
+                    <tr style="background: #f9fafb;">
+                        <td style="padding: 8px; border: 1px solid #ddd;"><strong>Quarto:</strong></td>
+                        <td style="padding: 8px; border: 1px solid #ddd;"><?php echo esc_html(isset($accommodation['roomName']) ? $accommodation['roomName'] : $data['viagem']['quartos']); ?></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px; border: 1px solid #ddd;"><strong>Regime:</strong></td>
+                        <td style="padding: 8px; border: 1px solid #ddd;"><?php echo esc_html($data['viagem']['regime']); ?></td>
+                    </tr>
+                    <tr style="background: #f9fafb;">
+                        <td style="padding: 8px; border: 1px solid #ddd;"><strong>Check-in:</strong></td>
+                        <td style="padding: 8px; border: 1px solid #ddd;"><?php echo esc_html(date('d/m/Y', strtotime($data['viagem']['checkin']))); ?></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px; border: 1px solid #ddd;"><strong>Check-out:</strong></td>
+                        <td style="padding: 8px; border: 1px solid #ddd;"><?php echo esc_html(date('d/m/Y', strtotime($data['viagem']['checkout']))); ?></td>
+                    </tr>
+                    <tr style="background: #f9fafb;">
+                        <td style="padding: 8px; border: 1px solid #ddd;"><strong>Noites:</strong></td>
+                        <td style="padding: 8px; border: 1px solid #ddd;"><?php echo esc_html($data['viagem']['noites']); ?></td>
+                    </tr>
+                </table>
+
+                <!-- 3. VOOS -->
+                <h2 style="color: #019CB8; border-bottom: 2px solid #019CB8; padding-bottom: 10px; margin-top: 40px;">
+                    ✈️ 3. Informações de Voos
+                </h2>
+
+                <?php if ($outbound_flight): ?>
+                <h3 style="color: #555; margin-top: 20px;">🛫 Voo de Ida</h3>
+                <table style="width: 100%; margin: 10px 0; border-collapse: collapse;">
+                    <tr style="background: #f9fafb;">
+                        <td style="padding: 8px; border: 1px solid #ddd;"><strong>Número do Voo:</strong></td>
+                        <td style="padding: 8px; border: 1px solid #ddd; font-family: monospace;"><?php echo esc_html(isset($outbound_flight['flightNumber']) ? $outbound_flight['flightNumber'] : 'N/A'); ?></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px; border: 1px solid #ddd;"><strong>Data/Hora Saída:</strong></td>
+                        <td style="padding: 8px; border: 1px solid #ddd;"><?php echo esc_html(isset($outbound_flight['departureDate']) ? date('d/m/Y H:i', strtotime($outbound_flight['departureDate'])) : 'N/A'); ?></td>
+                    </tr>
+                    <tr style="background: #f9fafb;">
+                        <td style="padding: 8px; border: 1px solid #ddd;"><strong>Data/Hora Chegada:</strong></td>
+                        <td style="padding: 8px; border: 1px solid #ddd;"><?php echo esc_html(isset($outbound_flight['arrivalDate']) ? date('d/m/Y H:i', strtotime($outbound_flight['arrivalDate'])) : 'N/A'); ?></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px; border: 1px solid #ddd;"><strong>Origem:</strong></td>
+                        <td style="padding: 8px; border: 1px solid #ddd;"><?php echo esc_html(isset($outbound_flight['origin']) ? $outbound_flight['origin'] : 'N/A'); ?></td>
+                    </tr>
+                    <tr style="background: #f9fafb;">
+                        <td style="padding: 8px; border: 1px solid #ddd;"><strong>Destino:</strong></td>
+                        <td style="padding: 8px; border: 1px solid #ddd;"><?php echo esc_html(isset($outbound_flight['destination']) ? $outbound_flight['destination'] : 'N/A'); ?></td>
+                    </tr>
+                </table>
+                <?php endif; ?>
+
+                <?php if ($inbound_flight): ?>
+                <h3 style="color: #555; margin-top: 20px;">🛬 Voo de Volta</h3>
+                <table style="width: 100%; margin: 10px 0; border-collapse: collapse;">
+                    <tr style="background: #f9fafb;">
+                        <td style="padding: 8px; border: 1px solid #ddd;"><strong>Número do Voo:</strong></td>
+                        <td style="padding: 8px; border: 1px solid #ddd; font-family: monospace;"><?php echo esc_html(isset($inbound_flight['flightNumber']) ? $inbound_flight['flightNumber'] : 'N/A'); ?></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px; border: 1px solid #ddd;"><strong>Data/Hora Saída:</strong></td>
+                        <td style="padding: 8px; border: 1px solid #ddd;"><?php echo esc_html(isset($inbound_flight['departureDate']) ? date('d/m/Y H:i', strtotime($inbound_flight['departureDate'])) : 'N/A'); ?></td>
+                    </tr>
+                    <tr style="background: #f9fafb;">
+                        <td style="padding: 8px; border: 1px solid #ddd;"><strong>Data/Hora Chegada:</strong></td>
+                        <td style="padding: 8px; border: 1px solid #ddd;"><?php echo esc_html(isset($inbound_flight['arrivalDate']) ? date('d/m/Y H:i', strtotime($inbound_flight['arrivalDate'])) : 'N/A'); ?></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px; border: 1px solid #ddd;"><strong>Origem:</strong></td>
+                        <td style="padding: 8px; border: 1px solid #ddd;"><?php echo esc_html(isset($inbound_flight['origin']) ? $inbound_flight['origin'] : 'N/A'); ?></td>
+                    </tr>
+                    <tr style="background: #f9fafb;">
+                        <td style="padding: 8px; border: 1px solid #ddd;"><strong>Destino:</strong></td>
+                        <td style="padding: 8px; border: 1px solid #ddd;"><?php echo esc_html(isset($inbound_flight['destination']) ? $inbound_flight['destination'] : 'N/A'); ?></td>
+                    </tr>
+                </table>
+                <?php endif; ?>
+
+                <?php if (!$outbound_flight && !$inbound_flight): ?>
+                <p style="color: #666; font-style: italic;">Informações de voos não disponíveis nesta cotação.</p>
+                <?php endif; ?>
+
+                <!-- 4. PASSAGEIROS -->
+                <h2 style="color: #019CB8; border-bottom: 2px solid #019CB8; padding-bottom: 10px; margin-top: 40px;">
+                    👥 4. Passageiros (<?php echo count($data['passageiros']); ?>)
+                </h2>
+                <?php foreach ($data['passageiros'] as $index => $pax):
+                    $birthdate = new DateTime($pax['nascimento']);
+                    $today = new DateTime('today');
+                    $age = $birthdate->diff($today)->y;
+                ?>
+                <div style="background: <?php echo $index % 2 == 0 ? '#f9fafb' : '#fff'; ?>; padding: 15px; margin: 10px 0; border-left: 4px solid #019CB8; border-radius: 4px;">
+                    <h4 style="margin: 0 0 10px 0; color: #019CB8;">Passageiro <?php echo ($index + 1); ?></h4>
                     <table style="width: 100%;">
                         <tr>
-                            <td style="padding: 5px 0;"><strong>Destino:</strong></td>
-                            <td><?php echo esc_html($data['viagem']['destino']); ?></td>
+                            <td style="padding: 4px 0; width: 180px;"><strong>Nome Completo:</strong></td>
+                            <td style="padding: 4px 0;"><?php echo esc_html($pax['nome'] . ' ' . $pax['sobrenome']); ?></td>
                         </tr>
                         <tr>
-                            <td style="padding: 5px 0;"><strong>Check-in:</strong></td>
-                            <td><?php echo esc_html(date('d/m/Y', strtotime($data['viagem']['checkin']))); ?></td>
+                            <td style="padding: 4px 0;"><strong>Data de Nascimento:</strong></td>
+                            <td style="padding: 4px 0;"><?php echo esc_html($pax['nascimento']); ?></td>
                         </tr>
                         <tr>
-                            <td style="padding: 5px 0;"><strong>Check-out:</strong></td>
-                            <td><?php echo esc_html(date('d/m/Y', strtotime($data['viagem']['checkout']))); ?></td>
+                            <td style="padding: 4px 0;"><strong>Idade:</strong></td>
+                            <td style="padding: 4px 0;"><?php echo esc_html($age); ?> anos</td>
                         </tr>
                         <tr>
-                            <td style="padding: 5px 0;"><strong>Noites:</strong></td>
-                            <td><?php echo esc_html($data['viagem']['noites']); ?> noite(s)</td>
+                            <td style="padding: 4px 0;"><strong>Tipo:</strong></td>
+                            <td style="padding: 4px 0;"><?php echo esc_html($pax['tipo']); ?></td>
                         </tr>
                         <tr>
-                            <td style="padding: 5px 0;"><strong>Quartos:</strong></td>
-                            <td><?php echo esc_html($data['viagem']['quartos']); ?></td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 5px 0;"><strong>Regime:</strong></td>
-                            <td><?php echo esc_html($data['viagem']['regime']); ?></td>
+                            <td style="padding: 4px 0;"><strong>Documento:</strong></td>
+                            <td style="padding: 4px 0;"><?php echo esc_html($pax['documento']); ?></td>
                         </tr>
                     </table>
                 </div>
+                <?php endforeach; ?>
 
+                <!-- 5. TITULAR DA RESERVA -->
                 <h2 style="color: #019CB8; border-bottom: 2px solid #019CB8; padding-bottom: 10px; margin-top: 40px;">
-                    👥 Passageiros (<?php echo count($data['passageiros']); ?>)
+                    📋 5. Titular da Reserva
                 </h2>
-                <div style="background: #f9fafb; padding: 20px; border-radius: 8px; margin: 20px 0;">
-                    <?php foreach ($data['passageiros'] as $index => $pax): ?>
-                        <div style="padding: 10px 0; <?php echo $index > 0 ? 'border-top: 1px solid #ddd;' : ''; ?>">
-                            <strong><?php echo ($index + 1); ?>.</strong>
-                            <?php echo esc_html($pax['nome'] . ' ' . $pax['sobrenome']); ?>
-                            (<?php echo esc_html($pax['tipo']); ?>)
-                            - Nasc: <?php echo esc_html($pax['nascimento']); ?>
-                            - Doc: <?php echo esc_html($pax['documento']); ?>
-                        </div>
-                    <?php endforeach; ?>
+                <table style="width: 100%; margin: 20px 0; border-collapse: collapse;">
+                    <tr style="background: #f9fafb;">
+                        <td style="padding: 8px; border: 1px solid #ddd; width: 180px;"><strong>Nome:</strong></td>
+                        <td style="padding: 8px; border: 1px solid #ddd;"><?php echo esc_html($data['cliente']['nome'] . ' ' . $data['cliente']['sobrenome']); ?></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px; border: 1px solid #ddd;"><strong>Email:</strong></td>
+                        <td style="padding: 8px; border: 1px solid #ddd;"><a href="mailto:<?php echo esc_attr($data['cliente']['email']); ?>"><?php echo esc_html($data['cliente']['email']); ?></a></td>
+                    </tr>
+                    <tr style="background: #f9fafb;">
+                        <td style="padding: 8px; border: 1px solid #ddd;"><strong>Telefone:</strong></td>
+                        <td style="padding: 8px; border: 1px solid #ddd;"><?php echo esc_html($data['cliente']['telefone']); ?></td>
+                    </tr>
+                </table>
+
+                <!-- 6. PREÇO FINAL -->
+                <h2 style="color: #019CB8; border-bottom: 2px solid #019CB8; padding-bottom: 10px; margin-top: 40px;">
+                    💰 6. Preço Final
+                </h2>
+                <div style="background: #e8f5e9; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                    <table style="width: 100%;">
+                        <tr>
+                            <td style="padding: 8px 0;"><strong>Valor Total:</strong></td>
+                            <td style="padding: 8px 0; text-align: right; font-size: 24px; font-weight: bold; color: #019CB8;">
+                                €<?php echo number_format($data['viagem']['precoTotal'], 2, ',', '.'); ?>
+                            </td>
+                        </tr>
+                        <?php
+                        $num_passengers = count($data['passageiros']);
+                        $price_per_person = $num_passengers > 0 ? $data['viagem']['precoTotal'] / $num_passengers : 0;
+                        ?>
+                        <tr>
+                            <td style="padding: 8px 0;"><strong>Valor Por Pessoa:</strong></td>
+                            <td style="padding: 8px 0; text-align: right; font-size: 18px; color: #555;">
+                                €<?php echo number_format($price_per_person, 2, ',', '.'); ?>
+                            </td>
+                        </tr>
+                    </table>
                 </div>
 
                 <?php if (isset($data['observacoes']) && !empty($data['observacoes'])): ?>
@@ -1781,17 +1926,7 @@ class Soltour_API {
                 <?php endif; ?>
 
                 <h2 style="color: #019CB8; border-bottom: 2px solid #019CB8; padding-bottom: 10px; margin-top: 40px;">
-                    💰 Valores
-                </h2>
-                <div style="background: #e8f5e9; padding: 20px; border-radius: 8px; margin: 20px 0; text-align: center;">
-                    <div style="font-size: 14px; color: #666; margin-bottom: 10px;">Valor Total Estimado</div>
-                    <div style="font-size: 36px; font-weight: bold; color: #019CB8;">
-                        €<?php echo number_format($data['viagem']['precoTotal'], 2, ',', '.'); ?>
-                    </div>
-                </div>
-
-                <h2 style="color: #019CB8; border-bottom: 2px solid #019CB8; padding-bottom: 10px; margin-top: 40px;">
-                    🔧 Dados para Processamento (API Soltour)
+                    🔧 Dados Técnicos para Processamento
                 </h2>
                 <div style="background: #f0f4f8; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #019CB8;">
                     <p style="font-size: 13px; color: #666; margin-bottom: 15px;">
