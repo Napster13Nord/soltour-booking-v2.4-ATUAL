@@ -100,6 +100,91 @@
 }
 
 /* ========================================
+   CONFIGURAÇÃO DE QUARTOS
+   ======================================== */
+
+#soltour-rooms-config {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.soltour-room-config {
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #e0e0e0;
+}
+
+.soltour-room-config h4 {
+    margin: 0 0 15px 0;
+    color: #019CB8;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.room-passengers {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+.passenger-input {
+    display: flex;
+    flex-direction: column;
+}
+
+.passenger-input label {
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #333;
+    font-size: 14px;
+}
+
+.passenger-input select {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    background: white;
+    cursor: pointer;
+}
+
+.passenger-input select:focus {
+    outline: none;
+    border-color: #019CB8;
+}
+
+.children-ages-container {
+    grid-column: 1 / -1;
+    padding-top: 15px;
+    border-top: 1px solid #e0e0e0;
+    margin-top: 15px;
+}
+
+.children-ages-container .child-age-input {
+    display: inline-block;
+    margin-right: 15px;
+    margin-bottom: 10px;
+}
+
+.children-ages-container .child-age-input label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 5px;
+    color: #555;
+}
+
+.children-ages-container .child-age-input select {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 13px;
+    background: white;
+}
+
+/* ========================================
    CALENDÁRIO DE PREÇOS
    ======================================== */
 
