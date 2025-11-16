@@ -51,27 +51,27 @@
 
 /* Botão fechar */
 .bt-modal-close {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    width: 40px;
-    height: 40px;
-    border: none;
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: 50%;
-    cursor: pointer;
-    z-index: 10;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
-    color: #333;
-    transition: all 0.2s;
+    position: absolute !important;
+    top: 15px !important;
+    right: 15px !important;
+    width: 40px !important;
+    height: 40px !important;
+    border: none !important;
+    background: rgba(255, 255, 255, 0.9) !important;
+    border-radius: 50% !important;
+    cursor: pointer !important;
+    z-index: 10 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 20px !important;
+    color: #333 !important;
+    transition: all 0.2s !important;
 }
 
 .bt-modal-close:hover {
-    background: #fff;
-    transform: rotate(90deg);
+    background: #fff !important;
+    transform: rotate(90deg) !important;
 }
 
 /* Header do modal */
@@ -206,24 +206,24 @@
 }
 
 .bt-counter-btn {
-    width: 35px;
-    height: 35px;
-    border: 2px solid #019CB8;
-    background: #fff;
-    color: #019CB8;
-    border-radius: 50%;
-    font-size: 18px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.2s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    width: 35px !important;
+    height: 35px !important;
+    border: 2px solid #019CB8 !important;
+    background: #fff !important;
+    color: #019CB8 !important;
+    border-radius: 50% !important;
+    font-size: 18px !important;
+    font-weight: 700 !important;
+    cursor: pointer !important;
+    transition: all 0.2s !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
 }
 
 .bt-counter-btn:hover {
-    background: #019CB8;
-    color: #fff;
+    background: #019CB8 !important;
+    color: #fff !important;
 }
 
 .bt-counter input {
@@ -273,30 +273,30 @@
 
 /* Botão de busca */
 .bt-btn-search {
-    width: 100%;
-    background: linear-gradient(135deg, #019CB8 0%, #0176a8 100%);
-    color: #fff;
-    border: none;
-    padding: 16px;
-    font-size: 18px;
-    font-weight: 700;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    box-shadow: 0 4px 15px rgba(1, 156, 184, 0.3);
+    width: 100% !important;
+    background: linear-gradient(135deg, #019CB8 0%, #0176a8 100%) !important;
+    color: #fff !important;
+    border: none !important;
+    padding: 16px !important;
+    font-size: 18px !important;
+    font-weight: 700 !important;
+    border-radius: 8px !important;
+    cursor: pointer !important;
+    transition: all 0.3s !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 10px !important;
+    box-shadow: 0 4px 15px rgba(1, 156, 184, 0.3) !important;
 }
 
 .bt-btn-search:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(1, 156, 184, 0.4);
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 20px rgba(1, 156, 184, 0.4) !important;
 }
 
 .bt-btn-search:active {
-    transform: translateY(0);
+    transform: translateY(0) !important;
 }
 
 /* Bloquear scroll do body quando modal aberto */
