@@ -484,21 +484,30 @@
         const hotelService = budget.hotelServices && budget.hotelServices[0];
         const flightService = budget.flightServices && budget.flightServices[0];
 
-        // (A) IMAGEM - PRIORIZAR AVAILABILITY
-        let hotelImage = '';
+        // (A) IMAGENS - COLETAR TODAS AS IMAGENS DISPONÍVEIS
+        let hotelImages = [];
         if (hotelService && hotelService.hotelCode && SoltourApp.hotelsFromAvailability[hotelService.hotelCode]) {
             const hotelFromAvail = SoltourApp.hotelsFromAvailability[hotelService.hotelCode];
+            // Adicionar mainImage primeiro se existir
             if (hotelFromAvail.mainImage) {
-                hotelImage = hotelFromAvail.mainImage;
-            } else if (hotelFromAvail.multimedias && hotelFromAvail.multimedias.length > 0) {
-                const firstImage = hotelFromAvail.multimedias.find(m => m.type === 'IMAGE');
-                if (firstImage) hotelImage = firstImage.url;
+                hotelImages.push(hotelFromAvail.mainImage);
+            }
+            // Adicionar todas as outras imagens de multimedias
+            if (hotelFromAvail.multimedias && hotelFromAvail.multimedias.length > 0) {
+                hotelFromAvail.multimedias.forEach(m => {
+                    if (m.type === 'IMAGE' && m.url && !hotelImages.includes(m.url)) {
+                        hotelImages.push(m.url);
+                    }
+                });
             }
         }
         // Fallback para details
-        if (!hotelImage && details && details.hotelDetails && details.hotelDetails.hotel && details.hotelDetails.hotel.multimedias) {
-            const firstImage = details.hotelDetails.hotel.multimedias.find(m => m.type === 'IMAGE');
-            if (firstImage) hotelImage = firstImage.url;
+        if (hotelImages.length === 0 && details && details.hotelDetails && details.hotelDetails.hotel && details.hotelDetails.hotel.multimedias) {
+            details.hotelDetails.hotel.multimedias.forEach(m => {
+                if (m.type === 'IMAGE' && m.url) {
+                    hotelImages.push(m.url);
+                }
+            });
         }
 
         // (B) PAÍS e (C) CIDADE - PRIORIZAR AVAILABILITY
@@ -601,14 +610,37 @@
         // (L) TIPO
         const productType = 'PACOTE';
 
+        // Construir carrossel de imagens
+        let imageGalleryHTML = '';
+        if (hotelImages.length > 0) {
+            const cardId = `carousel-${hotelCode}-${Date.now()}`;
+            imageGalleryHTML = `
+                <div class="package-image-carousel" id="${cardId}">
+                    ${hotelImages.map((img, index) => `
+                        <div class="carousel-slide ${index === 0 ? 'active' : ''}" style="display: ${index === 0 ? 'block' : 'none'};">
+                            <img src="${img}" alt="${hotelName}" />
+                        </div>
+                    `).join('')}
+                    ${hotelImages.length > 1 ? `
+                        <button class="slider-btn slider-prev" onclick="SoltourApp.changeSlide('${cardId}', -1)" aria-label="Imagem anterior">‹</button>
+                        <button class="slider-btn slider-next" onclick="SoltourApp.changeSlide('${cardId}', 1)" aria-label="Próxima imagem">›</button>
+                        <div class="carousel-indicators">
+                            ${hotelImages.map((_, index) => `
+                                <span class="indicator ${index === 0 ? 'active' : ''}" onclick="SoltourApp.goToSlide('${cardId}', ${index})"></span>
+                            `).join('')}
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        } else {
+            imageGalleryHTML = '<div class="no-image">📷 Sem imagem</div>';
+        }
+
         // Construir card
         const card = `
             <div class="soltour-package-card">
                 <div class="package-image">
-                    ${hotelImage ? 
-                        `<img src="${hotelImage}" alt="${hotelName}" />` : 
-                        '<div class="no-image">📷 Sem imagem</div>'
-                    }
+                    ${imageGalleryHTML}
                     <div class="package-badge">${productType}</div>
                 </div>
                 <div class="package-info">
@@ -737,5 +769,117 @@
         }));
         window.location.href = `/pacote-detalhes/?budget=${budgetId}`;
     };
+
+    // ===================================
+    // FUNÇÕES DO CARROSSEL DE IMAGENS
+    // ===================================
+
+    window.SoltourApp.changeSlide = function(carouselId, direction) {
+        const carousel = document.getElementById(carouselId);
+        if (!carousel) return;
+
+        const slides = carousel.querySelectorAll('.carousel-slide');
+        const indicators = carousel.querySelectorAll('.indicator');
+        let currentIndex = Array.from(slides).findIndex(slide => slide.classList.contains('active'));
+
+        // Remover active do slide atual
+        slides[currentIndex].classList.remove('active');
+        slides[currentIndex].style.display = 'none';
+        if (indicators[currentIndex]) {
+            indicators[currentIndex].classList.remove('active');
+        }
+
+        // Calcular novo índice
+        currentIndex += direction;
+        if (currentIndex >= slides.length) currentIndex = 0;
+        if (currentIndex < 0) currentIndex = slides.length - 1;
+
+        // Ativar novo slide
+        slides[currentIndex].classList.add('active');
+        slides[currentIndex].style.display = 'block';
+        if (indicators[currentIndex]) {
+            indicators[currentIndex].classList.add('active');
+        }
+    };
+
+    window.SoltourApp.goToSlide = function(carouselId, index) {
+        const carousel = document.getElementById(carouselId);
+        if (!carousel) return;
+
+        const slides = carousel.querySelectorAll('.carousel-slide');
+        const indicators = carousel.querySelectorAll('.indicator');
+        const currentIndex = Array.from(slides).findIndex(slide => slide.classList.contains('active'));
+
+        // Remover active do slide atual
+        if (currentIndex >= 0) {
+            slides[currentIndex].classList.remove('active');
+            slides[currentIndex].style.display = 'none';
+            if (indicators[currentIndex]) {
+                indicators[currentIndex].classList.remove('active');
+            }
+        }
+
+        // Ativar slide específico
+        if (slides[index]) {
+            slides[index].classList.add('active');
+            slides[index].style.display = 'block';
+        }
+        if (indicators[index]) {
+            indicators[index].classList.add('active');
+        }
+    };
+
+    // ===================================
+    // SUPORTE TOUCH/SWIPE PARA MOBILE
+    // ===================================
+
+    $(document).on('touchstart', '.package-image-carousel', function(e) {
+        const carousel = this;
+        carousel.touchStartX = e.touches[0].clientX;
+        carousel.touchStartY = e.touches[0].clientY;
+    });
+
+    $(document).on('touchmove', '.package-image-carousel', function(e) {
+        if (!this.touchStartX || !this.touchStartY) return;
+
+        const carousel = this;
+        const touchEndX = e.touches[0].clientX;
+        const touchEndY = e.touches[0].clientY;
+
+        const diffX = carousel.touchStartX - touchEndX;
+        const diffY = carousel.touchStartY - touchEndY;
+
+        // Apenas swipe horizontal (ignorar vertical)
+        if (Math.abs(diffX) > Math.abs(diffY)) {
+            e.preventDefault();
+        }
+    });
+
+    $(document).on('touchend', '.package-image-carousel', function(e) {
+        if (!this.touchStartX || !this.touchStartY) return;
+
+        const carousel = this;
+        const touchEndX = e.changedTouches[0].clientX;
+        const touchEndY = e.changedTouches[0].clientY;
+
+        const diffX = carousel.touchStartX - touchEndX;
+        const diffY = carousel.touchStartY - touchEndY;
+
+        // Swipe horizontal com threshold mínimo de 50px
+        if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
+            const carouselId = carousel.id;
+            if (diffX > 0) {
+                // Swipe left - próxima imagem
+                SoltourApp.changeSlide(carouselId, 1);
+            } else {
+                // Swipe right - imagem anterior
+                SoltourApp.changeSlide(carouselId, -1);
+            }
+        }
+
+        // Limpar valores
+        carousel.touchStartX = null;
+        carousel.touchStartY = null;
+    });
 
 })(jQuery);
