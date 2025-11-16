@@ -94,7 +94,37 @@
             // Prevenir scroll do body
             $('body').css('overflow', 'hidden');
 
+            // Iniciar rotação de mensagens
+            startLoadingMessageRotation();
         }
+    }
+
+    /**
+     * Rotaciona as mensagens do modal de loading a cada 5 segundos
+     */
+    var loadingMessageInterval = null;
+    function startLoadingMessageRotation() {
+        // Limpar intervalo anterior se existir
+        if (loadingMessageInterval) {
+            clearInterval(loadingMessageInterval);
+        }
+
+        const messages = [
+            'Buscando os melhores voos...',
+            'Buscando os melhores hotéis...',
+            'Buscando os melhores pacotes...'
+        ];
+
+        let currentIndex = 0;
+
+        // Definir primeira mensagem
+        $('#loading-modal-title').text(messages[currentIndex]);
+
+        // Rotacionar a cada 5 segundos
+        loadingMessageInterval = setInterval(function() {
+            currentIndex = (currentIndex + 1) % messages.length;
+            $('#loading-modal-title').text(messages[currentIndex]);
+        }, 5000);
     }
 
     /**
@@ -104,6 +134,12 @@
         const modal = $('#soltour-loading-modal');
 
         if (modal.length) {
+            // Limpar intervalo de rotação de mensagens
+            if (loadingMessageInterval) {
+                clearInterval(loadingMessageInterval);
+                loadingMessageInterval = null;
+            }
+
             // Remover classe active para esconder
             modal.removeClass('active');
 
@@ -2092,7 +2128,7 @@
                                          onclick="SoltourApp.selectRoom('${budget.budgetId}', this)">
                                         <div class="room-info">
                                             <div class="room-name">${roomDescription}</div>
-                                            <div class="room-occupancy">👥 ${numRoomPassengers} passageiro${numRoomPassengers !== 1 ? 's' : ''}</div>
+                                            <div class="room-occupancy"><span>👥</span> <span>${numRoomPassengers} passageiro${numRoomPassengers !== 1 ? 's' : ''}</span></div>
                                         </div>
                                     </div>
                                 `;
