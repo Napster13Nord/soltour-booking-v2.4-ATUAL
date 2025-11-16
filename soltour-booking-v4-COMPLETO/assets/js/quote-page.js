@@ -1030,7 +1030,28 @@
      */
     function generateFinalQuote() {
 
-        // Validar formulário
+        console.log('[SOLTOUR] ========== INICIANDO GERAÇÃO DE COTAÇÃO ==========');
+
+        // Primeiro validar HTML5 (campos required)
+        const $forms = $('.bt-form-section input[required], .bt-form-section select[required]');
+        let hasEmptyFields = false;
+
+        $forms.each(function() {
+            if (!this.value || this.value.trim() === '') {
+                hasEmptyFields = true;
+                $(this).addClass('error-field');
+                console.error('[SOLTOUR] Campo vazio:', this.name, this.id);
+            } else {
+                $(this).removeClass('error-field');
+            }
+        });
+
+        if (hasEmptyFields) {
+            alert('⚠️ Por favor, preencha todos os campos obrigatórios marcados com (*).');
+            return;
+        }
+
+        // Validar formulário via JavaScript
         const formData = collectFormData();
 
         if (!formData) {
@@ -1093,6 +1114,7 @@
     function collectFormData() {
         const passengers = [];
         let clientData = null;
+        let hasErrors = false;
 
         // Pegar todos os inputs do formulário
         $('.bt-form-section').each(function() {
@@ -1111,7 +1133,14 @@
 
             // Validar campos obrigatórios
             if (!gender || !firstName || !lastName || !age || !document) {
-                return false; // Inválido
+                hasErrors = true;
+                console.error('[SOLTOUR] Campos obrigatórios faltando para:', title);
+                console.error('[SOLTOUR] - Gender:', gender);
+                console.error('[SOLTOUR] - FirstName:', firstName);
+                console.error('[SOLTOUR] - LastName:', lastName);
+                console.error('[SOLTOUR] - Age:', age);
+                console.error('[SOLTOUR] - Document:', document);
+                return; // Continua iteração mas marca erro
             }
 
             // Calcular data de nascimento a partir da idade
@@ -1140,17 +1169,33 @@
                 phone: phone || null,
                 isMainPassenger: email ? true : false
             });
+
+            console.log('[SOLTOUR] Passageiro adicionado:', {
+                tipo: title.includes('Adulto') ? 'ADULT' : 'CHILD',
+                nome: firstName,
+                sobrenome: lastName
+            });
         });
 
+        // Verificar se houve erros
+        if (hasErrors) {
+            console.error('[SOLTOUR] Validação falhou: campos obrigatórios faltando');
+            return null;
+        }
+
         // Verificar se todos os passageiros foram preenchidos
-        if (passengers.length === 0 || passengers.some(p => !p.nome)) {
+        if (passengers.length === 0) {
+            console.error('[SOLTOUR] Nenhum passageiro foi coletado');
             return null;
         }
 
         // Verificar se temos dados do cliente
         if (!clientData) {
+            console.error('[SOLTOUR] Dados do cliente não encontrados');
             return null;
         }
+
+        console.log('[SOLTOUR] Total de passageiros coletados:', passengers.length);
 
         // Extrair trip_data do packageData
         const packageData = BeautyTravelQuote.packageData;
