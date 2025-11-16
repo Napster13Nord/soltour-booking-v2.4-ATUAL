@@ -100,6 +100,17 @@
             }
         });
 
+        // NOVO: Suporte para múltiplos quartos
+        $('#soltour-num-rooms').on('change', function() {
+            const numRooms = parseInt($(this).val()) || 1;
+            buildRoomsConfig(numRooms);
+        });
+
+        // Inicializar com 1 quarto por padrão
+        if ($('#soltour-num-rooms').length > 0) {
+            buildRoomsConfig(1);
+        }
+
         $('#soltour-search-form').on('submit', function(e) {
             e.preventDefault();
             performSearch();
@@ -165,25 +176,102 @@
         $('#soltour-children-ages').show();
     }
 
+    // NOVA FUNÇÃO: Construir configuração de quartos
+    function buildRoomsConfig(numRooms) {
+        const $container = $('#soltour-rooms-config');
+        $container.empty();
+
+        for (let room = 1; room <= numRooms; room++) {
+            const roomHtml = `
+                <div class="soltour-room-config" data-room="${room}">
+                    <h4>Quarto ${room}</h4>
+                    <div class="room-passengers">
+                        <div class="passenger-input">
+                            <label for="room-${room}-adults">Adultos:</label>
+                            <select id="room-${room}-adults" name="room_${room}_adults" required>
+                                <option value="1">1 adulto</option>
+                                <option value="2" selected>2 adultos</option>
+                                <option value="3">3 adultos</option>
+                                <option value="4">4 adultos</option>
+                            </select>
+                        </div>
+                        <div class="passenger-input">
+                            <label for="room-${room}-children">Crianças:</label>
+                            <select id="room-${room}-children" name="room_${room}_children" class="room-children-select" data-room="${room}">
+                                <option value="0">0 crianças</option>
+                                <option value="1">1 criança</option>
+                                <option value="2">2 crianças</option>
+                                <option value="3">3 crianças</option>
+                            </select>
+                        </div>
+                        <div id="room-${room}-children-ages" class="children-ages-container" style="display:none;"></div>
+                    </div>
+                </div>
+            `;
+            $container.append(roomHtml);
+
+            // Adicionar evento para mostrar idades das crianças
+            $(`#room-${room}-children`).on('change', function() {
+                const numChildren = parseInt($(this).val());
+                const roomNum = $(this).data('room');
+                const $agesContainer = $(`#room-${roomNum}-children-ages`);
+
+                if (numChildren > 0) {
+                    $agesContainer.empty();
+                    for (let i = 0; i < numChildren; i++) {
+                        $agesContainer.append(`
+                            <div class="child-age-input">
+                                <label>Idade criança ${i + 1}:</label>
+                                <select name="room_${roomNum}_child_age_${i}" required>
+                                    ${Array.from({length: 18}, (_, j) => `<option value="${j}">${j} anos</option>`).join('')}
+                                </select>
+                            </div>
+                        `);
+                    }
+                    $agesContainer.show();
+                } else {
+                    $agesContainer.hide().empty();
+                }
+            });
+        }
+
+        $container.show();
+    }
+
     function performSearch() {
         const startDate = $('#soltour-start-date').val();
         const nights = parseInt($('#soltour-nights').val());
-        const adults = parseInt($('#soltour-adults').val());
-        const children = parseInt($('#soltour-children').val());
 
         if (!startDate || !SoltourApp.searchParams.originCode || !SoltourApp.searchParams.destinationCode) {
             alert('Preencha todos os campos');
             return;
         }
 
-        const passengers = [];
-        for (let i = 0; i < adults; i++) {
-            passengers.push({ type: 'ADULT', age: 30 });
+        // NOVO: Construir array de rooms a partir da configuração dinâmica
+        const rooms = [];
+        const numRooms = parseInt($('#soltour-num-rooms').val()) || 1;
+
+        for (let room = 1; room <= numRooms; room++) {
+            const adults = parseInt($(`#room-${room}-adults`).val()) || 2;
+            const children = parseInt($(`#room-${room}-children`).val()) || 0;
+
+            const passengers = [];
+
+            // Adicionar adultos
+            for (let i = 0; i < adults; i++) {
+                passengers.push({ type: 'ADULT', age: 30 });
+            }
+
+            // Adicionar crianças com suas idades
+            for (let i = 0; i < children; i++) {
+                const age = parseInt($(`select[name="room_${room}_child_age_${i}"]`).val()) || 10;
+                passengers.push({ type: 'CHILD', age: age });
+            }
+
+            rooms.push({ passengers: passengers });
         }
-        for (let i = 0; i < children; i++) {
-            const age = parseInt($(`select[name="child_age_${i}"]`).val()) || 10;
-            passengers.push({ type: 'CHILD', age: age });
-        }
+
+        log('Rooms configurados para envio:', rooms);
 
         // Resetar para primeira página na nova busca
         SoltourApp.currentPage = 1;
@@ -195,10 +283,12 @@
             destination_code: SoltourApp.searchParams.destinationCode,
             start_date: startDate,
             num_nights: nights,
-            rooms: JSON.stringify([{ passengers: passengers }]),
+            rooms: JSON.stringify(rooms),
             first_item: 0,
             item_count: SoltourApp.itemsPerPage
         };
+
+        log('Parâmetros de busca:', SoltourApp.searchParams);
 
         if ($('#soltour-results-list').length > 0) {
             searchPackagesAjax();
