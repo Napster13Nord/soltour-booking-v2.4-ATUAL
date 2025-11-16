@@ -814,12 +814,26 @@
                         <h3>👤 Adulto ${i} <span class="bt-passenger-badge">Titular ${i === 1 ? '(Responsável)' : ''}</span></h3>
                         <div class="bt-form-row">
                             <div class="bt-form-group">
+                                <label for="adult-${i}-gender">Sexo <span class="required">*</span></label>
+                                <select id="adult-${i}-gender" name="adult_${i}_gender" required>
+                                    <option value="">Seleciona</option>
+                                    <option value="MAN">Masculino</option>
+                                    <option value="WOMAN">Feminino</option>
+                                </select>
+                            </div>
+                            <div class="bt-form-group">
                                 <label for="adult-${i}-firstname">Nome <span class="required">*</span></label>
                                 <input type="text" id="adult-${i}-firstname" name="adult_${i}_firstname" required />
                             </div>
+                        </div>
+                        <div class="bt-form-row">
                             <div class="bt-form-group">
-                                <label for="adult-${i}-lastname">Apelido <span class="required">*</span></label>
+                                <label for="adult-${i}-lastname">Primeiro Apelido <span class="required">*</span></label>
                                 <input type="text" id="adult-${i}-lastname" name="adult_${i}_lastname" required />
+                            </div>
+                            <div class="bt-form-group">
+                                <label for="adult-${i}-lastname2">Segundo Apelido</label>
+                                <input type="text" id="adult-${i}-lastname2" name="adult_${i}_lastname2" />
                             </div>
                         </div>
                         <div class="bt-form-row">
@@ -855,12 +869,26 @@
                         <h3>👶 Criança ${i} <span class="bt-passenger-badge">Menor (${age} anos)</span></h3>
                         <div class="bt-form-row">
                             <div class="bt-form-group">
+                                <label for="child-${i}-gender">Sexo <span class="required">*</span></label>
+                                <select id="child-${i}-gender" name="child_${i}_gender" required>
+                                    <option value="">Seleciona</option>
+                                    <option value="MAN">Masculino</option>
+                                    <option value="WOMAN">Feminino</option>
+                                </select>
+                            </div>
+                            <div class="bt-form-group">
                                 <label for="child-${i}-firstname">Nome <span class="required">*</span></label>
                                 <input type="text" id="child-${i}-firstname" name="child_${i}_firstname" required />
                             </div>
+                        </div>
+                        <div class="bt-form-row">
                             <div class="bt-form-group">
-                                <label for="child-${i}-lastname">Apelido <span class="required">*</span></label>
+                                <label for="child-${i}-lastname">Primeiro Apelido <span class="required">*</span></label>
                                 <input type="text" id="child-${i}-lastname" name="child_${i}_lastname" required />
+                            </div>
+                            <div class="bt-form-group">
+                                <label for="child-${i}-lastname2">Segundo Apelido</label>
+                                <input type="text" id="child-${i}-lastname2" name="child_${i}_lastname2" />
                             </div>
                         </div>
                         <div class="bt-form-row">
@@ -1072,15 +1100,17 @@
             const title = $section.find('h3').text();
 
             // Extrair dados do passageiro
+            const gender = $section.find('select[name*="gender"]').val()?.trim();
             const firstName = $section.find('input[name*="firstname"]').val()?.trim();
-            const lastName = $section.find('input[name*="lastname"]').val()?.trim();
+            const lastName = $section.find('input[name*="lastname"]:not([name*="lastname2"])').val()?.trim();
+            const lastName2 = $section.find('input[name*="lastname2"]').val()?.trim();
             const birthDate = $section.find('input[name*="birthdate"]').val();
             const document = $section.find('input[name*="document"]').val()?.trim();
             const email = $section.find('input[name*="email"]').val()?.trim();
             const phone = $section.find('input[name*="phone"]').val()?.trim();
 
-            // Validar campos obrigatórios
-            if (!firstName || !lastName || !birthDate || !document) {
+            // Validar campos obrigatórios (gender agora é obrigatório)
+            if (!gender || !firstName || !lastName || !birthDate || !document) {
                 return false; // Inválido
             }
 
@@ -1089,6 +1119,7 @@
                 clientData = {
                     nome: firstName,
                     sobrenome: lastName,
+                    sobrenome2: lastName2 || '',
                     email: email,
                     telefone: phone
                 };
@@ -1096,8 +1127,10 @@
 
             passengers.push({
                 tipo: title.includes('Adulto') ? 'ADULT' : 'CHILD',
+                sexo: gender,
                 nome: firstName,
                 sobrenome: lastName,
+                sobrenome2: lastName2 || '',
                 nascimento: birthDate,
                 documento: document,
                 email: email || null,

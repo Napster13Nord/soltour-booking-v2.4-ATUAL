@@ -1017,6 +1017,7 @@ class Soltour_API {
             'cliente' => array(
                 'nome' => sanitize_text_field($client_data['nome']),
                 'sobrenome' => sanitize_text_field($client_data['sobrenome']),
+                'sobrenome2' => isset($client_data['sobrenome2']) ? sanitize_text_field($client_data['sobrenome2']) : '',
                 'email' => sanitize_email($client_data['email']),
                 'telefone' => sanitize_text_field($client_data['telefone'])
             ),
@@ -1047,8 +1048,10 @@ class Soltour_API {
         foreach ($passengers as $pax) {
             $email_data['passageiros'][] = array(
                 'tipo' => sanitize_text_field($pax['tipo']),
+                'sexo' => isset($pax['sexo']) ? sanitize_text_field($pax['sexo']) : 'UNDEFINED',
                 'nome' => sanitize_text_field($pax['nome']),
                 'sobrenome' => sanitize_text_field($pax['sobrenome']),
+                'sobrenome2' => isset($pax['sobrenome2']) ? sanitize_text_field($pax['sobrenome2']) : '',
                 'nascimento' => sanitize_text_field($pax['nascimento']),
                 'documento' => sanitize_text_field($pax['documento'])
             );
@@ -1804,7 +1807,7 @@ class Soltour_API {
         "email": "<?php echo esc_html($data['cliente']['email']); ?>",
         "firstName": "<?php echo esc_html($data['cliente']['nome']); ?>",
         "lastName1": "<?php echo esc_html($data['cliente']['sobrenome']); ?>",
-        "lastName2": ""
+        "lastName2": "<?php echo esc_html(isset($data['cliente']['sobrenome2']) ? $data['cliente']['sobrenome2'] : ''); ?>"
     },
     "startDate": "<?php echo esc_html(date('Y-m-d', strtotime($data['viagem']['checkin']))); ?>",
     "agencyBookingReference": "BT-<?php echo date('YmdHis'); ?>"
@@ -1838,8 +1841,8 @@ class Soltour_API {
                         "identification": 0,
                         "firstName": "<?php echo esc_html($pax['nome']); ?>",
                         "lastName1": "<?php echo esc_html($pax['sobrenome']); ?>",
-                        "lastName2": "",
-                        "gender": "UNDEFINED",
+                        "lastName2": "<?php echo esc_html(isset($pax['sobrenome2']) ? $pax['sobrenome2'] : ''); ?>",
+                        "gender": "<?php echo esc_html(isset($pax['sexo']) ? $pax['sexo'] : 'UNDEFINED'); ?>",
                         "type": "<?php echo esc_html($pax['tipo']); ?>"
                     }
                     <?php endforeach; ?>
@@ -1861,13 +1864,13 @@ class Soltour_API {
 }</pre>
                     </div>
 
-                    <div style="background: #fff3cd; padding: 12px; border-radius: 4px; border-left: 4px solid #ffc107; font-size: 12px;">
-                        <strong>⚠️ Atenção:</strong>
+                    <div style="background: #d4edda; padding: 12px; border-radius: 4px; border-left: 4px solid #28a745; font-size: 12px;">
+                        <strong>✅ Processo de Reserva:</strong>
                         <ul style="margin: 5px 0; padding-left: 20px;">
-                            <li>Primeiro gerar o expediente para obter o <code>expedient</code></li>
-                            <li>Depois usar o <code>expedient</code> retornado para efetuar a reserva</li>
-                            <li>O <code>availToken</code> é válido por tempo limitado</li>
-                            <li>Faltam coletar: lastName2 e gender dos passageiros</li>
+                            <li><strong>Passo 1:</strong> Gerar o expediente (usar payload acima)</li>
+                            <li><strong>Passo 2:</strong> Obter o <code>expedient</code> da resposta</li>
+                            <li><strong>Passo 3:</strong> Usar o <code>expedient</code> para efetuar a reserva</li>
+                            <li><strong>⚠️ Importante:</strong> O <code>availToken</code> é válido por tempo limitado</li>
                         </ul>
                     </div>
 
