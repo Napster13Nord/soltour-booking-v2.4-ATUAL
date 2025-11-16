@@ -943,16 +943,38 @@ class Soltour_API {
 
         $this->log('=== GENERATE FINAL QUOTE ===');
 
-        // Coletar dados do POST
-        $budget_data = isset($_POST['budget_data']) ? json_decode(stripslashes($_POST['budget_data']), true) : array();
-        $passengers = isset($_POST['passengers']) ? json_decode(stripslashes($_POST['passengers']), true) : array();
-        $client_data = isset($_POST['client_data']) ? json_decode(stripslashes($_POST['client_data']), true) : array();
-        $trip_data = isset($_POST['trip_data']) ? json_decode(stripslashes($_POST['trip_data']), true) : array();
+        // Coletar dados do POST - tratando tanto string JSON quanto array
+        $budget_data = isset($_POST['budget_data'])
+            ? (is_array($_POST['budget_data']) ? $_POST['budget_data'] : json_decode(stripslashes($_POST['budget_data']), true))
+            : array();
+
+        $passengers = isset($_POST['passengers'])
+            ? (is_array($_POST['passengers']) ? $_POST['passengers'] : json_decode(stripslashes($_POST['passengers']), true))
+            : array();
+
+        $client_data = isset($_POST['client_data'])
+            ? (is_array($_POST['client_data']) ? $_POST['client_data'] : json_decode(stripslashes($_POST['client_data']), true))
+            : array();
+
+        $trip_data = isset($_POST['trip_data'])
+            ? (is_array($_POST['trip_data']) ? $_POST['trip_data'] : json_decode(stripslashes($_POST['trip_data']), true))
+            : array();
+
         $notes = isset($_POST['notes']) ? sanitize_textarea_field($_POST['notes']) : '';
+
+        // Log para debug
+        $this->log('Dados recebidos (tipos):');
+        $this->log('  - budget_data: ' . gettype($budget_data) . ' - ' . (is_array($budget_data) ? 'array com ' . count($budget_data) . ' items' : 'não é array'));
+        $this->log('  - passengers: ' . gettype($passengers) . ' - ' . (is_array($passengers) ? 'array com ' . count($passengers) . ' items' : 'não é array'));
+        $this->log('  - client_data: ' . gettype($client_data) . ' - ' . (is_array($client_data) ? 'array com ' . count($client_data) . ' items' : 'não é array'));
+        $this->log('  - trip_data: ' . gettype($trip_data) . ' - ' . (is_array($trip_data) ? 'array com ' . count($trip_data) . ' items' : 'não é array'));
 
         // Validar dados básicos
         if (empty($budget_data) || empty($passengers) || empty($client_data)) {
             $this->log('Dados incompletos recebidos', 'error');
+            $this->log('  - budget_data vazio: ' . (empty($budget_data) ? 'SIM' : 'NÃO'));
+            $this->log('  - passengers vazio: ' . (empty($passengers) ? 'SIM' : 'NÃO'));
+            $this->log('  - client_data vazio: ' . (empty($client_data) ? 'SIM' : 'NÃO'));
             wp_send_json_error(array(
                 'message' => 'Dados incompletos. Por favor, preencha todos os campos obrigatórios.'
             ));
@@ -961,8 +983,8 @@ class Soltour_API {
 
         $this->log('Dados recebidos:');
         $this->log('  - Passageiros: ' . count($passengers));
-        $this->log('  - Cliente: ' . $client_data['nome']);
-        $this->log('  - Hotel: ' . $trip_data['hotelName']);
+        $this->log('  - Cliente: ' . (isset($client_data['nome']) ? $client_data['nome'] : 'NOME NÃO ENCONTRADO'));
+        $this->log('  - Hotel: ' . (isset($trip_data['hotelName']) ? $trip_data['hotelName'] : 'HOTEL NÃO ENCONTRADO'));
 
         // Preparar dados para emails
         $email_data = array(
