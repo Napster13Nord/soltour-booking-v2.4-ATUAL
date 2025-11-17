@@ -2126,9 +2126,9 @@
     }
 
     function renderPagination() {
-        // Calcular total de páginas baseado em hotéis ÚNICOS, não budgets
-        const totalUniqueHotels = SoltourApp.allUniqueHotels.length;
-        const totalPages = Math.ceil(totalUniqueHotels / SoltourApp.itemsPerPage);
+        // Calcular total de páginas baseado no totalCount da API (server-side)
+        const totalBudgets = SoltourApp.totalBudgets || SoltourApp.allUniqueHotels.length;
+        const totalPages = Math.ceil(totalBudgets / SoltourApp.itemsPerPage);
 
 
         if (totalPages <= 1) {
@@ -2186,9 +2186,10 @@
 
     window.SoltourApp.loadPage = function(page) {
 
-        // Usar paginação LOCAL - não fazer nova chamada à API
-        // Todos os hotéis únicos já estão em SoltourApp.allUniqueHotels
-        renderLocalPage(page);
+        // Usar paginação SERVER-SIDE - fazer chamada à API
+        SoltourApp.currentPage = page;
+        // pageNumber da API começa em 0 → page 1 = 0, page 2 = 1, etc.
+        paginatePackagesAjax(page - 1, SoltourApp.itemsPerPage);
     };
 
     window.SoltourApp.selectPackage = function(budgetId, hotelCode, providerCode) {
