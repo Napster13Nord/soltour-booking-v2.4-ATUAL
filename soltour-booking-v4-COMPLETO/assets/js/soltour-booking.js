@@ -524,7 +524,7 @@
 
             // Paginação (corrigido para pageNumber/rowsPerPage conforme documentação Soltour)
             page_number: 0,
-            rows_per_page: 100 // Buscar todos os budgets de uma vez
+            rows_per_page: 10 // Carregar 10 pacotes por vez (paginação server-side)
         };
 
         if ($('#soltour-results-list').length > 0) {
@@ -889,10 +889,10 @@
         // O modal já foi mostrado em initResultsPage(), não mostrar novamente aqui
         $('#soltour-results-loading').hide();
 
-        // Buscar TODOS os resultados de uma vez (100 itens)
+        // Buscar resultados paginados (10 itens por vez)
         const searchParamsWithLargeLimit = $.extend({}, SoltourApp.searchParams, {
             page_number: 0,
-            rows_per_page: 100  // Buscar 100 budgets de uma vez
+            rows_per_page: 10  // Carregar 10 pacotes por vez (paginação server-side)
         });
 
         // ========================================

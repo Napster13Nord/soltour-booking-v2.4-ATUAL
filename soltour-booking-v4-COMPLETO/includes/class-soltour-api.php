@@ -642,7 +642,7 @@ class Soltour_API {
 
             // Paginação (corrigido para pageNumber/rowsPerPage conforme documentação Soltour)
             'pageNumber' => isset($_POST['page_number']) ? intval($_POST['page_number']) : 0,
-            'rowsPerPage' => isset($_POST['rows_per_page']) ? intval($_POST['rows_per_page']) : 100
+            'rowsPerPage' => isset($_POST['rows_per_page']) ? intval($_POST['rows_per_page']) : 10
         );
 
         $this->log('Params recebidos do frontend:');
@@ -673,7 +673,7 @@ class Soltour_API {
 
         $avail_token = sanitize_text_field($_POST['avail_token']);
         $page_number = isset($_POST['page_number']) ? intval($_POST['page_number']) : 0;
-        $rows_per_page = isset($_POST['rows_per_page']) ? intval($_POST['rows_per_page']) : 100;
+        $rows_per_page = isset($_POST['rows_per_page']) ? intval($_POST['rows_per_page']) : 10;
 
         // Receber parâmetros originais da busca
         $original_params = array(
