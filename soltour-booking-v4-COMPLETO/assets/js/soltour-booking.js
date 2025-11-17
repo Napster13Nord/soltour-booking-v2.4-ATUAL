@@ -522,10 +522,9 @@
             only_hotel: onlyHotel,
             product_type: productType,
 
-            // Paginação - carregar todos os resultados de uma vez
-            // API Soltour não implementa paginação server-side corretamente
-            page_number: 0,
-            rows_per_page: 200
+            // Paginação server-side (usando firstItem/itemCount)
+            first_item: 0,
+            item_count: 10
         };
 
         if ($('#soltour-results-list').length > 0) {
@@ -890,10 +889,10 @@
         // O modal já foi mostrado em initResultsPage(), não mostrar novamente aqui
         $('#soltour-results-loading').hide();
 
-        // Buscar todos os resultados de uma vez (API não implementa paginação server-side)
+        // Buscar primeira página (10 itens) com paginação server-side
         const searchParamsWithLargeLimit = $.extend({}, SoltourApp.searchParams, {
-            page_number: 0,
-            rows_per_page: 200
+            first_item: 0,
+            item_count: 10
         });
 
         // ========================================
@@ -1169,7 +1168,7 @@
         });
     }
 
-    function paginatePackagesAjax(pageNumber, rowsPerPage) {
+    function paginatePackagesAjax(firstItem, itemCount) {
 
         // Mostrar modal de carregamento durante paginação
         showLoadingModal(
@@ -1187,8 +1186,8 @@
                 action: 'soltour_paginate_packages',
                 nonce: soltourData.nonce,
                 avail_token: SoltourApp.availToken,
-                page_number: pageNumber,
-                rows_per_page: rowsPerPage,
+                first_item: firstItem,
+                item_count: itemCount,
                 // Enviar parâmetros originais da busca
                 origin_code: SoltourApp.searchParams.origin_code,
                 destination_code: SoltourApp.searchParams.destination_code,
@@ -2127,10 +2126,9 @@
     }
 
     function renderPagination() {
-        // Calcular total de páginas baseado nos hotéis únicos carregados (paginação client-side)
-        // A API Soltour não implementa paginação server-side corretamente
-        const totalUniqueHotels = SoltourApp.allUniqueHotels.length;
-        const totalPages = Math.ceil(totalUniqueHotels / SoltourApp.itemsPerPage);
+        // Calcular total de páginas baseado no totalCount da API (paginação server-side)
+        const totalBudgets = SoltourApp.totalBudgets || SoltourApp.allUniqueHotels.length;
+        const totalPages = Math.ceil(totalBudgets / SoltourApp.itemsPerPage);
 
 
         if (totalPages <= 1) {
@@ -2188,9 +2186,15 @@
 
     window.SoltourApp.loadPage = function(page) {
 
-        // Usar paginação LOCAL - a API Soltour retorna todos os resultados de uma vez
-        // (não respeita rowsPerPage), então fazemos paginação client-side
-        renderLocalPage(page);
+        // Usar paginação SERVER-SIDE com firstItem/itemCount
+        SoltourApp.currentPage = page;
+
+        // Calcular firstItem baseado na página
+        // Página 1: firstItem = 0, Página 2: firstItem = 10, etc.
+        const firstItem = (page - 1) * SoltourApp.itemsPerPage;
+        const itemCount = SoltourApp.itemsPerPage;
+
+        paginatePackagesAjax(firstItem, itemCount);
     };
 
     window.SoltourApp.selectPackage = function(budgetId, hotelCode, providerCode) {

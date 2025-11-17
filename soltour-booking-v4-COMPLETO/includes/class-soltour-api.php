@@ -191,8 +191,8 @@ class Soltour_API {
                     'direction' => isset($params['orderDirection']) ? $params['orderDirection'] : 'ASC'
                 ),
                 'pagination' => array(
-                    'pageNumber' => isset($params['pageNumber']) ? intval($params['pageNumber']) : 0,
-                    'rowsPerPage' => isset($params['rowsPerPage']) ? intval($params['rowsPerPage']) : 100
+                    'firstItem' => isset($params['firstItem']) ? intval($params['firstItem']) : 0,
+                    'itemCount' => isset($params['itemCount']) ? intval($params['itemCount']) : 100
                 )
             ),
             'languageCode' => SOLTOUR_API_LANG,
@@ -221,8 +221,8 @@ class Soltour_API {
         );
 
         $this->log('Enviando para API Soltour (booking/availability):');
-        $this->log('  - criteria.pagination.pageNumber: ' . $data['criteria']['pagination']['pageNumber']);
-        $this->log('  - criteria.pagination.rowsPerPage: ' . $data['criteria']['pagination']['rowsPerPage']);
+        $this->log('  - criteria.pagination.firstItem: ' . $data['criteria']['pagination']['firstItem']);
+        $this->log('  - criteria.pagination.itemCount: ' . $data['criteria']['pagination']['itemCount']);
 
         return $this->make_request('booking/availability', $data);
     }
@@ -232,7 +232,7 @@ class Soltour_API {
      * Busca próxima página usando availToken existente
      * IMPORTANTE: Precisa enviar TODOS os params originais + availToken
      */
-    public function paginate_availability($avail_token, $page_number, $rows_per_page, $original_params) {
+    public function paginate_availability($avail_token, $first_item, $item_count, $original_params) {
         // Reconstruir estrutura de rooms dos params originais
         $rooms = array();
         if (isset($original_params['rooms']) && is_array($original_params['rooms'])) {
@@ -262,8 +262,8 @@ class Soltour_API {
                     'direction' => 'ASC'
                 ),
                 'pagination' => array(
-                    'pageNumber' => intval($page_number),
-                    'rowsPerPage' => intval($rows_per_page)
+                    'firstItem' => intval($first_item),
+                    'itemCount' => intval($item_count)
                 )
             ),
             'languageCode' => SOLTOUR_API_LANG,
@@ -293,8 +293,8 @@ class Soltour_API {
 
         $this->log('Paginando com availToken E params completos:');
         $this->log('  - availToken: ' . substr($avail_token, 0, 20) . '...');
-        $this->log('  - pageNumber: ' . $page_number);
-        $this->log('  - rowsPerPage: ' . $rows_per_page);
+        $this->log('  - firstItem: ' . $first_item);
+        $this->log('  - itemCount: ' . $item_count);
         $this->log('  - params incluídos: SIM');
 
         return $this->make_request('booking/availability', $data);
@@ -640,14 +640,14 @@ class Soltour_API {
             'productType' => isset($_POST['product_type']) ? sanitize_text_field($_POST['product_type']) : 'PACKAGE',
             'onlyHotel' => isset($_POST['only_hotel']) ? sanitize_text_field($_POST['only_hotel']) : 'N',
 
-            // Paginação (corrigido para pageNumber/rowsPerPage conforme documentação Soltour)
-            'pageNumber' => isset($_POST['page_number']) ? intval($_POST['page_number']) : 0,
-            'rowsPerPage' => isset($_POST['rows_per_page']) ? intval($_POST['rows_per_page']) : 10
+            // Paginação (usando firstItem/itemCount conforme API Soltour)
+            'firstItem' => isset($_POST['first_item']) ? intval($_POST['first_item']) : 0,
+            'itemCount' => isset($_POST['item_count']) ? intval($_POST['item_count']) : 10
         );
 
         $this->log('Params recebidos do frontend:');
-        $this->log('  - pageNumber: ' . $params['pageNumber']);
-        $this->log('  - rowsPerPage: ' . $params['rowsPerPage']);
+        $this->log('  - firstItem: ' . $params['firstItem']);
+        $this->log('  - itemCount: ' . $params['itemCount']);
         $this->log('Params completos: ' . json_encode($params));
 
         $response = $this->search_availability($params);
@@ -672,8 +672,8 @@ class Soltour_API {
         $this->log('=== AJAX PAGINATE PACKAGES CALLED ===');
 
         $avail_token = sanitize_text_field($_POST['avail_token']);
-        $page_number = isset($_POST['page_number']) ? intval($_POST['page_number']) : 0;
-        $rows_per_page = isset($_POST['rows_per_page']) ? intval($_POST['rows_per_page']) : 10;
+        $first_item = isset($_POST['first_item']) ? intval($_POST['first_item']) : 0;
+        $item_count = isset($_POST['item_count']) ? intval($_POST['item_count']) : 10;
 
         // Receber parâmetros originais da busca
         $original_params = array(
@@ -685,11 +685,11 @@ class Soltour_API {
         );
 
         $this->log('Paginação requisitada:');
-        $this->log('  - pageNumber: ' . $page_number);
-        $this->log('  - rowsPerPage: ' . $rows_per_page);
+        $this->log('  - firstItem: ' . $first_item);
+        $this->log('  - itemCount: ' . $item_count);
         $this->log('  - original_params recebidos: SIM');
 
-        $response = $this->paginate_availability($avail_token, $page_number, $rows_per_page, $original_params);
+        $response = $this->paginate_availability($avail_token, $first_item, $item_count, $original_params);
 
         $this->log('Resposta da paginação:');
         $this->log('  - budgets: ' . (isset($response['budgets']) ? count($response['budgets']) : 0));
