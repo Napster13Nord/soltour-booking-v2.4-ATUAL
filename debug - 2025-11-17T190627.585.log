@@ -1,0 +1,663 @@
+
+[17-Nov-2025 17:03:39 UTC] Instantiated class: \RomethemeKit\RkitDuplicator
+[17-Nov-2025 17:03:39 UTC] Instantiated class: \RomethemeKit\BlurEffects
+[17-Nov-2025 17:03:39 UTC] Class not found: \RomethemeKit\Rkit_Sticky_Content
+[17-Nov-2025 17:03:39 UTC] Instantiated class: \RomethemeKit\RkitToolTips
+[17-Nov-2025 17:03:39 UTC] Instantiated class: \RomethemeKit\RkitWrapperLink
+[17-Nov-2025 17:03:39 UTC] Loaded file: blur_effects.php
+[17-Nov-2025 17:03:39 UTC] Loaded file: rkit_post_duplicator.php
+[17-Nov-2025 17:03:39 UTC] Loaded file: rkit_tool_tips.php
+[17-Nov-2025 17:03:39 UTC] Loaded file: rkit_wrapper_link.php
+[17-Nov-2025 17:03:39 UTC] Class not found: \RomethemeKit\Rkit_Custom_Cursor
+[17-Nov-2025 17:03:39 UTC] Instantiated class: \RomethemeKit\RkitDuplicator
+[17-Nov-2025 17:03:39 UTC] Instantiated class: \RomethemeKit\BlurEffects
+[17-Nov-2025 17:03:39 UTC] Class not found: \RomethemeKit\Rkit_Sticky_Content
+[17-Nov-2025 17:03:39 UTC] Instantiated class: \RomethemeKit\RkitToolTips
+[17-Nov-2025 17:03:39 UTC] Instantiated class: \RomethemeKit\RkitWrapperLink
+[17-Nov-2025 17:03:39 UTC] Loaded file: blur_effects.php
+[17-Nov-2025 17:03:39 UTC] Loaded file: rkit_post_duplicator.php
+[17-Nov-2025 17:03:39 UTC] Loaded file: rkit_tool_tips.php
+[17-Nov-2025 17:03:39 UTC] Loaded file: blur_effects.php
+[17-Nov-2025 17:03:39 UTC] Loaded file: rkit_wrapper_link.php
+[17-Nov-2025 17:03:39 UTC] Class not found: \RomethemeKit\Rkit_Custom_Cursor
+[17-Nov-2025 17:03:39 UTC] Instantiated class: \RomethemeKit\RkitDuplicator
+[17-Nov-2025 17:03:39 UTC] Instantiated class: \RomethemeKit\BlurEffects
+[17-Nov-2025 17:03:39 UTC] Class not found: \RomethemeKit\Rkit_Sticky_Content
+[17-Nov-2025 17:03:39 UTC] Instantiated class: \RomethemeKit\RkitToolTips
+[17-Nov-2025 17:03:39 UTC] Loaded file: rkit_post_duplicator.php
+[17-Nov-2025 17:03:39 UTC] Instantiated class: \RomethemeKit\RkitWrapperLink
+[17-Nov-2025 17:03:39 UTC] Loaded file: rkit_tool_tips.php
+[17-Nov-2025 17:03:39 UTC] Loaded file: rkit_wrapper_link.php
+[17-Nov-2025 17:03:39 UTC] Class not found: \RomethemeKit\Rkit_Custom_Cursor
+[17-Nov-2025 17:03:39 UTC] Instantiated class: \RomethemeKit\RkitDuplicator
+[17-Nov-2025 17:03:39 UTC] Instantiated class: \RomethemeKit\BlurEffects
+[17-Nov-2025 17:03:39 UTC] Class not found: \RomethemeKit\Rkit_Sticky_Content
+[17-Nov-2025 17:03:39 UTC] Instantiated class: \RomethemeKit\RkitToolTips
+[17-Nov-2025 17:03:39 UTC] Instantiated class: \RomethemeKit\RkitWrapperLink
+[17-Nov-2025 17:03:39 UTC] [Soltour API info] Getting details for budget: H80000##TI##0$5009631517461233253@@100, hotel: H80000
+[17-Nov-2025 17:03:39 UTC] [Soltour API info] Request to booking/details: {"productType":"PACKAGE","availToken":"kztE7G4MbiiFRjuwpdLdyE28mGqWpp2pj5eFAWHlsfk=","budgetId":"H80000##TI##0$5009631517461233253@@100","hotelParams":{"hotelCode":"H80000","providerCode":"UNDEFINED"}}
+[17-Nov-2025 17:03:39 UTC] [Soltour API info] Getting details for budget: H199536##TI##0$5485055241352059320@@100, hotel: H199536
+[17-Nov-2025 17:03:39 UTC] [Soltour API info] Request to booking/details: {"productType":"PACKAGE","availToken":"kztE7G4MbiiFRjuwpdLdyE28mGqWpp2pj5eFAWHlsfk=","budgetId":"H199536##TI##0$5485055241352059320@@100","hotelParams":{"hotelCode":"H199536","providerCode":"UNDEFINED"}}
+[17-Nov-2025 17:03:39 UTC] Loaded file: blur_effects.php
+[17-Nov-2025 17:03:39 UTC] Loaded file: rkit_post_duplicator.php
+[17-Nov-2025 17:03:39 UTC] Loaded file: rkit_tool_tips.php
+[17-Nov-2025 17:03:39 UTC] Loaded file: rkit_wrapper_link.php
+[17-Nov-2025 17:03:39 UTC] Class not found: \RomethemeKit\Rkit_Custom_Cursor
+[17-Nov-2025 17:03:39 UTC] Instantiated class: \RomethemeKit\RkitDuplicator
+[17-Nov-2025 17:03:39 UTC] Instantiated class: \RomethemeKit\BlurEffects
+[17-Nov-2025 17:03:39 UTC] Class not found: \RomethemeKit\Rkit_Sticky_Content
+[17-Nov-2025 17:03:39 UTC] Instantiated class: \RomethemeKit\RkitToolTips
+[17-Nov-2025 17:03:39 UTC] Instantiated class: \RomethemeKit\RkitWrapperLink
+[17-Nov-2025 17:03:39 UTC] [Soltour API info] Getting details for budget: H79963##TI##0$5552938215632855485@@100, hotel: H79963
+[17-Nov-2025 17:03:39 UTC] [Soltour API info] Request to booking/details: {"productType":"PACKAGE","availToken":"kztE7G4MbiiFRjuwpdLdyE28mGqWpp2pj5eFAWHlsfk=","budgetId":"H79963##TI##0$5552938215632855485@@100","hotelParams":{"hotelCode":"H79963","providerCode":"UNDEFINED"}}
+[17-Nov-2025 17:03:40 UTC] [Soltour API info] Getting details for budget: H199535##TI##0$4911438581363501156@@100, hotel: H199535
+[17-Nov-2025 17:03:40 UTC] [Soltour API info] Request to booking/details: {"productType":"PACKAGE","availToken":"kztE7G4MbiiFRjuwpdLdyE28mGqWpp2pj5eFAWHlsfk=","budgetId":"H199535##TI##0$4911438581363501156@@100","hotelParams":{"hotelCode":"H199535","providerCode":"UNDEFINED"}}
+[17-Nov-2025 17:03:40 UTC] Loaded file: blur_effects.php
+[17-Nov-2025 17:03:40 UTC] Loaded file: rkit_post_duplicator.php
+[17-Nov-2025 17:03:40 UTC] Loaded file: rkit_tool_tips.php
+[17-Nov-2025 17:03:40 UTC] Loaded file: rkit_wrapper_link.php
+[17-Nov-2025 17:03:40 UTC] Class not found: \RomethemeKit\Rkit_Custom_Cursor
+[17-Nov-2025 17:03:40 UTC] Instantiated class: \RomethemeKit\RkitDuplicator
+[17-Nov-2025 17:03:40 UTC] Instantiated class: \RomethemeKit\BlurEffects
+[17-Nov-2025 17:03:40 UTC] Class not found: \RomethemeKit\Rkit_Sticky_Content
+[17-Nov-2025 17:03:40 UTC] Instantiated class: \RomethemeKit\RkitToolTips
+[17-Nov-2025 17:03:40 UTC] Instantiated class: \RomethemeKit\RkitWrapperLink
+[17-Nov-2025 17:03:40 UTC] [Soltour API info] Response from booking/details: {"availToken":"kztE7G4MbiiFRjuwpdLdyE28mGqWpp2pj5eFAWHlsfk=","timestamp":"2025-11-17T18:03:40.242412331","serviceType":"UNDEFINED","agencyInformation":{"clientCode":"BEAUTYT","branchOfficeCode":"999","taxApplicationType":"ISC","taxRate":0,"paymentType":"PP","commission":{"currency":"EUR","rate":15}},"params":{"startDate":"2026-05-18","endDate":"2026-05-25","accomodation":{"rooms":[{"passengers":[{"age":30,"type":"ADULT"},{"age":30,"type":"ADULT"}]}]},"residentType":"NONE","numNights":0,"flightPa
+[17-Nov-2025 17:03:40 UTC] [Soltour API info] Details response structure: {"has_budget":false,"has_details":true,"has_error":false,"error_msg":null}
+[17-Nov-2025 17:03:40 UTC] [Soltour API info] Response from booking/details: {"availToken":"kztE7G4MbiiFRjuwpdLdyE28mGqWpp2pj5eFAWHlsfk=","timestamp":"2025-11-17T18:03:40.237773549","serviceType":"UNDEFINED","agencyInformation":{"clientCode":"BEAUTYT","branchOfficeCode":"999","taxApplicationType":"ISC","taxRate":0,"paymentType":"PP","commission":{"currency":"EUR","rate":15}},"params":{"startDate":"2026-05-18","endDate":"2026-05-25","accomodation":{"rooms":[{"passengers":[{"age":30,"type":"ADULT"},{"age":30,"type":"ADULT"}]}]},"residentType":"NONE","numNights":0,"flightPa
+[17-Nov-2025 17:03:40 UTC] [Soltour API info] Details response structure: {"has_budget":false,"has_details":true,"has_error":false,"error_msg":null}
+[17-Nov-2025 17:03:40 UTC] [Soltour API info] Response from booking/details: {"availToken":"kztE7G4MbiiFRjuwpdLdyE28mGqWpp2pj5eFAWHlsfk=","timestamp":"2025-11-17T18:03:40.242407631","serviceType":"UNDEFINED","agencyInformation":{"clientCode":"BEAUTYT","branchOfficeCode":"999","taxApplicationType":"ISC","taxRate":0,"paymentType":"PP","commission":{"currency":"EUR","rate":15}},"params":{"startDate":"2026-05-18","endDate":"2026-05-25","accomodation":{"rooms":[{"passengers":[{"age":30,"type":"ADULT"},{"age":30,"type":"ADULT"}]}]},"residentType":"NONE","numNights":0,"flightPa
+[17-Nov-2025 17:03:40 UTC] [Soltour API info] Details response structure: {"has_budget":false,"has_details":true,"has_error":false,"error_msg":null}
+[17-Nov-2025 17:03:40 UTC] [Soltour API info] Response from booking/details: {"availToken":"kztE7G4MbiiFRjuwpdLdyE28mGqWpp2pj5eFAWHlsfk=","timestamp":"2025-11-17T18:03:40.315028740","serviceType":"UNDEFINED","agencyInformation":{"clientCode":"BEAUTYT","branchOfficeCode":"999","taxApplicationType":"ISC","taxRate":0,"paymentType":"PP","commission":{"currency":"EUR","rate":15}},"params":{"startDate":"2026-05-18","endDate":"2026-05-25","accomodation":{"rooms":[{"passengers":[{"age":30,"type":"ADULT"},{"age":30,"type":"ADULT"}]}]},"residentType":"NONE","numNights":0,"flightPa
+[17-Nov-2025 17:03:40 UTC] [Soltour API info] Details response structure: {"has_budget":false,"has_details":true,"has_error":false,"error_msg":null}
+[17-Nov-2025 17:03:40 UTC] [Soltour API info] Getting details for budget: H199374##TI##0$5061268473860321127@@100, hotel: H199374
+[17-Nov-2025 17:03:40 UTC] [Soltour API info] Request to booking/details: {"productType":"PACKAGE","availToken":"kztE7G4MbiiFRjuwpdLdyE28mGqWpp2pj5eFAWHlsfk=","budgetId":"H199374##TI##0$5061268473860321127@@100","hotelParams":{"hotelCode":"H199374","providerCode":"UNDEFINED"}}
+[17-Nov-2025 17:03:41 UTC] Loaded file: blur_effects.php
+[17-Nov-2025 17:03:41 UTC] Loaded file: rkit_post_duplicator.php
+[17-Nov-2025 17:03:41 UTC] Loaded file: rkit_tool_tips.php
+[17-Nov-2025 17:03:41 UTC] Loaded file: rkit_wrapper_link.php
+[17-Nov-2025 17:03:41 UTC] Class not found: \RomethemeKit\Rkit_Custom_Cursor
+[17-Nov-2025 17:03:41 UTC] Instantiated class: \RomethemeKit\RkitDuplicator
+[17-Nov-2025 17:03:41 UTC] Instantiated class: \RomethemeKit\BlurEffects
+[17-Nov-2025 17:03:41 UTC] Class not found: \RomethemeKit\Rkit_Sticky_Content
+[17-Nov-2025 17:03:41 UTC] Instantiated class: \RomethemeKit\RkitToolTips
+[17-Nov-2025 17:03:41 UTC] Instantiated class: \RomethemeKit\RkitWrapperLink
+[17-Nov-2025 17:03:41 UTC] Loaded file: blur_effects.php
+[17-Nov-2025 17:03:41 UTC] Loaded file: rkit_post_duplicator.php
+[17-Nov-2025 17:03:41 UTC] Loaded file: rkit_tool_tips.php
+[17-Nov-2025 17:03:41 UTC] Loaded file: rkit_wrapper_link.php
+[17-Nov-2025 17:03:41 UTC] Class not found: \RomethemeKit\Rkit_Custom_Cursor
+[17-Nov-2025 17:03:41 UTC] Instantiated class: \RomethemeKit\RkitDuplicator
+[17-Nov-2025 17:03:41 UTC] Instantiated class: \RomethemeKit\BlurEffects
+[17-Nov-2025 17:03:41 UTC] Class not found: \RomethemeKit\Rkit_Sticky_Content
+[17-Nov-2025 17:03:41 UTC] Instantiated class: \RomethemeKit\RkitToolTips
+[17-Nov-2025 17:03:41 UTC] Instantiated class: \RomethemeKit\RkitWrapperLink
+[17-Nov-2025 17:03:41 UTC] Loaded file: blur_effects.php
+[17-Nov-2025 17:03:41 UTC] Loaded file: rkit_post_duplicator.php
+[17-Nov-2025 17:03:41 UTC] Loaded file: rkit_tool_tips.php
+[17-Nov-2025 17:03:41 UTC] Loaded file: rkit_wrapper_link.php
+[17-Nov-2025 17:03:41 UTC] Class not found: \RomethemeKit\Rkit_Custom_Cursor
+[17-Nov-2025 17:03:41 UTC] Instantiated class: \RomethemeKit\RkitDuplicator
+[17-Nov-2025 17:03:41 UTC] Instantiated class: \RomethemeKit\BlurEffects
+[17-Nov-2025 17:03:41 UTC] Class not found: \RomethemeKit\Rkit_Sticky_Content
+[17-Nov-2025 17:03:41 UTC] Instantiated class: \RomethemeKit\RkitToolTips
+[17-Nov-2025 17:03:41 UTC] Instantiated class: \RomethemeKit\RkitWrapperLink
+[17-Nov-2025 17:03:41 UTC] Loaded file: blur_effects.php
+[17-Nov-2025 17:03:41 UTC] Loaded file: rkit_post_duplicator.php
+[17-Nov-2025 17:03:41 UTC] Loaded file: rkit_tool_tips.php
+[17-Nov-2025 17:03:41 UTC] Loaded file: rkit_wrapper_link.php
+[17-Nov-2025 17:03:41 UTC] Class not found: \RomethemeKit\Rkit_Custom_Cursor
+[17-Nov-2025 17:03:41 UTC] Instantiated class: \RomethemeKit\RkitDuplicator
+[17-Nov-2025 17:03:41 UTC] Instantiated class: \RomethemeKit\BlurEffects
+[17-Nov-2025 17:03:41 UTC] Class not found: \RomethemeKit\Rkit_Sticky_Content
+[17-Nov-2025 17:03:41 UTC] Instantiated class: \RomethemeKit\RkitToolTips
+[17-Nov-2025 17:03:41 UTC] Instantiated class: \RomethemeKit\RkitWrapperLink
+[17-Nov-2025 17:03:41 UTC] [Soltour API info] Response from booking/details: {"availToken":"kztE7G4MbiiFRjuwpdLdyE28mGqWpp2pj5eFAWHlsfk=","timestamp":"2025-11-17T18:03:41.213090886","serviceType":"UNDEFINED","agencyInformation":{"clientCode":"BEAUTYT","branchOfficeCode":"999","taxApplicationType":"ISC","taxRate":0,"paymentType":"PP","commission":{"currency":"EUR","rate":15}},"params":{"startDate":"2026-05-18","endDate":"2026-05-25","accomodation":{"rooms":[{"passengers":[{"age":30,"type":"ADULT"},{"age":30,"type":"ADULT"}]}]},"residentType":"NONE","numNights":0,"flightPa
+[17-Nov-2025 17:03:41 UTC] [Soltour API info] Details response structure: {"has_budget":false,"has_details":true,"has_error":false,"error_msg":null}
+[17-Nov-2025 17:03:41 UTC] [Soltour API info] Getting details for budget: H199543##SA##0$5063402767067071930@@100, hotel: H199543
+[17-Nov-2025 17:03:41 UTC] [Soltour API info] Request to booking/details: {"productType":"PACKAGE","availToken":"kztE7G4MbiiFRjuwpdLdyE28mGqWpp2pj5eFAWHlsfk=","budgetId":"H199543##SA##0$5063402767067071930@@100","hotelParams":{"hotelCode":"H199543","providerCode":"UNDEFINED"}}
+[17-Nov-2025 17:03:41 UTC] [Soltour API info] Getting details for budget: H79993##TI##0$5079793730410177088@@100, hotel: H79993
+[17-Nov-2025 17:03:41 UTC] [Soltour API info] Request to booking/details: {"productType":"PACKAGE","availToken":"kztE7G4MbiiFRjuwpdLdyE28mGqWpp2pj5eFAWHlsfk=","budgetId":"H79993##TI##0$5079793730410177088@@100","hotelParams":{"hotelCode":"H79993","providerCode":"UNDEFINED"}}
+[17-Nov-2025 17:03:41 UTC] [Soltour API info] Getting details for budget: H99741##TI##0$5351728390995198368@@100, hotel: H99741
+[17-Nov-2025 17:03:41 UTC] [Soltour API info] Request to booking/details: {"productType":"PACKAGE","availToken":"kztE7G4MbiiFRjuwpdLdyE28mGqWpp2pj5eFAWHlsfk=","budgetId":"H99741##TI##0$5351728390995198368@@100","hotelParams":{"hotelCode":"H99741","providerCode":"UNDEFINED"}}
+[17-Nov-2025 17:03:41 UTC] [Soltour API info] Getting details for budget: H49702##TI##0$5750281844717392772@@100, hotel: H49702
+[17-Nov-2025 17:03:41 UTC] [Soltour API info] Request to booking/details: {"productType":"PACKAGE","availToken":"kztE7G4MbiiFRjuwpdLdyE28mGqWpp2pj5eFAWHlsfk=","budgetId":"H49702##TI##0$5750281844717392772@@100","hotelParams":{"hotelCode":"H49702","providerCode":"UNDEFINED"}}
+[17-Nov-2025 17:03:42 UTC] [Soltour API info] Response from booking/details: {"availToken":"kztE7G4MbiiFRjuwpdLdyE28mGqWpp2pj5eFAWHlsfk=","timestamp":"2025-11-17T18:03:41.936159681","serviceType":"UNDEFINED","agencyInformation":{"clientCode":"BEAUTYT","branchOfficeCode":"999","taxApplicationType":"ISC","taxRate":0,"paymentType":"PP","commission":{"currency":"EUR","rate":15}},"params":{"startDate":"2026-05-18","endDate":"2026-05-25","accomodation":{"rooms":[{"passengers":[{"age":30,"type":"ADULT"},{"age":30,"type":"ADULT"}]}]},"residentType":"NONE","numNights":0,"flightPa
+[17-Nov-2025 17:03:42 UTC] [Soltour API info] Details response structure: {"has_budget":false,"has_details":true,"has_error":false,"error_msg":null}
+[17-Nov-2025 17:03:42 UTC] [Soltour API info] Response from booking/details: {"availToken":"kztE7G4MbiiFRjuwpdLdyE28mGqWpp2pj5eFAWHlsfk=","timestamp":"2025-11-17T18:03:41.975825860","serviceType":"UNDEFINED","agencyInformation":{"clientCode":"BEAUTYT","branchOfficeCode":"999","taxApplicationType":"ISC","taxRate":0,"paymentType":"PP","commission":{"currency":"EUR","rate":15}},"params":{"startDate":"2026-05-18","endDate":"2026-05-25","accomodation":{"rooms":[{"passengers":[{"age":30,"type":"ADULT"},{"age":30,"type":"ADULT"}]}]},"residentType":"NONE","numNights":0,"flightPa
+[17-Nov-2025 17:03:42 UTC] [Soltour API info] Details response structure: {"has_budget":false,"has_details":true,"has_error":false,"error_msg":null}
+[17-Nov-2025 17:03:42 UTC] [Soltour API info] Response from booking/details: {"availToken":"kztE7G4MbiiFRjuwpdLdyE28mGqWpp2pj5eFAWHlsfk=","timestamp":"2025-11-17T18:03:42.004140827","serviceType":"UNDEFINED","agencyInformation":{"clientCode":"BEAUTYT","branchOfficeCode":"999","taxApplicationType":"ISC","taxRate":0,"paymentType":"PP","commission":{"currency":"EUR","rate":15}},"params":{"startDate":"2026-05-18","endDate":"2026-05-25","accomodation":{"rooms":[{"passengers":[{"age":30,"type":"ADULT"},{"age":30,"type":"ADULT"}]}]},"residentType":"NONE","numNights":0,"flightPa
+[17-Nov-2025 17:03:42 UTC] [Soltour API info] Details response structure: {"has_budget":false,"has_details":true,"has_error":false,"error_msg":null}
+[17-Nov-2025 17:03:42 UTC] Loaded file: blur_effects.php
+[17-Nov-2025 17:03:42 UTC] Loaded file: rkit_post_duplicator.php
+[17-Nov-2025 17:03:42 UTC] Loaded file: rkit_tool_tips.php
+[17-Nov-2025 17:03:42 UTC] Loaded file: rkit_wrapper_link.php
+[17-Nov-2025 17:03:42 UTC] Class not found: \RomethemeKit\Rkit_Custom_Cursor
+[17-Nov-2025 17:03:42 UTC] Instantiated class: \RomethemeKit\RkitDuplicator
+[17-Nov-2025 17:03:42 UTC] Instantiated class: \RomethemeKit\BlurEffects
+[17-Nov-2025 17:03:42 UTC] Class not found: \RomethemeKit\Rkit_Sticky_Content
+[17-Nov-2025 17:03:42 UTC] Instantiated class: \RomethemeKit\RkitToolTips
+[17-Nov-2025 17:03:42 UTC] Instantiated class: \RomethemeKit\RkitWrapperLink
+[17-Nov-2025 17:03:42 UTC] [Soltour API info] Response from booking/details: {"availToken":"kztE7G4MbiiFRjuwpdLdyE28mGqWpp2pj5eFAWHlsfk=","timestamp":"2025-11-17T18:03:42.280512033","serviceType":"UNDEFINED","agencyInformation":{"clientCode":"BEAUTYT","branchOfficeCode":"999","taxApplicationType":"ISC","taxRate":0,"paymentType":"PP","commission":{"currency":"EUR","rate":15}},"params":{"startDate":"2026-05-18","endDate":"2026-05-25","accomodation":{"rooms":[{"passengers":[{"age":30,"type":"ADULT"},{"age":30,"type":"ADULT"}]}]},"residentType":"NONE","numNights":0,"flightPa
+[17-Nov-2025 17:03:42 UTC] [Soltour API info] Details response structure: {"has_budget":false,"has_details":true,"has_error":false,"error_msg":null}
+[17-Nov-2025 17:03:42 UTC] [Soltour API info] Getting details for budget: H81784##TI##0$5701544852779542080@@100, hotel: H81784
+[17-Nov-2025 17:03:42 UTC] [Soltour API info] Request to booking/details: {"productType":"PACKAGE","availToken":"kztE7G4MbiiFRjuwpdLdyE28mGqWpp2pj5eFAWHlsfk=","budgetId":"H81784##TI##0$5701544852779542080@@100","hotelParams":{"hotelCode":"H81784","providerCode":"UNDEFINED"}}
+[17-Nov-2025 17:03:42 UTC] [Soltour API info] Response from booking/details: {"availToken":"kztE7G4MbiiFRjuwpdLdyE28mGqWpp2pj5eFAWHlsfk=","timestamp":"2025-11-17T18:03:42.898268457","serviceType":"UNDEFINED","agencyInformation":{"clientCode":"BEAUTYT","branchOfficeCode":"999","taxApplicationType":"ISC","taxRate":0,"paymentType":"PP","commission":{"currency":"EUR","rate":15}},"params":{"startDate":"2026-05-18","endDate":"2026-05-25","accomodation":{"rooms":[{"passengers":[{"age":30,"type":"ADULT"},{"age":30,"type":"ADULT"}]}]},"residentType":"NONE","numNights":0,"flightPa
+[17-Nov-2025 17:03:42 UTC] [Soltour API info] Details response structure: {"has_budget":false,"has_details":true,"has_error":false,"error_msg":null}
+[17-Nov-2025 17:03:43 UTC] Loaded file: blur_effects.php
+[17-Nov-2025 17:03:43 UTC] Loaded file: rkit_post_duplicator.php
+[17-Nov-2025 17:03:43 UTC] Loaded file: rkit_tool_tips.php
+[17-Nov-2025 17:03:43 UTC] Loaded file: rkit_wrapper_link.php
+[17-Nov-2025 17:03:43 UTC] Class not found: \RomethemeKit\Rkit_Custom_Cursor
+[17-Nov-2025 17:03:43 UTC] Instantiated class: \RomethemeKit\RkitDuplicator
+[17-Nov-2025 17:03:43 UTC] Instantiated class: \RomethemeKit\BlurEffects
+[17-Nov-2025 17:03:43 UTC] Class not found: \RomethemeKit\Rkit_Sticky_Content
+[17-Nov-2025 17:03:43 UTC] Instantiated class: \RomethemeKit\RkitToolTips
+[17-Nov-2025 17:03:43 UTC] Instantiated class: \RomethemeKit\RkitWrapperLink
+[17-Nov-2025 17:03:43 UTC] Loaded file: blur_effects.php
+[17-Nov-2025 17:03:43 UTC] Loaded file: rkit_post_duplicator.php
+[17-Nov-2025 17:03:43 UTC] Loaded file: rkit_tool_tips.php
+[17-Nov-2025 17:03:43 UTC] Loaded file: rkit_wrapper_link.php
+[17-Nov-2025 17:03:43 UTC] Class not found: \RomethemeKit\Rkit_Custom_Cursor
+[17-Nov-2025 17:03:43 UTC] Instantiated class: \RomethemeKit\RkitDuplicator
+[17-Nov-2025 17:03:43 UTC] Instantiated class: \RomethemeKit\BlurEffects
+[17-Nov-2025 17:03:43 UTC] Class not found: \RomethemeKit\Rkit_Sticky_Content
+[17-Nov-2025 17:03:43 UTC] Instantiated class: \RomethemeKit\RkitToolTips
+[17-Nov-2025 17:03:43 UTC] Instantiated class: \RomethemeKit\RkitWrapperLink
+[17-Nov-2025 17:03:43 UTC] Loaded file: blur_effects.php
+[17-Nov-2025 17:03:43 UTC] Loaded file: rkit_post_duplicator.php
+[17-Nov-2025 17:03:43 UTC] Loaded file: rkit_tool_tips.php
+[17-Nov-2025 17:03:43 UTC] Loaded file: rkit_wrapper_link.php
+[17-Nov-2025 17:03:43 UTC] Class not found: \RomethemeKit\Rkit_Custom_Cursor
+[17-Nov-2025 17:03:43 UTC] Instantiated class: \RomethemeKit\RkitDuplicator
+[17-Nov-2025 17:03:43 UTC] Instantiated class: \RomethemeKit\BlurEffects
+[17-Nov-2025 17:03:43 UTC] Class not found: \RomethemeKit\Rkit_Sticky_Content
+[17-Nov-2025 17:03:43 UTC] Instantiated class: \RomethemeKit\RkitToolTips
+[17-Nov-2025 17:03:43 UTC] Instantiated class: \RomethemeKit\RkitWrapperLink
+[17-Nov-2025 17:03:43 UTC] Loaded file: blur_effects.php
+[17-Nov-2025 17:03:43 UTC] Loaded file: rkit_post_duplicator.php
+[17-Nov-2025 17:03:43 UTC] Loaded file: rkit_tool_tips.php
+[17-Nov-2025 17:03:43 UTC] Loaded file: rkit_wrapper_link.php
+[17-Nov-2025 17:03:43 UTC] Class not found: \RomethemeKit\Rkit_Custom_Cursor
+[17-Nov-2025 17:03:43 UTC] Instantiated class: \RomethemeKit\RkitDuplicator
+[17-Nov-2025 17:03:43 UTC] Instantiated class: \RomethemeKit\BlurEffects
+[17-Nov-2025 17:03:43 UTC] Class not found: \RomethemeKit\Rkit_Sticky_Content
+[17-Nov-2025 17:03:43 UTC] Instantiated class: \RomethemeKit\RkitToolTips
+[17-Nov-2025 17:03:43 UTC] Instantiated class: \RomethemeKit\RkitWrapperLink
+[17-Nov-2025 17:03:43 UTC] [Soltour API info] Getting details for budget: H408431##SA##0$5272397322504452248@@100, hotel: H408431
+[17-Nov-2025 17:03:43 UTC] [Soltour API info] Request to booking/details: {"productType":"PACKAGE","availToken":"kztE7G4MbiiFRjuwpdLdyE28mGqWpp2pj5eFAWHlsfk=","budgetId":"H408431##SA##0$5272397322504452248@@100","hotelParams":{"hotelCode":"H408431","providerCode":"UNDEFINED"}}
+[17-Nov-2025 17:03:43 UTC] [Soltour API info] Getting details for budget: H2##TI##0$4887313481446396950@@100, hotel: H2
+[17-Nov-2025 17:03:43 UTC] [Soltour API info] Request to booking/details: {"productType":"PACKAGE","availToken":"kztE7G4MbiiFRjuwpdLdyE28mGqWpp2pj5eFAWHlsfk=","budgetId":"H2##TI##0$4887313481446396950@@100","hotelParams":{"hotelCode":"H2","providerCode":"UNDEFINED"}}
+[17-Nov-2025 17:03:43 UTC] [Soltour API info] Getting details for budget: H14##TI##0$4770623948497825998@@100, hotel: H14
+[17-Nov-2025 17:03:43 UTC] [Soltour API info] Request to booking/details: {"productType":"PACKAGE","availToken":"kztE7G4MbiiFRjuwpdLdyE28mGqWpp2pj5eFAWHlsfk=","budgetId":"H14##TI##0$4770623948497825998@@100","hotelParams":{"hotelCode":"H14","providerCode":"UNDEFINED"}}
+[17-Nov-2025 17:03:43 UTC] [Soltour API info] Getting details for budget: H68719##TI##0$5108502520938918182@@100, hotel: H68719
+[17-Nov-2025 17:03:43 UTC] [Soltour API info] Request to booking/details: {"productType":"PACKAGE","availToken":"kztE7G4MbiiFRjuwpdLdyE28mGqWpp2pj5eFAWHlsfk=","budgetId":"H68719##TI##0$5108502520938918182@@100","hotelParams":{"hotelCode":"H68719","providerCode":"UNDEFINED"}}
+[17-Nov-2025 17:03:44 UTC] [Soltour API info] Response from booking/details: {"availToken":"kztE7G4MbiiFRjuwpdLdyE28mGqWpp2pj5eFAWHlsfk=","timestamp":"2025-11-17T18:03:43.957617938","serviceType":"UNDEFINED","agencyInformation":{"clientCode":"BEAUTYT","branchOfficeCode":"999","taxApplicationType":"ISC","taxRate":0,"paymentType":"PP","commission":{"currency":"EUR","rate":15}},"params":{"startDate":"2026-05-18","endDate":"2026-05-25","accomodation":{"rooms":[{"passengers":[{"age":30,"type":"ADULT"},{"age":30,"type":"ADULT"}]}]},"residentType":"NONE","numNights":0,"flightPa
+[17-Nov-2025 17:03:44 UTC] [Soltour API info] Details response structure: {"has_budget":false,"has_details":true,"has_error":false,"error_msg":null}
+[17-Nov-2025 17:03:44 UTC] [Soltour API info] Response from booking/details: {"availToken":"kztE7G4MbiiFRjuwpdLdyE28mGqWpp2pj5eFAWHlsfk=","timestamp":"2025-11-17T18:03:44.001864","serviceType":"UNDEFINED","agencyInformation":{"clientCode":"BEAUTYT","branchOfficeCode":"999","taxApplicationType":"ISC","taxRate":0,"paymentType":"PP","commission":{"currency":"EUR","rate":15}},"params":{"startDate":"2026-05-18","endDate":"2026-05-25","accomodation":{"rooms":[{"passengers":[{"age":30,"type":"ADULT"},{"age":30,"type":"ADULT"}]}]},"residentType":"NONE","numNights":0,"flightParam
+[17-Nov-2025 17:03:44 UTC] [Soltour API info] Details response structure: {"has_budget":false,"has_details":true,"has_error":false,"error_msg":null}
+[17-Nov-2025 17:03:44 UTC] [Soltour API info] Response from booking/details: {"availToken":"kztE7G4MbiiFRjuwpdLdyE28mGqWpp2pj5eFAWHlsfk=","timestamp":"2025-11-17T18:03:44.043548599","serviceType":"UNDEFINED","agencyInformation":{"clientCode":"BEAUTYT","branchOfficeCode":"999","taxApplicationType":"ISC","taxRate":0,"paymentType":"PP","commission":{"currency":"EUR","rate":15}},"params":{"startDate":"2026-05-18","endDate":"2026-05-25","accomodation":{"rooms":[{"passengers":[{"age":30,"type":"ADULT"},{"age":30,"type":"ADULT"}]}]},"residentType":"NONE","numNights":0,"flightPa
+[17-Nov-2025 17:03:44 UTC] [Soltour API info] Details response structure: {"has_budget":false,"has_details":true,"has_error":false,"error_msg":null}
+[17-Nov-2025 17:03:44 UTC] Loaded file: blur_effects.php
+[17-Nov-2025 17:03:44 UTC] Loaded file: rkit_post_duplicator.php
+[17-Nov-2025 17:03:44 UTC] Loaded file: rkit_tool_tips.php
+[17-Nov-2025 17:03:44 UTC] Loaded file: rkit_wrapper_link.php
+[17-Nov-2025 17:03:44 UTC] Class not found: \RomethemeKit\Rkit_Custom_Cursor
+[17-Nov-2025 17:03:44 UTC] Instantiated class: \RomethemeKit\RkitDuplicator
+[17-Nov-2025 17:03:44 UTC] Instantiated class: \RomethemeKit\BlurEffects
+[17-Nov-2025 17:03:44 UTC] Class not found: \RomethemeKit\Rkit_Sticky_Content
+[17-Nov-2025 17:03:44 UTC] Instantiated class: \RomethemeKit\RkitToolTips
+[17-Nov-2025 17:03:44 UTC] Instantiated class: \RomethemeKit\RkitWrapperLink
+[17-Nov-2025 17:03:44 UTC] [Soltour API info] Response from booking/details: {"availToken":"kztE7G4MbiiFRjuwpdLdyE28mGqWpp2pj5eFAWHlsfk=","timestamp":"2025-11-17T18:03:44.044934327","serviceType":"UNDEFINED","agencyInformation":{"clientCode":"BEAUTYT","branchOfficeCode":"999","taxApplicationType":"ISC","taxRate":0,"paymentType":"PP","commission":{"currency":"EUR","rate":15}},"params":{"startDate":"2026-05-18","endDate":"2026-05-25","accomodation":{"rooms":[{"passengers":[{"age":30,"type":"ADULT"},{"age":30,"type":"ADULT"}]}]},"residentType":"NONE","numNights":0,"flightPa
+[17-Nov-2025 17:03:44 UTC] [Soltour API info] Details response structure: {"has_budget":false,"has_details":true,"has_error":false,"error_msg":null}
+[17-Nov-2025 17:03:44 UTC] [Soltour API info] Getting details for budget: H35##TI##0$5297976301171176105@@100, hotel: H35
+[17-Nov-2025 17:03:44 UTC] [Soltour API info] Request to booking/details: {"productType":"PACKAGE","availToken":"kztE7G4MbiiFRjuwpdLdyE28mGqWpp2pj5eFAWHlsfk=","budgetId":"H35##TI##0$5297976301171176105@@100","hotelParams":{"hotelCode":"H35","providerCode":"UNDEFINED"}}
+[17-Nov-2025 17:03:44 UTC] [Soltour API info] Response from booking/details: {"availToken":"kztE7G4MbiiFRjuwpdLdyE28mGqWpp2pj5eFAWHlsfk=","timestamp":"2025-11-17T18:03:44.845790232","serviceType":"UNDEFINED","agencyInformation":{"clientCode":"BEAUTYT","branchOfficeCode":"999","taxApplicationType":"ISC","taxRate":0,"paymentType":"PP","commission":{"currency":"EUR","rate":15}},"params":{"startDate":"2026-05-18","endDate":"2026-05-25","accomodation":{"rooms":[{"passengers":[{"age":30,"type":"ADULT"},{"age":30,"type":"ADULT"}]}]},"residentType":"NONE","numNights":0,"flightPa
+[17-Nov-2025 17:03:44 UTC] [Soltour API info] Details response structure: {"has_budget":false,"has_details":true,"has_error":false,"error_msg":null}
+[17-Nov-2025 17:04:02 UTC] Loaded file: blur_effects.php
+[17-Nov-2025 17:04:02 UTC] Loaded file: rkit_post_duplicator.php
+[17-Nov-2025 17:04:02 UTC] Loaded file: rkit_tool_tips.php
+[17-Nov-2025 17:04:02 UTC] Loaded file: rkit_wrapper_link.php
+[17-Nov-2025 17:04:02 UTC] Class not found: \RomethemeKit\Rkit_Custom_Cursor
+[17-Nov-2025 17:04:02 UTC] Instantiated class: \RomethemeKit\RkitDuplicator
+[17-Nov-2025 17:04:02 UTC] Instantiated class: \RomethemeKit\BlurEffects
+[17-Nov-2025 17:04:02 UTC] Class not found: \RomethemeKit\Rkit_Sticky_Content
+[17-Nov-2025 17:04:02 UTC] Instantiated class: \RomethemeKit\RkitToolTips
+[17-Nov-2025 17:04:02 UTC] Instantiated class: \RomethemeKit\RkitWrapperLink
+[17-Nov-2025 17:04:23 UTC] Loaded file: blur_effects.php
+[17-Nov-2025 17:04:23 UTC] Loaded file: rkit_post_duplicator.php
+[17-Nov-2025 17:04:23 UTC] Loaded file: rkit_tool_tips.php
+[17-Nov-2025 17:04:23 UTC] Loaded file: rkit_wrapper_link.php
+[17-Nov-2025 17:04:23 UTC] Class not found: \RomethemeKit\Rkit_Custom_Cursor
+[17-Nov-2025 17:04:23 UTC] Instantiated class: \RomethemeKit\RkitDuplicator
+[17-Nov-2025 17:04:23 UTC] Instantiated class: \RomethemeKit\BlurEffects
+[17-Nov-2025 17:04:23 UTC] Class not found: \RomethemeKit\Rkit_Sticky_Content
+[17-Nov-2025 17:04:23 UTC] Instantiated class: \RomethemeKit\RkitToolTips
+[17-Nov-2025 17:04:23 UTC] Instantiated class: \RomethemeKit\RkitWrapperLink
+[17-Nov-2025 17:04:24 UTC] Loaded file: blur_effects.php
+[17-Nov-2025 17:04:24 UTC] Loaded file: rkit_post_duplicator.php
+[17-Nov-2025 17:04:24 UTC] Loaded file: rkit_tool_tips.php
+[17-Nov-2025 17:04:24 UTC] Loaded file: rkit_wrapper_link.php
+[17-Nov-2025 17:04:24 UTC] Class not found: \RomethemeKit\Rkit_Custom_Cursor
+[17-Nov-2025 17:04:24 UTC] Instantiated class: \RomethemeKit\RkitDuplicator
+[17-Nov-2025 17:04:24 UTC] Instantiated class: \RomethemeKit\BlurEffects
+[17-Nov-2025 17:04:24 UTC] Class not found: \RomethemeKit\Rkit_Sticky_Content
+[17-Nov-2025 17:04:24 UTC] Instantiated class: \RomethemeKit\RkitToolTips
+[17-Nov-2025 17:04:24 UTC] Instantiated class: \RomethemeKit\RkitWrapperLink
+[17-Nov-2025 17:04:27 UTC] Loaded file: blur_effects.php
+[17-Nov-2025 17:04:27 UTC] Loaded file: rkit_post_duplicator.php
+[17-Nov-2025 17:04:27 UTC] Loaded file: rkit_tool_tips.php
+[17-Nov-2025 17:04:27 UTC] Loaded file: rkit_wrapper_link.php
+[17-Nov-2025 17:04:27 UTC] Class not found: \RomethemeKit\Rkit_Custom_Cursor
+[17-Nov-2025 17:04:27 UTC] Instantiated class: \RomethemeKit\RkitDuplicator
+[17-Nov-2025 17:04:27 UTC] Instantiated class: \RomethemeKit\BlurEffects
+[17-Nov-2025 17:04:27 UTC] Class not found: \RomethemeKit\Rkit_Sticky_Content
+[17-Nov-2025 17:04:27 UTC] Instantiated class: \RomethemeKit\RkitToolTips
+[17-Nov-2025 17:04:27 UTC] Instantiated class: \RomethemeKit\RkitWrapperLink
+[17-Nov-2025 17:04:27 UTC] Loaded file: blur_effects.php
+[17-Nov-2025 17:04:27 UTC] Loaded file: rkit_post_duplicator.php
+[17-Nov-2025 17:04:27 UTC] Loaded file: rkit_tool_tips.php
+[17-Nov-2025 17:04:27 UTC] Loaded file: rkit_wrapper_link.php
+[17-Nov-2025 17:04:27 UTC] Class not found: \RomethemeKit\Rkit_Custom_Cursor
+[17-Nov-2025 17:04:27 UTC] Instantiated class: \RomethemeKit\RkitDuplicator
+[17-Nov-2025 17:04:27 UTC] Instantiated class: \RomethemeKit\BlurEffects
+[17-Nov-2025 17:04:27 UTC] Class not found: \RomethemeKit\Rkit_Sticky_Content
+[17-Nov-2025 17:04:27 UTC] Instantiated class: \RomethemeKit\RkitToolTips
+[17-Nov-2025 17:04:27 UTC] Instantiated class: \RomethemeKit\RkitWrapperLink
+[17-Nov-2025 17:04:32 UTC] Loaded file: blur_effects.php
+[17-Nov-2025 17:04:32 UTC] Loaded file: rkit_post_duplicator.php
+[17-Nov-2025 17:04:32 UTC] Loaded file: rkit_tool_tips.php
+[17-Nov-2025 17:04:32 UTC] Loaded file: rkit_wrapper_link.php
+[17-Nov-2025 17:04:32 UTC] Class not found: \RomethemeKit\Rkit_Custom_Cursor
+[17-Nov-2025 17:04:32 UTC] Instantiated class: \RomethemeKit\RkitDuplicator
+[17-Nov-2025 17:04:32 UTC] Instantiated class: \RomethemeKit\BlurEffects
+[17-Nov-2025 17:04:32 UTC] Class not found: \RomethemeKit\Rkit_Sticky_Content
+[17-Nov-2025 17:04:32 UTC] Instantiated class: \RomethemeKit\RkitToolTips
+[17-Nov-2025 17:04:32 UTC] Instantiated class: \RomethemeKit\RkitWrapperLink
+[17-Nov-2025 17:04:32 UTC] Loaded file: blur_effects.php
+[17-Nov-2025 17:04:32 UTC] Loaded file: rkit_post_duplicator.php
+[17-Nov-2025 17:04:32 UTC] Loaded file: rkit_tool_tips.php
+[17-Nov-2025 17:04:32 UTC] Loaded file: rkit_wrapper_link.php
+[17-Nov-2025 17:04:32 UTC] Class not found: \RomethemeKit\Rkit_Custom_Cursor
+[17-Nov-2025 17:04:32 UTC] Instantiated class: \RomethemeKit\RkitDuplicator
+[17-Nov-2025 17:04:32 UTC] Instantiated class: \RomethemeKit\BlurEffects
+[17-Nov-2025 17:04:32 UTC] Class not found: \RomethemeKit\Rkit_Sticky_Content
+[17-Nov-2025 17:04:32 UTC] Instantiated class: \RomethemeKit\RkitToolTips
+[17-Nov-2025 17:04:32 UTC] Instantiated class: \RomethemeKit\RkitWrapperLink
+[17-Nov-2025 17:04:36 UTC] Loaded file: blur_effects.php
+[17-Nov-2025 17:04:36 UTC] Loaded file: rkit_post_duplicator.php
+[17-Nov-2025 17:04:36 UTC] Loaded file: rkit_tool_tips.php
+[17-Nov-2025 17:04:36 UTC] Loaded file: rkit_wrapper_link.php
+[17-Nov-2025 17:04:36 UTC] Class not found: \RomethemeKit\Rkit_Custom_Cursor
+[17-Nov-2025 17:04:36 UTC] Instantiated class: \RomethemeKit\RkitDuplicator
+[17-Nov-2025 17:04:36 UTC] Instantiated class: \RomethemeKit\BlurEffects
+[17-Nov-2025 17:04:36 UTC] Class not found: \RomethemeKit\Rkit_Sticky_Content
+[17-Nov-2025 17:04:36 UTC] Instantiated class: \RomethemeKit\RkitToolTips
+[17-Nov-2025 17:04:36 UTC] Instantiated class: \RomethemeKit\RkitWrapperLink
+[17-Nov-2025 17:04:37 UTC] [Soltour API info] Request to master/getAllOrigins: {"productType":"PACKAGE","destinationCode":"PUJ"}
+[17-Nov-2025 17:04:37 UTC] [Soltour API info] Response from master/getAllOrigins: {"origins":[{"code":"LCG","name":"A Coruña","airportType":"AIRPORT","destinationCode":"LCG","destinationName":"LA CORUNA","description":"A Coruña","dynamic":false},{"code":"ABC","name":"Albacete","airportType":"AIRPORT","description":"Albacete","dynamic":false},{"code":"ALC","name":"Alicante","airportType":"AIRPORT","destinationCode":"ALC","destinationName":"ALICANTE","description":"Alicante","dynamic":false},{"code":"LEI","name":"Almería","airportType":"AIRPORT","destinationCode":"LEI","dest
+[17-Nov-2025 17:04:48 UTC] Loaded file: blur_effects.php
+[17-Nov-2025 17:04:48 UTC] Loaded file: rkit_post_duplicator.php
+[17-Nov-2025 17:04:48 UTC] Loaded file: rkit_tool_tips.php
+[17-Nov-2025 17:04:48 UTC] Loaded file: rkit_wrapper_link.php
+[17-Nov-2025 17:04:48 UTC] Class not found: \RomethemeKit\Rkit_Custom_Cursor
+[17-Nov-2025 17:04:48 UTC] Instantiated class: \RomethemeKit\RkitDuplicator
+[17-Nov-2025 17:04:48 UTC] Instantiated class: \RomethemeKit\BlurEffects
+[17-Nov-2025 17:04:48 UTC] Class not found: \RomethemeKit\Rkit_Sticky_Content
+[17-Nov-2025 17:04:48 UTC] Instantiated class: \RomethemeKit\RkitToolTips
+[17-Nov-2025 17:04:48 UTC] Instantiated class: \RomethemeKit\RkitWrapperLink
+[17-Nov-2025 17:04:49 UTC] Loaded file: blur_effects.php
+[17-Nov-2025 17:04:49 UTC] Loaded file: rkit_post_duplicator.php
+[17-Nov-2025 17:04:49 UTC] Loaded file: rkit_tool_tips.php
+[17-Nov-2025 17:04:49 UTC] Loaded file: rkit_wrapper_link.php
+[17-Nov-2025 17:04:49 UTC] Class not found: \RomethemeKit\Rkit_Custom_Cursor
+[17-Nov-2025 17:04:49 UTC] Instantiated class: \RomethemeKit\RkitDuplicator
+[17-Nov-2025 17:04:49 UTC] Instantiated class: \RomethemeKit\BlurEffects
+[17-Nov-2025 17:04:49 UTC] Class not found: \RomethemeKit\Rkit_Sticky_Content
+[17-Nov-2025 17:04:49 UTC] Instantiated class: \RomethemeKit\RkitToolTips
+[17-Nov-2025 17:04:49 UTC] Instantiated class: \RomethemeKit\RkitWrapperLink
+[17-Nov-2025 17:04:50 UTC] Loaded file: blur_effects.php
+[17-Nov-2025 17:04:50 UTC] Loaded file: rkit_post_duplicator.php
+[17-Nov-2025 17:04:50 UTC] Loaded file: rkit_tool_tips.php
+[17-Nov-2025 17:04:50 UTC] Loaded file: rkit_wrapper_link.php
+[17-Nov-2025 17:04:50 UTC] Class not found: \RomethemeKit\Rkit_Custom_Cursor
+[17-Nov-2025 17:04:50 UTC] Instantiated class: \RomethemeKit\RkitDuplicator
+[17-Nov-2025 17:04:50 UTC] Instantiated class: \RomethemeKit\BlurEffects
+[17-Nov-2025 17:04:50 UTC] Class not found: \RomethemeKit\Rkit_Sticky_Content
+[17-Nov-2025 17:04:50 UTC] Instantiated class: \RomethemeKit\RkitToolTips
+[17-Nov-2025 17:04:50 UTC] Instantiated class: \RomethemeKit\RkitWrapperLink
+[17-Nov-2025 17:04:50 UTC] Loaded file: blur_effects.php
+[17-Nov-2025 17:04:50 UTC] Loaded file: rkit_post_duplicator.php
+[17-Nov-2025 17:04:50 UTC] Loaded file: rkit_tool_tips.php
+[17-Nov-2025 17:04:50 UTC] Loaded file: rkit_wrapper_link.php
+[17-Nov-2025 17:04:50 UTC] Class not found: \RomethemeKit\Rkit_Custom_Cursor
+[17-Nov-2025 17:04:50 UTC] Instantiated class: \RomethemeKit\RkitDuplicator
+[17-Nov-2025 17:04:50 UTC] Instantiated class: \RomethemeKit\BlurEffects
+[17-Nov-2025 17:04:50 UTC] Class not found: \RomethemeKit\Rkit_Sticky_Content
+[17-Nov-2025 17:04:50 UTC] Instantiated class: \RomethemeKit\RkitToolTips
+[17-Nov-2025 17:04:50 UTC] Instantiated class: \RomethemeKit\RkitWrapperLink
+[17-Nov-2025 17:04:50 UTC] [Soltour API info] === AJAX SEARCH PACKAGES CALLED ===
+[17-Nov-2025 17:04:50 UTC] [Soltour API info] Params recebidos do frontend:
+[17-Nov-2025 17:04:50 UTC] [Soltour API info]   - pageNumber: 0
+[17-Nov-2025 17:04:50 UTC] [Soltour API info]   - rowsPerPage: 10
+[17-Nov-2025 17:04:50 UTC] [Soltour API info] Params completos: {"originCode":"LIS","destinationCode":"PUJ","startDate":"2026-01-18","numNights":7,"rooms":[{"passengers":[{"type":"ADULT","age":30},{"type":"ADULT","age":30}]}],"productType":"PACKAGE","onlyHotel":"N","pageNumber":0,"rowsPerPage":10}
+[17-Nov-2025 17:04:50 UTC] [Soltour API info] Enviando para API Soltour (booking/availability):
+[17-Nov-2025 17:04:50 UTC] [Soltour API info]   - criteria.pagination.pageNumber: 0
+[17-Nov-2025 17:04:50 UTC] [Soltour API info]   - criteria.pagination.rowsPerPage: 10
+[17-Nov-2025 17:04:50 UTC] [Soltour API info] Request to booking/availability: {"productType":"PACKAGE","onlyHotel":"N","criteria":{"order":{"type":"PRICE","direction":"ASC"},"pagination":{"pageNumber":0,"rowsPerPage":10}},"languageCode":"PT","params":{"startDate":"2026-01-18","endDate":"2026-01-25","residentType":"NONE","accomodation":{"rooms":[{"passengers":[{"type":"ADULT","age":30},{"type":"ADULT","age":30}]}]},"hotelParams":{"destinationCode":"PUJ","includeImmediatePayment":true},"flightParams":{"itineraries":[{"origins":["LIS"],"destinations":["PUJ"]}],"directFlightsOnly":false,"includeImmediatePayment":true}}}
+[17-Nov-2025 17:04:58 UTC] [Soltour API info] Response from booking/availability: {"productType":"PACKAGE","availToken":"MlUNgYhbXClQwzUomFjpgmWt9IQOuyKUZsHVXrOWvtA=","timestamp":"2025-11-17T18:04:51.055599681","serviceType":"UNDEFINED","agencyInformation":{"clientCode":"BEAUTYT","branchOfficeCode":"999","taxApplicationType":"ISC","taxRate":0,"paymentType":"PP","commission":{"currency":"EUR","rate":15}},"budgets":[{"booked":false,"selected":false,"hotelServices":[{"responseId":"F2ehkf3QgQzxdlK7gtex16BA/I9QMaqtNMGUOgC4D4w=","id":"651086c0-c817-440a-92f9-1acefa8f762f","type":"H
+[17-Nov-2025 17:04:58 UTC] [Soltour API info] Resposta da API Soltour:
+[17-Nov-2025 17:04:58 UTC] [Soltour API info]   - budgets: 82
+[17-Nov-2025 17:04:58 UTC] [Soltour API info]   - totalCount: 0
+[17-Nov-2025 17:04:58 UTC] [Soltour API info]   - hotels: 43
+[17-Nov-2025 17:04:58 UTC] [Soltour API info]   - availToken: SIM
+[17-Nov-2025 17:04:58 UTC] Loaded file: blur_effects.php
+[17-Nov-2025 17:04:58 UTC] Loaded file: rkit_post_duplicator.php
+[17-Nov-2025 17:04:58 UTC] Loaded file: rkit_tool_tips.php
+[17-Nov-2025 17:04:58 UTC] Loaded file: rkit_wrapper_link.php
+[17-Nov-2025 17:04:58 UTC] Class not found: \RomethemeKit\Rkit_Custom_Cursor
+[17-Nov-2025 17:04:58 UTC] Instantiated class: \RomethemeKit\RkitDuplicator
+[17-Nov-2025 17:04:58 UTC] Instantiated class: \RomethemeKit\BlurEffects
+[17-Nov-2025 17:04:58 UTC] Class not found: \RomethemeKit\Rkit_Sticky_Content
+[17-Nov-2025 17:04:58 UTC] Instantiated class: \RomethemeKit\RkitToolTips
+[17-Nov-2025 17:04:58 UTC] Instantiated class: \RomethemeKit\RkitWrapperLink
+[17-Nov-2025 17:04:58 UTC] Loaded file: blur_effects.php
+[17-Nov-2025 17:04:58 UTC] Loaded file: rkit_post_duplicator.php
+[17-Nov-2025 17:04:58 UTC] Loaded file: rkit_tool_tips.php
+[17-Nov-2025 17:04:58 UTC] Loaded file: rkit_wrapper_link.php
+[17-Nov-2025 17:04:58 UTC] Class not found: \RomethemeKit\Rkit_Custom_Cursor
+[17-Nov-2025 17:04:58 UTC] Instantiated class: \RomethemeKit\RkitDuplicator
+[17-Nov-2025 17:04:58 UTC] Instantiated class: \RomethemeKit\BlurEffects
+[17-Nov-2025 17:04:58 UTC] Class not found: \RomethemeKit\Rkit_Sticky_Content
+[17-Nov-2025 17:04:58 UTC] Instantiated class: \RomethemeKit\RkitToolTips
+[17-Nov-2025 17:04:58 UTC] Instantiated class: \RomethemeKit\RkitWrapperLink
+[17-Nov-2025 17:04:58 UTC] Loaded file: blur_effects.php
+[17-Nov-2025 17:04:58 UTC] Loaded file: rkit_post_duplicator.php
+[17-Nov-2025 17:04:58 UTC] Loaded file: rkit_tool_tips.php
+[17-Nov-2025 17:04:58 UTC] Loaded file: rkit_wrapper_link.php
+[17-Nov-2025 17:04:58 UTC] Class not found: \RomethemeKit\Rkit_Custom_Cursor
+[17-Nov-2025 17:04:58 UTC] Instantiated class: \RomethemeKit\RkitDuplicator
+[17-Nov-2025 17:04:58 UTC] Instantiated class: \RomethemeKit\BlurEffects
+[17-Nov-2025 17:04:58 UTC] Class not found: \RomethemeKit\Rkit_Sticky_Content
+[17-Nov-2025 17:04:58 UTC] Instantiated class: \RomethemeKit\RkitToolTips
+[17-Nov-2025 17:04:58 UTC] Instantiated class: \RomethemeKit\RkitWrapperLink
+[17-Nov-2025 17:04:58 UTC] Loaded file: blur_effects.php
+[17-Nov-2025 17:04:58 UTC] Loaded file: rkit_post_duplicator.php
+[17-Nov-2025 17:04:58 UTC] Loaded file: rkit_tool_tips.php
+[17-Nov-2025 17:04:58 UTC] Loaded file: rkit_wrapper_link.php
+[17-Nov-2025 17:04:58 UTC] Class not found: \RomethemeKit\Rkit_Custom_Cursor
+[17-Nov-2025 17:04:58 UTC] Instantiated class: \RomethemeKit\RkitDuplicator
+[17-Nov-2025 17:04:58 UTC] Instantiated class: \RomethemeKit\BlurEffects
+[17-Nov-2025 17:04:58 UTC] Class not found: \RomethemeKit\Rkit_Sticky_Content
+[17-Nov-2025 17:04:58 UTC] Instantiated class: \RomethemeKit\RkitToolTips
+[17-Nov-2025 17:04:58 UTC] Instantiated class: \RomethemeKit\RkitWrapperLink
+[17-Nov-2025 17:04:58 UTC] Loaded file: blur_effects.php
+[17-Nov-2025 17:04:58 UTC] Loaded file: rkit_post_duplicator.php
+[17-Nov-2025 17:04:58 UTC] Loaded file: rkit_tool_tips.php
+[17-Nov-2025 17:04:58 UTC] Loaded file: rkit_wrapper_link.php
+[17-Nov-2025 17:04:58 UTC] Class not found: \RomethemeKit\Rkit_Custom_Cursor
+[17-Nov-2025 17:04:58 UTC] Instantiated class: \RomethemeKit\RkitDuplicator
+[17-Nov-2025 17:04:58 UTC] Instantiated class: \RomethemeKit\BlurEffects
+[17-Nov-2025 17:04:58 UTC] Class not found: \RomethemeKit\Rkit_Sticky_Content
+[17-Nov-2025 17:04:58 UTC] Instantiated class: \RomethemeKit\RkitToolTips
+[17-Nov-2025 17:04:58 UTC] Instantiated class: \RomethemeKit\RkitWrapperLink
+[17-Nov-2025 17:04:59 UTC] [Soltour API info] Getting details for budget: H220697##TI##0$5581292051027920255@@127, hotel: H220697
+[17-Nov-2025 17:04:59 UTC] [Soltour API info] Request to booking/details: {"productType":"PACKAGE","availToken":"MlUNgYhbXClQwzUomFjpgmWt9IQOuyKUZsHVXrOWvtA=","budgetId":"H220697##TI##0$5581292051027920255@@127","hotelParams":{"hotelCode":"H220697","providerCode":"UNDEFINED"}}
+[17-Nov-2025 17:04:59 UTC] [Soltour API info] Getting details for budget: H199543##SA##0$4858621918913565072@@127, hotel: H199543
+[17-Nov-2025 17:04:59 UTC] [Soltour API info] Request to booking/details: {"productType":"PACKAGE","availToken":"MlUNgYhbXClQwzUomFjpgmWt9IQOuyKUZsHVXrOWvtA=","budgetId":"H199543##SA##0$4858621918913565072@@127","hotelParams":{"hotelCode":"H199543","providerCode":"UNDEFINED"}}
+[17-Nov-2025 17:04:59 UTC] [Soltour API info] Getting details for budget: H24##TI##0$5498007449240049949@@127, hotel: H24
+[17-Nov-2025 17:04:59 UTC] [Soltour API info] Request to booking/details: {"productType":"PACKAGE","availToken":"MlUNgYhbXClQwzUomFjpgmWt9IQOuyKUZsHVXrOWvtA=","budgetId":"H24##TI##0$5498007449240049949@@127","hotelParams":{"hotelCode":"H24","providerCode":"UNDEFINED"}}
+[17-Nov-2025 17:04:59 UTC] [Soltour API info] Getting details for budget: H81381##TI##0$5649228155069110705@@127, hotel: H81381
+[17-Nov-2025 17:04:59 UTC] [Soltour API info] Request to booking/details: {"productType":"PACKAGE","availToken":"MlUNgYhbXClQwzUomFjpgmWt9IQOuyKUZsHVXrOWvtA=","budgetId":"H81381##TI##0$5649228155069110705@@127","hotelParams":{"hotelCode":"H81381","providerCode":"UNDEFINED"}}
+[17-Nov-2025 17:04:59 UTC] [Soltour API info] Getting details for budget: H99741##TI##0$5722720119838324346@@127, hotel: H99741
+[17-Nov-2025 17:04:59 UTC] [Soltour API info] Request to booking/details: {"productType":"PACKAGE","availToken":"MlUNgYhbXClQwzUomFjpgmWt9IQOuyKUZsHVXrOWvtA=","budgetId":"H99741##TI##0$5722720119838324346@@127","hotelParams":{"hotelCode":"H99741","providerCode":"UNDEFINED"}}
+[17-Nov-2025 17:04:59 UTC] [Soltour API info] Response from booking/details: {"availToken":"MlUNgYhbXClQwzUomFjpgmWt9IQOuyKUZsHVXrOWvtA=","timestamp":"2025-11-17T18:04:59.636410015","serviceType":"UNDEFINED","agencyInformation":{"clientCode":"BEAUTYT","branchOfficeCode":"999","taxApplicationType":"ISC","taxRate":0,"paymentType":"PP","commission":{"currency":"EUR","rate":15}},"params":{"startDate":"2026-01-18","endDate":"2026-01-25","accomodation":{"rooms":[{"passengers":[{"age":30,"type":"ADULT"},{"age":30,"type":"ADULT"}]}]},"residentType":"NONE","numNights":0,"flightPa
+[17-Nov-2025 17:04:59 UTC] [Soltour API info] Details response structure: {"has_budget":false,"has_details":true,"has_error":false,"error_msg":null}
+[17-Nov-2025 17:04:59 UTC] [Soltour API info] Response from booking/details: {"availToken":"MlUNgYhbXClQwzUomFjpgmWt9IQOuyKUZsHVXrOWvtA=","timestamp":"2025-11-17T18:04:59.731259468","serviceType":"UNDEFINED","agencyInformation":{"clientCode":"BEAUTYT","branchOfficeCode":"999","taxApplicationType":"ISC","taxRate":0,"paymentType":"PP","commission":{"currency":"EUR","rate":15}},"params":{"startDate":"2026-01-18","endDate":"2026-01-25","accomodation":{"rooms":[{"passengers":[{"age":30,"type":"ADULT"},{"age":30,"type":"ADULT"}]}]},"residentType":"NONE","numNights":0,"flightPa
+[17-Nov-2025 17:04:59 UTC] [Soltour API info] Details response structure: {"has_budget":false,"has_details":true,"has_error":false,"error_msg":null}
+[17-Nov-2025 17:04:59 UTC] [Soltour API info] Response from booking/details: {"availToken":"MlUNgYhbXClQwzUomFjpgmWt9IQOuyKUZsHVXrOWvtA=","timestamp":"2025-11-17T18:04:59.727157218","serviceType":"UNDEFINED","agencyInformation":{"clientCode":"BEAUTYT","branchOfficeCode":"999","taxApplicationType":"ISC","taxRate":0,"paymentType":"PP","commission":{"currency":"EUR","rate":15}},"params":{"startDate":"2026-01-18","endDate":"2026-01-25","accomodation":{"rooms":[{"passengers":[{"age":30,"type":"ADULT"},{"age":30,"type":"ADULT"}]}]},"residentType":"NONE","numNights":0,"flightPa
+[17-Nov-2025 17:04:59 UTC] [Soltour API info] Details response structure: {"has_budget":false,"has_details":true,"has_error":false,"error_msg":null}
+[17-Nov-2025 17:04:59 UTC] [Soltour API info] Response from booking/details: {"availToken":"MlUNgYhbXClQwzUomFjpgmWt9IQOuyKUZsHVXrOWvtA=","timestamp":"2025-11-17T18:04:59.755697308","serviceType":"UNDEFINED","agencyInformation":{"clientCode":"BEAUTYT","branchOfficeCode":"999","taxApplicationType":"ISC","taxRate":0,"paymentType":"PP","commission":{"currency":"EUR","rate":15}},"params":{"startDate":"2026-01-18","endDate":"2026-01-25","accomodation":{"rooms":[{"passengers":[{"age":30,"type":"ADULT"},{"age":30,"type":"ADULT"}]}]},"residentType":"NONE","numNights":0,"flightPa
+[17-Nov-2025 17:04:59 UTC] [Soltour API info] Details response structure: {"has_budget":false,"has_details":true,"has_error":false,"error_msg":null}
+[17-Nov-2025 17:04:59 UTC] [Soltour API info] Response from booking/details: {"availToken":"MlUNgYhbXClQwzUomFjpgmWt9IQOuyKUZsHVXrOWvtA=","timestamp":"2025-11-17T18:04:59.677792199","serviceType":"UNDEFINED","agencyInformation":{"clientCode":"BEAUTYT","branchOfficeCode":"999","taxApplicationType":"ISC","taxRate":0,"paymentType":"PP","commission":{"currency":"EUR","rate":15}},"params":{"startDate":"2026-01-18","endDate":"2026-01-25","accomodation":{"rooms":[{"passengers":[{"age":30,"type":"ADULT"},{"age":30,"type":"ADULT"}]}]},"residentType":"NONE","numNights":0,"flightPa
+[17-Nov-2025 17:04:59 UTC] [Soltour API info] Details response structure: {"has_budget":false,"has_details":true,"has_error":false,"error_msg":null}
+[17-Nov-2025 17:05:00 UTC] Loaded file: blur_effects.php
+[17-Nov-2025 17:05:00 UTC] Loaded file: rkit_post_duplicator.php
+[17-Nov-2025 17:05:00 UTC] Loaded file: rkit_tool_tips.php
+[17-Nov-2025 17:05:00 UTC] Loaded file: rkit_wrapper_link.php
+[17-Nov-2025 17:05:00 UTC] Class not found: \RomethemeKit\Rkit_Custom_Cursor
+[17-Nov-2025 17:05:00 UTC] Instantiated class: \RomethemeKit\RkitDuplicator
+[17-Nov-2025 17:05:00 UTC] Instantiated class: \RomethemeKit\BlurEffects
+[17-Nov-2025 17:05:00 UTC] Class not found: \RomethemeKit\Rkit_Sticky_Content
+[17-Nov-2025 17:05:00 UTC] Instantiated class: \RomethemeKit\RkitToolTips
+[17-Nov-2025 17:05:00 UTC] Instantiated class: \RomethemeKit\RkitWrapperLink
+[17-Nov-2025 17:05:00 UTC] Loaded file: blur_effects.php
+[17-Nov-2025 17:05:00 UTC] Loaded file: rkit_post_duplicator.php
+[17-Nov-2025 17:05:00 UTC] Loaded file: rkit_tool_tips.php
+[17-Nov-2025 17:05:00 UTC] Loaded file: rkit_wrapper_link.php
+[17-Nov-2025 17:05:00 UTC] Class not found: \RomethemeKit\Rkit_Custom_Cursor
+[17-Nov-2025 17:05:00 UTC] Instantiated class: \RomethemeKit\RkitDuplicator
+[17-Nov-2025 17:05:00 UTC] Instantiated class: \RomethemeKit\BlurEffects
+[17-Nov-2025 17:05:00 UTC] Class not found: \RomethemeKit\Rkit_Sticky_Content
+[17-Nov-2025 17:05:00 UTC] Instantiated class: \RomethemeKit\RkitToolTips
+[17-Nov-2025 17:05:00 UTC] Instantiated class: \RomethemeKit\RkitWrapperLink
+[17-Nov-2025 17:05:00 UTC] Loaded file: blur_effects.php
+[17-Nov-2025 17:05:00 UTC] Loaded file: rkit_post_duplicator.php
+[17-Nov-2025 17:05:00 UTC] Loaded file: rkit_tool_tips.php
+[17-Nov-2025 17:05:00 UTC] Loaded file: rkit_wrapper_link.php
+[17-Nov-2025 17:05:00 UTC] Class not found: \RomethemeKit\Rkit_Custom_Cursor
+[17-Nov-2025 17:05:00 UTC] Instantiated class: \RomethemeKit\RkitDuplicator
+[17-Nov-2025 17:05:00 UTC] Instantiated class: \RomethemeKit\BlurEffects
+[17-Nov-2025 17:05:00 UTC] Class not found: \RomethemeKit\Rkit_Sticky_Content
+[17-Nov-2025 17:05:00 UTC] Instantiated class: \RomethemeKit\RkitToolTips
+[17-Nov-2025 17:05:00 UTC] Instantiated class: \RomethemeKit\RkitWrapperLink
+[17-Nov-2025 17:05:00 UTC] Loaded file: blur_effects.php
+[17-Nov-2025 17:05:00 UTC] Loaded file: rkit_post_duplicator.php
+[17-Nov-2025 17:05:00 UTC] Loaded file: rkit_tool_tips.php
+[17-Nov-2025 17:05:00 UTC] Loaded file: rkit_wrapper_link.php
+[17-Nov-2025 17:05:00 UTC] Class not found: \RomethemeKit\Rkit_Custom_Cursor
+[17-Nov-2025 17:05:00 UTC] Instantiated class: \RomethemeKit\RkitDuplicator
+[17-Nov-2025 17:05:00 UTC] Instantiated class: \RomethemeKit\BlurEffects
+[17-Nov-2025 17:05:00 UTC] Class not found: \RomethemeKit\Rkit_Sticky_Content
+[17-Nov-2025 17:05:00 UTC] Instantiated class: \RomethemeKit\RkitToolTips
+[17-Nov-2025 17:05:00 UTC] Instantiated class: \RomethemeKit\RkitWrapperLink
+[17-Nov-2025 17:05:00 UTC] [Soltour API info] Getting details for budget: H408431##SA##0$4800268034624435963@@127, hotel: H408431
+[17-Nov-2025 17:05:00 UTC] [Soltour API info] Request to booking/details: {"productType":"PACKAGE","availToken":"MlUNgYhbXClQwzUomFjpgmWt9IQOuyKUZsHVXrOWvtA=","budgetId":"H408431##SA##0$4800268034624435963@@127","hotelParams":{"hotelCode":"H408431","providerCode":"UNDEFINED"}}
+[17-Nov-2025 17:05:00 UTC] [Soltour API info] Getting details for budget: H79993##TI##0$4683372512330939130@@127, hotel: H79993
+[17-Nov-2025 17:05:00 UTC] [Soltour API info] Request to booking/details: {"productType":"PACKAGE","availToken":"MlUNgYhbXClQwzUomFjpgmWt9IQOuyKUZsHVXrOWvtA=","budgetId":"H79993##TI##0$4683372512330939130@@127","hotelParams":{"hotelCode":"H79993","providerCode":"UNDEFINED"}}
+[17-Nov-2025 17:05:00 UTC] [Soltour API info] Getting details for budget: H68719##TI##0$5605180805286677390@@127, hotel: H68719
+[17-Nov-2025 17:05:00 UTC] [Soltour API info] Request to booking/details: {"productType":"PACKAGE","availToken":"MlUNgYhbXClQwzUomFjpgmWt9IQOuyKUZsHVXrOWvtA=","budgetId":"H68719##TI##0$5605180805286677390@@127","hotelParams":{"hotelCode":"H68719","providerCode":"UNDEFINED"}}
+[17-Nov-2025 17:05:00 UTC] [Soltour API info] Getting details for budget: H49702##TI##0$5736206014870600098@@127, hotel: H49702
+[17-Nov-2025 17:05:00 UTC] [Soltour API info] Request to booking/details: {"productType":"PACKAGE","availToken":"MlUNgYhbXClQwzUomFjpgmWt9IQOuyKUZsHVXrOWvtA=","budgetId":"H49702##TI##0$5736206014870600098@@127","hotelParams":{"hotelCode":"H49702","providerCode":"UNDEFINED"}}
+[17-Nov-2025 17:05:01 UTC] [Soltour API info] Response from booking/details: {"availToken":"MlUNgYhbXClQwzUomFjpgmWt9IQOuyKUZsHVXrOWvtA=","timestamp":"2025-11-17T18:05:01.031683086","serviceType":"UNDEFINED","agencyInformation":{"clientCode":"BEAUTYT","branchOfficeCode":"999","taxApplicationType":"ISC","taxRate":0,"paymentType":"PP","commission":{"currency":"EUR","rate":15}},"params":{"startDate":"2026-01-18","endDate":"2026-01-25","accomodation":{"rooms":[{"passengers":[{"age":30,"type":"ADULT"},{"age":30,"type":"ADULT"}]}]},"residentType":"NONE","numNights":0,"flightPa
+[17-Nov-2025 17:05:01 UTC] [Soltour API info] Details response structure: {"has_budget":false,"has_details":true,"has_error":false,"error_msg":null}
+[17-Nov-2025 17:05:01 UTC] [Soltour API info] Response from booking/details: {"availToken":"MlUNgYhbXClQwzUomFjpgmWt9IQOuyKUZsHVXrOWvtA=","timestamp":"2025-11-17T18:05:00.994218589","serviceType":"UNDEFINED","agencyInformation":{"clientCode":"BEAUTYT","branchOfficeCode":"999","taxApplicationType":"ISC","taxRate":0,"paymentType":"PP","commission":{"currency":"EUR","rate":15}},"params":{"startDate":"2026-01-18","endDate":"2026-01-25","accomodation":{"rooms":[{"passengers":[{"age":30,"type":"ADULT"},{"age":30,"type":"ADULT"}]}]},"residentType":"NONE","numNights":0,"flightPa
+[17-Nov-2025 17:05:01 UTC] [Soltour API info] Details response structure: {"has_budget":false,"has_details":true,"has_error":false,"error_msg":null}
+[17-Nov-2025 17:05:01 UTC] Loaded file: blur_effects.php
+[17-Nov-2025 17:05:01 UTC] Loaded file: rkit_post_duplicator.php
+[17-Nov-2025 17:05:01 UTC] Loaded file: rkit_tool_tips.php
+[17-Nov-2025 17:05:01 UTC] Loaded file: rkit_wrapper_link.php
+[17-Nov-2025 17:05:01 UTC] Class not found: \RomethemeKit\Rkit_Custom_Cursor
+[17-Nov-2025 17:05:01 UTC] Instantiated class: \RomethemeKit\RkitDuplicator
+[17-Nov-2025 17:05:01 UTC] Instantiated class: \RomethemeKit\BlurEffects
+[17-Nov-2025 17:05:01 UTC] Class not found: \RomethemeKit\Rkit_Sticky_Content
+[17-Nov-2025 17:05:01 UTC] Instantiated class: \RomethemeKit\RkitToolTips
+[17-Nov-2025 17:05:01 UTC] Instantiated class: \RomethemeKit\RkitWrapperLink
+[17-Nov-2025 17:05:01 UTC] [Soltour API info] Response from booking/details: {"availToken":"MlUNgYhbXClQwzUomFjpgmWt9IQOuyKUZsHVXrOWvtA=","timestamp":"2025-11-17T18:05:01.067747657","serviceType":"UNDEFINED","agencyInformation":{"clientCode":"BEAUTYT","branchOfficeCode":"999","taxApplicationType":"ISC","taxRate":0,"paymentType":"PP","commission":{"currency":"EUR","rate":15}},"params":{"startDate":"2026-01-18","endDate":"2026-01-25","accomodation":{"rooms":[{"passengers":[{"age":30,"type":"ADULT"},{"age":30,"type":"ADULT"}]}]},"residentType":"NONE","numNights":0,"flightPa
+[17-Nov-2025 17:05:01 UTC] [Soltour API info] Details response structure: {"has_budget":false,"has_details":true,"has_error":false,"error_msg":null}
+[17-Nov-2025 17:05:01 UTC] [Soltour API info] Response from booking/details: {"availToken":"MlUNgYhbXClQwzUomFjpgmWt9IQOuyKUZsHVXrOWvtA=","timestamp":"2025-11-17T18:05:01.120378388","serviceType":"UNDEFINED","agencyInformation":{"clientCode":"BEAUTYT","branchOfficeCode":"999","taxApplicationType":"ISC","taxRate":0,"paymentType":"PP","commission":{"currency":"EUR","rate":15}},"params":{"startDate":"2026-01-18","endDate":"2026-01-25","accomodation":{"rooms":[{"passengers":[{"age":30,"type":"ADULT"},{"age":30,"type":"ADULT"}]}]},"residentType":"NONE","numNights":0,"flightPa
+[17-Nov-2025 17:05:01 UTC] [Soltour API info] Details response structure: {"has_budget":false,"has_details":true,"has_error":false,"error_msg":null}
+[17-Nov-2025 17:05:01 UTC] [Soltour API info] Getting details for budget: H10654##TI##0$4916265436911065386@@127, hotel: H10654
+[17-Nov-2025 17:05:01 UTC] [Soltour API info] Request to booking/details: {"productType":"PACKAGE","availToken":"MlUNgYhbXClQwzUomFjpgmWt9IQOuyKUZsHVXrOWvtA=","budgetId":"H10654##TI##0$4916265436911065386@@127","hotelParams":{"hotelCode":"H10654","providerCode":"UNDEFINED"}}
+[17-Nov-2025 17:05:02 UTC] Loaded file: blur_effects.php
+[17-Nov-2025 17:05:02 UTC] Loaded file: rkit_post_duplicator.php
+[17-Nov-2025 17:05:02 UTC] Loaded file: rkit_tool_tips.php
+[17-Nov-2025 17:05:02 UTC] Loaded file: rkit_wrapper_link.php
+[17-Nov-2025 17:05:02 UTC] Class not found: \RomethemeKit\Rkit_Custom_Cursor
+[17-Nov-2025 17:05:02 UTC] Instantiated class: \RomethemeKit\RkitDuplicator
+[17-Nov-2025 17:05:02 UTC] Instantiated class: \RomethemeKit\BlurEffects
+[17-Nov-2025 17:05:02 UTC] Class not found: \RomethemeKit\Rkit_Sticky_Content
+[17-Nov-2025 17:05:02 UTC] Instantiated class: \RomethemeKit\RkitToolTips
+[17-Nov-2025 17:05:02 UTC] Instantiated class: \RomethemeKit\RkitWrapperLink
+[17-Nov-2025 17:05:02 UTC] Loaded file: blur_effects.php
+[17-Nov-2025 17:05:02 UTC] Loaded file: rkit_post_duplicator.php
+[17-Nov-2025 17:05:02 UTC] Loaded file: rkit_tool_tips.php
+[17-Nov-2025 17:05:02 UTC] Loaded file: rkit_wrapper_link.php
+[17-Nov-2025 17:05:02 UTC] Class not found: \RomethemeKit\Rkit_Custom_Cursor
+[17-Nov-2025 17:05:02 UTC] Instantiated class: \RomethemeKit\RkitDuplicator
+[17-Nov-2025 17:05:02 UTC] Instantiated class: \RomethemeKit\BlurEffects
+[17-Nov-2025 17:05:02 UTC] Class not found: \RomethemeKit\Rkit_Sticky_Content
+[17-Nov-2025 17:05:02 UTC] Instantiated class: \RomethemeKit\RkitToolTips
+[17-Nov-2025 17:05:02 UTC] Instantiated class: \RomethemeKit\RkitWrapperLink
+[17-Nov-2025 17:05:02 UTC] Loaded file: blur_effects.php
+[17-Nov-2025 17:05:02 UTC] Loaded file: rkit_post_duplicator.php
+[17-Nov-2025 17:05:02 UTC] Loaded file: rkit_tool_tips.php
+[17-Nov-2025 17:05:02 UTC] Loaded file: rkit_wrapper_link.php
+[17-Nov-2025 17:05:02 UTC] Class not found: \RomethemeKit\Rkit_Custom_Cursor
+[17-Nov-2025 17:05:02 UTC] Instantiated class: \RomethemeKit\RkitDuplicator
+[17-Nov-2025 17:05:02 UTC] Instantiated class: \RomethemeKit\BlurEffects
+[17-Nov-2025 17:05:02 UTC] Class not found: \RomethemeKit\Rkit_Sticky_Content
+[17-Nov-2025 17:05:02 UTC] Instantiated class: \RomethemeKit\RkitToolTips
+[17-Nov-2025 17:05:02 UTC] Instantiated class: \RomethemeKit\RkitWrapperLink
+[17-Nov-2025 17:05:02 UTC] Loaded file: blur_effects.php
+[17-Nov-2025 17:05:02 UTC] Loaded file: rkit_post_duplicator.php
+[17-Nov-2025 17:05:02 UTC] Loaded file: rkit_tool_tips.php
+[17-Nov-2025 17:05:02 UTC] Loaded file: rkit_wrapper_link.php
+[17-Nov-2025 17:05:02 UTC] Class not found: \RomethemeKit\Rkit_Custom_Cursor
+[17-Nov-2025 17:05:02 UTC] Instantiated class: \RomethemeKit\RkitDuplicator
+[17-Nov-2025 17:05:02 UTC] Instantiated class: \RomethemeKit\BlurEffects
+[17-Nov-2025 17:05:02 UTC] Class not found: \RomethemeKit\Rkit_Sticky_Content
+[17-Nov-2025 17:05:02 UTC] Instantiated class: \RomethemeKit\RkitToolTips
+[17-Nov-2025 17:05:02 UTC] Instantiated class: \RomethemeKit\RkitWrapperLink
+[17-Nov-2025 17:05:02 UTC] [Soltour API info] Response from booking/details: {"availToken":"MlUNgYhbXClQwzUomFjpgmWt9IQOuyKUZsHVXrOWvtA=","timestamp":"2025-11-17T18:05:02.274218325","serviceType":"UNDEFINED","agencyInformation":{"clientCode":"BEAUTYT","branchOfficeCode":"999","taxApplicationType":"ISC","taxRate":0,"paymentType":"PP","commission":{"currency":"EUR","rate":15}},"params":{"startDate":"2026-01-18","endDate":"2026-01-25","accomodation":{"rooms":[{"passengers":[{"age":30,"type":"ADULT"},{"age":30,"type":"ADULT"}]}]},"residentType":"NONE","numNights":0,"flightPa
+[17-Nov-2025 17:05:02 UTC] [Soltour API info] Details response structure: {"has_budget":false,"has_details":true,"has_error":false,"error_msg":null}
+[17-Nov-2025 17:05:02 UTC] [Soltour API info] Getting details for budget: H33##TI##0$5224565869005408225@@127, hotel: H33
+[17-Nov-2025 17:05:02 UTC] [Soltour API info] Request to booking/details: {"productType":"PACKAGE","availToken":"MlUNgYhbXClQwzUomFjpgmWt9IQOuyKUZsHVXrOWvtA=","budgetId":"H33##TI##0$5224565869005408225@@127","hotelParams":{"hotelCode":"H33","providerCode":"UNDEFINED"}}
+[17-Nov-2025 17:05:02 UTC] [Soltour API info] Getting details for budget: H50725##TI##0$4848732532411679338@@127, hotel: H50725
+[17-Nov-2025 17:05:02 UTC] [Soltour API info] Request to booking/details: {"productType":"PACKAGE","availToken":"MlUNgYhbXClQwzUomFjpgmWt9IQOuyKUZsHVXrOWvtA=","budgetId":"H50725##TI##0$4848732532411679338@@127","hotelParams":{"hotelCode":"H50725","providerCode":"UNDEFINED"}}
+[17-Nov-2025 17:05:03 UTC] [Soltour API info] Getting details for budget: H14##TI##0$4769833026189255234@@127, hotel: H14
+[17-Nov-2025 17:05:03 UTC] [Soltour API info] Request to booking/details: {"productType":"PACKAGE","availToken":"MlUNgYhbXClQwzUomFjpgmWt9IQOuyKUZsHVXrOWvtA=","budgetId":"H14##TI##0$4769833026189255234@@127","hotelParams":{"hotelCode":"H14","providerCode":"UNDEFINED"}}
+[17-Nov-2025 17:05:03 UTC] [Soltour API info] Getting details for budget: H2##TI##0$5403619570776492598@@127, hotel: H2
+[17-Nov-2025 17:05:03 UTC] [Soltour API info] Request to booking/details: {"productType":"PACKAGE","availToken":"MlUNgYhbXClQwzUomFjpgmWt9IQOuyKUZsHVXrOWvtA=","budgetId":"H2##TI##0$5403619570776492598@@127","hotelParams":{"hotelCode":"H2","providerCode":"UNDEFINED"}}
+[17-Nov-2025 17:05:03 UTC] Loaded file: blur_effects.php
+[17-Nov-2025 17:05:03 UTC] Loaded file: rkit_post_duplicator.php
+[17-Nov-2025 17:05:03 UTC] Loaded file: rkit_tool_tips.php
+[17-Nov-2025 17:05:03 UTC] Loaded file: rkit_wrapper_link.php
+[17-Nov-2025 17:05:03 UTC] Class not found: \RomethemeKit\Rkit_Custom_Cursor
+[17-Nov-2025 17:05:03 UTC] Instantiated class: \RomethemeKit\RkitDuplicator
+[17-Nov-2025 17:05:03 UTC] Instantiated class: \RomethemeKit\BlurEffects
+[17-Nov-2025 17:05:03 UTC] Class not found: \RomethemeKit\Rkit_Sticky_Content
+[17-Nov-2025 17:05:03 UTC] Instantiated class: \RomethemeKit\RkitToolTips
+[17-Nov-2025 17:05:03 UTC] Instantiated class: \RomethemeKit\RkitWrapperLink
+[17-Nov-2025 17:05:03 UTC] [Soltour API info] Response from booking/details: {"availToken":"MlUNgYhbXClQwzUomFjpgmWt9IQOuyKUZsHVXrOWvtA=","timestamp":"2025-11-17T18:05:03.288345113","serviceType":"UNDEFINED","agencyInformation":{"clientCode":"BEAUTYT","branchOfficeCode":"999","taxApplicationType":"ISC","taxRate":0,"paymentType":"PP","commission":{"currency":"EUR","rate":15}},"params":{"startDate":"2026-01-18","endDate":"2026-01-25","accomodation":{"rooms":[{"passengers":[{"age":30,"type":"ADULT"},{"age":30,"type":"ADULT"}]}]},"residentType":"NONE","numNights":0,"flightPa
+[17-Nov-2025 17:05:03 UTC] [Soltour API info] Details response structure: {"has_budget":false,"has_details":true,"has_error":false,"error_msg":null}
+[17-Nov-2025 17:05:03 UTC] [Soltour API info] Response from booking/details: {"availToken":"MlUNgYhbXClQwzUomFjpgmWt9IQOuyKUZsHVXrOWvtA=","timestamp":"2025-11-17T18:05:03.371876867","serviceType":"UNDEFINED","agencyInformation":{"clientCode":"BEAUTYT","branchOfficeCode":"999","taxApplicationType":"ISC","taxRate":0,"paymentType":"PP","commission":{"currency":"EUR","rate":15}},"params":{"startDate":"2026-01-18","endDate":"2026-01-25","accomodation":{"rooms":[{"passengers":[{"age":30,"type":"ADULT"},{"age":30,"type":"ADULT"}]}]},"residentType":"NONE","numNights":0,"flightPa
+[17-Nov-2025 17:05:03 UTC] [Soltour API info] Details response structure: {"has_budget":false,"has_details":true,"has_error":false,"error_msg":null}
+[17-Nov-2025 17:05:03 UTC] [Soltour API info] Response from booking/details: {"availToken":"MlUNgYhbXClQwzUomFjpgmWt9IQOuyKUZsHVXrOWvtA=","timestamp":"2025-11-17T18:05:03.320181900","serviceType":"UNDEFINED","agencyInformation":{"clientCode":"BEAUTYT","branchOfficeCode":"999","taxApplicationType":"ISC","taxRate":0,"paymentType":"PP","commission":{"currency":"EUR","rate":15}},"params":{"startDate":"2026-01-18","endDate":"2026-01-25","accomodation":{"rooms":[{"passengers":[{"age":30,"type":"ADULT"},{"age":30,"type":"ADULT"}]}]},"residentType":"NONE","numNights":0,"flightPa
+[17-Nov-2025 17:05:03 UTC] [Soltour API info] Details response structure: {"has_budget":false,"has_details":true,"has_error":false,"error_msg":null}
+[17-Nov-2025 17:05:03 UTC] [Soltour API info] Response from booking/details: {"availToken":"MlUNgYhbXClQwzUomFjpgmWt9IQOuyKUZsHVXrOWvtA=","timestamp":"2025-11-17T18:05:03.374919198","serviceType":"UNDEFINED","agencyInformation":{"clientCode":"BEAUTYT","branchOfficeCode":"999","taxApplicationType":"ISC","taxRate":0,"paymentType":"PP","commission":{"currency":"EUR","rate":15}},"params":{"startDate":"2026-01-18","endDate":"2026-01-25","accomodation":{"rooms":[{"passengers":[{"age":30,"type":"ADULT"},{"age":30,"type":"ADULT"}]}]},"residentType":"NONE","numNights":0,"flightPa
+[17-Nov-2025 17:05:03 UTC] [Soltour API info] Details response structure: {"has_budget":false,"has_details":true,"has_error":false,"error_msg":null}
+[17-Nov-2025 17:05:03 UTC] [Soltour API info] Getting details for budget: H35##TI##0$4693188827094473433@@127, hotel: H35
+[17-Nov-2025 17:05:03 UTC] [Soltour API info] Request to booking/details: {"productType":"PACKAGE","availToken":"MlUNgYhbXClQwzUomFjpgmWt9IQOuyKUZsHVXrOWvtA=","budgetId":"H35##TI##0$4693188827094473433@@127","hotelParams":{"hotelCode":"H35","providerCode":"UNDEFINED"}}
+[17-Nov-2025 17:05:03 UTC] [Soltour API info] Response from booking/details: {"availToken":"MlUNgYhbXClQwzUomFjpgmWt9IQOuyKUZsHVXrOWvtA=","timestamp":"2025-11-17T18:05:03.925224550","serviceType":"UNDEFINED","agencyInformation":{"clientCode":"BEAUTYT","branchOfficeCode":"999","taxApplicationType":"ISC","taxRate":0,"paymentType":"PP","commission":{"currency":"EUR","rate":15}},"params":{"startDate":"2026-01-18","endDate":"2026-01-25","accomodation":{"rooms":[{"passengers":[{"age":30,"type":"ADULT"},{"age":30,"type":"ADULT"}]}]},"residentType":"NONE","numNights":0,"flightPa
+[17-Nov-2025 17:05:03 UTC] [Soltour API info] Details response structure: {"has_budget":false,"has_details":true,"has_error":false,"error_msg":null}
+[17-Nov-2025 17:05:04 UTC] Loaded file: blur_effects.php
+[17-Nov-2025 17:05:04 UTC] Loaded file: rkit_post_duplicator.php
+[17-Nov-2025 17:05:04 UTC] Loaded file: rkit_tool_tips.php
+[17-Nov-2025 17:05:04 UTC] Loaded file: rkit_wrapper_link.php
+[17-Nov-2025 17:05:04 UTC] Class not found: \RomethemeKit\Rkit_Custom_Cursor
+[17-Nov-2025 17:05:04 UTC] Instantiated class: \RomethemeKit\RkitDuplicator
+[17-Nov-2025 17:05:04 UTC] Instantiated class: \RomethemeKit\BlurEffects
+[17-Nov-2025 17:05:04 UTC] Class not found: \RomethemeKit\Rkit_Sticky_Content
+[17-Nov-2025 17:05:04 UTC] Instantiated class: \RomethemeKit\RkitToolTips
+[17-Nov-2025 17:05:04 UTC] Instantiated class: \RomethemeKit\RkitWrapperLink
+[17-Nov-2025 17:05:04 UTC] Loaded file: blur_effects.php
+[17-Nov-2025 17:05:04 UTC] Loaded file: rkit_post_duplicator.php
+[17-Nov-2025 17:05:04 UTC] Loaded file: rkit_tool_tips.php
+[17-Nov-2025 17:05:04 UTC] Loaded file: rkit_wrapper_link.php
+[17-Nov-2025 17:05:04 UTC] Class not found: \RomethemeKit\Rkit_Custom_Cursor
+[17-Nov-2025 17:05:04 UTC] Instantiated class: \RomethemeKit\RkitDuplicator
+[17-Nov-2025 17:05:04 UTC] Instantiated class: \RomethemeKit\BlurEffects
+[17-Nov-2025 17:05:04 UTC] Class not found: \RomethemeKit\Rkit_Sticky_Content
+[17-Nov-2025 17:05:04 UTC] Instantiated class: \RomethemeKit\RkitToolTips
+[17-Nov-2025 17:05:04 UTC] Instantiated class: \RomethemeKit\RkitWrapperLink
+[17-Nov-2025 17:05:04 UTC] Loaded file: blur_effects.php
+[17-Nov-2025 17:05:04 UTC] Loaded file: rkit_post_duplicator.php
+[17-Nov-2025 17:05:04 UTC] Loaded file: rkit_tool_tips.php
+[17-Nov-2025 17:05:04 UTC] Loaded file: rkit_wrapper_link.php
+[17-Nov-2025 17:05:04 UTC] Class not found: \RomethemeKit\Rkit_Custom_Cursor
+[17-Nov-2025 17:05:04 UTC] Instantiated class: \RomethemeKit\RkitDuplicator
+[17-Nov-2025 17:05:04 UTC] Instantiated class: \RomethemeKit\BlurEffects
+[17-Nov-2025 17:05:04 UTC] Class not found: \RomethemeKit\Rkit_Sticky_Content
+[17-Nov-2025 17:05:04 UTC] Instantiated class: \RomethemeKit\RkitToolTips
+[17-Nov-2025 17:05:04 UTC] Instantiated class: \RomethemeKit\RkitWrapperLink
+[17-Nov-2025 17:05:04 UTC] Loaded file: blur_effects.php
+[17-Nov-2025 17:05:04 UTC] Loaded file: rkit_post_duplicator.php
+[17-Nov-2025 17:05:04 UTC] Loaded file: rkit_tool_tips.php
+[17-Nov-2025 17:05:04 UTC] Loaded file: rkit_wrapper_link.php
+[17-Nov-2025 17:05:04 UTC] Class not found: \RomethemeKit\Rkit_Custom_Cursor
+[17-Nov-2025 17:05:04 UTC] Instantiated class: \RomethemeKit\RkitDuplicator
+[17-Nov-2025 17:05:04 UTC] Instantiated class: \RomethemeKit\BlurEffects
+[17-Nov-2025 17:05:04 UTC] Class not found: \RomethemeKit\Rkit_Sticky_Content
+[17-Nov-2025 17:05:04 UTC] Instantiated class: \RomethemeKit\RkitToolTips
+[17-Nov-2025 17:05:04 UTC] Instantiated class: \RomethemeKit\RkitWrapperLink
+[17-Nov-2025 17:05:04 UTC] [Soltour API info] Getting details for budget: H198567##TI##0$5637214742885343955@@127, hotel: H198567
+[17-Nov-2025 17:05:04 UTC] [Soltour API info] Request to booking/details: {"productType":"PACKAGE","availToken":"MlUNgYhbXClQwzUomFjpgmWt9IQOuyKUZsHVXrOWvtA=","budgetId":"H198567##TI##0$5637214742885343955@@127","hotelParams":{"hotelCode":"H198567","providerCode":"UNDEFINED"}}
+[17-Nov-2025 17:05:04 UTC] [Soltour API info] Getting details for budget: H199535##TI##0$5728296590734530311@@127, hotel: H199535
+[17-Nov-2025 17:05:04 UTC] [Soltour API info] Request to booking/details: {"productType":"PACKAGE","availToken":"MlUNgYhbXClQwzUomFjpgmWt9IQOuyKUZsHVXrOWvtA=","budgetId":"H199535##TI##0$5728296590734530311@@127","hotelParams":{"hotelCode":"H199535","providerCode":"UNDEFINED"}}
+[17-Nov-2025 17:05:04 UTC] [Soltour API info] Getting details for budget: H224289##TI##0$5337241211402376627@@127, hotel: H224289
+[17-Nov-2025 17:05:04 UTC] [Soltour API info] Request to booking/details: {"productType":"PACKAGE","availToken":"MlUNgYhbXClQwzUomFjpgmWt9IQOuyKUZsHVXrOWvtA=","budgetId":"H224289##TI##0$5337241211402376627@@127","hotelParams":{"hotelCode":"H224289","providerCode":"UNDEFINED"}}
+[17-Nov-2025 17:05:04 UTC] [Soltour API info] Getting details for budget: H79963##TI##0$5482369157226720778@@127, hotel: H79963
+[17-Nov-2025 17:05:04 UTC] [Soltour API info] Request to booking/details: {"productType":"PACKAGE","availToken":"MlUNgYhbXClQwzUomFjpgmWt9IQOuyKUZsHVXrOWvtA=","budgetId":"H79963##TI##0$5482369157226720778@@127","hotelParams":{"hotelCode":"H79963","providerCode":"UNDEFINED"}}
+[17-Nov-2025 17:05:05 UTC] Loaded file: blur_effects.php
+[17-Nov-2025 17:05:05 UTC] Loaded file: rkit_post_duplicator.php
+[17-Nov-2025 17:05:05 UTC] Loaded file: rkit_tool_tips.php
+[17-Nov-2025 17:05:05 UTC] Loaded file: rkit_wrapper_link.php
+[17-Nov-2025 17:05:05 UTC] Class not found: \RomethemeKit\Rkit_Custom_Cursor
+[17-Nov-2025 17:05:05 UTC] Instantiated class: \RomethemeKit\RkitDuplicator
+[17-Nov-2025 17:05:05 UTC] Instantiated class: \RomethemeKit\BlurEffects
+[17-Nov-2025 17:05:05 UTC] Class not found: \RomethemeKit\Rkit_Sticky_Content
+[17-Nov-2025 17:05:05 UTC] Instantiated class: \RomethemeKit\RkitToolTips
+[17-Nov-2025 17:05:05 UTC] Instantiated class: \RomethemeKit\RkitWrapperLink
+[17-Nov-2025 17:05:05 UTC] [Soltour API info] Response from booking/details: {"availToken":"MlUNgYhbXClQwzUomFjpgmWt9IQOuyKUZsHVXrOWvtA=","timestamp":"2025-11-17T18:05:05.061581764","serviceType":"UNDEFINED","agencyInformation":{"clientCode":"BEAUTYT","branchOfficeCode":"999","taxApplicationType":"ISC","taxRate":0,"paymentType":"PP","commission":{"currency":"EUR","rate":15}},"params":{"startDate":"2026-01-18","endDate":"2026-01-25","accomodation":{"rooms":[{"passengers":[{"age":30,"type":"ADULT"},{"age":30,"type":"ADULT"}]}]},"residentType":"NONE","numNights":0,"flightPa
+[17-Nov-2025 17:05:05 UTC] [Soltour API info] Details response structure: {"has_budget":false,"has_details":true,"has_error":false,"error_msg":null}
+[17-Nov-2025 17:05:05 UTC] [Soltour API info] Response from booking/details: {"availToken":"MlUNgYhbXClQwzUomFjpgmWt9IQOuyKUZsHVXrOWvtA=","timestamp":"2025-11-17T18:05:05.076895445","serviceType":"UNDEFINED","agencyInformation":{"clientCode":"BEAUTYT","branchOfficeCode":"999","taxApplicationType":"ISC","taxRate":0,"paymentType":"PP","commission":{"currency":"EUR","rate":15}},"params":{"startDate":"2026-01-18","endDate":"2026-01-25","accomodation":{"rooms":[{"passengers":[{"age":30,"type":"ADULT"},{"age":30,"type":"ADULT"}]}]},"residentType":"NONE","numNights":0,"flightPa
+[17-Nov-2025 17:05:05 UTC] [Soltour API info] Details response structure: {"has_budget":false,"has_details":true,"has_error":false,"error_msg":null}
+[17-Nov-2025 17:05:05 UTC] [Soltour API info] Response from booking/details: {"availToken":"MlUNgYhbXClQwzUomFjpgmWt9IQOuyKUZsHVXrOWvtA=","timestamp":"2025-11-17T18:05:05.168620474","serviceType":"UNDEFINED","agencyInformation":{"clientCode":"BEAUTYT","branchOfficeCode":"999","taxApplicationType":"ISC","taxRate":0,"paymentType":"PP","commission":{"currency":"EUR","rate":15}},"params":{"startDate":"2026-01-18","endDate":"2026-01-25","accomodation":{"rooms":[{"passengers":[{"age":30,"type":"ADULT"},{"age":30,"type":"ADULT"}]}]},"residentType":"NONE","numNights":0,"flightPa
+[17-Nov-2025 17:05:05 UTC] [Soltour API info] Details response structure: {"has_budget":false,"has_details":true,"has_error":false,"error_msg":null}
+[17-Nov-2025 17:05:05 UTC] [Soltour API info] Response from booking/details: {"availToken":"MlUNgYhbXClQwzUomFjpgmWt9IQOuyKUZsHVXrOWvtA=","timestamp":"2025-11-17T18:05:05.201868144","serviceType":"UNDEFINED","agencyInformation":{"clientCode":"BEAUTYT","branchOfficeCode":"999","taxApplicationType":"ISC","taxRate":0,"paymentType":"PP","commission":{"currency":"EUR","rate":15}},"params":{"startDate":"2026-01-18","endDate":"2026-01-25","accomodation":{"rooms":[{"passengers":[{"age":30,"type":"ADULT"},{"age":30,"type":"ADULT"}]}]},"residentType":"NONE","numNights":0,"flightPa
+[17-Nov-2025 17:05:05 UTC] [Soltour API info] Details response structure: {"has_budget":false,"has_details":true,"has_error":false,"error_msg":null}
+[17-Nov-2025 17:05:05 UTC] [Soltour API info] Getting details for budget: H199374##TI##0$5101356783862517885@@127, hotel: H199374
+[17-Nov-2025 17:05:05 UTC] [Soltour API info] Request to booking/details: {"productType":"PACKAGE","availToken":"MlUNgYhbXClQwzUomFjpgmWt9IQOuyKUZsHVXrOWvtA=","budgetId":"H199374##TI##0$5101356783862517885@@127","hotelParams":{"hotelCode":"H199374","providerCode":"UNDEFINED"}}
+[17-Nov-2025 17:05:06 UTC] [Soltour API info] Response from booking/details: {"availToken":"MlUNgYhbXClQwzUomFjpgmWt9IQOuyKUZsHVXrOWvtA=","timestamp":"2025-11-17T18:05:06.230374551","serviceType":"UNDEFINED","agencyInformation":{"clientCode":"BEAUTYT","branchOfficeCode":"999","taxApplicationType":"ISC","taxRate":0,"paymentType":"PP","commission":{"currency":"EUR","rate":15}},"params":{"startDate":"2026-01-18","endDate":"2026-01-25","accomodation":{"rooms":[{"passengers":[{"age":30,"type":"ADULT"},{"age":30,"type":"ADULT"}]}]},"residentType":"NONE","numNights":0,"flightPa
+[17-Nov-2025 17:05:06 UTC] [Soltour API info] Details response structure: {"has_budget":false,"has_details":true,"has_error":false,"error_msg":null}
+[17-Nov-2025 17:05:39 UTC] Loaded file: blur_effects.php
+[17-Nov-2025 17:05:39 UTC] Loaded file: rkit_post_duplicator.php
+[17-Nov-2025 17:05:39 UTC] Loaded file: rkit_tool_tips.php
+[17-Nov-2025 17:05:39 UTC] Loaded file: rkit_wrapper_link.php
+[17-Nov-2025 17:05:39 UTC] Class not found: \RomethemeKit\Rkit_Custom_Cursor
+[17-Nov-2025 17:05:39 UTC] Instantiated class: \RomethemeKit\RkitDuplicator
+[17-Nov-2025 17:05:39 UTC] Instantiated class: \RomethemeKit\BlurEffects
+[17-Nov-2025 17:05:39 UTC] Class not found: \RomethemeKit\Rkit_Sticky_Content
+[17-Nov-2025 17:05:39 UTC] Instantiated class: \RomethemeKit\RkitToolTips
+[17-Nov-2025 17:05:39 UTC] Instantiated class: \RomethemeKit\RkitWrapperLink
+[17-Nov-2025 17:05:40 UTC] Loaded file: blur_effects.php
+[17-Nov-2025 17:05:40 UTC] Loaded file: rkit_post_duplicator.php
+[17-Nov-2025 17:05:40 UTC] Loaded file: rkit_tool_tips.php
+[17-Nov-2025 17:05:40 UTC] Loaded file: rkit_wrapper_link.php
+[17-Nov-2025 17:05:40 UTC] Class not found: \RomethemeKit\Rkit_Custom_Cursor
+[17-Nov-2025 17:05:40 UTC] Instantiated class: \RomethemeKit\RkitDuplicator
+[17-Nov-2025 17:05:40 UTC] Instantiated class: \RomethemeKit\BlurEffects
+[17-Nov-2025 17:05:40 UTC] Class not found: \RomethemeKit\Rkit_Sticky_Content
+[17-Nov-2025 17:05:40 UTC] Instantiated class: \RomethemeKit\RkitToolTips
+[17-Nov-2025 17:05:40 UTC] Instantiated class: \RomethemeKit\RkitWrapperLink
+[17-Nov-2025 17:06:02 UTC] Loaded file: blur_effects.php
+[17-Nov-2025 17:06:02 UTC] Loaded file: rkit_post_duplicator.php
+[17-Nov-2025 17:06:02 UTC] Loaded file: rkit_tool_tips.php
+[17-Nov-2025 17:06:02 UTC] Loaded file: rkit_wrapper_link.php
+[17-Nov-2025 17:06:02 UTC] Class not found: \RomethemeKit\Rkit_Custom_Cursor
+[17-Nov-2025 17:06:02 UTC] Instantiated class: \RomethemeKit\RkitDuplicator
+[17-Nov-2025 17:06:02 UTC] Instantiated class: \RomethemeKit\BlurEffects
+[17-Nov-2025 17:06:02 UTC] Class not found: \RomethemeKit\Rkit_Sticky_Content
+[17-Nov-2025 17:06:02 UTC] Instantiated class: \RomethemeKit\RkitToolTips
+[17-Nov-2025 17:06:02 UTC] Instantiated class: \RomethemeKit\RkitWrapperLink
