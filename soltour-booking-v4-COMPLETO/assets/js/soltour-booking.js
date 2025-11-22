@@ -761,11 +761,19 @@
     };
 
     window.SoltourApp.selectPackage = function(budgetId, hotelCode, providerCode) {
+        // Encontrar o budget correspondente para ter acesso aos dados completos
+        const budget = SoltourApp.allBudgets.find(b => b.budgetId === budgetId);
+        const hotelInfo = SoltourApp.hotelsFromAvailability[hotelCode];
+
+        // Salvar dados completos incluindo searchParams para que a página de detalhes tenha acesso aos passageiros
         sessionStorage.setItem('soltour_selected_package', JSON.stringify({
             budgetId: budgetId,
             hotelCode: hotelCode,
             providerCode: providerCode,
-            availToken: SoltourApp.availToken
+            availToken: SoltourApp.availToken,
+            budget: budget,
+            hotelInfo: hotelInfo,
+            searchParams: SoltourApp.searchParams  // IMPORTANTE: Incluir searchParams com informações dos passageiros
         }));
         window.location.href = `/pacote-detalhes/?budget=${budgetId}`;
     };

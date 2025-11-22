@@ -153,10 +153,33 @@
 
                 passengerCount = allPassengers.length;
             } catch (e) {
+                console.error('Erro ao processar passageiros de searchParams:', e);
             }
         }
 
-        const pricePerPerson = passengerCount > 0 ? price / passengerCount : 0;
+        // Fallback: Se não conseguiu obter passageiros de searchParams, tentar extrair do budget
+        if (passengerCount === 0 && budget.rooms && Array.isArray(budget.rooms)) {
+            budget.rooms.forEach(room => {
+                if (room.passengers) {
+                    room.passengers.forEach(p => {
+                        allPassengers.push(p);
+                        if (p.type === 'ADULT') adults++;
+                        else if (p.type === 'CHILD') children++;
+                        passengerCount++;
+                    });
+                }
+            });
+        }
+
+        // Fallback final: Se ainda não tiver passageiros, usar valor padrão de 2 adultos
+        if (passengerCount === 0) {
+            console.warn('Não foi possível determinar número de passageiros, usando padrão de 2 adultos');
+            adults = 2;
+            passengerCount = 2;
+            allPassengers = [{ type: 'ADULT', age: 30 }, { type: 'ADULT', age: 30 }];
+        }
+
+        const pricePerPerson = passengerCount > 0 ? price / passengerCount : price / 2;
 
         // Noites
         const numNights = getNumNights(budget);
